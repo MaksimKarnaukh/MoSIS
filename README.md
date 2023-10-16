@@ -100,7 +100,7 @@ Whenever this RegEx matches, we know there is a violation of the requirements. T
 8) There is an intentional bug in the implementation (which is visible in some of the traces) that causes the system specification not to be satisfied. You need to figure out which requirement is being violated and show how your FSA checks this. Identify which of the traces show the violation and which ones don't. Also, describe in your own words what the meaning is of this bug; for instance: The traffic light never turned green after car x has been detected by the demand sensor..
 9) Write a report that explains your solution for this assignment. Include your models and discuss them. Make sure to mention all your hypotheses, assumptions and conclusions. See also the "submission information" at the top of this page.
 
-## Tools & Links 
+## Tools
 
 https://plantuml.com/
 
@@ -109,3 +109,7 @@ https://www.planttext.com/
 ## Templates
 
 http://msdl.uantwerpen.be/people/hv/teaching/MoSIS/assignments/index.html
+
+## Links
+
+https://www.cs.mcgill.ca/~joerg/SEL/COMP-533_Handouts_files/COMP-533%204%20Use%20Cases.pdf
