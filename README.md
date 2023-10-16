@@ -103,6 +103,7 @@ Whenever this RegEx matches, we know there is a violation of the requirements. T
 ## Tools & Links 
 
 https://plantuml.com/
+
 https://www.planttext.com/
 
 ## Templates
