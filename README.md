@@ -69,7 +69,7 @@ You will need to perform the following tasks step by step:
 
 1) Write full Use Cases using the use case template (for ONLY requirements 5 and 6).
 2) Design a class diagram for the system considering its relevant entities, relationships, attributes and operations.
-3) Design the dynamic interaction behaviour in UML Sequence Diagrams for the above use cases (ONLY requirements 4 and 5), using the textual rendering tool PlantUML, or using the online tool WebSequenceDiagrams. You can start designing the class diagram without relationships and attributes, then design the sequence diagrams to realize the necessary operations and relationships between classes, and finally update the class diagram with the identified operations. Describe all possible options. Use variable names to reduce complexity. Clearly indicate the pre- and postconditions for your Sequence Diagrams.
+3) Design the dynamic interaction behaviour in UML Sequence Diagrams for the above use cases (ONLY requirements 5 and 6), using the textual rendering tool PlantUML, or using the online tool WebSequenceDiagrams. You can start designing the class diagram without relationships and attributes, then design the sequence diagrams to realize the necessary operations and relationships between classes, and finally update the class diagram with the identified operations. Describe all possible options. Use variable names to reduce complexity. Clearly indicate the pre- and postconditions for your Sequence Diagrams.
 4) Write Regular Expressions (RegEx) (refer to the format of the given output trace) for verifying the above use cases.
 
 To make life easier, we use abbreviations to shorten the messages that you need to recognize in your RegExp/FSA. Here are the mappings:
