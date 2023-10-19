@@ -1,10 +1,30 @@
 @startuml
 
-autonumber
+'5) When the FS is ON and the QS is ON,
+'if DS is turned ON, it indicates intense traffic over the ramp.
+'In this scenario, two cars must cross the TL before it turns RED.
+'Then, set TL to GREEN. After DS is OFF, ON and OFF (two cars),
+'turn TL to RED.
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+title "Sequence diagram for requirement 5"
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+control RMController as RMC
+entity FreewaySensor
+entity EndOfQueueSensor
+entity DemandSensor
+entity RampTrafficLight
+
+FreewaySensor -> RMC: on
+EndOfQueueSensor -> RMC: on
+DemandSensor -> RMC: on
+
+DemandSensor -> RMC: off
+DemandSensor -> RMC: on
+DemandSensor -> RMC: off
+
+group . [pre: RampTrafficLight.color == GREEN]
+    RMC -> RampTrafficLight: setLightColor(RED)
+end
+
+
 @enduml

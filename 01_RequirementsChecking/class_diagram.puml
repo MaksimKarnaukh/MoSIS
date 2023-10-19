@@ -8,7 +8,7 @@ GREEN
 
 class RampMeterController {
 -sensorStates: Sensor*[]
--meteringRate: number
+/-meteringRate: number
 +update()
 +processSensorData()
 +setMeteringRate(r: number)

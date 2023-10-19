@@ -1,10 +1,18 @@
 @startuml
-
 autonumber
 
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
+'6) The passage sensor can only be turned ON once a car leaves the demand
+'sensor shifting from ON to OFF. Another car can only turn the
+'passage sensor ON once it has been turned OFF (the previous car joined the mainline).
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+entity PassageSensor as PS
+entity DemandSensor as DS
+control RMController as RMC
+
+note over PS : Preconditions:\n\t Turned OFF
+note over DS : Preconditions:\n\t Turned ON
+DS -> RMC : OFF
+PS -> RMC : ON
+PS -> RMC : OFF
+
 @enduml
