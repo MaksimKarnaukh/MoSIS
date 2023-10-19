@@ -1,15 +1,38 @@
 @startuml
+skinparam classAttributeIconSize 0
+
+enum Color {
+RED
+GREEN
+}
 
 class RampMeterController {
+-sensorStates: Sensor*[]
+-meteringRate: number
++update()
++processSensorData()
++setMeteringRate(r: number)
++getMeteringRate()
+}
+
+class RampTrafficLight {
+-currentColor: Color
++setLightColor(c: Color)
++getLightColor()
+}
+
+class WarningSignal {
+-isOn: boolean
++setSignalState(s: boolean)
++getSignalState()
 }
 
 abstract class Sensor {
+-sensorStatus: boolean
++setStatus(s: boolean)
++getStatus()
++notifyController()
 }
-
-Sensor <|-- FreewaySensor
-Sensor <|-- DemandSensor
-Sensor <|-- PassageSensor
-Sensor <|-- EndOfQueueSensor
 
 class FreewaySensor {
 }
@@ -20,9 +43,14 @@ class PassageSensor {
 class EndOfQueueSensor {
 }
 
-class RampTrafficLight {
-lightState
-changeLight()
-}
+Sensor <|-- FreewaySensor
+Sensor <|-- DemandSensor
+Sensor <|-- PassageSensor
+Sensor <|-- EndOfQueueSensor
+
+RampMeterController "1" -- "4..*" Sensor : has >
+
+RampMeterController "1" -- "1" RampTrafficLight : controls >
+RampMeterController "1" -- "1" WarningSignal : controls >
 
 @enduml
