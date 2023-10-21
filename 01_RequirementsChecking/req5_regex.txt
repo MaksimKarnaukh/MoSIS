@@ -1,0 +1,37 @@
+When the freeway sensor is ON and the end of queue sensor is ON, if demand sensor is turned ON, it indicates intense traffic over the ramp.
+In this scenario, two cars must cross the traffic light before it turns RED. Then, set traffic light to GREEN.
+After demand sensor is OFF, ON and OFF (two cars), turn traffic light to RED.
+
+Freeway sensor is on
+FS ON\n
+
+End of queue sensor is on
+QS ON\n
+
+FS ON\n((?!FS OFF$).*\n)*
+
+
+FS ON\n(.*\n)*(?=QS ON\n|FS OFF)QS ON\n(.*\n)*(?<=DS ON .\n)(.*\n)*(?<=DS OFF .\n)(.*\n)*DS ON .\n(.*\n)*$
+
+
+Solution:
+Spot if the light turned green when FS, QS, DS were ON and then turned red
+FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(?:(?!TL GREEN\n)(.*\n))*TL RED
+
+Spot if DS turned off (at least once) during the green light
+FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(.*\n)*?TL GREEN\n((?:(?<!DS OFF .\n)(.*\n))*)((?:(?!DS OFF .\n)(.*\n))*)TL RED\n
+
+Spot if DS did not turn on during the green light
+FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(DS OFF .\n)(?:(?!DS ON .\n)(.*\n))*TL RED
+
+Spot if DS turned off a second time during the green light
+FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(.*\n)*?TL GREEN\n(?:(?=DS OFF .\n)(.*\n))*(?:(?!DS OFF .\n)(.*\n))*TL RED
+
+Spot if the DS turned on for a second time (or more) during the green light
+FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(DS OFF .\n)(?:(?!DS ON .\n)(.*\n))*DS ON .\n((?:(?!DS ON .\n)(.*\n))*DS ON .\n)+(?:(?!TL RED .\n)(.*\n))*TL RED\n
+
+Spot if the DS is turned off for a third (or more) time during the green light
+FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(?:(?!DS OFF .\n)(.*\n))*DS OFF .\n(?:(?!DS OFF .\n)(.*\n))*DS OFF .\n((?:(?!DS OFF .\n)(.*\n))*DS OFF .\n)+TL RED\n
+
+
+
