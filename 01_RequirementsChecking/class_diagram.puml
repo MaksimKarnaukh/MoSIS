@@ -7,7 +7,7 @@ GREEN
 }
 
 class RampMeterController {
--sensorStates: Sensor*[]
+-sensors: Sensor*[]
 /-meteringRate: number
 +update()
 +processSensorData()
@@ -48,9 +48,9 @@ Sensor <|-- DemandSensor
 Sensor <|-- PassageSensor
 Sensor <|-- EndOfQueueSensor
 
-RampMeterController "1" -- "4..*" Sensor : has >
+RampMeterController "1" -- "4..*" Sensor : send data <
 
-RampMeterController "1" -- "1" RampTrafficLight : controls >
-RampMeterController "1" -- "1" WarningSignal : controls >
+RampMeterController "1" -- "1" RampTrafficLight : change state >
+RampMeterController "1" -- "1" WarningSignal : change state >
 
 @enduml

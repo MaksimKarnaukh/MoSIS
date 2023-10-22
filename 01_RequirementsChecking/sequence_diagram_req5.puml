@@ -8,23 +8,31 @@
 
 title "Sequence diagram for requirement 5"
 
+note across: preconditions per entity for all entities
+
 control RMController as RMC
-entity FreewaySensor
-entity EndOfQueueSensor
-entity DemandSensor
-entity RampTrafficLight
+entity FreewaySensor as FS
+entity EndOfQueueSensor as QS
+entity DemandSensor as DS
+entity RampTrafficLight as RTL
 
-FreewaySensor -> RMC: on
-EndOfQueueSensor -> RMC: on
-DemandSensor -> RMC: on
+'note over FS : Preconditions:\n\t Turned OFF
+'note over QS : Preconditions:\n\t Turned ON
+'note over DS : Preconditions:\n\t Turned ON
 
-DemandSensor -> RMC: off
-DemandSensor -> RMC: on
-DemandSensor -> RMC: off
 
-group . [pre: RampTrafficLight.color == GREEN]
-    RMC -> RampTrafficLight: setLightColor(RED)
-end
+FS -> RMC: on
+QS -> RMC: on
+DS -> RMC: on
 
+RMC -> RTL: GREEN
+
+DS -> RMC: off
+DS -> RMC: on
+DS -> RMC: off
+
+RMC -> RTL: RED
+
+note across: postconditions per entity for all entities
 
 @enduml
