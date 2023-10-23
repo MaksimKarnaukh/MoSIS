@@ -1,11 +1,48 @@
 @startuml
 
-[*] --> State1
-State1 --> [*]
-State1 : this is a string
-State1 : this is another string
+'regex for req 5:
+'FS ON\n(.*\n)*?(?=QS ON\n|FS OFF\n)QS ON\n(?:(?!DS ON .\n)(.*\n))*(?:(?!TL GREEN\n)(.*\n))*TL RED|
+'FS ON\n(.*\n)*?(?=QS ON\n|FS OFF\n)QS ON\n(.*\n)*?TL GREEN\n((?:(?<!DS OFF .\n)(.*\n))*)((?:(?!DS OFF .\n)(.*\n))*)TL RED\n|
+'FS ON\n(.*\n)*?(?=QS ON\n|FS OFF\n)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(DS OFF .\n)(?:(?!DS ON .\n)(.*\n))*TL RED|
+'FS ON\n(.*\n)*?(?=QS ON\n|FS OFF\n)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(DS OFF .\n)(?:(?!DS ON .\n)(.*\n))*DS ON .\n((?:(?!DS ON .\n)(.*\n))*DS ON .\n)+(?:(?!TL RED .\n)(.*\n))*TL RED\n|
+'FS ON\n(.*\n)*?(?=QS ON\n|FS OFF\n)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(?:(?!DS OFF .\n)(.*\n))*DS OFF .\n(?:(?!DS OFF .\n)(.*\n))*DS OFF .\n((?:(?!DS OFF .\n)(.*\n))*DS OFF .\n)+TL RED\n
 
-State1 -> State2
-State2 --> [*]
+'regex for req 6:
+'DS ON (\d+)\n((?!DS OFF \1\n(.|\n)*PS ON \1\n)(.|\n))*PS OFF \1\n|
+'PS ON (\d+)\n(?:(?!PS OFF \5\n)(.|\n))*PS ON (?:(?!\5)\d+)\n|
+'(DS OFF \d+\n)((?!DS ON (\d)\n)(.|\n))*DS OFF \d+\nPS ON \d+\n
+
+
+
+Req5_S1 --> S2
+
+S11 --> S12: PS ON x\\n
+S12 --> S12: ((?!PS OFF \x\\n)(.|\\n))*
+
+S12 --> Dead: PS ON y\\n
+S12 --> S15: PS OFF x\\n
+S15 --> S11: (.|\\n)*
+
+S11 --> S20: DS ON x\\n
+
+
+[*] --> Req6_S1:
+
+Req6_S1 --> Req6_S2: DS ON x\\n
+
+Req6_S1 --> Req6_S1: ^(?!DS ON x\\n).*$
+
+Req6_S2 --> Req6_S2: (.|\\n)*
+
+Req6_S2 --> Req6_S3: DS OFF x\\n
+Req6_S3 --> Req6_S3: PS ON x\\n
+
+Req6_S3 --> Req6_S4: PS ON x\\n
+Req6_S4 --> Req6_S4: PS OFF x\\n
+
+Req6_S4 --> Req6_S5: PS OFF x\\n
+
+Dead-->[*]
+
 
 @enduml

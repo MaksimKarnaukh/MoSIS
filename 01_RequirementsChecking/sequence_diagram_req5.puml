@@ -8,8 +8,6 @@
 
 title "Sequence diagram for requirement 5"
 
-note across: preconditions per entity for all entities
-
 control RMController as RMC
 entity FreewaySensor as FS
 entity EndOfQueueSensor as QS
@@ -20,6 +18,7 @@ entity RampTrafficLight as RTL
 'note over QS : Preconditions:\n\t Turned ON
 'note over DS : Preconditions:\n\t Turned ON
 
+note left of RMC: Preconditions:\n\t FS is ON\n\t QS is ON\n\t DS is ON
 
 FS -> RMC: on
 QS -> RMC: on
@@ -33,6 +32,6 @@ DS -> RMC: off
 
 RMC -> RTL: RED
 
-note across: postconditions per entity for all entities
+note left of RMC: Postconditions:\n\t FS is ON\n\t QS is ON\n\t DS is OFF
 
 @enduml

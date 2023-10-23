@@ -9,14 +9,12 @@ entity PassageSensor as PS
 entity DemandSensor as DS
 control RMController as RMC
 
-note over PS : Preconditions:\n\t Turned OFF
-note over DS : Preconditions:\n\t Turned ON
+note left of PS : Preconditions:\n\t PassageSensor Turned OFF \n\t DemandSensor Turned ON
 
 DS -> RMC : OFF
 PS -> RMC : ON
 PS -> RMC : OFF
 
-note over PS : Postconditions:\n\t .
-note over DS : Postconditions:\n\t .
+note left of PS : Postconditions:\n\t PassageSensor Turned OFF \n\t DemandSensor Turned ON
 
 @enduml
