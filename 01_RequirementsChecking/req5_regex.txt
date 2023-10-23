@@ -35,3 +35,4 @@ FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN
 
 
 
+FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(?:(?!TL GREEN\n)(.*\n))*TL RED|FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(.*\n)*?TL GREEN\n((?:(?<!DS OFF .\n)(.*\n))*)((?:(?!DS OFF .\n)(.*\n))*)TL RED\n|FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(DS OFF .\n)(?:(?!DS ON .\n)(.*\n))*TL RED|FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(DS OFF .\n)(?:(?!DS ON .\n)(.*\n))*DS ON .\n((?:(?!DS ON .\n)(.*\n))*DS ON .\n)+(?:(?!TL RED .\n)(.*\n))*TL RED\n|FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(?:(?!DS OFF .\n)(.*\n))*DS OFF .\n(?:(?!DS OFF .\n)(.*\n))*DS OFF .\n((?:(?!DS OFF .\n)(.*\n))*DS OFF .\n)+TL RED\n
