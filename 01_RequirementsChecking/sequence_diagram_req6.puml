@@ -19,6 +19,6 @@ PS -> RMC : Notify the RMC that the passage sensor is ON
 Car -> PS :Car leaves the demand sensor
 PS -> RMC : Notify the RMC that the passage sensor is OFF
 
-note left  of PS : Postconditions:\n\t PassageSensor turned OFF \n\t
+note left of PS : Postconditions:\n\t PassageSensor turned OFF \n\t
 
 @enduml

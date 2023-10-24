@@ -1,0 +1,16 @@
+@startuml
+
+'regex for req 6:
+'DS ON (\d+)\n((?!DS OFF \1\n(.|\n)*PS ON \1\n)(.|\n))*PS OFF \1\n|
+'PS ON (\d+)\n(?:(?!PS OFF \5\n)(.|\n))*PS ON (?:(?!\5)\d+)\n
+
+[*] --> S1
+S1 --> S2: PS ON x\\n
+S1 --> S1: else
+S2 --> S2: else
+
+S2 --> [*]: PS ON y\\n
+S2 --> S1: PS OFF x\\n
+
+
+@enduml

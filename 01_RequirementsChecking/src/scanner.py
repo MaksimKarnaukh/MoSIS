@@ -39,6 +39,39 @@ class CharacterStream:
         self.cur_ptr = self.last_ptr
 
 
+class StringStream:
+    """
+    A stream of strings helper class
+    """
+    def __init__(self, string):
+        self.strings = self.setstrings(string)
+        self.last_ptr = -1
+        self.cur_ptr = -1
+
+    def setstrings(self, string):
+        return string.split("\n")
+
+    def __repr__(self):
+        return "\n".join(self.strings)
+
+    def __str__(self):
+        return "\n".join(self.strings)
+
+    def peek(self):
+        if self.cur_ptr+1 < len(self.strings):
+            return self.strings[self.cur_ptr+1]
+        return None
+
+    def consume(self):
+        self.cur_ptr += 1
+
+    def commit(self):
+        self.last_ptr = self.cur_ptr
+
+    def rollback(self):
+        self.cur_ptr = self.last_ptr
+
+
 class Scanner:
     """
     A simple Finite State Automaton simulator.
@@ -228,11 +261,85 @@ class NumberScanner(Scanner):
     def entry(self, state, input):
         pass
 
+
+# read file and put in one big string change trace file here
+def readFile(fileName):
+    strings = []
+    with open(fileName, "r") as f:
+        strings.append(f.read())
+
+    return '\n'.join(strings)
+
+
+
+class Requirement6_RE2_Scanner(Scanner):
+    def __init__(self, stream):
+        # superclass constructor
+        super().__init__(stream)
+
+        self.id = 0
+
+        # define accepting states
+        self.accepting_states=["S3"]
+
+    def __str__(self):
+        return str(self.id)
+
+    def transition(self, state, input):
+        """
+        Encodes transitions and actions
+        """
+        if state is None:
+            # action
+            # initialize variables
+            self.id = 0
+            # new state
+            return "S1"
+
+        elif state == "S1":
+            # if input starts with PS ON, get the number x in string 'PS ON x'
+
+            if input[0:6] == 'PS ON ':
+                # action
+                self.id = int(input[6:])
+                # new state
+                return "S2"
+            else:
+                return "S1"
+
+        elif state == "S2":
+            if input[0:6] == 'PS OFF':
+                # action
+                id = int(input[7:])
+                # new state
+                return "S1"
+            elif input[0:6] == 'PS ON ':
+                # action
+                id = int(input[6:])
+                if id != self.id:
+                    self.id = id
+                    return "S3"
+                # new state
+                return "S2"
+            else:
+                return "S2"
+
+        elif state == "S3":
+            return "S3"
+
+        else:
+            return None
+
+    def entry(self, state, input):
+        pass
+
 if __name__ == "__main__":
-    stream = CharacterStream("123e-4")
-    scanner = NumberScanner(stream)
+    FSM_input = readFile("../output_traces/trace6.txt")
+    stream = StringStream(FSM_input)
+    scanner = Requirement6_RE2_Scanner(stream)
     success = scanner.scan()
     if success:
-        print("Stream has been accepted. Number: %se%s" % (str(scanner.value), str(scanner.exp)))
+        print("Stream not accepted ID: %s" % (str(scanner.id)))
     else:
-        print("Stream not accepted")
+        print("Stream has been accepted. ID: %s" % (str(scanner.id)))
+

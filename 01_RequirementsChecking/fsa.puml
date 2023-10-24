@@ -9,8 +9,7 @@
 
 'regex for req 6:
 'DS ON (\d+)\n((?!DS OFF \1\n(.|\n)*PS ON \1\n)(.|\n))*PS OFF \1\n|
-'PS ON (\d+)\n(?:(?!PS OFF \5\n)(.|\n))*PS ON (?:(?!\5)\d+)\n|
-'(DS OFF \d+\n)((?!DS ON (\d)\n)(.|\n))*DS OFF \d+\nPS ON \d+\n
+'PS ON (\d+)\n(?:(?!PS OFF \5\n)(.|\n))*PS ON (?:(?!\5)\d+)\n
 
 
 
