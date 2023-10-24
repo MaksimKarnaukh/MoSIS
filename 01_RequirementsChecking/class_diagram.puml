@@ -9,8 +9,11 @@ GREEN
 class RampMeterController {
 -sensors: Sensor*[]
 /-meteringRate: number
+/-trafficVolume: int
+/-speed: float
+/-density: float
 +update()
-+processSensorData()
++processTrafficData()
 +setMeteringRate(r: number)
 +getMeteringRate()
 }
