@@ -34,13 +34,23 @@ RMC -> RTL: Tell the RTL to turn GREEN
 Car1 -> DS: Leaves the sensor Demand Sensor area
 DS -> RMC: Notify RMC that the sensor turned OFF
 
-Car1 -> PS: Enters the Passage Sensor area
-PS -> RMC: Notify RMC that the sensor turned ON
-Car1 -> PS: Leaves the Passage Sensor area
-PS -> RMC: Notify RMC that the sensor turned OFF
+alt main success scenario
+    Car1 -> PS: Enters the Passage Sensor area
+    PS -> RMC: Notify RMC that the sensor turned ON
+    Car1 -> PS: Leaves the Passage Sensor area
+    PS -> RMC: Notify RMC that the sensor turned OFF
+    Car2 -> DS: enters the Demand Sensor area
+    DS -> RMC: Notify RMC that the sensor turned ON
+else alternative scenario
+    Car2 -> DS: Enters the Demand Sensor area
+    DS -> RMC: Notify RMC that the sensor turned ON
+    Car1 -> PS: Enters the Passage Sensor area
+    PS -> RMC: Notify RMC that the sensor turned ON
+    Car1 -> PS: Leaves the Passage Sensor area
+    PS -> RMC: Notify RMC that the sensor turned OFF
+end
 
-Car2 -> DS: enters the Demand Sensor area
-DS -> RMC: Notify RMC that the sensor turned ON
+
 Car2 -> DS: Leaves the Demand Sensor area
 DS -> RMC: Notify RMC that the sensor turned OFF
 
