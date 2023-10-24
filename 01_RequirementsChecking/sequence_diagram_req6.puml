@@ -8,10 +8,11 @@ title "Sequence diagram for requirement 6"
 entity PassageSensor as PS
 entity DemandSensor as DS
 control RMController as RMC
+actor Car as Car
 
 note left of PS : Preconditions:\n\t PassageSensor turned OFF \n\t DemandSensor turned ON
 
-note over DS: Car leaves demand sensor
+Car -> DS:Leaves Demand Sensor area
 DS -> RMC : Notify the RMC that the demand sensor is OFF
 Car -> DS:Enters Passage Sensor area
 PS -> RMC : Notify the RMC that the passage sensor is ON
