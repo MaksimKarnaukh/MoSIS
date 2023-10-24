@@ -41,11 +41,18 @@ alt main success scenario
     PS -> RMC: Notify RMC that the sensor turned OFF
     Car2 -> DS: enters the Demand Sensor area
     DS -> RMC: Notify RMC that the sensor turned ON
-else alternative scenario
+else alternative scenario 1
     Car2 -> DS: Enters the Demand Sensor area
     DS -> RMC: Notify RMC that the sensor turned ON
     Car1 -> PS: Enters the Passage Sensor area
     PS -> RMC: Notify RMC that the sensor turned ON
+    Car1 -> PS: Leaves the Passage Sensor area
+    PS -> RMC: Notify RMC that the sensor turned OFF
+else alternative scenario 2
+    Car1 -> PS: Enters the Passage Sensor area
+    PS -> RMC: Notify RMC that the sensor turned ON
+    Car2 -> DS: Enters the Demand Sensor area
+    DS -> RMC: Notify RMC that the sensor turned ON
     Car1 -> PS: Leaves the Passage Sensor area
     PS -> RMC: Notify RMC that the sensor turned OFF
 end
