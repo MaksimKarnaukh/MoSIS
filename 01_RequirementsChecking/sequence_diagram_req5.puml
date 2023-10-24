@@ -13,25 +13,27 @@ entity FreewaySensor as FS
 entity EndOfQueueSensor as QS
 entity DemandSensor as DS
 entity RampTrafficLight as RTL
+entity PassageSensor as PS
 
-'note over FS : Preconditions:\n\t Turned OFF
-'note over QS : Preconditions:\n\t Turned ON
-'note over DS : Preconditions:\n\t Turned ON
+note left of RMC: Preconditions:\n\t FreewaySensor turned ON\n\t EndOfQueueSensor turned ON\n\t DemandSensor is ON\n\t RampTrafficLight is RED\n\t PassageSensor is turned OFF
 
-note left of RMC: Preconditions:\n\t FS is ON\n\t QS is ON\n\t DS is ON
-
-FS -> RMC: on
-QS -> RMC: on
-DS -> RMC: on
+'below commented lines not explicitly needed because they are part of the preconditions
+'FS -> RMC: on
+'QS -> RMC: on
+'DS -> RMC: on
 
 RMC -> RTL: GREEN
 
 DS -> RMC: off
+
+PS -> RMC: on
+PS -> RMC: off
+
 DS -> RMC: on
 DS -> RMC: off
 
 RMC -> RTL: RED
 
-note left of RMC: Postconditions:\n\t FS is ON\n\t QS is ON\n\t DS is OFF
+note left of RMC: Postconditions:\n\t PassageSensor turned ON \n\t and then PassageSensor \n\t turned OFF\n\t
 
 @enduml
