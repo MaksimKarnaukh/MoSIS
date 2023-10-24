@@ -8,14 +8,19 @@
 
 title "Sequence diagram for requirement 5"
 
+actor Car1 as Car1
+actor Car2 as Car2
+
 control RMController as RMC
-entity FreewaySensor as FS
+entity RampTrafficLight as RTL
 entity EndOfQueueSensor as QS
 entity DemandSensor as DS
-entity RampTrafficLight as RTL
 entity PassageSensor as PS
+entity FreewaySensor as FS
 
-note left of RMC: Preconditions:\n\t FreewaySensor turned ON\n\t EndOfQueueSensor turned ON\n\t DemandSensor is ON\n\t RampTrafficLight is RED\n\t PassageSensor is turned OFF
+
+
+note left of Car1: Preconditions:\n\t FreewaySensor turned ON\n\t EndOfQueueSensor turned ON\n\t DemandSensor is ON\n\t RampTrafficLight is RED\n\t PassageSensor is turned OFF
 
 'below commented lines not explicitly needed because they are part of the preconditions
 'FS -> RMC: on
@@ -25,21 +30,22 @@ note left of RMC: Preconditions:\n\t FreewaySensor turned ON\n\t EndOfQueueSenso
 note over RMC: Preconditions are met
 RMC -> RTL: Tell the RTL to turn GREEN
 
-note over DS: First car leaves the sensor Demand Sensor area
+
+Car1 -> DS: Leaves the sensor Demand Sensor area
 DS -> RMC: Notify RMC that the sensor turned OFF
 
-note over PS: First car enters the Passage Sensor area
+Car1 -> PS: Enters the Passage Sensor area
 PS -> RMC: Notify RMC that the sensor turned ON
-note over PS: First car leaves the Passage Sensor area
+Car1 -> PS: Leaves the Passage Sensor area
 PS -> RMC: Notify RMC that the sensor turned OFF
 
-note over DS: Second car enters the Demand Sensor area
+Car2 -> DS: enters the Demand Sensor area
 DS -> RMC: Notify RMC that the sensor turned ON
-note over DS: Second car leaves the Demand Sensor area
+Car2 -> DS: Leaves the Demand Sensor area
 DS -> RMC: Notify RMC that the sensor turned OFF
 
 RMC -> RTL: Tell the RTL that it has to turn the right RED
 
-note left of RMC: Postconditions:\n\t PassageSensor turned ON \n\t and then PassageSensor \n\t\t turned OFF\n\t
+note left of Car1: Postconditions:\n\t PassageSensor turned ON \n\t and then PassageSensor \n\t\t turned OFF\n\t
 
 @enduml
