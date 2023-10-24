@@ -13,11 +13,11 @@ note left of PS : Preconditions:\n\t PassageSensor turned OFF \n\t DemandSensor 
 
 note over DS: Car leaves demand sensor
 DS -> RMC : Notify the RMC that the demand sensor is OFF
-note over PS: Car enters passage sensor
+Car -> DS:Enters Passage Sensor area
 PS -> RMC : Notify the RMC that the passage sensor is ON
-note over PS: Car leaves demand sensor
+Car -> PS :Car leaves the demand sensor
 PS -> RMC : Notify the RMC that the passage sensor is OFF
 
-note left of PS : Postconditions:\n\t PassageSensor turned OFF \n\t
+note left  of PS : Postconditions:\n\t PassageSensor turned OFF \n\t
 
 @enduml
