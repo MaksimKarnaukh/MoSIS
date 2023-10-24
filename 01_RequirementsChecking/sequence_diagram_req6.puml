@@ -4,6 +4,7 @@ autonumber
 '6) The passage sensor can only be turned ON once a car leaves the demand
 'sensor shifting from ON to OFF. Another car can only turn the
 'passage sensor ON once it has been turned OFF (the previous car joined the mainline).
+title "Sequence diagram for requirement 6"
 
 entity PassageSensor as PS
 entity DemandSensor as DS
