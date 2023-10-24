@@ -22,18 +22,24 @@ note left of RMC: Preconditions:\n\t FreewaySensor turned ON\n\t EndOfQueueSenso
 'QS -> RMC: on
 'DS -> RMC: on
 
-RMC -> RTL: GREEN
+note over RMC: Preconditions are met
+RMC -> RTL: Tell the RTL to turn GREEN
 
-DS -> RMC: off
+note over DS: First car leaves the sensor Demand Sensor area
+DS -> RMC: Notify RMC that the sensor turned OFF
 
-PS -> RMC: on
-PS -> RMC: off
+note over PS: First car enters the Passage Sensor area
+PS -> RMC: Notify RMC that the sensor turned ON
+note over PS: First car leaves the Passage Sensor area
+PS -> RMC: Notify RMC that the sensor turned OFF
 
-DS -> RMC: on
-DS -> RMC: off
+note over DS: Second car enters the Demand Sensor area
+DS -> RMC: Notify RMC that the sensor turned ON
+note over DS: Second car leaves the Demand Sensor area
+DS -> RMC: Notify RMC that the sensor turned OFF
 
-RMC -> RTL: RED
+RMC -> RTL: Tell the RTL that it has to turn the right RED
 
-note left of RMC: Postconditions:\n\t PassageSensor turned ON \n\t and then PassageSensor \n\t turned OFF\n\t
+note left of RMC: Postconditions:\n\t PassageSensor turned ON \n\t and then PassageSensor \n\t\t turned OFF\n\t
 
 @enduml
