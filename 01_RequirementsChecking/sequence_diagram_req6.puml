@@ -1,5 +1,4 @@
 @startuml
-autonumber
 
 '6) The passage sensor can only be turned ON once a car leaves the demand
 'sensor shifting from ON to OFF. Another car can only turn the

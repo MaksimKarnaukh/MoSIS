@@ -16,8 +16,6 @@ entity RampTrafficLight as RTL
 entity EndOfQueueSensor as QS
 entity DemandSensor as DS
 entity PassageSensor as PS
-entity FreewaySensor as FS
-
 
 
 note left of Car1: Preconditions:\n\t FreewaySensor turned ON\n\t EndOfQueueSensor turned ON\n\t DemandSensor is ON\n\t RampTrafficLight is RED\n\t PassageSensor is turned OFF
