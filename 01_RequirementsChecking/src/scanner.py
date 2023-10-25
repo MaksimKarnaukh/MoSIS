@@ -439,14 +439,8 @@ def runThroughAllFSAs(FSM_inputs: list):
 
 
 if __name__ == "__main__":
-    # FSM_input = readFile("../output_traces/trace6.txt")
-    # stream = StringStream(FSM_input)
-    # scanner = Requirement6_RE2_Scanner(stream)
-    # success = scanner.scan()
-    # if success:
-    #     print("Stream not accepted. ID: %s" % (str(scanner.id)))
-    # else:
-    #     print("Stream has been accepted. ID: %s" % (str(scanner.id)))
+
+    # run test
 
     trace1 = readFile("../output_traces/trace1.txt")
     trace2 = readFile("../output_traces/trace2.txt")
