@@ -425,7 +425,7 @@ def runThroughAllFSAs(FSM_inputs: list):
         if success:
             print("Stream not accepted, violation against requirement 6. ID: %s" % (str(scanner.id)))
         else:
-            print("Stream has been accepted. ID: %s" % (str(scanner.id)))
+            print("Stream has been accepted. Correct")
 
         print(f"Running trace {i+1} through Requirement6_RE2_Scanner")
         stream = StringStream(FSM_input)
@@ -434,7 +434,7 @@ def runThroughAllFSAs(FSM_inputs: list):
         if success:
             print("Stream not accepted, violation against requirement 6. ID: %s" % (str(scanner.id)))
         else:
-            print("Stream has been accepted. ID: %s" % (str(scanner.id)))
+            print("Stream has been accepted. Correct")
         print("----------------------------------------------------------------------------------------")
 
 
