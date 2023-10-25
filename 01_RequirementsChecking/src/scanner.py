@@ -104,8 +104,7 @@ class Scanner:
 
             # perform transition and its action to the appropriate new state
             next_state = self.transition(self.current_state, next_char)
-            if self.id == 6:
-                abc = 5
+
             if __trace__:
                 if next_state is None:
                     print("")
@@ -418,8 +417,7 @@ def runThroughAllFSAs(FSM_inputs: list):
     Runs through all the FSMs and prints out the results
     """
     for i, FSM_input in enumerate(FSM_inputs):
-        if i == 2:
-            a = 5
+
         print(f"Running trace {i+1} through Requirement6_RE1_Scanner")
         stream = StringStream(FSM_input)
         scanner = Requirement6_RE1_Scanner(stream)
