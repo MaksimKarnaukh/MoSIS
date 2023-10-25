@@ -5,12 +5,12 @@
 'passage sensor ON once it has been turned OFF (the previous car joined the mainline).
 title "Sequence diagram for requirement 6"
 
+actor Car as Car
 entity PassageSensor as PS
 entity DemandSensor as DS
 control RMController as RMC
-actor Car as Car
 
-note left of PS : Preconditions:\n\t PassageSensor turned OFF \n\t DemandSensor turned ON
+note left of Car : Preconditions:\n\t PassageSensor turned OFF \n\t DemandSensor turned ON
 
 Car -> DS:Leaves Demand Sensor area
 DS -> RMC : Notify the RMC that the demand sensor is OFF
@@ -19,6 +19,6 @@ PS -> RMC : Notify the RMC that the passage sensor is ON
 Car -> PS :Car leaves the demand sensor
 PS -> RMC : Notify the RMC that the passage sensor is OFF
 
-note left of PS : Postconditions:\n\t PassageSensor turned OFF \n\t
+note left  of Car : Postconditions:\n\t PassageSensor turned OFF \n\t
 
 @enduml

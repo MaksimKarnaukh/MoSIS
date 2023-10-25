@@ -28,7 +28,6 @@ note left of Car1: Preconditions:\n\t FreewaySensor turned ON\n\t EndOfQueueSens
 note over RMC: Preconditions are met
 RMC -> RTL: Tell the RTL to turn GREEN
 
-
 Car1 -> DS: Leaves the sensor Demand Sensor area
 DS -> RMC: Notify RMC that the sensor turned OFF
 
