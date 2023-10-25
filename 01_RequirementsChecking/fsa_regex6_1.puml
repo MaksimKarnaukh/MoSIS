@@ -1,38 +1,23 @@
 @startuml
 
-'regex for req 6:
-'DS ON (\d+)\n((?!DS OFF \1\n(.|\n)*PS ON \1\n)(.|\n))*PS OFF \1\n|
+'subregex for req 6:
+'DS ON (\d+)\n((?!DS OFF \1\n(.|\n)*PS ON \1\n)(.|\n))*PS OFF \1\n
 
 
-Req5_S1 --> S2
+[*] --> S1
+S1 --> S2: DS ON x\\n
+S1 --> S1: else
 
-S11 --> S12: PS ON x\\n
-S12 --> S12: ((?!PS OFF \x\\n)(.|\\n))*
+S2 --> S2: else
+S2 --> S3: DS OFF x\\n
+S3 --> S4: PS ON x\\n
+S3 --> S3: else
 
-S12 --> Dead: PS ON y\\n
-S12 --> S15: PS OFF x\\n
-S15 --> S11: (.|\\n)*
+S4 --> S1: PS OFF x\\n
+S4 --> S4: else
 
-S11 --> S20: DS ON x\\n
+S3 --> [*]: PS OFF x\\n
 
-
-[*] --> Req6_S1:
-
-Req6_S1 --> Req6_S2: DS ON x\\n
-
-Req6_S1 --> Req6_S1: ^(?!DS ON x\\n).*$
-
-Req6_S2 --> Req6_S2: (.|\\n)*
-
-Req6_S2 --> Req6_S3: DS OFF x\\n
-Req6_S3 --> Req6_S3: PS ON x\\n
-
-Req6_S3 --> Req6_S4: PS ON x\\n
-Req6_S4 --> Req6_S4: PS OFF x\\n
-
-Req6_S4 --> Req6_S5: PS OFF x\\n
-
-Dead-->[*]
-
+S2 --> [*]: PS OFF x\\n|PS ON x\\n
 
 @enduml
