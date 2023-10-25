@@ -3,7 +3,7 @@
 #
 # Based on code for COMP 304B Assignment 3
 # Updated to Python 3 in 2021
-#
+# Adapted by Sam and Maksim
 
 # trace FSA dynamics (True | False)
 __trace__ = False
@@ -104,7 +104,8 @@ class Scanner:
 
             # perform transition and its action to the appropriate new state
             next_state = self.transition(self.current_state, next_char)
-
+            if self.id == 6:
+                abc = 5
             if __trace__:
                 if next_state is None:
                     print("")
@@ -270,6 +271,93 @@ def readFile(fileName):
     return '\n'.join(strings)
 
 
+class Requirement6_RE1_Scanner(Scanner):
+    def __init__(self, stream):
+        # superclass constructor
+        super().__init__(stream)
+
+        self.id = 0
+
+        # define accepting states
+        self.accepting_states=["S5"]
+
+    def __str__(self):
+        return str(self.id)
+
+    def transition(self, state, input):
+        """
+        Encodes transitions and actions
+        """
+        if state is None:
+            # action
+            # initialize variables
+            self.id = 0
+            # new state
+            return "S1"
+
+        elif state == "S1":
+
+            if input[0:6] == 'DS ON ':
+                self.id = int(input[6:])
+                return "S2"
+            else:
+                return "S1"
+
+        elif state == "S2":
+            if input[0:6] == 'DS OFF':
+                id = int(input[7:])
+                if id == self.id:
+                    return "S3"
+                self.id = id
+                return "S2"
+            elif input[0:6] == 'PS OFF':
+                id = int(input[7:])
+                if id == self.id:
+                    return "S5"
+                return "S2"
+            elif input[0:6] == 'PS ON ':
+                id = int(input[6:])
+                if id == self.id:
+                    self.id = id
+                    return "S5"
+                return "S2"
+            else:
+                return "S2"
+
+        elif state == "S3":
+            if input[0:6] == 'PS ON ':
+                id = int(input[6:])
+                if id == self.id:
+                    return "S4"
+                return "S3"
+            elif input[0:6] == 'PS OFF':
+                id = int(input[7:])
+                if id == self.id:
+                    return "S5"
+                return "S3"
+            else:
+                return "S3"
+
+        elif state == "S4":
+
+            if input[0:6] == 'PS OFF':
+                id = int(input[7:])
+                if id == self.id:
+                    return "S1"
+                return "S4"
+            else:
+                return "S4"
+
+        elif state == "S5":
+            return "S5"
+
+        else:
+            return None
+
+    def entry(self, state, input):
+        pass
+
+
 class Requirement6_RE2_Scanner(Scanner):
     def __init__(self, stream):
         # superclass constructor
@@ -296,90 +384,21 @@ class Requirement6_RE2_Scanner(Scanner):
 
         elif state == "S1":
             # if input starts with PS ON, get the number x in string 'PS ON x'
-
             if input[0:6] == 'PS ON ':
-                # action
                 self.id = int(input[6:])
-                # new state
                 return "S2"
             else:
                 return "S1"
 
         elif state == "S2":
             if input[0:6] == 'PS OFF':
-                # action
                 id = int(input[7:])
-                # new state
                 return "S1"
             elif input[0:6] == 'PS ON ':
-                # action
                 id = int(input[6:])
                 if id != self.id:
                     self.id = id
                     return "S3"
-                # new state
-                return "S2"
-            else:
-                return "S2"
-
-        elif state == "S3":
-            return "S3"
-
-        else:
-            return None
-
-    def entry(self, state, input):
-        pass
-
-
-class Requirement6_RE1_Scanner(Scanner):
-    def __init__(self, stream):
-        # superclass constructor
-        super().__init__(stream)
-
-        self.id = 0
-
-        # define accepting states
-        self.accepting_states=["S3"]
-
-    def __str__(self):
-        return str(self.id)
-
-    def transition(self, state, input):
-        """
-        Encodes transitions and actions
-        """
-        if state is None:
-            # action
-            # initialize variables
-            self.id = 0
-            # new state
-            return "S1"
-
-        elif state == "S1":
-            # if input starts with PS ON, get the number x in string 'PS ON x'
-
-            if input[0:6] == 'PS ON ':
-                # action
-                self.id = int(input[6:])
-                # new state
-                return "S2"
-            else:
-                return "S1"
-
-        elif state == "S2":
-            if input[0:6] == 'PS OFF':
-                # action
-                id = int(input[7:])
-                # new state
-                return "S1"
-            elif input[0:6] == 'PS ON ':
-                # action
-                id = int(input[6:])
-                if id != self.id:
-                    self.id = id
-                    return "S3"
-                # new state
                 return "S2"
             else:
                 return "S2"
@@ -399,6 +418,8 @@ def runThroughAllFSAs(FSM_inputs: list):
     Runs through all the FSMs and prints out the results
     """
     for i, FSM_input in enumerate(FSM_inputs):
+        if i == 2:
+            a = 5
         print(f"Running trace {i+1} through Requirement6_RE1_Scanner")
         stream = StringStream(FSM_input)
         scanner = Requirement6_RE1_Scanner(stream)
@@ -416,6 +437,7 @@ def runThroughAllFSAs(FSM_inputs: list):
             print("Stream not accepted, violation against requirement 6. ID: %s" % (str(scanner.id)))
         else:
             print("Stream has been accepted. ID: %s" % (str(scanner.id)))
+        print("----------------------------------------------------------------------------------------")
 
 
 if __name__ == "__main__":

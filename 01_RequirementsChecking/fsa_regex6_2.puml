@@ -1,7 +1,7 @@
 @startuml
 
 'subregex for req 6:
-'PS ON (\d+)\n(?:(?!PS OFF \5\n)(.|\n))*PS ON (?:(?!\5)\d+)\n
+'PS ON (\d+)\n(?:(?!PS OFF \1\n)(.|\n))*PS ON (?:(?!\1)\d+)\n
 
 [*] --> S1
 S1 --> S2: PS ON x\\n
