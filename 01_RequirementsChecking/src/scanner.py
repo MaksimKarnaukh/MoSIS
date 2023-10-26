@@ -411,8 +411,83 @@ class Requirement6_RE2_Scanner(Scanner):
     def entry(self, state, input):
         pass
 
-
 class Requirement5_RE1_Scanner(Scanner):
+    def __init__(self, stream):
+        # superclass constructor
+        super().__init__(stream)
+
+        self.id = 0
+
+        # define accepting states
+        self.accepting_states=["S8"]
+
+    def __str__(self):
+        return str(self.id)
+
+    def transition(self, state, input):
+        """
+        Encodes transitions and actions
+        """
+        if state is None:
+            # action
+            # initialize variables
+            self.id = 0
+            # new state
+            return "S1"
+
+        elif state == "S1":
+            if input[0:6] == 'FS ON':
+                return "S2"
+            else:
+                return "S1"
+
+        elif state == "S2":
+            if input[0:6] == 'QS ON':
+                return "S3"
+            else: return "S2"
+
+        elif state == "S3":
+            if input[0:6] == 'DS ON ':
+                self.id = int(input[6:])
+                return "S4"
+            elif input == 'QS OFF':
+                return "S2"
+            else:
+                return "S3"
+
+        elif state == "S4":
+
+            if input == 'TL GREEN':
+                return "S5"
+            else:
+                return "S4"
+        elif state == "S5":
+            if input == 'TL RED':
+                return "S8"
+            elif input[0:6] == 'DS OFF':
+                id = int(input[7:])
+                if id == self.id:
+                    return "S3"
+                self.id = id
+                return "S6"
+            else:
+                return "S5"
+        elif state == "S6":
+            if input == 'TL RED':
+                return "S3"
+            else:
+                return "S6"
+        elif state == "S8":
+            return "S8"
+
+
+        else:
+            return None
+
+    def entry(self, state, input):
+        pass
+
+class Requirement5_RE3_Scanner(Scanner):
     def __init__(self, stream):
         # superclass constructor
         super().__init__(stream)
