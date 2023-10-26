@@ -25,37 +25,12 @@ DS hasnt turned off once during the green light
 (FS ON)\n(?:.*\n)*(QS ON)\n(?:.*\n)*(DS ON \d+)\n(?:.*\n)*(TL GREEN)\n(?:(?!DS OFF \d+\n)(?:.|\n))*(TL RED)\n(?:.*\n)*(QS OFF)\n
 
 DS turned off a second time during the green light
+(FS ON)\n(?:.*\n)*(QS ON)\n(?:.*\n)*(TL GREEN)\n(?:(?!DS OFF \d+\n)(?:.|\n))*(DS OFF.*)\n(?:(?!DS OFF \d+\n)(?:.|\n))*(?:(?!TL RED\n|DS.*\d+\n)(?:.|\n))*(TL RED)\n(?:.*\n)*(QS OFF)\n
 
 DS turned off a second time during the green light by the second car
 (FS ON)\n(?:.*\n)*(QS ON)\n(?:.*\n)*(TL GREEN)\n(?:.*\n)*(DS ON (\d+))\n(?:(?!DS OFF \5\n)(?:.|\n))*(DS OFF (?:(?!\5)\d+))\n(?:.|\n)*(?:(?!TL RED\n)(?:.|\n))*(TL RED)\n(?:.*\n)*(QS OFF)\n
 
-The light doesnt turn green if DS, QS, FS are ON
-
-The light doesnt turn red after the second car has passed
-
+DS turned on and off a second time, spots if either the on or off is missing.
+(FS ON)\n(?:.*\n)*(QS ON)\n(?:.*\n)*(TL GREEN)\n((?!DS OFF \d+\n)(?:.|\n))*.*\n(?:(?!DS ON \d+\n|DS OFF \d+\n)(?:.|\n))*(DS.*\d+)\n(?:(?!TL RED\n|DS.*\d+\n)(?:.|\n))*(TL RED)\n(?:.*\n)*(QS OFF)\n
 
 
-
-
-Solution:
-Spot if the light turned green when FS, QS, DS were ON and then turned red
-FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(?:(?!TL GREEN\n)(.*\n))*TL RED
-
-Spot if DS turned off (at least once) during the green light
-FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(.*\n)*?TL GREEN\n((?:(?<!DS OFF .\n)(.*\n))*)((?:(?!DS OFF .\n)(.*\n))*)TL RED\n
-
-Spot if DS did not turn on during the green light
-FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(DS OFF .\n)(?:(?!DS ON .\n)(.*\n))*TL RED
-
-Spot if DS turned off a second time during the green light
-FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(.*\n)*?TL GREEN\n(?:(?=DS OFF .\n)(.*\n))*(?:(?!DS OFF .\n)(.*\n))*TL RED
-
-Spot if the DS turned on for a second time (or more) during the green light
-FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(DS OFF .\n)(?:(?!DS ON .\n)(.*\n))*DS ON .\n((?:(?!DS ON .\n)(.*\n))*DS ON .\n)+(?:(?!TL RED .\n)(.*\n))*TL RED\n
-
-Spot if the DS is turned off for a third (or more) time during the green light
-FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(?:(?!DS OFF .\n)(.*\n))*DS OFF .\n(?:(?!DS OFF .\n)(.*\n))*DS OFF .\n((?:(?!DS OFF .\n)(.*\n))*DS OFF .\n)+TL RED\n
-
-
-
-FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(?:(?!TL GREEN\n)(.*\n))*TL RED|FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(.*\n)*?TL GREEN\n((?:(?<!DS OFF .\n)(.*\n))*)((?:(?!DS OFF .\n)(.*\n))*)TL RED\n|FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(DS OFF .\n)(?:(?!DS ON .\n)(.*\n))*TL RED|FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(DS OFF .\n)(?:(?!DS ON .\n)(.*\n))*DS ON .\n((?:(?!DS ON .\n)(.*\n))*DS ON .\n)+(?:(?!TL RED .\n)(.*\n))*TL RED\n|FS ON\n(.*\n)*?(?=QS ON\n|FS OFF)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(?:(?!DS OFF .\n)(.*\n))*DS OFF .\n(?:(?!DS OFF .\n)(.*\n))*DS OFF .\n((?:(?!DS OFF .\n)(.*\n))*DS OFF .\n)+TL RED\n
