@@ -568,7 +568,7 @@ class Requirement5_RE2_Scanner(Scanner):
         self.id = 0
 
         # define accepting states
-        self.accepting_states=["S5"]
+        self.accepting_states=["S8"]
 
     def __str__(self):
         return str(self.id)
