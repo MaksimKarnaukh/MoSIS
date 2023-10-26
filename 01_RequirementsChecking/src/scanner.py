@@ -667,6 +667,34 @@ def runThroughAllFSAs(FSM_inputs: list):
             print("Stream not accepted, violation against requirement 6. ID: %s" % (str(scanner.id)))
         else:
             print("Stream has been accepted. Correct")
+        print("-")
+
+        print(f"Running trace {i + 1} through Requirement5_RE1_Scanner")
+        stream = StringStream(FSM_input)
+        scanner = Requirement5_RE1_Scanner(stream)
+        success = scanner.scan()
+        if success:
+            print("Stream not accepted, violation against requirement 5. ID: %s" % (str(scanner.id)))
+        else:
+            print("Stream has been accepted. Correct")
+
+        print(f"Running trace {i + 1} through Requirement5_RE2_Scanner")
+        stream = StringStream(FSM_input)
+        scanner = Requirement5_RE2_Scanner(stream)
+        success = scanner.scan()
+        if success:
+            print("Stream not accepted, violation against requirement 5. ID: %s" % (str(scanner.id)))
+        else:
+            print("Stream has been accepted. Correct")
+
+        print(f"Running trace {i + 1} through Requirement5_RE3_Scanner")
+        stream = StringStream(FSM_input)
+        scanner = Requirement5_RE3_Scanner(stream)
+        success = scanner.scan()
+        if success:
+            print("Stream not accepted, violation against requirement 5. ID: %s" % (str(scanner.id)))
+        else:
+            print("Stream has been accepted. Correct")
         print("----------------------------------------------------------------------------------------")
 
 
