@@ -652,7 +652,7 @@ def runThroughAllFSAs(FSM_inputs: list):
     """
     for i, FSM_input in enumerate(FSM_inputs):
 
-        print(f"Running trace {i+1} through Requirement6_RE1_Scanner")
+        print(f"Running trace {i+1} through Requirement6_RE1_Scanner, checked subregex = DS ON (\d+)\\n((?!DS OFF \\1\\n(.|\\n)*PS ON \\1\\n)(.|\\n))*PS OFF \\1\\n")
         stream = StringStream(FSM_input)
         scanner = Requirement6_RE1_Scanner(stream)
         success = scanner.scan()
@@ -661,7 +661,7 @@ def runThroughAllFSAs(FSM_inputs: list):
         else:
             print("Stream has been accepted. Correct")
 
-        print(f"Running trace {i+1} through Requirement6_RE2_Scanner")
+        print(f"Running trace {i+1} through Requirement6_RE2_Scanner, checked subregex = PS ON (\d+)\\n(?:(?!PS OFF \\1\\n)(.|\\n))*PS ON (?:(?!\\1)\d+)\\n")
         stream = StringStream(FSM_input)
         scanner = Requirement6_RE2_Scanner(stream)
         success = scanner.scan()
@@ -671,7 +671,7 @@ def runThroughAllFSAs(FSM_inputs: list):
             print("Stream has been accepted. Correct")
         print("-")
 
-        print(f"Running trace {i + 1} through Requirement5_RE1_Scanner")
+        print(f"Running trace {i + 1} through Requirement5_RE1_Scanner, checked subregex = (FS ON)\\n(?:.*\\n)*(QS ON)\\n(?:.*\\n)*(DS ON (\d+))\\n(?:.*\\n)*(TL GREEN)\\n(?:(?!TL RED\\n|DS OFF \\4\\n)(?:.|\\n))*(TL RED)\\n(?:.*\\n)*(QS OFF)\\n")
         stream = StringStream(FSM_input)
         scanner = Requirement5_RE1_Scanner(stream)
         success = scanner.scan()
@@ -680,7 +680,7 @@ def runThroughAllFSAs(FSM_inputs: list):
         else:
             print("Stream has been accepted. Correct")
 
-        print(f"Running trace {i + 1} through Requirement5_RE2_Scanner")
+        print(f"Running trace {i + 1} through Requirement5_RE2_Scanner, checked subregex = (FS ON)\\n(?:.*\\n)*(QS ON)\\n(?:.*\\n)*(TL GREEN)\\n(?:(?!DS OFF \d+\\n)(?:.|\\n))*(DS OFF.*)\\n(?:(?!DS OFF \d+\\n)(?:.|\\n))*(?:(?!TL RED\\n|DS.*\d+\\n)(?:.|\\n))*(TL RED)\\n(?:.*\\n)*(QS OFF)\\n")
         stream = StringStream(FSM_input)
         scanner = Requirement5_RE2_Scanner(stream)
         success = scanner.scan()
@@ -689,7 +689,7 @@ def runThroughAllFSAs(FSM_inputs: list):
         else:
             print("Stream has been accepted. Correct")
 
-        print(f"Running trace {i + 1} through Requirement5_RE3_Scanner")
+        print(f"Running trace {i + 1} through Requirement5_RE3_Scanner, checked subregex = (FS ON)\\n(?:.*\\n)*(QS ON)\\n(?:.*\\n)*(TL GREEN)\\n((?!DS OFF \d+\\n)(?:.|\\n))*.*\\n(?:(?!DS ON \d+\\n|DS OFF \d+\\n)(?:.|\\n))*(DS.*\d+)\\n(?:(?!TL RED\\n|DS.*\d+\\n)(?:.|\\n))*(TL RED)\\n(?:.*\\n)*(QS OFF)\\n")
         stream = StringStream(FSM_input)
         scanner = Requirement5_RE3_Scanner(stream)
         success = scanner.scan()
