@@ -19,16 +19,10 @@ Correcte case:
 
 
 the first car doesnt leave the DS
-(FS ON)\n(?:.*\n)*(QS ON)\n(?:.*\n)*(DS ON (\d+))\n(?:.*\n)*(TL GREEN)\n(?:(?!DS OFF \4\n)(?:.|\n))*(DS OFF (?:(?!\4)\d+))\n(?:.|\n)*(?:(?!TL RED\n)(?:.|\n))*(TL RED)\n(?:.*\n)*(QS OFF)\n
-
-DS hasnt turned off once during the green light
-(FS ON)\n(?:.*\n)*(QS ON)\n(?:.*\n)*(DS ON \d+)\n(?:.*\n)*(TL GREEN)\n(?:(?!DS OFF \d+\n)(?:.|\n))*(TL RED)\n(?:.*\n)*(QS OFF)\n
+(FS ON)\n(?:.*\n)*(QS ON)\n(?:.*\n)*(DS ON (\d+))\n(?:.*\n)*(TL GREEN)\n(?:(?!TL RED\n|DS OFF \4\n)(?:.|\n))*(TL RED)\n(?:.*\n)*(QS OFF)\n
 
 DS turned off a second time during the green light
 (FS ON)\n(?:.*\n)*(QS ON)\n(?:.*\n)*(TL GREEN)\n(?:(?!DS OFF \d+\n)(?:.|\n))*(DS OFF.*)\n(?:(?!DS OFF \d+\n)(?:.|\n))*(?:(?!TL RED\n|DS.*\d+\n)(?:.|\n))*(TL RED)\n(?:.*\n)*(QS OFF)\n
-
-DS turned off a second time during the green light by the second car
-(FS ON)\n(?:.*\n)*(QS ON)\n(?:.*\n)*(TL GREEN)\n(?:.*\n)*(DS ON (\d+))\n(?:(?!DS OFF \5\n)(?:.|\n))*(DS OFF (?:(?!\5)\d+))\n(?:.|\n)*(?:(?!TL RED\n)(?:.|\n))*(TL RED)\n(?:.*\n)*(QS OFF)\n
 
 DS turned on and off a second time, spots if either the on or off is missing.
 (FS ON)\n(?:.*\n)*(QS ON)\n(?:.*\n)*(TL GREEN)\n((?!DS OFF \d+\n)(?:.|\n))*.*\n(?:(?!DS ON \d+\n|DS OFF \d+\n)(?:.|\n))*(DS.*\d+)\n(?:(?!TL RED\n|DS.*\d+\n)(?:.|\n))*(TL RED)\n(?:.*\n)*(QS OFF)\n
