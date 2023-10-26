@@ -412,6 +412,93 @@ class Requirement6_RE2_Scanner(Scanner):
         pass
 
 
+class Requirement5_RE1_Scanner(Scanner):
+    def __init__(self, stream):
+        # superclass constructor
+        super().__init__(stream)
+
+        self.id = 0
+
+        # define accepting states
+        self.accepting_states=["S5"]
+
+    def __str__(self):
+        return str(self.id)
+
+    def transition(self, state, input):
+        """
+        Encodes transitions and actions
+        """
+        if state is None:
+            # action
+            # initialize variables
+            self.id = 0
+            # new state
+            return "S1"
+
+        elif state == "S1":
+
+            if input[0:6] == 'DS ON ':
+                self.id = int(input[6:])
+                return "S2"
+            else:
+                return "S1"
+
+        elif state == "S2":
+            if input[0:6] == 'DS OFF':
+                id = int(input[7:])
+                if id == self.id:
+                    return "S3"
+                self.id = id
+                return "S2"
+            elif input[0:6] == 'PS OFF':
+                id = int(input[7:])
+                if id == self.id:
+                    return "S5"
+                return "S2"
+            elif input[0:6] == 'PS ON ':
+                id = int(input[6:])
+                if id == self.id:
+                    self.id = id
+                    return "S5"
+                return "S2"
+            else:
+                return "S2"
+
+        elif state == "S3":
+            if input[0:6] == 'PS ON ':
+                id = int(input[6:])
+                if id == self.id:
+                    return "S4"
+                return "S3"
+            elif input[0:6] == 'PS OFF':
+                id = int(input[7:])
+                if id == self.id:
+                    return "S5"
+                return "S3"
+            else:
+                return "S3"
+
+        elif state == "S4":
+
+            if input[0:6] == 'PS OFF':
+                id = int(input[7:])
+                if id == self.id:
+                    return "S1"
+                return "S4"
+            else:
+                return "S4"
+
+        elif state == "S5":
+            return "S5"
+
+        else:
+            return None
+
+    def entry(self, state, input):
+        pass
+
+
 def runThroughAllFSAs(FSM_inputs: list):
     """
     Runs through all the FSMs and prints out the results
@@ -442,12 +529,14 @@ if __name__ == "__main__":
 
     # run test
 
-    trace1 = readFile("../output_traces/trace1.txt")
-    trace2 = readFile("../output_traces/trace2.txt")
-    trace3 = readFile("../output_traces/trace3.txt")
-    trace4 = readFile("../output_traces/trace4.txt")
-    trace5 = readFile("../output_traces/trace5.txt")
-    trace6 = readFile("../output_traces/trace6.txt")
+    traces_file_path = "../output_traces/"
+
+    trace1 = readFile(traces_file_path + "trace1.txt")
+    trace2 = readFile(traces_file_path + "trace2.txt")
+    trace3 = readFile(traces_file_path + "trace3.txt")
+    trace4 = readFile(traces_file_path + "trace4.txt")
+    trace5 = readFile(traces_file_path + "trace5.txt")
+    trace6 = readFile(traces_file_path + "trace6.txt")
     traces = [trace1, trace2, trace3, trace4, trace5, trace6]
 
     runThroughAllFSAs(traces)
