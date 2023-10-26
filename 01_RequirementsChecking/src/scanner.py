@@ -525,146 +525,54 @@ class Requirement5_RE2_Scanner(Scanner):
 
         elif state == "S1":
 
-            if input[0:6] == 'DS ON ':
-                self.id = int(input[6:])
+            if input == 'FS ON':
                 return "S2"
             else:
                 return "S1"
 
         elif state == "S2":
-            if input[0:6] == 'DS OFF':
-                id = int(input[7:])
-                if id == self.id:
-                    return "S3"
-                self.id = id
-                return "S2"
-            elif input[0:6] == 'PS OFF':
-                id = int(input[7:])
-                if id == self.id:
-                    return "S5"
-                return "S2"
-            elif input[0:6] == 'PS ON ':
-                id = int(input[6:])
-                if id == self.id:
-                    self.id = id
-                    return "S5"
-                return "S2"
+            if input == 'QS ON':
+                return "S3"
             else:
                 return "S2"
 
         elif state == "S3":
-            if input[0:6] == 'PS ON ':
-                id = int(input[6:])
-                if id == self.id:
-                    return "S4"
-                return "S3"
-            elif input[0:6] == 'PS OFF':
-                id = int(input[7:])
-                if id == self.id:
-                    return "S5"
-                return "S3"
+            if input == 'QS OFF':
+                return "S2"
+            elif input == 'TL GREEN':
+                return "S4"
             else:
                 return "S3"
 
         elif state == "S4":
-
-            if input[0:6] == 'PS OFF':
-                id = int(input[7:])
-                if id == self.id:
-                    return "S1"
-                return "S4"
-            else:
-                return "S4"
-
-        elif state == "S5":
-            return "S5"
-
-        else:
-            return None
-
-    def entry(self, state, input):
-        pass
-
-
-class Requirement5_RE3_Scanner(Scanner):
-    def __init__(self, stream):
-        # superclass constructor
-        super().__init__(stream)
-
-        self.id = 0
-
-        # define accepting states
-        self.accepting_states=["S5"]
-
-    def __str__(self):
-        return str(self.id)
-
-    def transition(self, state, input):
-        """
-        Encodes transitions and actions
-        """
-        if state is None:
-            # action
-            # initialize variables
-            self.id = 0
-            # new state
-            return "S1"
-
-        elif state == "S1":
-
-            if input[0:6] == 'DS ON ':
-                self.id = int(input[6:])
-                return "S2"
-            else:
-                return "S1"
-
-        elif state == "S2":
             if input[0:6] == 'DS OFF':
-                id = int(input[7:])
-                if id == self.id:
-                    return "S3"
-                self.id = id
-                return "S2"
-            elif input[0:6] == 'PS OFF':
-                id = int(input[7:])
-                if id == self.id:
-                    return "S5"
-                return "S2"
-            elif input[0:6] == 'PS ON ':
-                id = int(input[6:])
-                if id == self.id:
-                    self.id = id
-                    return "S5"
-                return "S2"
-            else:
-                return "S2"
-
-        elif state == "S3":
-            if input[0:6] == 'PS ON ':
-                id = int(input[6:])
-                if id == self.id:
-                    return "S4"
-                return "S3"
-            elif input[0:6] == 'PS OFF':
-                id = int(input[7:])
-                if id == self.id:
-                    return "S5"
-                return "S3"
-            else:
-                return "S3"
-
-        elif state == "S4":
-
-            if input[0:6] == 'PS OFF':
-                id = int(input[7:])
-                if id == self.id:
-                    return "S1"
-                return "S4"
+                self.id = int(input[7:])
+                return "S5"
             else:
                 return "S4"
 
         elif state == "S5":
-            return "S5"
+            if input[0:6] == 'DS OFF':
+                self.id = int(input[7:])
+                return "S6"
+            else:
+                return "S5"
+
+        elif state == "S6":
+            if input[0:6] == 'DS OFF':
+                self.id = int(input[7:])
+                return "S7"
+            else:
+                return "S6"
+
+        elif state == "S7":
+            if input == 'TL RED':
+                return "S3"
+            else:
+                return "S7"
+
+        elif state == "S8":
+            return "S8"
 
         else:
             return None

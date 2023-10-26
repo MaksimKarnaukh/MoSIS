@@ -13,7 +13,7 @@ S1 --> S2 : FS ON\\n
 S2 --> S2 : else
 S2 --> S3 : QS ON\\n
 
-S3 --> S3 : else
+S3 -> S3 : else
 S3 --> S4 : TL GREEN\\n
 
 S4 --> S4 : else
@@ -25,7 +25,8 @@ S5 --> [*] : TL RED \\n
 S6 --> S6 : else
 S6 --> S7 : DS OFF z\\n
 
-S7 -> S3 : TL RED\\n
+S7 --> S3 : TL RED\\n
+S7 --> S7 : else
 
 S3 --> S2 : QS OFF\\n
 
