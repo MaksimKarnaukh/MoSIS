@@ -495,7 +495,7 @@ class Requirement5_RE3_Scanner(Scanner):
         self.id = 0
 
         # define accepting states
-        self.accepting_states=["S5"]
+        self.accepting_states=["S8"]
 
     def __str__(self):
         return str(self.id)
@@ -509,7 +509,7 @@ class Requirement5_RE3_Scanner(Scanner):
             # initialize variables
             self.id = 0
             # new state
-            return "S8"
+            return "S1"
 
         elif state == "S1":
 
@@ -594,6 +594,8 @@ class Requirement5_RE2_Scanner(Scanner):
         elif state == "S2":
             if input == 'QS ON':
                 return "S3"
+            elif input == 'FS OFF':
+                return "S2"
             else:
                 return "S2"
 
