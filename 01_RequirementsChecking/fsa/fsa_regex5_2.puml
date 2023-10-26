@@ -1,13 +1,26 @@
 @startuml
 
-'regex for req 5:
-'FS ON\n(.*\n)*?(?=QS ON\n|FS OFF\n)QS ON\n(?:(?!DS ON .\n)(.*\n))*(?:(?!TL GREEN\n)(.*\n))*TL RED|
-'FS ON\n(.*\n)*?(?=QS ON\n|FS OFF\n)QS ON\n(.*\n)*?TL GREEN\n((?:(?<!DS OFF .\n)(.*\n))*)((?:(?!DS OFF .\n)(.*\n))*)TL RED\n|
-'FS ON\n(.*\n)*?(?=QS ON\n|FS OFF\n)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(DS OFF .\n)(?:(?!DS ON .\n)(.*\n))*TL RED|
-'FS ON\n(.*\n)*?(?=QS ON\n|FS OFF\n)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(DS OFF .\n)(?:(?!DS ON .\n)(.*\n))*DS ON .\n((?:(?!DS ON .\n)(.*\n))*DS ON .\n)+(?:(?!TL RED .\n)(.*\n))*TL RED\n|
-'FS ON\n(.*\n)*?(?=QS ON\n|FS OFF\n)QS ON\n(?:(?!DS ON .\n)(.*\n))*(.*\n)*?TL GREEN\n(?:(?!DS OFF .\n)(.*\n))*DS OFF .\n(?:(?!DS OFF .\n)(.*\n))*DS OFF .\n((?:(?!DS OFF .\n)(.*\n))*DS OFF .\n)+TL RED\n
+'subregex for req 5:
+'(FS ON)\n(?:.*\n)*(QS ON)\n(?:.*\n)*(TL GREEN)\n(?:(?!DS OFF \d+\n)(?:.|\n))*
+'(DS OFF.*)\n(?:(?!DS OFF \d+\n)(?:.|\n))*(?:(?!TL RED\n|DS.*\d+\n)(?:.|\n))*
+'(TL RED)\n(?:.*\n)*(QS OFF)\n
 
 [*] --> S1
+
+S1 --> S1 : else
+S1 --> S2 : FS ON\\n
+
+S2 --> S2 : else
+S2 --> S3 : QS ON\\n
+
+S3 --> S3 : else
+S3 --> S4 : TL GREEN\\n
+
+S4 --> S4 : else
+S4 --> S5 : DS OFF x\\n
+S5 --> [*] : else
+S5 --> S6 : DS OFF x\\n
+
 
 
 @enduml
