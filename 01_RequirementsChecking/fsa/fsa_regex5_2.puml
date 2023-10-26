@@ -18,9 +18,16 @@ S3 --> S4 : TL GREEN\\n
 
 S4 --> S4 : else
 S4 --> S5 : DS OFF x\\n
-S5 --> [*] : else
-S5 --> S6 : DS OFF x\\n
+S5 --> S5 : else
+S5 --> S6 : DS OFF y\\n
+S5 --> [*] : TL RED \\n
 
+S6 --> S6 : else
+S6 --> S7 : DS OFF z\\n
+
+S7 -> S3 : TL RED\\n
+
+S3 --> S2 : QS OFF\\n
 
 
 @enduml
