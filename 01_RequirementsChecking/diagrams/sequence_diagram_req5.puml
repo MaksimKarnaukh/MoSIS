@@ -14,7 +14,7 @@ actor "car2:Car" as Car2
 
 control "rmc:RMController" as RMC
 entity "rtl:RampTrafficLight" as RTL
-entity "qs:EndOfQueueSensor" as QS
+'entity "qs:EndOfQueueSensor" as QS
 entity "ds:DemandSensor" as DS
 entity "ps:PassageSensor" as PS
 
@@ -28,38 +28,52 @@ note left of Car1: Preconditions:\n\t FreewaySensor turned ON\n\t EndOfQueueSens
 
 note over RMC: Preconditions are met
 RMC -> RTL: Tell the RTL to turn GREEN
+Activate RTL
+Activate Car1
+Activate Car2
+Activate RMC
 
 Car1 -> DS: Leaves the sensor Demand Sensor area
+Activate DS
 DS -> RMC: Notify RMC that the sensor turned OFF
 
 alt main success scenario
     Car1 -> PS: Enters the Passage Sensor area
+    Activate PS
     PS -> RMC: Notify RMC that the sensor turned ON
     Car1 -> PS: Leaves the Passage Sensor area
     PS -> RMC: Notify RMC that the sensor turned OFF
+    Deactivate PS
     Car2 -> DS: enters the Demand Sensor area
     DS -> RMC: Notify RMC that the sensor turned ON
 else alternative scenario 1
     Car2 -> DS: Enters the Demand Sensor area
     DS -> RMC: Notify RMC that the sensor turned ON
     Car1 -> PS: Enters the Passage Sensor area
+    Activate PS
     PS -> RMC: Notify RMC that the sensor turned ON
     Car1 -> PS: Leaves the Passage Sensor area
     PS -> RMC: Notify RMC that the sensor turned OFF
+    Deactivate PS
 else alternative scenario 2
     Car1 -> PS: Enters the Passage Sensor area
+    Activate PS
     PS -> RMC: Notify RMC that the sensor turned ON
     Car2 -> DS: Enters the Demand Sensor area
     DS -> RMC: Notify RMC that the sensor turned ON
     Car1 -> PS: Leaves the Passage Sensor area
     PS -> RMC: Notify RMC that the sensor turned OFF
+    Deactivate PS
 end
 
 
 Car2 -> DS: Leaves the Demand Sensor area
 DS -> RMC: Notify RMC that the sensor turned OFF
+Deactivate DS
 
 RMC -> RTL: Tell the RTL that it has to turn the right RED
+Deactivate RMC
+Deactivate RTL
 
 note left of Car1: Postconditions:\n\t PassageSensor turned ON \n\t and then PassageSensor \n\t\t turned OFF\n\t
 
