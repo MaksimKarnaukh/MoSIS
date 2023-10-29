@@ -1,4 +1,5 @@
 @startuml
+skinparam sequenceParticipant underline
 
 '5) When the FS is ON and the QS is ON,
 'if DS is turned ON, it indicates intense traffic over the ramp.
@@ -8,14 +9,14 @@
 
 title "Sequence diagram for requirement 5"
 
-actor Car1 as Car1
-actor Car2 as Car2
+actor "car1:Car" as Car1
+actor "car2:Car" as Car2
 
-control RMController as RMC
-entity RampTrafficLight as RTL
-entity EndOfQueueSensor as QS
-entity DemandSensor as DS
-entity PassageSensor as PS
+control "rmc:RMController" as RMC
+entity "rtl:RampTrafficLight" as RTL
+entity "qs:EndOfQueueSensor" as QS
+entity "ds:DemandSensor" as DS
+entity "ps:PassageSensor" as PS
 
 
 note left of Car1: Preconditions:\n\t FreewaySensor turned ON\n\t EndOfQueueSensor turned ON\n\t DemandSensor is ON\n\t RampTrafficLight is RED\n\t PassageSensor is turned OFF

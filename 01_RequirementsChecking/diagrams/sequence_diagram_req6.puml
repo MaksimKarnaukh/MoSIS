@@ -1,23 +1,31 @@
 @startuml
+skinparam sequenceParticipant underline
 
 '6) The passage sensor can only be turned ON once a car leaves the demand
 'sensor shifting from ON to OFF. Another car can only turn the
 'passage sensor ON once it has been turned OFF (the previous car joined the mainline).
 title "Sequence diagram for requirement 6"
 
-actor Car as Car
-entity PassageSensor as PS
-entity DemandSensor as DS
-control RMController as RMC
+actor "car:Car" as Car
+entity "ps:PassageSensor" as PS
+entity "ds:DemandSensor" as DS
+control "rmc:RMController" as RMC
 
 note left of Car : Preconditions:\n\t PassageSensor turned OFF \n\t DemandSensor turned ON
 
+Activate Car
 Car -> DS:Leaves Demand Sensor area
+Activate DS
 DS -> RMC : Notify the RMC that the demand sensor is OFF
-Car -> DS:Enters Passage Sensor area
+Deactivate DS
+Activate RMC
+Car -> PS:Enters Passage Sensor area
+Activate PS
 PS -> RMC : Notify the RMC that the passage sensor is ON
-Car -> PS :Car leaves the demand sensor
+Car -> PS :Leaves the passage sensor
 PS -> RMC : Notify the RMC that the passage sensor is OFF
+Deactivate PS
+Deactivate RMC
 
 note left  of Car : Postconditions:\n\t PassageSensor turned OFF \n\t
 
