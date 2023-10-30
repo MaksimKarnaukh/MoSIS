@@ -14,8 +14,8 @@ actor "Ramp Traffic Light" as RTL
 actor "RMController" as RMC
 
 package "Ramp Metering System" {
-  usecase "Use case 1" as UC1
-  usecase "use case 2" as UC2
+  usecase "Intense Traffic" as UC1
+  usecase "Joining Mainline" as UC2
 }
 Car -- UC1
 Car -- UC2

@@ -46,6 +46,13 @@ class PassageSensor {
 class EndOfQueueSensor {
 }
 
+class Car {
+-id: int
++getID()
+}
+
+Car "1" -- "1" Sensor : trigger on/off >
+
 Sensor <|-- FreewaySensor
 Sensor <|-- DemandSensor
 Sensor <|-- PassageSensor

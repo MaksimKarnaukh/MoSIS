@@ -17,7 +17,7 @@ entity "ps:PassageSensor" as PS
 control "rmc:RMController" as RMC
 entity "rtl:RampTrafficLight" as RTL
 
-note left of Car1: Preconditions:\n\t FreewaySensor turned ON\n\t EndOfQueueSensor turned ON\n\t DemandSensor is ON\n\t RampTrafficLight is RED\n\t PassageSensor is turned OFF
+note left of Car1: Preconditions:\n\t FreewaySensor turned ON\n\t EndOfQueueSensor turned ON\n\t DemandSensor is ON\n\t PassageSensor is turned OFF
 
 'below commented lines not explicitly needed because they are part of the preconditions
 'FS -> RMC: on
