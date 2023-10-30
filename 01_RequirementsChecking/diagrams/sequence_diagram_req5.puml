@@ -12,12 +12,10 @@ title "Sequence diagram for requirement 5"
 actor "car1:Car" as Car1
 actor "car2:Car" as Car2
 
-control "rmc:RMController" as RMC
-entity "rtl:RampTrafficLight" as RTL
-'entity "qs:EndOfQueueSensor" as QS
 entity "ds:DemandSensor" as DS
 entity "ps:PassageSensor" as PS
-
+control "rmc:RMController" as RMC
+entity "rtl:RampTrafficLight" as RTL
 
 note left of Car1: Preconditions:\n\t FreewaySensor turned ON\n\t EndOfQueueSensor turned ON\n\t DemandSensor is ON\n\t RampTrafficLight is RED\n\t PassageSensor is turned OFF
 
@@ -36,44 +34,58 @@ Activate RMC
 Car1 -> DS: Leaves the sensor Demand Sensor area
 Activate DS
 DS -> RMC: Notify RMC that the sensor turned OFF
+Deactivate DS
 
 alt main success scenario
     Car1 -> PS: Enters the Passage Sensor area
     Activate PS
     PS -> RMC: Notify RMC that the sensor turned ON
+    Deactivate PS
     Car1 -> PS: Leaves the Passage Sensor area
+    Activate PS
     PS -> RMC: Notify RMC that the sensor turned OFF
     Deactivate PS
     Car2 -> DS: enters the Demand Sensor area
+    Activate DS
     DS -> RMC: Notify RMC that the sensor turned ON
+    Deactivate DS
 else alternative scenario 1
     Car2 -> DS: Enters the Demand Sensor area
+    Activate DS
     DS -> RMC: Notify RMC that the sensor turned ON
+    Deactivate DS
     Car1 -> PS: Enters the Passage Sensor area
     Activate PS
     PS -> RMC: Notify RMC that the sensor turned ON
+    Deactivate PS
     Car1 -> PS: Leaves the Passage Sensor area
+    Activate PS
     PS -> RMC: Notify RMC that the sensor turned OFF
     Deactivate PS
 else alternative scenario 2
     Car1 -> PS: Enters the Passage Sensor area
     Activate PS
     PS -> RMC: Notify RMC that the sensor turned ON
+    Deactivate PS
     Car2 -> DS: Enters the Demand Sensor area
+    Activate DS
     DS -> RMC: Notify RMC that the sensor turned ON
+    Deactivate DS
     Car1 -> PS: Leaves the Passage Sensor area
+    Activate PS
     PS -> RMC: Notify RMC that the sensor turned OFF
     Deactivate PS
 end
 
 
 Car2 -> DS: Leaves the Demand Sensor area
+Activate DS
 DS -> RMC: Notify RMC that the sensor turned OFF
 Deactivate DS
 
 RMC -> RTL: Tell the RTL that it has to turn the right RED
-Deactivate RMC
-Deactivate RTL
+'Deactivate RMC
+'Deactivate RTL
 
 note left of Car1: Postconditions:\n\t PassageSensor turned ON \n\t and then PassageSensor \n\t\t turned OFF\n\t
 

@@ -1,0 +1,35 @@
+@startuml
+
+skinparam packageStyle rect
+
+left to right direction
+actor "Car" as Car
+
+actor "Passage sensor" as PS
+actor "Demand sensor" as DS
+actor "Freeway sensor" as FS
+actor "End of Queue sensor" as QS
+actor "Ramp Traffic Light" as RTL
+
+actor "RMController" as RMC
+
+package "Ramp Metering System" {
+  usecase "Use case 1" as UC1
+  usecase "use case 2" as UC2
+}
+Car -- UC1
+Car -- UC2
+RMC -- UC1
+RMC -- UC2
+
+UC1 -- PS
+UC1 -- DS
+RTL -- UC1
+'UC1 -- FS
+FS -up- UC1
+'UC1 -- QS
+QS -up- UC1
+
+UC2 -- PS
+UC2 -- DS
+@enduml

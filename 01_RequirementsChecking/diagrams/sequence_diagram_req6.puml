@@ -14,18 +14,21 @@ control "rmc:RMController" as RMC
 note left of Car : Preconditions:\n\t PassageSensor turned OFF \n\t DemandSensor turned ON
 
 Activate Car
+Activate RMC
 Car -> DS:Leaves Demand Sensor area
 Activate DS
 DS -> RMC : Notify the RMC that the demand sensor is OFF
 Deactivate DS
-Activate RMC
+
 Car -> PS:Enters Passage Sensor area
 Activate PS
 PS -> RMC : Notify the RMC that the passage sensor is ON
+Deactivate PS
 Car -> PS :Leaves the passage sensor
+Activate PS
 PS -> RMC : Notify the RMC that the passage sensor is OFF
 Deactivate PS
-Deactivate RMC
+'Deactivate RMC
 
 note left  of Car : Postconditions:\n\t PassageSensor turned OFF \n\t
 
