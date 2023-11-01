@@ -4,6 +4,7 @@ from matplotlib import pyplot
 import numpy as np
 import csv
 
+
 def singleSimulation(A=60, b=0, M=1500, v0=30, x0=0):
     """
     This function simulates the model, once, with the given parameters, by executing through a shell command.
@@ -12,12 +13,13 @@ def singleSimulation(A=60, b=0, M=1500, v0=30, x0=0):
     """
     # Create the string command that will be executed to execute the Modelica model
     # The command is structured as './<executable name> -override <param1 name>=<param1 value>, <param2 name>=<param2 value>..'
-    simulationCommand='.\\car_model.bat -override A='+str(A)+',b='+str(b)+',M='+str(M)+',v0='+str(v0)+',x0='+str(x0)
+    simulationCommand = '.\\car_model.bat -override A=' + str(A) + ',b=' + str(b) + ',M=' + str(M) + ',v0=' + str(
+        v0) + ',x0=' + str(x0)
     # Assuming that your shell is focused on the example/ directory, you should change directory to the one actually containing the executable. This directory usually has the same name as the Modelica file name.
     # Create the corresponding string command and execute it.
     os.chdir('CarDrag/car_package.car_model')
     # Simulate the model without generating terminal output
-    os.system(simulationCommand+' > NUL')
+    os.system(simulationCommand + ' > NUL')
     # Obtain the variable values by reading the MAT-file
     [names, data] = readMat('car_model_res.mat')
     # Create a plot of the Temperature over time in the simulation
@@ -47,10 +49,10 @@ def readMat(matFileName):
         for i in range(len(names)):
             # If it is a variable, read the whole array
             if (dataMat['dataInfo'][0][i] == 0) or (dataMat['dataInfo'][0][i] == 2):
-                data[i] = dataMat['data_2'][dataMat['dataInfo'][1][i]-1]
+                data[i] = dataMat['data_2'][dataMat['dataInfo'][1][i] - 1]
             # If it is a parameter, read only the first value
             elif dataMat['dataInfo'][0][i] == 1:
-                data[i] = dataMat['data_1'][dataMat['dataInfo'][1][i]-1][0]
+                data[i] = dataMat['data_1'][dataMat['dataInfo'][1][i] - 1][0]
     else:
         # If the matrix of metadata need not be transposed, the names can be read directly as individual strings
         names = dataMat['name']
@@ -58,10 +60,10 @@ def readMat(matFileName):
         for i in range(len(names)):
             # If it is a variable, read the whole array
             if (dataMat['dataInfo'][i][0] == 0) or (dataMat['dataInfo'][i][0] == 2):
-                data[i] = dataMat['data_2'][dataMat['dataInfo'][i][1]-1]
+                data[i] = dataMat['data_2'][dataMat['dataInfo'][i][1] - 1]
             # If it is a parameter, read only the first value
             elif dataMat['dataInfo'][i][0] == 1:
-                data[i] = dataMat['data_1'][dataMat['dataInfo'][i][1]-1][0]
+                data[i] = dataMat['data_1'][dataMat['dataInfo'][i][1] - 1][0]
     # Return the names of variables, and their corresponding values
     return [names, data]
 
@@ -79,6 +81,7 @@ def openDataPlot(xdata, ydata, xLabel, yLabel):
     pyplot.xlabel(xLabel)
     pyplot.ylabel(yLabel)
     pyplot.show()
+
 
 # "function" that calls the single simulation function from shell. In your code, this function call should be in a loop over the combinations of parameters.
 if __name__ == "__main__":
@@ -130,12 +133,6 @@ if __name__ == "__main__":
 
     # Also include a plot of the resulting curve (from your selection of the value of b) superimposed with the csv dot plot.
 
-
-
-
-
-
-
 # The follwing function is an alternative way of executing/simulating the Modelica model using the OMPython package. This method is not recommended.
 # from OMPython import OMCSessionZMQ, ModelicaSystem
 # def singleSimulationOMPython(T_inf=298.15, T0=363.15, h=0.7, A=1.0, m=0.1, c_p=1.2):
@@ -162,4 +159,3 @@ if __name__ == "__main__":
 #     model.simulate()
 #     samples = model.getSolutions(["time", "T"])
 #     openDataPlot([samples[0]],[samples[1]],'time (seconds)','temperature (C)')
-
