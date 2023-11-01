@@ -1,10 +1,10 @@
-
 import os
 from scipy import io
 from matplotlib import pyplot
+import numpy as np
+import csv
 
-
-def singleSimulation(T_inf=298.15, T0=363.15, h=0.7, A=1.0, m=0.1, c_p=1.2):
+def singleSimulation(A=60, b=0, M=1500, v0=30, x0=0):
     """
     This function simulates the model, once, with the given parameters, by executing through a shell command.
     It reads the results by calling the readMat function and displays a graph of the Temperature versus Time by calling the plotData function
@@ -12,16 +12,18 @@ def singleSimulation(T_inf=298.15, T0=363.15, h=0.7, A=1.0, m=0.1, c_p=1.2):
     """
     # Create the string command that will be executed to execute the Modelica model
     # The command is structured as './<executable name> -override <param1 name>=<param1 value>, <param2 name>=<param2 value>..'
-    simulationCommand='./NewtonCooling -override T_inf='+str(T_inf)+',T0='+str(T0)+',h='+str(h)+',A='+str(A)+',m='+str(m)+',c_p='+str(c_p)
+    simulationCommand='.\\car_model.bat -override A='+str(A)+',b='+str(b)+',M='+str(M)+',v0='+str(v0)+',x0='+str(x0)
     # Assuming that your shell is focused on the example/ directory, you should change directory to the one actually containing the executable. This directory usually has the same name as the Modelica file name.
     # Create the corresponding string command and execute it.
-    os.chdir('NewtonCooling')
-    # Simulate the model
-    os.system(simulationCommand)
+    os.chdir('CarDrag/car_package.car_model')
+    # Simulate the model without generating terminal output
+    os.system(simulationCommand+' > NUL')
     # Obtain the variable values by reading the MAT-file
-    [names, data] = readMat('NewtonCooling_res.mat')
+    [names, data] = readMat('car_model_res.mat')
     # Create a plot of the Temperature over time in the simulation
-    openDataPlot([data[0]], [data[1]], 'time (seconds)', 'temperature (C)')
+    # openDataPlot(data[0], data[2], 'time (seconds)', 'displacement (m)')
+    os.chdir('../../')
+    return data[2]
 
 
 def readMat(matFileName):
@@ -36,7 +38,7 @@ def readMat(matFileName):
     data = [None] * len(names)
     # Check if the matrix of metadatas are transposed.
     if dataMat['Aclass'][3] == 'binTrans':
-        # If the matrix of matadata needs to be transposed, the names nead to be read from each string
+        # If the matrix of matadata needs to be transposed, the names need to be read from each string
         for x in range(len(dataMat['name'])):
             for i in range(len(dataMat['name'][x])):
                 if dataMat['name'][x][i] != '\x00':
@@ -80,7 +82,59 @@ def openDataPlot(xdata, ydata, xLabel, yLabel):
 
 # "function" that calls the single simulation function from shell. In your code, this function call should be in a loop over the combinations of parameters.
 if __name__ == "__main__":
-    singleSimulation()
+
+    # Define the range of 'b' values to explore
+    b_values = np.linspace(0.01, 3.0, 300)
+
+    displacement_data = []
+    best_b_displacement_data = []
+    errors = []
+    min_error = float('inf')
+    best_b = 0
+
+    reference_data = []
+    # Load the reference data from the CSV file
+    with open('../traces/deceleration_data.csv', 'r') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        # This skips the first row of the CSV file.
+        next(csv_reader)
+        reference_data = [float(row[1]) for row in csv_reader]
+
+    print("starting simulations for b values")
+    # Loop through 'b' values and simulate the car model with adjusted parameters
+    for b in b_values:
+        displacement = singleSimulation(b=b)
+        displacement_data.append(displacement)
+
+        displacement_adapted = [displacement[i] for i in range(0, 610, 10)]
+
+        # Calculate the sum of squared errors
+        error = sum((ref - sim) ** 2 for ref, sim in zip(reference_data, displacement_adapted))
+        errors.append(error)
+
+        # Check if this 'b' value has the minimum error
+        if error < min_error:
+            min_error = error
+            best_b = b
+            best_b_displacement_data = displacement
+
+    print("finished simulations for b values")
+    # Indicate the value of b for which the error is lowest.
+    print(f"The best 'b' value (lowest error) is: {best_b:.2f}")
+
+    # plot the error as a function of b.
+    pyplot.plot(b_values, errors)
+    pyplot.xlabel('b')
+    pyplot.ylabel('Sum of squared errors')
+    pyplot.show()
+
+    # Also include a plot of the resulting curve (from your selection of the value of b) superimposed with the csv dot plot.
+
+
+
+
+
+
 
 # The follwing function is an alternative way of executing/simulating the Modelica model using the OMPython package. This method is not recommended.
 # from OMPython import OMCSessionZMQ, ModelicaSystem
