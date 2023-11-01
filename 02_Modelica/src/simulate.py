@@ -22,7 +22,7 @@ def singleSimulation(A=60, b=0, M=1500, v0=30, x0=0):
     os.system(simulationCommand + ' > NUL')
     # Obtain the variable values by reading the MAT-file
     [names, data] = readMat('car_model_res.mat')
-    # Create a plot of the Temperature over time in the simulation
+    # Create a plot over time in the simulation
     # openDataPlot(data[0], data[2], 'time (seconds)', 'displacement (m)')
     os.chdir('../../')
     return data[2]
@@ -97,7 +97,7 @@ if __name__ == "__main__":
 
     reference_data = []
     # Load the reference data from the CSV file
-    with open('../traces/deceleration_data.csv', 'r') as csv_file:
+    with open('../input/deceleration_data.csv', 'r') as csv_file:
         csv_reader = csv.reader(csv_file)
         # This skips the first row of the CSV file.
         next(csv_reader)
@@ -131,7 +131,16 @@ if __name__ == "__main__":
     pyplot.ylabel('Sum of squared errors')
     pyplot.show()
 
-    # Also include a plot of the resulting curve (from your selection of the value of b) superimposed with the csv dot plot.
+    # plot of the resulting curve (from selection of the value of b) superimposed with the csv dot plot.
+    pyplot.plot(reference_data, 'o', label='reference data', markersize=4)
+    best_b_displacement_data = [best_b_displacement_data[i] for i in range(0, 610, 10)]
+    pyplot.plot(best_b_displacement_data, label='best b', color='red')
+    pyplot.xlabel('time (s)')
+    pyplot.ylabel('displacement (m)')
+    pyplot.legend()
+    pyplot.show()
+
+
 
 # The follwing function is an alternative way of executing/simulating the Modelica model using the OMPython package. This method is not recommended.
 # from OMPython import OMCSessionZMQ, ModelicaSystem
