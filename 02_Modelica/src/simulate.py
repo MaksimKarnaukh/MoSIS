@@ -95,8 +95,8 @@ if __name__ == "__main__":
     min_error = float('inf')
     best_b = 0
 
-    reference_data = []
     # Load the reference data from the CSV file
+    reference_data = []
     with open('../input/deceleration_data.csv', 'r') as csv_file:
         csv_reader = csv.reader(csv_file)
         # This skips the first row of the CSV file.
@@ -112,7 +112,7 @@ if __name__ == "__main__":
         displacement_adapted = [displacement[i] for i in range(0, 610, 10)]
 
         # Calculate the sum of squared errors
-        error = sum((ref - sim) ** 2 for ref, sim in zip(reference_data, displacement_adapted))
+        error = sum((ref - sim) ** 2 for ref, sim in zip(reference_data[1:], displacement_adapted[1:]))
         errors.append(error)
 
         # Check if this 'b' value has the minimum error
@@ -140,31 +140,3 @@ if __name__ == "__main__":
     pyplot.legend()
     pyplot.show()
 
-
-
-# The follwing function is an alternative way of executing/simulating the Modelica model using the OMPython package. This method is not recommended.
-# from OMPython import OMCSessionZMQ, ModelicaSystem
-# def singleSimulationOMPython(T_inf=298.15, T0=363.15, h=0.7, A=1.0, m=0.1, c_p=1.2):
-#     omc = OMCSessionZMQ()
-#     model = ModelicaSystem('example.mo','NewtonCoolingWithTypes')
-#     model.buildModel('T')
-#     print('Performing simulation: Ambient Temp.:',str(T_inf),
-#                                ', Initial Temp.:',str(initTemp),
-#                                ', Convection Coeff.:',str(h),
-#                                ', Area:',str(A),
-#                                ', Mass:',str(m),
-#                                ', Specific Heat:',str(Cp))
-#
-#     model.setSimulationOptions(["stepSize=0.01",
-#                                 "tolerance=1e-9",
-#                                 "startTime=0",
-#                                 "stopTime=10"])
-#     model.setParameters(['T_inf='+str(T_inf),
-#                          'T0='+str(T0),
-#                          'h='+str(h),
-#                          'A='+str(A),
-#                          'm='+str(m),
-#                          'c_p='+str(c_p)])
-#     model.simulate()
-#     samples = model.getSolutions(["time", "T"])
-#     openDataPlot([samples[0]],[samples[1]],'time (seconds)','temperature (C)')
