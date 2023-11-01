@@ -112,10 +112,10 @@ if __name__ == "__main__":
         displacement_adapted = [displacement[i] for i in range(0, 610, 10)]
 
         # Calculate the sum of squared errors
-        error = sum((ref - sim) ** 2 for ref, sim in zip(reference_data[1:], displacement_adapted[1:]))
+        error = sum((ref - sim) ** 2 for ref, sim in zip(reference_data, displacement_adapted))
         errors.append(error)
 
-        # Check if this 'b' value has the minimum error
+        # Check if the 'b' value has the minimum error
         if error < min_error:
             min_error = error
             best_b = b
