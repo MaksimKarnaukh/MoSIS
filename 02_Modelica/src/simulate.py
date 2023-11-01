@@ -1,7 +1,7 @@
-
 import os
-from scipy import io
+
 from matplotlib import pyplot
+from scipy import io
 
 
 def singleSimulation(T_inf=298.15, T0=363.15, h=0.7, A=1.0, m=0.1, c_p=1.2):
@@ -12,7 +12,8 @@ def singleSimulation(T_inf=298.15, T0=363.15, h=0.7, A=1.0, m=0.1, c_p=1.2):
     """
     # Create the string command that will be executed to execute the Modelica model
     # The command is structured as './<executable name> -override <param1 name>=<param1 value>, <param2 name>=<param2 value>..'
-    simulationCommand='./NewtonCooling -override T_inf='+str(T_inf)+',T0='+str(T0)+',h='+str(h)+',A='+str(A)+',m='+str(m)+',c_p='+str(c_p)
+    simulationCommand = './NewtonCooling -override T_inf=' + str(T_inf) + ',T0=' + str(T0) + ',h=' + str(
+        h) + ',A=' + str(A) + ',m=' + str(m) + ',c_p=' + str(c_p)
     # Assuming that your shell is focused on the example/ directory, you should change directory to the one actually containing the executable. This directory usually has the same name as the Modelica file name.
     # Create the corresponding string command and execute it.
     os.chdir('NewtonCooling')
@@ -45,10 +46,10 @@ def readMat(matFileName):
         for i in range(len(names)):
             # If it is a variable, read the whole array
             if (dataMat['dataInfo'][0][i] == 0) or (dataMat['dataInfo'][0][i] == 2):
-                data[i] = dataMat['data_2'][dataMat['dataInfo'][1][i]-1]
+                data[i] = dataMat['data_2'][dataMat['dataInfo'][1][i] - 1]
             # If it is a parameter, read only the first value
             elif dataMat['dataInfo'][0][i] == 1:
-                data[i] = dataMat['data_1'][dataMat['dataInfo'][1][i]-1][0]
+                data[i] = dataMat['data_1'][dataMat['dataInfo'][1][i] - 1][0]
     else:
         # If the matrix of metadata need not be transposed, the names can be read directly as individual strings
         names = dataMat['name']
@@ -56,10 +57,10 @@ def readMat(matFileName):
         for i in range(len(names)):
             # If it is a variable, read the whole array
             if (dataMat['dataInfo'][i][0] == 0) or (dataMat['dataInfo'][i][0] == 2):
-                data[i] = dataMat['data_2'][dataMat['dataInfo'][i][1]-1]
+                data[i] = dataMat['data_2'][dataMat['dataInfo'][i][1] - 1]
             # If it is a parameter, read only the first value
             elif dataMat['dataInfo'][i][0] == 1:
-                data[i] = dataMat['data_1'][dataMat['dataInfo'][i][1]-1][0]
+                data[i] = dataMat['data_1'][dataMat['dataInfo'][i][1] - 1][0]
     # Return the names of variables, and their corresponding values
     return [names, data]
 
@@ -77,6 +78,7 @@ def openDataPlot(xdata, ydata, xLabel, yLabel):
     pyplot.xlabel(xLabel)
     pyplot.ylabel(yLabel)
     pyplot.show()
+
 
 # "function" that calls the single simulation function from shell. In your code, this function call should be in a loop over the combinations of parameters.
 if __name__ == "__main__":
@@ -108,4 +110,3 @@ if __name__ == "__main__":
 #     model.simulate()
 #     samples = model.getSolutions(["time", "T"])
 #     openDataPlot([samples[0]],[samples[1]],'time (seconds)','temperature (C)')
-
