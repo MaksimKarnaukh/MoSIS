@@ -1,10 +1,15 @@
-# This file contains example Python code to demonstrate the simulation of the newtonCooling Modelica model
-# You need os package to execute commands in shell
+
 import os
-# This function simulates the model, once, with the given parameters, by executing through a shell command.
-# It reads the results by calling the readMat function and displays a graph of the Temperature versus Time by calling the plotData function
-# This function takes parameter values of the newtonCoolingWithTypes model.
+from scipy import io
+from matplotlib import pyplot
+
+
 def singleSimulation(T_inf=298.15, T0=363.15, h=0.7, A=1.0, m=0.1, c_p=1.2):
+    """
+    This function simulates the model, once, with the given parameters, by executing through a shell command.
+    It reads the results by calling the readMat function and displays a graph of the Temperature versus Time by calling the plotData function
+    This function takes parameter values of the newtonCoolingWithTypes model.
+    """
     # Create the string command that will be executed to execute the Modelica model
     # The command is structured as './<executable name> -override <param1 name>=<param1 value>, <param2 name>=<param2 value>..'
     simulationCommand='./NewtonCooling -override T_inf='+str(T_inf)+',T0='+str(T0)+',h='+str(h)+',A='+str(A)+',m='+str(m)+',c_p='+str(c_p)
@@ -16,20 +21,22 @@ def singleSimulation(T_inf=298.15, T0=363.15, h=0.7, A=1.0, m=0.1, c_p=1.2):
     # Obtain the variable values by reading the MAT-file
     [names, data] = readMat('NewtonCooling_res.mat')
     # Create a plot of the Temperature over time in the simulation
-    openDataPlot([data[0]],[data[1]],'time (seconds)','temperature (C)')
+    openDataPlot([data[0]], [data[1]], 'time (seconds)', 'temperature (C)')
 
-# You need scipy package to read MAT-files
-from scipy import io
-# Reuse this exact function to read MAT-file data.
-# matFileName is the name of the MAT-file generated on execution of a Modelica executable
-# The output is [names, data] where names is an array of strings which are names of variables, data is an array of values of the associated variable in the same order
+
 def readMat(matFileName):
-    dataMat =  io.loadmat(matFileName)
+    """
+    function to read MAT-file data. matFileName is the name of the MAT-file generated on execution of a Modelica executable
+    The output is [names, data] where names is an array of strings which are names of variables, data is an array of values of the associated variable in the same order
+    :param matFileName:
+    :return:
+    """
+    dataMat = io.loadmat(matFileName)
     names = [''] * len(dataMat['name'][0])
     data = [None] * len(names)
     # Check if the matrix of metadatas are transposed.
     if dataMat['Aclass'][3] == 'binTrans':
-        # If the matrix of  matadata needs to be transposed, the names nead to be read from each string
+        # If the matrix of matadata needs to be transposed, the names nead to be read from each string
         for x in range(len(dataMat['name'])):
             for i in range(len(dataMat['name'][x])):
                 if dataMat['name'][x][i] != '\x00':
@@ -54,23 +61,24 @@ def readMat(matFileName):
             elif dataMat['dataInfo'][i][0] == 1:
                 data[i] = dataMat['data_1'][dataMat['dataInfo'][i][1]-1][0]
     # Return the names of variables, and their corresponding values
-    return [names,data]
+    return [names, data]
 
-# You need matplotlib to plot
-from matplotlib import pyplot
-# This function plots the data from the simulation.
-# xdata is x-axis data
-# ydata is corresponding y-axis data
-# xLabel is the string label value to be displayed in the plot for the x axis
-# yLabel is the string label value to be displayed in the plot for the y axis
+
 def openDataPlot(xdata, ydata, xLabel, yLabel):
+    """
+    This function plots the data from the simulation.
+    xdata is x-axis data
+    ydata is corresponding y-axis data
+    xLabel is the string label value to be displayed in the plot for the x axis
+    yLabel is the string label value to be displayed in the plot for the y axis
+    """
     figure, axis = pyplot.subplots()
     axis.plot(xdata, ydata)
     pyplot.xlabel(xLabel)
     pyplot.ylabel(yLabel)
     pyplot.show()
 
-# "function" that calls the single simulation function from shell. In your code, this function call should be in a loop ove the combinations of parameters.
+# "function" that calls the single simulation function from shell. In your code, this function call should be in a loop over the combinations of parameters.
 if __name__ == "__main__":
     singleSimulation()
 
