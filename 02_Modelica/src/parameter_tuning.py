@@ -109,6 +109,7 @@ if __name__ == "__main__":
         displacement = singleSimulation(b=b)
         displacement_data.append(displacement)
 
+        # Adapt the displacement data to match the reference data
         displacement_adapted = [displacement[i] for i in range(0, 610, 10)]
 
         # Calculate the sum of squared errors
