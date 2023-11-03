@@ -1,14 +1,10 @@
 package pid_package
   model control_loop
-    Modelica.Blocks.Math.Add add annotation(
+    Modelica.Blocks.Math.Add add(k2 = -1)  annotation(
       Placement(visible = true, transformation(origin = {-54, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     pid_package.PID_controller pID_controller annotation(
       Placement(visible = true, transformation(origin = {-22, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain negate(k = -1) annotation(
-      Placement(visible = true, transformation(origin = {-10, -80}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain negate1(k = -1) annotation(
-      Placement(visible = true, transformation(origin = {42, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Add add1 annotation(
+    Modelica.Blocks.Math.Add add1(k1 = -1)  annotation(
       Placement(visible = true, transformation(origin = {76, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     pid_package.mech_car mech_car annotation(
       Placement(visible = true, transformation(origin = {10, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -19,20 +15,16 @@ package pid_package
   equation
     connect(add.y, pID_controller.e_t) annotation(
       Line(points = {{-42, 0}, {-34, 0}}, color = {0, 0, 127}));
-    connect(negate.y, add.u2) annotation(
-      Line(points = {{-20, -80}, {-66, -80}, {-66, -6}}, color = {0, 0, 127}));
-    connect(negate1.y, add1.u1) annotation(
-      Line(points = {{54, 0}, {56, 0}, {56, 6}, {64, 6}}, color = {0, 0, 127}));
-    connect(add1.y, negate.u) annotation(
-      Line(points = {{88, 0}, {92, 0}, {92, -80}, {2, -80}}, color = {0, 0, 127}));
     connect(pID_controller.u_t, mech_car.u) annotation(
       Line(points = {{-11, 0}, {-2, 0}}, color = {0, 0, 127}));
-    connect(mech_car.y, negate1.u) annotation(
-      Line(points = {{21, 0}, {30, 0}}, color = {0, 0, 127}));
     connect(lead_car.x_lt, add1.u2) annotation(
       Line(points = {{42, -30}, {64, -30}, {64, -6}}, color = {0, 0, 127}));
     connect(r_t.y, add.u1) annotation(
       Line(points = {{-77, 0}, {-74, 0}, {-74, 6}, {-66, 6}}, color = {0, 0, 127}));
+    connect(mech_car.y, add1.u1) annotation(
+      Line(points = {{22, 0}, {64, 0}, {64, 6}}, color = {0, 0, 127}));
+  connect(add1.y, add.u2) annotation(
+      Line(points = {{88, 0}, {90, 0}, {90, -80}, {-66, -80}, {-66, -6}}, color = {0, 0, 127}));
     annotation(
       Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})));
   end control_loop;
