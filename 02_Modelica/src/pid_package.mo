@@ -80,15 +80,19 @@ package pid_package
   end lead_car;
 
   block PID_controller
+    parameter Real k_p = 1.0 "Gain value position";
+    parameter Real k_i = 1.0 "Gain value integrator";
+    parameter Real k_d = 20.0 "Gain value derivative";
+    
     output Modelica.Blocks.Interfaces.RealOutput u_t annotation(
       Placement(visible = true, transformation(origin = {0, 0}, extent = {{100, -10}, {120, 10}}, rotation = 0), iconTransformation(origin = {0, 0}, extent = {{100, -10}, {120, 10}}, rotation = 0)));
     input Modelica.Blocks.Interfaces.RealInput e_t annotation(
       Placement(visible = true, transformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
-    Modelica.Blocks.Continuous.Integrator integrator annotation(
+    Modelica.Blocks.Continuous.Integrator integrator(k = k_i)  annotation(
       Placement(visible = true, transformation(origin = {-50, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain(k = 1) annotation(
+    Modelica.Blocks.Math.Gain gain(k = k_p) annotation(
       Placement(visible = true, transformation(origin = {-50, 40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Continuous.Derivative derivative(k = 20) annotation(
+    Modelica.Blocks.Continuous.Derivative derivative(k = k_d) annotation(
       Placement(visible = true, transformation(origin = {-50, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     Modelica.Blocks.Math.Add3 add3 annotation(
       Placement(visible = true, transformation(origin = {-6, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
