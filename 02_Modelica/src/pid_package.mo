@@ -1,20 +1,20 @@
 package pid_package
   model control_loop
-  Modelica.Blocks.Math.Add add annotation(
+    Modelica.Blocks.Math.Add add annotation(
       Placement(visible = true, transformation(origin = {-54, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  pid_package.PID_controller pID_controller annotation(
+    pid_package.PID_controller pID_controller annotation(
       Placement(visible = true, transformation(origin = {-22, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Math.Gain negate(k = -1) annotation(
+    Modelica.Blocks.Math.Gain negate(k = -1) annotation(
       Placement(visible = true, transformation(origin = {-10, -80}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
-  Modelica.Blocks.Math.Gain negate1(k = -1) annotation(
+    Modelica.Blocks.Math.Gain negate1(k = -1) annotation(
       Placement(visible = true, transformation(origin = {42, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Math.Add add1 annotation(
+    Modelica.Blocks.Math.Add add1 annotation(
       Placement(visible = true, transformation(origin = {76, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  pid_package.mech_car mech_car annotation(
+    pid_package.mech_car mech_car annotation(
       Placement(visible = true, transformation(origin = {10, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  pid_package.lead_car lead_car annotation(
+    pid_package.lead_car lead_car annotation(
       Placement(visible = true, transformation(origin = {30, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Sources.Constant r_t(k = 10) annotation(
+    Modelica.Blocks.Sources.Constant r_t(k = 10) annotation(
       Placement(visible = true, transformation(origin = {-88, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   equation
     connect(add.y, pID_controller.e_t) annotation(
@@ -35,7 +35,7 @@ package pid_package
       Line(points = {{-77, 0}, {-74, 0}, {-74, 6}, {-66, 6}}, color = {0, 0, 127}));
     annotation(
       Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})));
-end control_loop;
+  end control_loop;
 
   block lead_car
     output Modelica.Blocks.Interfaces.RealOutput x_lt annotation(
@@ -44,17 +44,17 @@ end control_loop;
       Placement(visible = true, transformation(origin = {-16, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     Modelica.Blocks.Continuous.Integrator integrator1 annotation(
       Placement(visible = true, transformation(origin = {24, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Tables.CombiTable1Ds combiTable1Ds(extrapolation = Modelica.Blocks.Types.Extrapolation.HoldLastPoint, smoothness = Modelica.Blocks.Types.Smoothness.ConstantSegments, table = [0, 1.75; 20, -0.75; 40, 0.5; 60, -3.25; 70, 0]) annotation(
+    Modelica.Blocks.Tables.CombiTable1Ds combiTable1Ds(extrapolation = Modelica.Blocks.Types.Extrapolation.HoldLastPoint, smoothness = Modelica.Blocks.Types.Smoothness.ConstantSegments, table = [0, 1.75; 20, -0.75; 40, 0.5; 60, -3.25; 70, 0]) annotation(
       Placement(visible = true, transformation(origin = {-50, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Sources.ContinuousClock continuousClock1 annotation(
+    Modelica.Blocks.Sources.ContinuousClock continuousClock1 annotation(
       Placement(visible = true, transformation(origin = {-88, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Math.Add3 add3 annotation(
+    Modelica.Blocks.Math.Add3 add3 annotation(
       Placement(visible = true, transformation(origin = {70, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Sources.Constant x_l0(k = 10) annotation(
+    Modelica.Blocks.Sources.Constant x_l0(k = 10) annotation(
       Placement(visible = true, transformation(origin = {-56, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Sources.Constant v_l0(k = 2.5) annotation(
+    Modelica.Blocks.Sources.Constant v_l0(k = 2.5) annotation(
       Placement(visible = true, transformation(origin = {-56, 40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Math.Product product annotation(
+    Modelica.Blocks.Math.Product product annotation(
       Placement(visible = true, transformation(origin = {-16, 60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   equation
     connect(integrator.y, integrator1.u) annotation(
@@ -90,7 +90,7 @@ end control_loop;
       Placement(visible = true, transformation(origin = {-50, 40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     Modelica.Blocks.Continuous.Derivative derivative(k = 20) annotation(
       Placement(visible = true, transformation(origin = {-50, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Math.Add3 add3 annotation(
+    Modelica.Blocks.Math.Add3 add3 annotation(
       Placement(visible = true, transformation(origin = {-6, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   equation
     connect(e_t, integrator.u) annotation(
@@ -99,13 +99,13 @@ end control_loop;
       Line(points = {{-120, 0}, {-80, 0}, {-80, -40}, {-62, -40}}, color = {0, 0, 127}));
     connect(e_t, gain.u) annotation(
       Line(points = {{-120, 0}, {-80, 0}, {-80, 40}, {-62, 40}}, color = {0, 0, 127}));
-  connect(gain.y, add3.u1) annotation(
+    connect(gain.y, add3.u1) annotation(
       Line(points = {{-38, 40}, {-30, 40}, {-30, 8}, {-18, 8}}, color = {0, 0, 127}));
-  connect(derivative.y, add3.u3) annotation(
+    connect(derivative.y, add3.u3) annotation(
       Line(points = {{-38, -40}, {-30, -40}, {-30, -8}, {-18, -8}}, color = {0, 0, 127}));
-  connect(integrator.y, add3.u2) annotation(
+    connect(integrator.y, add3.u2) annotation(
       Line(points = {{-38, 0}, {-18, 0}}, color = {0, 0, 127}));
-  connect(add3.y, u_t) annotation(
+    connect(add3.y, u_t) annotation(
       Line(points = {{6, 0}, {110, 0}}, color = {0, 0, 127}));
     annotation(
       Icon(graphics = {Rectangle(extent = {{-100, 100}, {100, -100}}), Text(textColor = {0, 0, 255}, extent = {{-150, 150}, {150, 110}}, textString = "%name")}, coordinateSystem(extent = {{-100, -100}, {100, 100}})));
@@ -143,38 +143,7 @@ end control_loop;
       Line(points = {{38, -24}, {32, -24}, {32, 0}, {26, 0}}, color = {0, 127, 0}));
     connect(accSensor.flange, vehicle.flangeT) annotation(
       Line(points = {{38, -44}, {32, -44}, {32, 0}, {26, 0}}, color = {0, 127, 0}));
-  end mech_car;annotation(
-  
-  block P
-    output Modelica.Blocks.Interfaces.RealOutput u_t annotation(
-      Placement(visible = true, transformation(origin = {0, 0}, extent = {{100, -10}, {120, 10}}, rotation = 0), iconTransformation(origin = {0, 0}, extent = {{100, -10}, {120, 10}}, rotation = 0)));
-    input Modelica.Blocks.Interfaces.RealInput e_t annotation(
-      Placement(visible = true, transformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0), iconTransformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}, rotation = 0)));
-    Modelica.Blocks.Continuous.Integrator integrator annotation(
-      Placement(visible = true, transformation(origin = {-50, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Math.Gain gain(k = 1) annotation(
-      Placement(visible = true, transformation(origin = {-50, 40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Continuous.Derivative derivative(k = 20) annotation(
-      Placement(visible = true, transformation(origin = {-50, -40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  Modelica.Blocks.Math.Add3 add3 annotation(
-      Placement(visible = true, transformation(origin = {-6, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  equation
-    connect(e_t, integrator.u) annotation(
-      Line(points = {{-120, 0}, {-62, 0}}, color = {0, 0, 127}));
-    connect(e_t, derivative.u) annotation(
-      Line(points = {{-120, 0}, {-80, 0}, {-80, -40}, {-62, -40}}, color = {0, 0, 127}));
-    connect(e_t, gain.u) annotation(
-      Line(points = {{-120, 0}, {-80, 0}, {-80, 40}, {-62, 40}}, color = {0, 0, 127}));
-  connect(gain.y, add3.u1) annotation(
-      Line(points = {{-38, 40}, {-30, 40}, {-30, 8}, {-18, 8}}, color = {0, 0, 127}));
-  connect(derivative.y, add3.u3) annotation(
-      Line(points = {{-38, -40}, {-30, -40}, {-30, -8}, {-18, -8}}, color = {0, 0, 127}));
-  connect(integrator.y, add3.u2) annotation(
-      Line(points = {{-38, 0}, {-18, 0}}, color = {0, 0, 127}));
-  connect(add3.y, u_t) annotation(
-      Line(points = {{6, 0}, {110, 0}}, color = {0, 0, 127}));
-    annotation(
-      Icon(graphics = {Rectangle(extent = {{-100, 100}, {100, -100}}), Text(textColor = {0, 0, 255}, extent = {{-150, 150}, {150, 110}}, textString = "%name")}, coordinateSystem(extent = {{-100, -100}, {100, 100}})));
-  end P;
+  end mech_car;
+  annotation(
     uses(Modelica(version = "4.0.0")));
 end pid_package;
