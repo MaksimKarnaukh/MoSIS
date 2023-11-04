@@ -169,12 +169,28 @@ def vary_var(var_name, values):
     pyplot.legend()
     pyplot.show()
 
+    # difference between the two curves
+    pyplot.plot(best_b_displacement_data[2], [best_b_displacement_data[1][i] - best_b_displacement_data[0][i] for i in range(len(best_b_displacement_data[0]))], label=f'best {var_name}', color='red')
+    pyplot.xlabel('time (s)')
+    pyplot.ylabel('displacement (m)')
+    pyplot.legend()
+    pyplot.show()
+
     # plot of the resulting curve (from selection of the value of b) superimposed with the csv dot plot.
     pyplot.plot(worst_b_displacement_data[2],worst_b_displacement_data[1], 'o', label='reference data', markersize=4)
     # add title
     pyplot.title(f'Biggest error: {var_name} = {worst_var:.2f}')
     # best_b_displacement_data = [worst_b_displacement_data[i] for i in range(0, 610, 10)]
     pyplot.plot(worst_b_displacement_data[2],worst_b_displacement_data[0], label=f'worst {var_name}', color='red')
+    pyplot.xlabel('time (s)')
+    pyplot.ylabel('displacement (m)')
+    pyplot.legend()
+    pyplot.show()
+
+    # difference between the two curves
+    pyplot.plot(worst_b_displacement_data[2], [worst_b_displacement_data[1][i] - worst_b_displacement_data[0][i] for i in
+                                              range(len(worst_b_displacement_data[0]))], label=f'worst {var_name}',
+                color='red')
     pyplot.xlabel('time (s)')
     pyplot.ylabel('displacement (m)')
     pyplot.legend()
