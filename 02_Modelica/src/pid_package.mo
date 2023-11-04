@@ -1,6 +1,6 @@
 package pid_package
   model control_loop
-    Modelica.Blocks.Math.Add add(k2 = -1)  annotation(
+    Modelica.Blocks.Math.Add add(k1 = -1)  annotation(
       Placement(visible = true, transformation(origin = {-54, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     pid_package.PID_controller pID_controller annotation(
       Placement(visible = true, transformation(origin = {-22, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -26,7 +26,8 @@ package pid_package
   connect(add1.y, add.u2) annotation(
       Line(points = {{88, 0}, {90, 0}, {90, -80}, {-66, -80}, {-66, -6}}, color = {0, 0, 127}));
     annotation(
-      Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})));
+      Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})),
+  __OpenModelica_simulationFlags(lv = "LOG_STATS", s = "dassl", variableFilter = ".*"));
   end control_loop;
 
   block lead_car
@@ -104,7 +105,8 @@ package pid_package
     connect(add3.y, u_t) annotation(
       Line(points = {{6, 0}, {110, 0}}, color = {0, 0, 127}));
     annotation(
-      Icon(graphics = {Rectangle(extent = {{-100, 100}, {100, -100}}), Text(textColor = {0, 0, 255}, extent = {{-150, 150}, {150, 110}}, textString = "%name")}, coordinateSystem(extent = {{-100, -100}, {100, 100}})));
+      Icon(graphics = {Rectangle(extent = {{-100, 100}, {100, -100}}), Text(textColor = {0, 0, 255}, extent = {{-150, 150}, {150, 110}}, textString = "%name")}, coordinateSystem(extent = {{-100, -100}, {100, 100}})),
+  __OpenModelica_simulationFlags(lv = "LOG_STATS", noRestart = "()", s = "dassl", variableFilter = ".*"));
   end PID_controller;
 
   block mech_car
