@@ -10,7 +10,9 @@ package pid_package
       Placement(visible = true, transformation(origin = {10, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     pid_package.lead_car lead_car annotation(
       Placement(visible = true, transformation(origin = {30, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    Modelica.Blocks.Sources.Constant r_t(k = 10) annotation(
+    parameter Real set_point = 10.0 "Desired Distance";
+  
+    Modelica.Blocks.Sources.Constant r_t(k = set_point) annotation(
       Placement(visible = true, transformation(origin = {-88, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   equation
     connect(add.y, pID_controller.e_t) annotation(
