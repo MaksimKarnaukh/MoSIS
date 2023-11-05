@@ -84,7 +84,7 @@ def compareDataPlot(xdata, ydata1, ydata2, xLabel, yLabel):
     pyplot.show()
 
 
-def openDataPlot(xdata, ydata, xLabel, yLabel):
+def openDataPlot(xdata, ydata, xLabel, yLabel, title=""):
     """
     This function plots the data from the simulation.
     xdata is x-axis data
@@ -92,7 +92,10 @@ def openDataPlot(xdata, ydata, xLabel, yLabel):
     xLabel is the string label value to be displayed in the plot for the x axis
     yLabel is the string label value to be displayed in the plot for the y axis
     """
+
     figure, axis = pyplot.subplots()
+    if title:
+        pyplot.title(title)
     axis.plot(xdata, ydata)
     pyplot.xlabel(xLabel)
     pyplot.ylabel(yLabel)
@@ -112,28 +115,69 @@ def has_collided(simulated_data):
     # Check if the two cars have collided, this happened when the difference between the two cars is negative
     return any([i < 0 for i in simulated_data[0]])
 
+def find_collision(simulated_data):
+    """
+    This function finds the collision point between the two cars.
+    this is the time where the difference between the two cars is negative
+    """
+    # find the index of the first negative value
+    index = next(i for i, x in enumerate(simulated_data[0]) if x < 0)
+    time_of_collision = simulated_data[3][index]
+    displacement_of_collision = simulated_data[1][index]
+    return time_of_collision, displacement_of_collision
+
 def find_best_set_point():
     #Start from a set-point of 9.9 and keep going lower until you can find a simulation trace where the two cars collide with each other. Keep your control parameters the same as designed by you in part 4 of the assignment!
-    simulation = handle_single_simulation(10)
-
-    set_point = 9.9
-    while not has_collided(simulation):
-        simulation = handle_single_simulation(set_point)
-        set_point -= 0.1
+    simulation_new = handle_single_simulation(10)
+    simulation = simulation_new
+    set_point_new = 10
+    set_point = 10
+    while not has_collided(simulation_new):
+        set_point = set_point_new
+        set_point_new = round(set_point - 0.1, 3)
         print(f"Trying set point {set_point}")
+        simulation = simulation_new
+        simulation_new = handle_single_simulation(set_point)
     print(f"Found set point {set_point}")
 #     plot the displacement of the ego car and the lead car in the same plot
     pyplot.plot(simulation[3], simulation[1], label='ego car displacement')
     pyplot.plot(simulation[3], simulation[2], label='lead car displacement')
+    # title
+    pyplot.title(f'No collision on set_point = {set_point}')
     pyplot.xlabel('time')
     pyplot.ylabel('displacement')
     pyplot.legend()
-    # y axis limits 0 and 10
-    # pyplot.ylim(0, 100)
     pyplot.show()
 
+
     # plot the difference between the displacement of the ego car and the lead car
-    openDataPlot(simulation[3], simulation[0], 'time', 'lead car displacement - ego car displacement')
+    openDataPlot(simulation[3], simulation[0], 'time', 'lead car displacement - ego car displacement', f'No collision on set_point = {set_point}')
+
+    time_of_collision, displacement_of_collision = find_collision(simulation_new)
+    #     plot the displacement of the ego car and the lead car in the same plot
+    pyplot.plot(simulation_new[3], simulation_new[1], label='ego car displacement')
+    pyplot.plot(simulation_new[3], simulation_new[2], label='lead car displacement')
+    # title
+    pyplot.title(f'Collision on set_point = {set_point_new}')
+    pyplot.xlabel('time')
+    pyplot.ylabel('displacement')
+    pyplot.legend()
+    pyplot.xlim(time_of_collision-0.1, time_of_collision + 0.1)
+    pyplot.ylim(displacement_of_collision-1, displacement_of_collision + 1)
+    # plot y = 0 line
+    pyplot.show()
+
+    figure, axis = pyplot.subplots()
+    pyplot.title(f'Collision on set_point = {set_point_new}')
+    axis.plot(simulation_new[3], simulation_new[0])
+    pyplot.xlabel('time')
+    pyplot.xlim(time_of_collision-0.1, time_of_collision + 0.1)
+    pyplot.ylabel('lead car displacement - ego car displacement')
+    #draw x = time_of_collision line
+    pyplot.axvline(x=time_of_collision, color='black', linestyle='--')
+    pyplot.plot(simulation_new[3], [0 for i in simulation_new[3]], label='y=0', color='black', linestyle='--')
+    pyplot.show()
+
 
 
 # "function" that calls the single simulation function from shell. In your code, this function call should be in a loop over the combinations of parameters.
