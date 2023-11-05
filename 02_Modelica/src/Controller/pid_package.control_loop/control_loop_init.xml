@@ -9,11 +9,11 @@
 
   OPENMODELICAHOME                    = "C:/Program Files/OpenModelica1.21.0-64bit"
 
-  guid                                = "{12027c7e-d0fd-432f-9c0b-3f3a6164f70c}"
+  guid                                = "{a7a0e42e-acfe-4d3f-a8fb-f2b16455f2b8}"
 
   description                         = ""
   generationTool                      = "OpenModelica Compiler OpenModelica v1.21.0 (64-bit)"
-  generationDateAndTime               = "2023-11-04T19:49:53Z"
+  generationDateAndTime               = "2023-11-04T23:36:05Z"
 
   variableNamingConvention            = "structured"
 
@@ -1693,8 +1693,8 @@
     alias = "noAlias"
     classIndex = "73" classType = "rPar"
     isProtected = "false" hideResult = "" initNonlinear = "false"
-    fileName = "C:/Users/Maksim/PycharmProjects/MoSIS/02_Modelica/src/pid_package.mo" startLine = "76" startColumn = "5" endLine = "76" endColumn = "51" fileWritable = "true">
-    <Real start="1.0" fixed="true" useNominal="false" />
+    fileName = "C:/Users/Maksim/PycharmProjects/MoSIS/02_Modelica/src/pid_package.mo" startLine = "76" startColumn = "5" endLine = "76" endColumn = "53" fileWritable = "true">
+    <Real start="100.0" fixed="true" useNominal="false" />
   </ScalarVariable>
   <ScalarVariable
     name = "r_t.k"
