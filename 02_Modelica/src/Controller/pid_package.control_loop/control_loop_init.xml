@@ -9,11 +9,11 @@
 
   OPENMODELICAHOME                    = "C:/Program Files/OpenModelica1.21.0-64bit"
 
-  guid                                = "{bac00ac5-08ca-4642-bb77-faeb16ee4132}"
+  guid                                = "{10d05763-1ed0-404e-8e21-ca58c42b6d72}"
 
   description                         = ""
   generationTool                      = "OpenModelica Compiler OpenModelica v1.21.0 (64-bit)"
-  generationDateAndTime               = "2023-11-05T02:11:20Z"
+  generationDateAndTime               = "2023-11-05T17:30:39Z"
 
   variableNamingConvention            = "structured"
 
@@ -29,7 +29,7 @@
   numberOfContinuousStates            = "8"  cmt_numberOfContinuousStates            = "NX:       number of states,                                   FMI"
   numberOfRealAlgebraicVariables      = "47"  cmt_numberOfRealAlgebraicVariables      = "NY:       number of real variables,                           OMC"
   numberOfRealAlgebraicAliasVariables = "74"  cmt_numberOfRealAlgebraicAliasVariables = "NA:       number of alias variables,                          OMC"
-  numberOfRealParameters              = "76"  cmt_numberOfRealParameters              = "NP:       number of parameters,                               OMC"
+  numberOfRealParameters              = "77"  cmt_numberOfRealParameters              = "NP:       number of parameters,                               OMC"
 
   numberOfIntegerAlgebraicVariables   = "0"  cmt_numberOfIntegerAlgebraicVariables   = "NYINT:    number of alg. int variables,                       OMC"
   numberOfIntegerAliasVariables       = "0"  cmt_numberOfIntegerAliasVariables       = "NAINT:    number of alias int variables,                      OMC"
@@ -375,7 +375,7 @@
     alias = "noAlias"
     classIndex = "10" classType = "rAlg"
     isProtected = "false" hideResult = "" initNonlinear = "false"
-    fileName = "C:/School/2023-2024/MoSis/Project/MoSIS/02_Modelica/src/pid_package.mo" startLine = "34" startColumn = "5" endLine = "35" endColumn = "199" fileWritable = "true">
+    fileName = "C:/School/2023-2024/MoSis/Project/MoSIS/02_Modelica/src/pid_package.mo" startLine = "36" startColumn = "5" endLine = "37" endColumn = "199" fileWritable = "true">
     <Real fixed="false" useNominal="false" />
   </ScalarVariable>
   <ScalarVariable
@@ -805,7 +805,7 @@
     alias = "noAlias"
     classIndex = "46" classType = "rAlg"
     isProtected = "false" hideResult = "" initNonlinear = "false"
-    fileName = "C:/School/2023-2024/MoSis/Project/MoSIS/02_Modelica/src/pid_package.mo" startLine = "80" startColumn = "5" endLine = "81" endColumn = "199" fileWritable = "true">
+    fileName = "C:/School/2023-2024/MoSis/Project/MoSIS/02_Modelica/src/pid_package.mo" startLine = "82" startColumn = "5" endLine = "83" endColumn = "199" fileWritable = "true">
     <Real fixed="false" useNominal="false" />
   </ScalarVariable>
   <ScalarVariable
@@ -1669,7 +1669,7 @@
     alias = "noAlias"
     classIndex = "71" classType = "rPar"
     isProtected = "false" hideResult = "" initNonlinear = "false"
-    fileName = "C:/School/2023-2024/MoSis/Project/MoSIS/02_Modelica/src/pid_package.mo" startLine = "78" startColumn = "5" endLine = "78" endColumn = "54" fileWritable = "true">
+    fileName = "C:/School/2023-2024/MoSis/Project/MoSIS/02_Modelica/src/pid_package.mo" startLine = "80" startColumn = "5" endLine = "80" endColumn = "54" fileWritable = "true">
     <Real start="20.0" fixed="true" useNominal="false" />
   </ScalarVariable>
   <ScalarVariable
@@ -1681,7 +1681,7 @@
     alias = "noAlias"
     classIndex = "72" classType = "rPar"
     isProtected = "false" hideResult = "" initNonlinear = "false"
-    fileName = "C:/School/2023-2024/MoSis/Project/MoSIS/02_Modelica/src/pid_package.mo" startLine = "77" startColumn = "5" endLine = "77" endColumn = "53" fileWritable = "true">
+    fileName = "C:/School/2023-2024/MoSis/Project/MoSIS/02_Modelica/src/pid_package.mo" startLine = "79" startColumn = "5" endLine = "79" endColumn = "53" fileWritable = "true">
     <Real start="1.0" fixed="true" useNominal="false" />
   </ScalarVariable>
   <ScalarVariable
@@ -1693,7 +1693,7 @@
     alias = "noAlias"
     classIndex = "73" classType = "rPar"
     isProtected = "false" hideResult = "" initNonlinear = "false"
-    fileName = "C:/School/2023-2024/MoSis/Project/MoSIS/02_Modelica/src/pid_package.mo" startLine = "76" startColumn = "5" endLine = "76" endColumn = "51" fileWritable = "true">
+    fileName = "C:/School/2023-2024/MoSis/Project/MoSIS/02_Modelica/src/pid_package.mo" startLine = "78" startColumn = "5" endLine = "78" endColumn = "51" fileWritable = "true">
     <Real start="1.0" fixed="true" useNominal="false" />
   </ScalarVariable>
   <ScalarVariable
@@ -1701,12 +1701,12 @@
     valueReference = "1137"
     description = "Constant output value"
     variability = "parameter" isDiscrete = "true"
-    causality = "parameter" isValueChangeable = "true"
+    causality = "calculatedParameter" isValueChangeable = "false"
     alias = "noAlias"
     classIndex = "74" classType = "rPar"
     isProtected = "false" hideResult = "" initNonlinear = "false"
     fileName = "C:/Users/samro/AppData/Roaming/.openmodelica/libraries/Modelica 4.0.0+maint.om/Blocks/Sources.mo" startLine = "165" startColumn = "5" endLine = "166" endColumn = "102" fileWritable = "true">
-    <Real start="10.0" fixed="true" useNominal="false" />
+    <Real fixed="true" useNominal="false" />
   </ScalarVariable>
   <ScalarVariable
     name = "r_t.y"
@@ -1721,8 +1721,20 @@
     <Real fixed="true" useNominal="false" />
   </ScalarVariable>
   <ScalarVariable
-    name = "add.u2"
+    name = "set_point"
     valueReference = "1139"
+    description = "Desired Distance"
+    variability = "parameter" isDiscrete = "true"
+    causality = "parameter" isValueChangeable = "true"
+    alias = "noAlias"
+    classIndex = "76" classType = "rPar"
+    isProtected = "false" hideResult = "" initNonlinear = "false"
+    fileName = "C:/School/2023-2024/MoSis/Project/MoSIS/02_Modelica/src/pid_package.mo" startLine = "13" startColumn = "5" endLine = "13" endColumn = "55" fileWritable = "true">
+    <Real start="10.0" fixed="true" useNominal="false" />
+  </ScalarVariable>
+  <ScalarVariable
+    name = "add.u2"
+    valueReference = "1140"
     description = "Connector of Real input signal 2"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1734,7 +1746,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "add1.u1"
-    valueReference = "1140"
+    valueReference = "1141"
     description = "Connector of Real input signal 1"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1746,7 +1758,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "add1.u2"
-    valueReference = "1141"
+    valueReference = "1142"
     description = "Connector of Real input signal 2"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1758,7 +1770,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.add3.u1"
-    valueReference = "1142"
+    valueReference = "1143"
     description = "Connector of Real input signal 1"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1770,7 +1782,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.add3.u3"
-    valueReference = "1143"
+    valueReference = "1144"
     description = "Connector of Real input signal 3"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1782,7 +1794,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.add3.y"
-    valueReference = "1144"
+    valueReference = "1145"
     description = "Connector of Real output signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1794,7 +1806,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.combiTable1Ds.u"
-    valueReference = "1145"
+    valueReference = "1146"
     description = "Connector of Real input signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1806,7 +1818,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.integrator.u"
-    valueReference = "1146"
+    valueReference = "1147"
     description = "Connector of Real input signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1818,7 +1830,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.integrator1.u"
-    valueReference = "1147"
+    valueReference = "1148"
     description = "Connector of Real input signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1830,7 +1842,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.product.u1"
-    valueReference = "1148"
+    valueReference = "1149"
     description = "Connector of Real input signal 1"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1842,7 +1854,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.accSensor.a"
-    valueReference = "1149"
+    valueReference = "1150"
     description = "Absolute acceleration of flange as output signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1854,7 +1866,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.accSensor.flange.s"
-    valueReference = "1150"
+    valueReference = "1151"
     description = "Absolute position of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1866,7 +1878,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.accSensor.v"
-    valueReference = "1151"
+    valueReference = "1152"
     description = "Absolute velocity of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1878,7 +1890,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.gain.u"
-    valueReference = "1152"
+    valueReference = "1153"
     description = "Input signal connector"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1890,7 +1902,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.gain.y"
-    valueReference = "1153"
+    valueReference = "1154"
     description = "Output signal connector"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1902,7 +1914,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.positionSensor.flange.s"
-    valueReference = "1154"
+    valueReference = "1155"
     description = "Absolute position of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1914,7 +1926,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.positionSensor.s"
-    valueReference = "1155"
+    valueReference = "1156"
     description = "Absolute position of flange as output signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1926,7 +1938,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.speedSensor.flange.s"
-    valueReference = "1156"
+    valueReference = "1157"
     description = "Absolute position of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1938,7 +1950,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.speedSensor.v"
-    valueReference = "1157"
+    valueReference = "1158"
     description = "Absolute velocity of flange as output signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1950,7 +1962,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.torque.flange.phi"
-    valueReference = "1158"
+    valueReference = "1159"
     description = "Absolute rotation angle of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1962,11 +1974,11 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.torque.flange.tau"
-    valueReference = "1159"
+    valueReference = "1160"
     description = "Cut torque in the flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
-    alias = "negatedAlias" aliasVariable="mech_car.torque.tau" aliasVariableId="159"
+    alias = "negatedAlias" aliasVariable="mech_car.torque.tau" aliasVariableId="160"
     classIndex = "20" classType = "rAli"
     isProtected = "false" hideResult = "" initNonlinear = "false"
     fileName = "C:/Users/samro/AppData/Roaming/.openmodelica/libraries/Modelica 4.0.0+maint.om/Mechanics/Rotational/Interfaces/Flange.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "48" fileWritable = "true">
@@ -1974,7 +1986,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.u"
-    valueReference = "1160"
+    valueReference = "1161"
     description = "Connector of Real input signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1986,7 +1998,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.atan.u"
-    valueReference = "1161"
+    valueReference = "1162"
     description = "Connector of Real input signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -1998,7 +2010,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.atan.y"
-    valueReference = "1162"
+    valueReference = "1163"
     description = "Connector of Real output signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2010,7 +2022,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fDrag.flange.f"
-    valueReference = "1163"
+    valueReference = "1164"
     description = "Cut force directed into flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2022,7 +2034,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fDrag.flange.s"
-    valueReference = "1164"
+    valueReference = "1165"
     description = "Absolute position of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2034,7 +2046,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fDrag.s_support"
-    valueReference = "1165"
+    valueReference = "1166"
     description = "Absolute position of support flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2046,11 +2058,11 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fDrag.support.f"
-    valueReference = "1166"
+    valueReference = "1167"
     description = "Cut force directed into flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
-    alias = "negatedAlias" aliasVariable="mech_car.vehicle.fDrag.f" aliasVariableId="166"
+    alias = "negatedAlias" aliasVariable="mech_car.vehicle.fDrag.f" aliasVariableId="167"
     classIndex = "27" classType = "rAli"
     isProtected = "false" hideResult = "" initNonlinear = "false"
     fileName = "C:/Users/samro/AppData/Roaming/.openmodelica/libraries/Modelica 4.0.0+maint.om/Mechanics/Translational/Interfaces/Flange.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "51" fileWritable = "true">
@@ -2058,7 +2070,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fDrag.support.s"
-    valueReference = "1167"
+    valueReference = "1168"
     description = "Absolute position of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2070,11 +2082,11 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fGrav.flange.f"
-    valueReference = "1168"
+    valueReference = "1169"
     description = "Cut force directed into flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
-    alias = "negatedAlias" aliasVariable="mech_car.vehicle.fGrav.f" aliasVariableId="168"
+    alias = "negatedAlias" aliasVariable="mech_car.vehicle.fGrav.f" aliasVariableId="169"
     classIndex = "29" classType = "rAli"
     isProtected = "false" hideResult = "" initNonlinear = "false"
     fileName = "C:/Users/samro/AppData/Roaming/.openmodelica/libraries/Modelica 4.0.0+maint.om/Mechanics/Translational/Interfaces/Flange.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "51" fileWritable = "true">
@@ -2082,7 +2094,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fGrav.flange.s"
-    valueReference = "1169"
+    valueReference = "1170"
     description = "Absolute position of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2094,7 +2106,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fGrav.s"
-    valueReference = "1170"
+    valueReference = "1171"
     description = "Distance between flange and support (= flange.s - support.s)"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2106,7 +2118,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fRoll.flange.f"
-    valueReference = "1171"
+    valueReference = "1172"
     description = "Cut force directed into flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2118,7 +2130,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fRoll.flange.s"
-    valueReference = "1172"
+    valueReference = "1173"
     description = "Absolute position of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2130,7 +2142,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fRoll.v"
-    valueReference = "1173"
+    valueReference = "1174"
     description = "Velocity of flange with respect to support (= der(s))"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2142,7 +2154,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.flangeR.phi"
-    valueReference = "1174"
+    valueReference = "1175"
     description = "Absolute rotation angle of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2154,7 +2166,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.flangeR.tau"
-    valueReference = "1175"
+    valueReference = "1176"
     description = "Cut torque in the flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2166,7 +2178,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.flangeT.s"
-    valueReference = "1176"
+    valueReference = "1177"
     description = "Absolute position of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2178,7 +2190,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.gravForceGain.y"
-    valueReference = "1177"
+    valueReference = "1178"
     description = "Output signal connector"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2190,7 +2202,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.idealRollingWheel.fixedR.flange.tau"
-    valueReference = "1178"
+    valueReference = "1179"
     description = "Cut torque in the flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2202,7 +2214,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.idealRollingWheel.fixedT.flange.f"
-    valueReference = "1179"
+    valueReference = "1180"
     description = "Cut force directed into flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2214,7 +2226,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.idealRollingWheel.flangeR.phi"
-    valueReference = "1180"
+    valueReference = "1181"
     description = "Absolute rotation angle of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2226,7 +2238,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.idealRollingWheel.flangeT.s"
-    valueReference = "1181"
+    valueReference = "1182"
     description = "Absolute position of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2238,7 +2250,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.idealRollingWheel.internalSupportR.flange.phi"
-    valueReference = "1182"
+    valueReference = "1183"
     description = "Absolute rotation angle of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2250,11 +2262,11 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.idealRollingWheel.internalSupportR.flange.tau"
-    valueReference = "1183"
+    valueReference = "1184"
     description = "Cut torque in the flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
-    alias = "negatedAlias" aliasVariable="mech_car.vehicle.idealRollingWheel.flangeR.tau" aliasVariableId="183"
+    alias = "negatedAlias" aliasVariable="mech_car.vehicle.idealRollingWheel.flangeR.tau" aliasVariableId="184"
     classIndex = "44" classType = "rAli"
     isProtected = "true" hideResult = "" initNonlinear = "false"
     fileName = "C:/Users/samro/AppData/Roaming/.openmodelica/libraries/Modelica 4.0.0+maint.om/Mechanics/Rotational/Interfaces/Flange.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "48" fileWritable = "true">
@@ -2262,7 +2274,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.idealRollingWheel.internalSupportR.phi"
-    valueReference = "1184"
+    valueReference = "1185"
     description = "External support angle (= flange.phi)"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2274,11 +2286,11 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.idealRollingWheel.internalSupportR.tau"
-    valueReference = "1185"
+    valueReference = "1186"
     description = "External support torque (must be computed via torque balance in model where InternalSupport is used; = flange.tau)"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
-    alias = "negatedAlias" aliasVariable="mech_car.vehicle.idealRollingWheel.flangeR.tau" aliasVariableId="185"
+    alias = "negatedAlias" aliasVariable="mech_car.vehicle.idealRollingWheel.flangeR.tau" aliasVariableId="186"
     classIndex = "46" classType = "rAli"
     isProtected = "true" hideResult = "" initNonlinear = "false"
     fileName = "C:/Users/samro/AppData/Roaming/.openmodelica/libraries/Modelica 4.0.0+maint.om/Mechanics/Rotational/Interfaces/InternalSupport.mo" startLine = "4" startColumn = "3" endLine = "5" endColumn = "121" fileWritable = "true">
@@ -2286,11 +2298,11 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.idealRollingWheel.internalSupportT.f"
-    valueReference = "1186"
+    valueReference = "1187"
     description = "External support force (must be computed via force balance in model where InternalSupport is used; = flange.f)"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
-    alias = "negatedAlias" aliasVariable="mech_car.vehicle.idealRollingWheel.flangeT.f" aliasVariableId="186"
+    alias = "negatedAlias" aliasVariable="mech_car.vehicle.idealRollingWheel.flangeT.f" aliasVariableId="187"
     classIndex = "47" classType = "rAli"
     isProtected = "true" hideResult = "" initNonlinear = "false"
     fileName = "C:/Users/samro/AppData/Roaming/.openmodelica/libraries/Modelica 4.0.0+maint.om/Mechanics/Translational/Interfaces/InternalSupport.mo" startLine = "4" startColumn = "3" endLine = "5" endColumn = "117" fileWritable = "true">
@@ -2298,11 +2310,11 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.idealRollingWheel.internalSupportT.flange.f"
-    valueReference = "1187"
+    valueReference = "1188"
     description = "Cut force directed into flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
-    alias = "negatedAlias" aliasVariable="mech_car.vehicle.idealRollingWheel.flangeT.f" aliasVariableId="187"
+    alias = "negatedAlias" aliasVariable="mech_car.vehicle.idealRollingWheel.flangeT.f" aliasVariableId="188"
     classIndex = "48" classType = "rAli"
     isProtected = "true" hideResult = "" initNonlinear = "false"
     fileName = "C:/Users/samro/AppData/Roaming/.openmodelica/libraries/Modelica 4.0.0+maint.om/Mechanics/Translational/Interfaces/Flange.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "51" fileWritable = "true">
@@ -2310,7 +2322,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.idealRollingWheel.internalSupportT.flange.s"
-    valueReference = "1188"
+    valueReference = "1189"
     description = "Absolute position of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2322,7 +2334,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.idealRollingWheel.internalSupportT.s"
-    valueReference = "1189"
+    valueReference = "1190"
     description = "External support position (= flange.s)"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2334,7 +2346,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.inertia.flange_a.phi"
-    valueReference = "1190"
+    valueReference = "1191"
     description = "Absolute rotation angle of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2346,7 +2358,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.inertia.flange_a.tau"
-    valueReference = "1191"
+    valueReference = "1192"
     description = "Cut torque in the flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2358,7 +2370,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.inertia.flange_b.phi"
-    valueReference = "1192"
+    valueReference = "1193"
     description = "Absolute rotation angle of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2370,11 +2382,11 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.inertia.flange_b.tau"
-    valueReference = "1193"
+    valueReference = "1194"
     description = "Cut torque in the flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
-    alias = "negatedAlias" aliasVariable="mech_car.vehicle.idealRollingWheel.flangeR.tau" aliasVariableId="193"
+    alias = "negatedAlias" aliasVariable="mech_car.vehicle.idealRollingWheel.flangeR.tau" aliasVariableId="194"
     classIndex = "54" classType = "rAli"
     isProtected = "false" hideResult = "" initNonlinear = "false"
     fileName = "C:/Users/samro/AppData/Roaming/.openmodelica/libraries/Modelica 4.0.0+maint.om/Mechanics/Rotational/Interfaces/Flange.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "48" fileWritable = "true">
@@ -2382,7 +2394,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.mass.a"
-    valueReference = "1194"
+    valueReference = "1195"
     description = "Absolute acceleration of component"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2394,11 +2406,11 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.mass.flange_a.f"
-    valueReference = "1195"
+    valueReference = "1196"
     description = "Cut force directed into flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
-    alias = "negatedAlias" aliasVariable="mech_car.vehicle.idealRollingWheel.flangeT.f" aliasVariableId="195"
+    alias = "negatedAlias" aliasVariable="mech_car.vehicle.idealRollingWheel.flangeT.f" aliasVariableId="196"
     classIndex = "56" classType = "rAli"
     isProtected = "false" hideResult = "" initNonlinear = "false"
     fileName = "C:/Users/samro/AppData/Roaming/.openmodelica/libraries/Modelica 4.0.0+maint.om/Mechanics/Translational/Interfaces/Flange.mo" startLine = "5" startColumn = "3" endLine = "5" endColumn = "51" fileWritable = "true">
@@ -2406,7 +2418,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.mass.flange_a.s"
-    valueReference = "1196"
+    valueReference = "1197"
     description = "Absolute position of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2418,7 +2430,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.mass.flange_b.s"
-    valueReference = "1197"
+    valueReference = "1198"
     description = "Absolute position of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2430,7 +2442,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.mass.s"
-    valueReference = "1198"
+    valueReference = "1199"
     description = "Absolute position of center of component (s = flange_a.s + L/2 = flange_b.s - L/2)"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2442,7 +2454,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.s"
-    valueReference = "1199"
+    valueReference = "1200"
     description = "Position of vehicle"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2454,7 +2466,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.sin.y"
-    valueReference = "1200"
+    valueReference = "1201"
     description = "Connector of Real output signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2466,7 +2478,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.v"
-    valueReference = "1201"
+    valueReference = "1202"
     description = "Velocity of vehicle"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2478,7 +2490,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.windSpeed.flange.f"
-    valueReference = "1202"
+    valueReference = "1203"
     description = "Cut force directed into flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2490,7 +2502,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.windSpeed.flange.s"
-    valueReference = "1203"
+    valueReference = "1204"
     description = "Absolute position of flange"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2502,7 +2514,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.y"
-    valueReference = "1204"
+    valueReference = "1205"
     description = "Connector of Real output signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2514,7 +2526,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "pID_controller.add3.u1"
-    valueReference = "1205"
+    valueReference = "1206"
     description = "Connector of Real input signal 1"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2526,7 +2538,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "pID_controller.add3.u2"
-    valueReference = "1206"
+    valueReference = "1207"
     description = "Connector of Real input signal 2"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2538,7 +2550,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "pID_controller.add3.u3"
-    valueReference = "1207"
+    valueReference = "1208"
     description = "Connector of Real input signal 3"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2550,7 +2562,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "pID_controller.add3.y"
-    valueReference = "1208"
+    valueReference = "1209"
     description = "Connector of Real output signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2562,7 +2574,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "pID_controller.derivative.u"
-    valueReference = "1209"
+    valueReference = "1210"
     description = "Connector of Real input signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2574,18 +2586,18 @@
   </ScalarVariable>
   <ScalarVariable
     name = "pID_controller.e_t"
-    valueReference = "1210"
+    valueReference = "1211"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
     alias = "alias" aliasVariable="add.y" aliasVariableId="19"
     classIndex = "71" classType = "rAli"
     isProtected = "false" hideResult = "" initNonlinear = "false"
-    fileName = "C:/School/2023-2024/MoSis/Project/MoSIS/02_Modelica/src/pid_package.mo" startLine = "82" startColumn = "5" endLine = "83" endColumn = "203" fileWritable = "true">
+    fileName = "C:/School/2023-2024/MoSis/Project/MoSIS/02_Modelica/src/pid_package.mo" startLine = "84" startColumn = "5" endLine = "85" endColumn = "203" fileWritable = "true">
     <Real fixed="false" useNominal="false" />
   </ScalarVariable>
   <ScalarVariable
     name = "pID_controller.gain.u"
-    valueReference = "1211"
+    valueReference = "1212"
     description = "Input signal connector"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2597,7 +2609,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "pID_controller.integrator.u"
-    valueReference = "1212"
+    valueReference = "1213"
     description = "Connector of Real input signal"
     variability = "continuous" isDiscrete = "false"
     causality = "local" isValueChangeable = "false"
@@ -2609,7 +2621,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.combiTable1Ds.columns[1]"
-    valueReference = "1213"
+    valueReference = "1214"
     description = "Columns of table to be interpolated"
     variability = "parameter" isDiscrete = "true"
     causality = "parameter" isValueChangeable = "true"
@@ -2621,7 +2633,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.combiTable1Ds.extrapolation"
-    valueReference = "1214"
+    valueReference = "1215"
     description = "Extrapolation of data outside the definition range"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2633,7 +2645,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.combiTable1Ds.nout"
-    valueReference = "1215"
+    valueReference = "1216"
     description = "Number of outputs"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2645,7 +2657,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.combiTable1Ds.smoothness"
-    valueReference = "1216"
+    valueReference = "1217"
     description = "Smoothness of table interpolation"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2657,7 +2669,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.integrator.initType"
-    valueReference = "1217"
+    valueReference = "1218"
     description = "Type of initialization (1: no init, 2: steady state, 3,4: initial output)"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2669,7 +2681,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.integrator1.initType"
-    valueReference = "1218"
+    valueReference = "1219"
     description = "Type of initialization (1: no init, 2: steady state, 3,4: initial output)"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2681,7 +2693,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fRoll.reg"
-    valueReference = "1219"
+    valueReference = "1220"
     description = "Type of regularization"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2693,7 +2705,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.inertia.stateSelect"
-    valueReference = "1220"
+    valueReference = "1221"
     description = "Priority to use phi and w as states"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2705,7 +2717,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.mass.stateSelect"
-    valueReference = "1221"
+    valueReference = "1222"
     description = "Priority to use s and v as states"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2717,7 +2729,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "pID_controller.derivative.initType"
-    valueReference = "1222"
+    valueReference = "1223"
     description = "Type of initialization (1: no init, 2: steady state, 3: initial state, 4: initial output)"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2729,7 +2741,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "pID_controller.integrator.initType"
-    valueReference = "1223"
+    valueReference = "1224"
     description = "Type of initialization (1: no init, 2: steady state, 3,4: initial output)"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2741,7 +2753,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.integrator.local_reset"
-    valueReference = "1224"
+    valueReference = "1225"
     variability = "discrete" isDiscrete = "true"
     causality = "local" isValueChangeable = "false"
     alias = "noAlias"
@@ -2752,7 +2764,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.integrator1.local_reset"
-    valueReference = "1225"
+    valueReference = "1226"
     variability = "discrete" isDiscrete = "true"
     causality = "local" isValueChangeable = "false"
     alias = "noAlias"
@@ -2763,7 +2775,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "pID_controller.integrator.local_reset"
-    valueReference = "1226"
+    valueReference = "1227"
     variability = "discrete" isDiscrete = "true"
     causality = "local" isValueChangeable = "false"
     alias = "noAlias"
@@ -2774,7 +2786,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.combiTable1Ds.tableOnFile"
-    valueReference = "1227"
+    valueReference = "1228"
     description = "= true, if table is defined on file or in function usertab"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2786,7 +2798,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.combiTable1Ds.verboseExtrapolation"
-    valueReference = "1228"
+    valueReference = "1229"
     description = "= true, if warning messages are to be printed if table input is outside the definition range"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2798,7 +2810,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.combiTable1Ds.verboseRead"
-    valueReference = "1229"
+    valueReference = "1230"
     description = "= true, if info message that file is loading is to be printed"
     variability = "parameter" isDiscrete = "true"
     causality = "parameter" isValueChangeable = "true"
@@ -2810,7 +2822,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.integrator.use_reset"
-    valueReference = "1230"
+    valueReference = "1231"
     description = "= true, if reset port enabled"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2822,7 +2834,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.integrator.use_set"
-    valueReference = "1231"
+    valueReference = "1232"
     description = "= true, if set port enabled and used as reinitialization value when reset"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2834,7 +2846,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.integrator1.use_reset"
-    valueReference = "1232"
+    valueReference = "1233"
     description = "= true, if reset port enabled"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2846,7 +2858,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.integrator1.use_set"
-    valueReference = "1233"
+    valueReference = "1234"
     description = "= true, if set port enabled and used as reinitialization value when reset"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2858,7 +2870,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.torque.useSupport"
-    valueReference = "1234"
+    valueReference = "1235"
     description = "= true, if support flange enabled, otherwise implicitly grounded"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2870,7 +2882,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fDrag.ForceDirection"
-    valueReference = "1235"
+    valueReference = "1236"
     description = "Same direction of force in both directions of motion"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2882,7 +2894,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fDrag.useSupport"
-    valueReference = "1236"
+    valueReference = "1237"
     description = "= true, if support flange enabled, otherwise implicitly grounded"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2894,7 +2906,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fGrav.useSupport"
-    valueReference = "1237"
+    valueReference = "1238"
     description = "= true, if support flange enabled, otherwise implicitly grounded"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2906,7 +2918,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fRoll.useCrInput"
-    valueReference = "1238"
+    valueReference = "1239"
     description = "Enable signal input for Cr"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2918,7 +2930,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fRoll.useInclinationInput"
-    valueReference = "1239"
+    valueReference = "1240"
     description = "Enable signal input for inclination"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2930,7 +2942,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.fRoll.useSupport"
-    valueReference = "1240"
+    valueReference = "1241"
     description = "= true, if support flange enabled, otherwise implicitly grounded"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2942,7 +2954,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.idealRollingWheel.useSupportR"
-    valueReference = "1241"
+    valueReference = "1242"
     description = "= true, if rotational support flange enabled, otherwise implicitly grounded"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2954,7 +2966,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.idealRollingWheel.useSupportT"
-    valueReference = "1242"
+    valueReference = "1243"
     description = "= true, if translational support flange enabled, otherwise implicitly grounded"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2966,7 +2978,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.useCrInput"
-    valueReference = "1243"
+    valueReference = "1244"
     description = "Enable signal input for Cr"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2978,7 +2990,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.useInclinationInput"
-    valueReference = "1244"
+    valueReference = "1245"
     description = "Enable signal input for inclination"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -2990,7 +3002,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.useWindInput"
-    valueReference = "1245"
+    valueReference = "1246"
     description = "Enable signal input for wind velocity"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -3002,7 +3014,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.windSpeed.exact"
-    valueReference = "1246"
+    valueReference = "1247"
     description = "Is true/false for exact treatment/filtering of the input signal, respectively"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -3014,7 +3026,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "mech_car.vehicle.windSpeed.useSupport"
-    valueReference = "1247"
+    valueReference = "1248"
     description = "= true, if support flange enabled, otherwise implicitly grounded"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -3026,7 +3038,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "pID_controller.derivative.zeroGain"
-    valueReference = "1248"
+    valueReference = "1249"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
     alias = "noAlias"
@@ -3037,7 +3049,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "pID_controller.integrator.use_reset"
-    valueReference = "1249"
+    valueReference = "1250"
     description = "= true, if reset port enabled"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -3049,7 +3061,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "pID_controller.integrator.use_set"
-    valueReference = "1250"
+    valueReference = "1251"
     description = "= true, if set port enabled and used as reinitialization value when reset"
     variability = "parameter" isDiscrete = "true"
     causality = "calculatedParameter" isValueChangeable = "false"
@@ -3061,7 +3073,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.combiTable1Ds.fileName"
-    valueReference = "1251"
+    valueReference = "1252"
     description = "File where matrix is stored"
     variability = "parameter" isDiscrete = "true"
     causality = "parameter" isValueChangeable = "true"
@@ -3073,7 +3085,7 @@
   </ScalarVariable>
   <ScalarVariable
     name = "lead_car.combiTable1Ds.tableName"
-    valueReference = "1252"
+    valueReference = "1253"
     description = "Table name on file or in function usertab (see docu)"
     variability = "parameter" isDiscrete = "true"
     causality = "parameter" isValueChangeable = "true"
