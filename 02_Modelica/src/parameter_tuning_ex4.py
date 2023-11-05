@@ -120,7 +120,7 @@ def handle_single_simulation(k):
     reference_data = [i - 10 for i in displacement_lead]
     # time the loop to see how long it takes round to 2 decimal places
     rmse = calculate_RMSE(displacement_eco, reference_data)
-    displacement_data = (displacement_eco, reference_data, time_data, rmse, (k_p, k_i, k_d))
+    displacement_data = (displacement_eco, reference_data, time_data, rmse, (k_p, k_i, k_d), displacement_lead)
     return displacement_data
 
 
@@ -128,7 +128,7 @@ def vary_combinations():
     best_displacement_data = None
 
     # values for k_p from 200 to 400 with multiples of 10
-    k_p_values = np.linspace(200, 400, 21)
+    k_p_values = np.linspace(210, 390, 19)
     # values for k_i from 1 to 20 with multiples of 1
     k_i_values = np.linspace(1, 20, 20)
     # values for k_d from 1 to 20 with multiples of 1
@@ -150,6 +150,29 @@ def vary_combinations():
     pyplot.plot(best_displacement_data[2], [best_displacement_data[1][i] - best_displacement_data[0][i] for i in
                                     range(len(best_displacement_data[0]))], label=f'best {best_displacement_data[4]}',
                 color='red')
+    pyplot.xlabel('time (s)')
+    pyplot.ylabel('displacement (m)')
+    pyplot.legend()
+    pyplot.show()
+
+    # plot the displacement of the ego car and the lead car
+    pyplot.plot(best_displacement_data[2], best_displacement_data[0], label=f'ego car {best_displacement_data[4]}',
+                color='red')
+    pyplot.plot(best_displacement_data[2], best_displacement_data[5], label=f'lead car {best_displacement_data[4]}',
+                color='blue')
+    pyplot.xlabel('time (s)')
+    pyplot.ylabel('displacement (m)')
+    pyplot.legend()
+    pyplot.show()
+
+    # plot the displacement of the ego car and the lead car for part of the plot
+    pyplot.plot(best_displacement_data[2], best_displacement_data[0], label=f'ego car {best_displacement_data[4]}',
+                color='red')
+    pyplot.plot(best_displacement_data[2], best_displacement_data[5],
+                label=f'lead car {best_displacement_data[4]}',
+                color='blue')
+    pyplot.xlim(0, 10)
+    pyplot.ylim(0, 175)
     pyplot.xlabel('time (s)')
     pyplot.ylabel('displacement (m)')
     pyplot.legend()
