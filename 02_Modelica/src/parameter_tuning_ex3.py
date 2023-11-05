@@ -1,8 +1,10 @@
 import os
-from scipy import io
-from matplotlib import pyplot
+import time
+
 import numpy as np
-import csv
+from matplotlib import pyplot
+from scipy import io
+
 
 def readMat(matFileName):
     """
@@ -44,12 +46,13 @@ def readMat(matFileName):
     return [names, data]
 
 
-
 [names, data] = readMat('.\\Controller\\pid_package.control_loop\\control_loop_res.mat')
 index_of_lead_displacement = names.index('lead_car.x_lt')
 index_mech_car_displacement = names.index('add1.u1')
+index_e_t = names.index('add.y')
 
-def singleSimulation(k_p=1.0, k_i=1.0, k_d = 20.0):
+
+def singleSimulation(k_p=1.0, k_i=1.0, k_d=20.0):
     """
     This function simulates the model, once, with the given parameters, by executing through a shell command.
     It reads the results by calling the readMat function and displays a graph of the Temperature versus Time by calling the plotData function
@@ -74,6 +77,7 @@ def singleSimulation(k_p=1.0, k_i=1.0, k_d = 20.0):
     # 59 vs 178
     return data[index_mech_car_displacement], data[index_of_lead_displacement], data[0]
 
+
 def compareDataPlot(xdata, ydata1, ydata2, xLabel, yLabel):
     """
     This function plots the data from the simulation.
@@ -91,7 +95,6 @@ def compareDataPlot(xdata, ydata1, ydata2, xLabel, yLabel):
     pyplot.show()
 
 
-
 def openDataPlot(xdata, ydata, xLabel, yLabel):
     """
     This function plots the data from the simulation.
@@ -105,6 +108,7 @@ def openDataPlot(xdata, ydata, xLabel, yLabel):
     pyplot.xlabel(xLabel)
     pyplot.ylabel(yLabel)
     pyplot.show()
+
 
 def vary_var(var_name, values):
     vars = {'k_p': 1.0, 'k_i': 1.0, 'k_d': 20.0}
@@ -121,14 +125,14 @@ def vary_var(var_name, values):
     print(f"starting simulations for {var_name} values")
     # Loop through 'b' values and simulate the car model with adjusted parameters
 
-
     # openDataPlot(time_data,reference_data, 'time (seconds)', 'displacement (m)')
 
     for val in values:
         vars[var_name] = val
-        [displacement_eco, displacement_lead,time_data ] = singleSimulation(k_p=vars['k_p'], k_i=vars['k_i'], k_d=vars['k_d'])
+        [displacement_eco, displacement_lead, time_data] = singleSimulation(k_p=vars['k_p'], k_i=vars['k_i'],
+                                                                            k_d=vars['k_d'])
         reference_data = [i - 10 for i in displacement_lead]
-        displacement_data = (displacement_eco, reference_data,time_data )
+        displacement_data = (displacement_eco, reference_data, time_data)
         displacement_data_set.append(displacement_data)
 
         # # Calculate the sum of squared errors
@@ -165,11 +169,10 @@ def vary_var(var_name, values):
     pyplot.subplots_adjust(left=0.15)
     # place legend under the plot but remain visible and readable (not cut off)
     pyplot.legend(loc='upper center', bbox_to_anchor=(0.5, 1.05),
-              ncol=3, fancybox=True, shadow=True)
+                  ncol=3, fancybox=True, shadow=True)
 
     # pyplot.ylim(-1000, 1000)
     pyplot.show()
-
 
     # plot the error as a function of b.
     # pyplot.plot(values, errors)
@@ -220,13 +223,15 @@ def vary_var(var_name, values):
 
 def vary_k_p():
     # Vary k_p only to study its effect on the behavior of the ego car.
-    k_p_values = [1,5,15,50,100,200]
+    k_p_values = [1, 5, 15, 50, 100, 200]
     vary_var('k_p', k_p_values)
+
 
 def vary_k_i():
     # Vary k_i only to study its effect on the behavior of the ego car.
     k_i_values = np.linspace(1, 20.0, 5)
     vary_var('k_i', k_i_values)
+
 
 def vary_k_d():
     # Vary k_d only to study its effect on the behavior of the ego car.
@@ -234,20 +239,64 @@ def vary_k_d():
     vary_var('k_d', k_d_values)
 
 
+def calculate_RMSE(simulated, reference):
+    """
+    This function calculates the RMSE between the simulated and reference data
+    """
+    rmse = np.sqrt(np.mean((simulated - reference) ** 2))
+    return rmse
+
+def update_best_RMSE(rmse, k, simulated,best_rmse, best_k, best_simulated):
+    if rmse < best_rmse:
+        best_rmse = rmse
+        best_k = k
+        best_simulated = simulated
+    return best_rmse, best_k, best_simulated
+def vary_combinations():
+    lowest_rmse = float('inf')
+    best_k = ()
+    best_simulated = []
+
+    # values for k_p from 200 to 400 with multiples of 10
+    k_p_values = np.linspace(200, 400, 21)
+    # values for k_i from 1 to 20 with multiples of 1
+    k_i_values = np.linspace(1, 20, 20)
+    # values for k_d from 1 to 20 with multiples of 1
+    k_d_values = np.linspace(1, 20, 20)
+    # loop over kp_values
+    start = time.time()
+
+    for k_p in k_p_values:
+        # time the loop to see how long it takes round to 2 decimal places
+        print("total time taken this loop: ", round(time.time() - start, 2), "s", f'k_p: {(k_p-200)//10}/20')
+        start = time.time()
+        #         loop over ki_values
+        for k_i in k_i_values:
+
+            #             loop over kd_values
+            # use multithreading to speed up the process
+            for k_d in k_d_values:
+
+                #                 simulate
+                [displacement_eco, displacement_lead, time_data] = singleSimulation(k_p=k_p, k_i=k_i, k_d=k_d)
+
+                reference_data = [i - 10 for i in displacement_lead]
+                # time the loop to see how long it takes round to 2 decimal places
+                displacement_data = (displacement_eco, reference_data, time_data)
+                #                 calculate RMSE
+                rmse = calculate_RMSE(displacement_eco, reference_data)
+
+                #                 update best RMSE
+                lowest_rmse, best_k, best_simulated = update_best_RMSE(rmse, (k_p, k_i, k_d), displacement_data, lowest_rmse, best_k, best_simulated)
+        print("total time taken this loop: ", round(time.time() - start, 2), "s",
+              f'k_p: {(k_p - 200) // 10}/20')
+
+    print(f'Lowest RMSE: {lowest_rmse}, best k: {best_k}')
+
+
+
+
+
 # "function" that calls the single simulation function from shell. In your code, this function call should be in a loop over the combinations of parameters.
 if __name__ == "__main__":
-    vary_k_p()
-    vary_k_i()
-    vary_k_d()
-
-
-
-
-
-
-
-
-
-
-
-
+    vary_combinations()
