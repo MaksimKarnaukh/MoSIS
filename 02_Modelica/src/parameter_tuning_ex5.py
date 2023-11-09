@@ -113,7 +113,7 @@ def handle_single_simulation(set_point):
 
 def has_collided(simulated_data):
     # Check if the two cars have collided, this happened when the difference between the two cars is negative
-    return any([i < 0 for i in simulated_data[0]])
+    return any([i <= 0 for i in simulated_data[0]])
 
 def find_collision(simulated_data):
     """
