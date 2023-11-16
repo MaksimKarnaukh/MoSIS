@@ -1,0 +1,980 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>CBD.Core module &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CBD.depGraph module" href="CBD.depGraph.html" />
+    <link rel="prev" title="CBD.preprocessing.rungekutta module" href="CBD.preprocessing.rungekutta.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.depGraph.html" title="CBD.depGraph module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="CBD.preprocessing.rungekutta.html" title="CBD.preprocessing.rungekutta module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.html" accesskey="U">CBD package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.Core module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-CBD.Core">
+<span id="cbd-core-module"></span><h1>CBD.Core module<a class="headerlink" href="#module-CBD.Core" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.Core.InputLink">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.Core.</span></span><span class="sig-name descname"><span class="pre">InputLink</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_port</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CBD.Core.InputLink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CBD.Core.InputLink.block">
+<span class="sig-name descname"><span class="pre">block</span></span><a class="headerlink" href="#CBD.Core.InputLink.block" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CBD.Core.InputLink.output_port">
+<span class="sig-name descname"><span class="pre">output_port</span></span><a class="headerlink" href="#CBD.Core.InputLink.output_port" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.Core.Signal">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.Core.</span></span><span class="sig-name descname"><span class="pre">Signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#CBD.Core.Signal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CBD.Core.Signal.time">
+<span class="sig-name descname"><span class="pre">time</span></span><a class="headerlink" href="#CBD.Core.Signal.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CBD.Core.Signal.value">
+<span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#CBD.Core.Signal.value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.Core.Port">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.Core.</span></span><span class="sig-name descname"><span class="pre">Port</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Port"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Port" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Defines a port of a block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the port.</p></li>
+<li><p><strong>direction</strong> (<em>Port.Direction</em>) – The direction of the port; i.e., if it is
+an input or an output port.</p></li>
+<li><p><strong>block</strong> (<a class="reference internal" href="#CBD.Core.BaseBlock" title="CBD.Core.BaseBlock"><em>BaseBlock</em></a>) – The block to which this port belongs.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CBD.Core.Port.Direction">
+<span class="sig-name descname"><span class="pre">Direction</span></span><a class="headerlink" href="#CBD.Core.Port.Direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Possible port directions.</p>
+<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.util.Enum</span></code></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.Port.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Port.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Port.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the value of the port and transfers this to all outgoing connections.
+This will mainly update the current history.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> (<em>float</em>) – The new value of the port.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.Port.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Port.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Port.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the current value of the port.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.Port.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Port.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Port.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears all port signal history.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.Port.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Port.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Port.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the port’s connections.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.Port.getOutgoing">
+<span class="sig-name descname"><span class="pre">getOutgoing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Port.getOutgoing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Port.getOutgoing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains all outgoing connections from this port.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.Port.getIncoming">
+<span class="sig-name descname"><span class="pre">getIncoming</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Port.getIncoming"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Port.getIncoming" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the incoming connection to this port.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.Port.getHistory">
+<span class="sig-name descname"><span class="pre">getHistory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Port.getHistory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Port.getHistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains all historic information about the signals of this port.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.Port.getPreviousPortClosure">
+<span class="sig-name descname"><span class="pre">getPreviousPortClosure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Port.getPreviousPortClosure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Port.getPreviousPortClosure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the previous port to which this port is connected that has no incoming connections.
+Hierarchical blocks and useless connections can/will be solved using this method.</p>
+<p>I.e., it obtains the port whose signal changes will eventually transfer to this port.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.Port.getNextPortClosure">
+<span class="sig-name descname"><span class="pre">getNextPortClosure</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Port.getNextPortClosure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Port.getNextPortClosure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the next ports to which this port is connected that has no outgoing connections.
+Hierarchical blocks and useless connections can/will be solved using this method.</p>
+<p>I.e., it obtains the ports to whom this port transfers signals.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.Port.count">
+<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Port.count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Port.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Counts how often a signal was changed on this port.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.Port.connect">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Port.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Port.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connects two ports together.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<a class="reference internal" href="#CBD.Core.Port" title="CBD.Core.Port"><em>Port</em></a>) – The source port from which a connection starts.</p></li>
+<li><p><strong>target</strong> (<a class="reference internal" href="#CBD.Core.Port" title="CBD.Core.Port"><em>Port</em></a>) – The target port where a connection ends.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.Port.disconnect">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Port.disconnect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Port.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnects two previously connected ports.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<a class="reference internal" href="#CBD.Core.Port" title="CBD.Core.Port"><em>Port</em></a>) – The source port from which a connection starts.</p></li>
+<li><p><strong>target</strong> (<a class="reference internal" href="#CBD.Core.Port" title="CBD.Core.Port"><em>Port</em></a>) – The target port where a connection ends.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.Core.Connector">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.Core.</span></span><span class="sig-name descname"><span class="pre">Connector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Connector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Connector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A connection that links two ports together.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<a class="reference internal" href="#CBD.Core.Port" title="CBD.Core.Port"><em>Port</em></a>) – The source port from which a connection starts.</p></li>
+<li><p><strong>target</strong> (<a class="reference internal" href="#CBD.Core.Port" title="CBD.Core.Port"><em>Port</em></a>) – The target port where a connection ends.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.Connector.transfer">
+<span class="sig-name descname"><span class="pre">transfer</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#Connector.transfer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.Connector.transfer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transfers the signal from the source port to the target port.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.Core.</span></span><span class="sig-name descname"><span class="pre">BaseBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_ports</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_ports</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A base class for all types of basic blocks</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the block. When empty, a <a class="reference internal" href="CBD.util.html#CBD.util.hash64" title="CBD.util.hash64"><code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.util.hash64()</span></code></a>
+encoded name of the instance <code class="xref py py-func docutils literal notranslate"><span class="pre">id()</span></code> will be used, however
+this is a bad practice and will result in a warning. When
+using non-alphanumeric characters, a warning will also be shown.</p></li>
+<li><p><strong>input_ports</strong> (<em>iter</em>) – List of input port names (strings).</p></li>
+<li><p><strong>output_ports</strong> (<em>iter</em>) – List of output port names (strings).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.addInputPort">
+<span class="sig-name descname"><span class="pre">addInputPort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.addInputPort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.addInputPort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an input port if there is no port with the given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the port.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.addOutputPort">
+<span class="sig-name descname"><span class="pre">addOutputPort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.addOutputPort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.addOutputPort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an output port if there is no port with the given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the port.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getInputPorts">
+<span class="sig-name descname"><span class="pre">getInputPorts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getInputPorts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getInputPorts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getInputPortNames">
+<span class="sig-name descname"><span class="pre">getInputPortNames</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getInputPortNames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getInputPortNames" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getInputPortByName">
+<span class="sig-name descname"><span class="pre">getInputPortByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getInputPortByName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getInputPortByName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.hasInputPortWithName">
+<span class="sig-name descname"><span class="pre">hasInputPortWithName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.hasInputPortWithName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.hasInputPortWithName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getOutputPorts">
+<span class="sig-name descname"><span class="pre">getOutputPorts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getOutputPorts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getOutputPorts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getOutputPortByName">
+<span class="sig-name descname"><span class="pre">getOutputPortByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getOutputPortByName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getOutputPortByName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getOutputPortNames">
+<span class="sig-name descname"><span class="pre">getOutputPortNames</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getOutputPortNames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getOutputPortNames" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.hasOutputPortWithName">
+<span class="sig-name descname"><span class="pre">hasOutputPortWithName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.hasOutputPortWithName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.hasOutputPortWithName" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.reparentPorts">
+<span class="sig-name descname"><span class="pre">reparentPorts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.reparentPorts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.reparentPorts" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.clone">
+<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.clone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Deep) copies the current block, ignoring all connections or links
+that were set on this block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getBlockName">
+<span class="sig-name descname"><span class="pre">getBlockName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getBlockName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getBlockName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the name of the block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getFunctionName">
+<span class="sig-name descname"><span class="pre">getFunctionName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getFunctionName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getFunctionName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the block’s function name, based on the block type.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.setBlockName">
+<span class="sig-name descname"><span class="pre">setBlockName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.setBlockName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.setBlockName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the name of the block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.setParent">
+<span class="sig-name descname"><span class="pre">setParent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.setParent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.setParent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the block’s parent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parent</strong> (<a class="reference internal" href="#CBD.Core.CBD" title="CBD.Core.CBD"><em>CBD</em></a>) – The parent of the block.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getBlockType">
+<span class="sig-name descname"><span class="pre">getBlockType</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getBlockType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getBlockType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the type of the block. This is the name of the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getClock">
+<span class="sig-name descname"><span class="pre">getClock</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getClock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getClock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the simulation clock. Only works if the block is part of a <a class="reference internal" href="CBD.html#module-CBD" title="CBD"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD</span></code></a> model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.appendToSignal">
+<span class="sig-name descname"><span class="pre">appendToSignal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.appendToSignal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.appendToSignal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Appends the value to the set of obtained signals and links it to the current simulation
+time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>Any</em>) – The value to append.</p></li>
+<li><p><strong>name_output</strong> (<em>str</em>) – The name of the output port. If not set, or <code class="code docutils literal notranslate"><span class="pre">None</span></code>,
+the value of <code class="code docutils literal notranslate"><span class="pre">OUT1</span></code> will be used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getSignalHistory">
+<span class="sig-name descname"><span class="pre">getSignalHistory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getSignalHistory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getSignalHistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the set of signals this block has sent over an output port.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name_output</strong> (<em>str</em>) – The name of the output port. If not set, or <code class="code docutils literal notranslate"><span class="pre">None</span></code>,
+the value of <code class="code docutils literal notranslate"><span class="pre">OUT1</span></code> will be used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.clearPorts">
+<span class="sig-name descname"><span class="pre">clearPorts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.clearPorts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.clearPorts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears all signal data from the ports.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.resetPorts">
+<span class="sig-name descname"><span class="pre">resetPorts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.resetPorts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.resetPorts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears all signal data from the ports and resets all connections.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getDependencies">
+<span class="sig-name descname"><span class="pre">getDependencies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getDependencies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getDependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to help the creation of the dependency graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The current simulation’s iteration, for which
+the dependency graph must be constructed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ports that must be computed in order to compute this block,
+at the time of the iteration.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getPortConnectedToInput">
+<span class="sig-name descname"><span class="pre">getPortConnectedToInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_port</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getPortConnectedToInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getPortConnectedToInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the block that is connected to a specific input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input_port</strong> (<em>str</em>) – The name of the input port.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getInputSignal">
+<span class="sig-name descname"><span class="pre">getInputSignal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'IN1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getInputSignal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getInputSignal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the signal sent out by the input block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which the signal is obtained.
+When <code class="code docutils literal notranslate"><span class="pre">None</span></code> or <code class="code docutils literal notranslate"><span class="pre">-1</span></code>, the last value
+will be used.</p></li>
+<li><p><strong>input_port</strong> (<em>str</em>) – The name of the input port. If omitted, or when
+<code class="code docutils literal notranslate"><span class="pre">None</span></code>, the value of <code class="code docutils literal notranslate"><span class="pre">IN1</span></code> will be used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.getPath">
+<span class="sig-name descname"><span class="pre">getPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.getPath"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.getPath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the path of the current block.
+This includes the paths from its parents. When the block has no parents
+i.e. when it’s the top-level block, the block’s name is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sep</strong> (<em>str</em>) – The separator to use. Defaults to <code class="code docutils literal notranslate"><span class="pre">.</span></code></p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The full path as a string.</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<p>A block called <code class="code docutils literal notranslate"><span class="pre">grandchild</span></code>, which is located in the <code class="code docutils literal notranslate"><span class="pre">child</span></code> CBD,
+that in its turn is located in this CBD has a path of <code class="code docutils literal notranslate"><span class="pre">child.grandchild</span></code>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.defaultInputPortNameIdentifier">
+<span class="sig-name descname"><span class="pre">defaultInputPortNameIdentifier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.defaultInputPortNameIdentifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.defaultInputPortNameIdentifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Algorithm that identifies which input port name to select if no input port name
+is provided for a link/connection.</p>
+<p>Be default, all ports with name <code class="code docutils literal notranslate"><span class="pre">INx</span></code> are analyzed, where <code class="code docutils literal notranslate"><span class="pre">x</span></code> identifies
+an integer of the auto-increment port.
+E.g. if the last connected port was <code class="code docutils literal notranslate"><span class="pre">IN1</span></code>, <code class="code docutils literal notranslate"><span class="pre">IN2</span></code> will be returned (if
+there is no incoming connection yet).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The new input port.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.linkToInput">
+<span class="sig-name descname"><span class="pre">linkToInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_block</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_input</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'OUT1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.linkToInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.linkToInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Links the output of the <code class="code docutils literal notranslate"><span class="pre">in_block</span></code> to the input of this block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in_block</strong> (<a class="reference internal" href="#CBD.Core.BaseBlock" title="CBD.Core.BaseBlock"><em>BaseBlock</em></a>) – The block that must be linked before the current block.</p>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>name_input</strong> (<em>str</em>) – The name of the input port. When <code class="code docutils literal notranslate"><span class="pre">None</span></code> or omitted,
+<a class="reference internal" href="#CBD.Core.BaseBlock.defaultInputPortNameIdentifier" title="CBD.Core.BaseBlock.defaultInputPortNameIdentifier"><code class="xref py py-func docutils literal notranslate"><span class="pre">defaultInputPortNameIdentifier()</span></code></a> is used to find the
+next port name.</p></li>
+<li><p><strong>name_output</strong> (<em>str</em>) – The name of the output port. Defaults to <code class="code docutils literal notranslate"><span class="pre">OUT1</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.unlinkInput">
+<span class="sig-name descname"><span class="pre">unlinkInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_input</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.unlinkInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.unlinkInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unlinks the input for this block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name_input</strong> (<em>str</em>) – The name of the input.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.BaseBlock.info">
+<span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#BaseBlock.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.BaseBlock.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string with the block’s details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>indent</strong> (<em>int</em>) – The amount of indentation that is required at the
+start of each line. Defaults to 0.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.Core.CBD">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.Core.</span></span><span class="sig-name descname"><span class="pre">CBD</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_ports</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_ports</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#CBD.Core.BaseBlock" title="CBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.Core.BaseBlock</span></code></a></p>
+<p>The CBD class, contains an entire Causal Block Diagram
+Call the run function to simulate the model.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.clone">
+<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.clone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Deep) copies the current block, ignoring all connections or links
+that were set on this block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.getTopCBD">
+<span class="sig-name descname"><span class="pre">getTopCBD</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.getTopCBD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.getTopCBD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the highest-level <a class="reference internal" href="CBD.html#module-CBD" title="CBD"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD</span></code></a> instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.flatten">
+<span class="sig-name descname"><span class="pre">flatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.flatten"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.flatten" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flatten the CBD inline and call recursively for all sub-CBDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ignore</strong> (<em>iter</em>) – Block class names to ignore in the flattening. When <code class="code docutils literal notranslate"><span class="pre">None</span></code>,
+no blocks are ignored. Defaults to <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>psep</strong> (<em>str</em>) – The path separator to use. Defaults to <code class="code docutils literal notranslate"><span class="pre">&quot;.&quot;</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.5: </span>When an empty CBD block is encountered during flattening, this block will be removed from
+the resulting flattened model. Add it to the <code class="xref py py-attr docutils literal notranslate"><span class="pre">ignore</span></code> iterable to prevent such a
+removal.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.flattened">
+<span class="sig-name descname"><span class="pre">flattened</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.flattened"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.flattened" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a flattened version of the provided CBD.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ignore</strong> (<em>iter</em>) – Block class names to ignore in the flattening. When <code class="code docutils literal notranslate"><span class="pre">None</span></code>,
+no blocks are ignored. Defaults to <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>psep</strong> (<em>str</em>) – The path separator to use. Defaults to <code class="code docutils literal notranslate"><span class="pre">&quot;.&quot;</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.getBlocks">
+<span class="sig-name descname"><span class="pre">getBlocks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.getBlocks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.getBlocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the list of blocks.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.getBlockByName">
+<span class="sig-name descname"><span class="pre">getBlockByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.getBlockByName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.getBlockByName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a block by its name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The block’s name</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.hasBlock">
+<span class="sig-name descname"><span class="pre">hasBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.hasBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.hasBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the CBD has a block with the given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name of the block to check.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.clearBlocks">
+<span class="sig-name descname"><span class="pre">clearBlocks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.clearBlocks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.clearBlocks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the block information. Calling this function will
+“empty” the current block.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.getClock">
+<span class="sig-name descname"><span class="pre">getClock</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.getClock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.getClock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the current simulation clock.
+This will always be the block of the highest-level <a class="reference internal" href="CBD.html#module-CBD" title="CBD"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.addFixedRateClock">
+<span class="sig-name descname"><span class="pre">addFixedRateClock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'clock'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.addFixedRateClock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.addFixedRateClock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a clock with a fixed rate.</p>
+<p>Two blocks are added to the simulation: a <code class="xref py py-class docutils literal notranslate"><span class="pre">Clock</span></code> and a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ConstantBlock</span></code> for the rate. Their names will be <code class="code docutils literal notranslate"><span class="pre">&lt;prefix&gt;-&lt;what&gt;</span></code>,
+where <code class="code docutils literal notranslate"><span class="pre">&lt;what&gt;</span></code> identifies the purpose of the block (which is one of
+<code class="code docutils literal notranslate"><span class="pre">clock</span></code> or <code class="code docutils literal notranslate"><span class="pre">delta</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prefix</strong> (<em>str</em>) – The prefix for the names of the blocks.
+Defaults to <code class="code docutils literal notranslate"><span class="pre">&quot;clock&quot;</span></code>.</p></li>
+<li><p><strong>delta_t</strong> (<em>float</em>) – The interval when the clock must tick.
+Defaults to 1.</p></li>
+<li><p><strong>start_time</strong> (<em>float</em>) – The time at which the simulation starts.
+Defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Whenever this function is not called, upon simulation start a clock
+is added with the default values.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Clock Usage Assumption:</strong> When adding a (custom) clock to your model(s),
+its outputs will always represent the (relative) simulated time and time-delta,
+independent of the simulation algorithm used. I.e., changing the delay of a
+fixed-rate clock should only influence the accuracy of the signals, <strong>not</strong>
+the correctness of the signals. It is forbidden to misuse these outputs for
+specific simulations (e.g., using the <code class="code docutils literal notranslate"><span class="pre">time</span></code> as a counter, using
+<code class="code docutils literal notranslate"><span class="pre">delta</span></code> as a constant value…).</p>
+<p>In other words, the clock is guaranteed to output a correct value and should
+only be used in the context of “time”. When exporting the CBD model to other
+formalisms/simulators, the Clock’s outputs should be replaced with the
+corresponding simulator’s clock without loss of generality.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.addBlock">
+<span class="sig-name descname"><span class="pre">addBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.addBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.addBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a block to the CBD model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block</strong> (<a class="reference internal" href="#CBD.Core.BaseBlock" title="CBD.Core.BaseBlock"><em>BaseBlock</em></a>) – The block to add.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The block that was passed as an argument.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.removeBlock">
+<span class="sig-name descname"><span class="pre">removeBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.removeBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.removeBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a block from the <a class="reference internal" href="CBD.html#module-CBD" title="CBD"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block</strong> (<a class="reference internal" href="#CBD.Core.BaseBlock" title="CBD.Core.BaseBlock"><em>BaseBlock</em></a>) – The block to remove.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.addConnection">
+<span class="sig-name descname"><span class="pre">addConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_block</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_block</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_port_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_port_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'OUT1'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.addConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.addConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a connection between <code class="code docutils literal notranslate"><span class="pre">from_block</span></code> with <code class="code docutils literal notranslate"><span class="pre">input_port_name</span></code> to
+<code class="code docutils literal notranslate"><span class="pre">to_block</span></code> with <code class="code docutils literal notranslate"><span class="pre">outport_port_name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>from_block</strong> (<em>str</em>) – The block to start the connection from.</p></li>
+<li><p><strong>to_block</strong> (<em>str</em>) – The target block of the connection.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>input_port_name</strong> (<em>str</em>) – The name of the input port. When <code class="code docutils literal notranslate"><span class="pre">None</span></code> or unset,
+<code class="xref py py-func docutils literal notranslate"><span class="pre">defaultInputPortNameIdentifier()</span></code> will be used to
+identify the port name.</p></li>
+<li><p><strong>output_port_name</strong> (<em>str</em>) – The name of the output port. Defaults to <code class="code docutils literal notranslate"><span class="pre">OUT1</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Connecting from and to ports is possible by setting the <code class="xref py py-attr docutils literal notranslate"><span class="pre">from_block</span></code> and/or
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">to_block</span></code> arguments to the port names.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#CBD.Core.BaseBlock.linkToInput" title="CBD.Core.BaseBlock.linkToInput"><code class="xref py py-func docutils literal notranslate"><span class="pre">BaseBlock.linkToInput()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.getDependencies">
+<span class="sig-name descname"><span class="pre">getDependencies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.getDependencies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.getDependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to help the creation of the dependency graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The current simulation’s iteration, for which
+the dependency graph must be constructed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ports that must be computed in order to compute this block,
+at the time of the iteration.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.removeConnection">
+<span class="sig-name descname"><span class="pre">removeConnection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_port_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.removeConnection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.removeConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes an input connection of block <code class="code docutils literal notranslate"><span class="pre">block</span></code> and port <code class="code docutils literal notranslate"><span class="pre">input_port_name</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block</strong> (<a class="reference internal" href="#CBD.Core.BaseBlock" title="CBD.Core.BaseBlock"><em>BaseBlock</em></a>) – A block to remove an input connection for.</p></li>
+<li><p><strong>input_port_name</strong> (<em>str</em>) – The (input) port name.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.find">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtain a block/port in a submodel of this CBD.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – The path of the block to find. Empty string for the current block,
+<code class="code docutils literal notranslate"><span class="pre">child.grandchild</span></code> for the block called code:<cite>grandchild</cite>,
+which is located in the <code class="code docutils literal notranslate"><span class="pre">child</span></code> CBD that is located in this CBD.</p></li>
+<li><p><strong>sep</strong> (<em>str</em>) – The path separator to use. Defaults to <code class="code docutils literal notranslate"><span class="pre">.</span></code></p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>The block that corresponds to the given path and the path to the block itself.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The block/port that will be returned has a different path than the path provided
+in this function call. This is because this function assumes you already have
+a path to the CBD you call it on. For instance, if this CBD contains a child
+called <code class="code docutils literal notranslate"><span class="pre">child</span></code>, which has a <code class="code docutils literal notranslate"><span class="pre">grandchild</span></code> block in its turn, calling
+find on the <code class="xref py py-class docutils literal notranslate"><span class="pre">child</span></code> to locate the <code class="code docutils literal notranslate"><span class="pre">grandchild</span></code> only needs
+<code class="code docutils literal notranslate"><span class="pre">grandchild</span></code> to be passed as a path. If the function is called on the
+current CBD block instead, <code class="code docutils literal notranslate"><span class="pre">child.grandchild</span></code> is required to obtain the
+same block.</p>
+</div>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.info">
+<span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the model structure recursively.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>indent</strong> (<em>int</em>) – The level of indents to start at.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.dump">
+<span class="sig-name descname"><span class="pre">dump</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.dump" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dumps the model information to the console.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.dumpSignals">
+<span class="sig-name descname"><span class="pre">dumpSignals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.dumpSignals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.dumpSignals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dumps the signal information to the console.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.getSignalHistory">
+<span class="sig-name descname"><span class="pre">getSignalHistory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.getSignalHistory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.getSignalHistory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the set of signals this block has sent over an output port.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name_output</strong> (<em>str</em>) – The name of the output port. If not set, or <code class="code docutils literal notranslate"><span class="pre">None</span></code>,
+the value of <code class="code docutils literal notranslate"><span class="pre">OUT1</span></code> will be used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.getSignals">
+<span class="sig-name descname"><span class="pre">getSignals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.getSignals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.getSignals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains all signal histories.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.clearSignals">
+<span class="sig-name descname"><span class="pre">clearSignals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.clearSignals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.clearSignals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the output signals of all blocks and ports.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.Core.CBD.getUniqueBlockName">
+<span class="sig-name descname"><span class="pre">getUniqueBlockName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/Core.html#CBD.getUniqueBlockName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.Core.CBD.getUniqueBlockName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches a name that is unique within the given model.
+This name is in the form <code class="code docutils literal notranslate"><span class="pre">&lt;prefix&gt;&lt;suffix&gt;</span></code>. The suffix is the
+string representation of a unique identifier. This identifier is
+continuously increased and tested.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prefix</strong> (<em>str</em>) – The prefix of the name to fetch. When a valid
+name by itself, this will be returned, ignoring
+any suffix. Defaults to the empty string.</p></li>
+<li><p><strong>hash</strong> (<em>bool</em>) – When <code class="code docutils literal notranslate"><span class="pre">True</span></code>, the current object id will be
+used as a starting point for the identifier.
+Additionally, the <a class="reference internal" href="CBD.util.html#CBD.util.hash64" title="CBD.util.hash64"><code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.util.hash64()</span></code></a> function
+will be used for the suffix representation. When
+<code class="code docutils literal notranslate"><span class="pre">False</span></code>, the identifier will start at 1 and
+no hashing will be done. Defaults to <code class="code docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="CBD.html">CBD package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="CBD.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="CBD.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CBD.Core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.depGraph.html">CBD.depGraph module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.naivelog.html">CBD.naivelog module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.scheduling.html">CBD.scheduling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.simulator.html">CBD.simulator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.util.html">CBD.util module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="CBD.preprocessing.rungekutta.html"
+                          title="previous chapter">CBD.preprocessing.rungekutta module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="CBD.depGraph.html"
+                          title="next chapter">CBD.depGraph module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.depGraph.html" title="CBD.depGraph module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="CBD.preprocessing.rungekutta.html" title="CBD.preprocessing.rungekutta module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.html" >CBD package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.Core module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

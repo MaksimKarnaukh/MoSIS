@@ -1,0 +1,290 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>CBD.realtime.threadingBackend module &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CBD.realtime.threadingGameLoop module" href="CBD.realtime.threadingGameLoop.html" />
+    <link rel="prev" title="CBD.realtime.plotting module" href="CBD.realtime.plotting.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.realtime.threadingGameLoop.html" title="CBD.realtime.threadingGameLoop module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="CBD.realtime.plotting.html" title="CBD.realtime.plotting module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="install.html" >How to install the CBD framework?</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="CBD.realtime.html" accesskey="U">CBD.realtime package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.realtime.threadingBackend module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-CBD.realtime.threadingBackend">
+<span id="cbd-realtime-threadingbackend-module"></span><h1>CBD.realtime.threadingBackend module<a class="headerlink" href="#module-CBD.realtime.threadingBackend" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.realtime.threadingBackend.Platform">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.realtime.threadingBackend.</span></span><span class="sig-name descname"><span class="pre">Platform</span></span><a class="reference internal" href="_modules/CBD/realtime/threadingBackend.html#Platform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.realtime.threadingBackend.Platform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Identifies the platform to use in real-time simulation.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CBD.realtime.threadingBackend.Platform.THREADING">
+<span class="sig-name descname"><span class="pre">THREADING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'python'</span></em><a class="headerlink" href="#CBD.realtime.threadingBackend.Platform.THREADING" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the default Python threading platform.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="CBD.realtime.threadingPython.html#CBD.realtime.threadingPython.ThreadingPython" title="CBD.realtime.threadingPython.ThreadingPython"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.threadingPython.ThreadingPython</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CBD.realtime.threadingBackend.Platform.PYTHON">
+<span class="sig-name descname"><span class="pre">PYTHON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'python'</span></em><a class="headerlink" href="#CBD.realtime.threadingBackend.Platform.PYTHON" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the default Python threading platform.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="CBD.realtime.threadingPython.html#CBD.realtime.threadingPython.ThreadingPython" title="CBD.realtime.threadingPython.ThreadingPython"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.threadingPython.ThreadingPython</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CBD.realtime.threadingBackend.Platform.TKINTER">
+<span class="sig-name descname"><span class="pre">TKINTER</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'tkinter'</span></em><a class="headerlink" href="#CBD.realtime.threadingBackend.Platform.TKINTER" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the TkInter backend, to allow GUIs of the simulation.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="CBD.realtime.threadingTkInter.html#CBD.realtime.threadingTkInter.ThreadingTkInter" title="CBD.realtime.threadingTkInter.ThreadingTkInter"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.threadingTkInter.ThreadingTkInter</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CBD.realtime.threadingBackend.Platform.TK">
+<span class="sig-name descname"><span class="pre">TK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'tkinter'</span></em><a class="headerlink" href="#CBD.realtime.threadingBackend.Platform.TK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the TkInter backend, to allow GUIs of the simulation.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="CBD.realtime.threadingTkInter.html#CBD.realtime.threadingTkInter.ThreadingTkInter" title="CBD.realtime.threadingTkInter.ThreadingTkInter"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.threadingTkInter.ThreadingTkInter</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CBD.realtime.threadingBackend.Platform.GAMELOOP">
+<span class="sig-name descname"><span class="pre">GAMELOOP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'loop'</span></em><a class="headerlink" href="#CBD.realtime.threadingBackend.Platform.GAMELOOP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use a gameloop backend, to keep the time yourself.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="CBD.realtime.threadingGameLoop.html#CBD.realtime.threadingGameLoop.ThreadingGameLoop" title="CBD.realtime.threadingGameLoop.ThreadingGameLoop"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.threadingGameLoop.ThreadingGameLoop</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CBD.realtime.threadingBackend.Platform.LOOP">
+<span class="sig-name descname"><span class="pre">LOOP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'loop'</span></em><a class="headerlink" href="#CBD.realtime.threadingBackend.Platform.LOOP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use a gameloop backend, to keep the time yourself.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="CBD.realtime.threadingGameLoop.html#CBD.realtime.threadingGameLoop.ThreadingGameLoop" title="CBD.realtime.threadingGameLoop.ThreadingGameLoop"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.threadingGameLoop.ThreadingGameLoop</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CBD.realtime.threadingBackend.Platform.GLA">
+<span class="sig-name descname"><span class="pre">GLA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'loop_alt'</span></em><a class="headerlink" href="#CBD.realtime.threadingBackend.Platform.GLA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use an alternative gameloop backend, to keep the time yourself.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="CBD.realtime.threadingGameLoopAlt.html#CBD.realtime.threadingGameLoopAlt.ThreadingGameLoopAlt" title="CBD.realtime.threadingGameLoopAlt.ThreadingGameLoopAlt"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.threadingGameLoopAlt.ThreadingGameLoopAlt</span></code></a></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.realtime.threadingBackend.ThreadingBackend">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.realtime.threadingBackend.</span></span><span class="sig-name descname"><span class="pre">ThreadingBackend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subsystem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/realtime/threadingBackend.html#ThreadingBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.realtime.threadingBackend.ThreadingBackend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Wrapper around the actual threading backend.
+It will also handle interrupts and the passing of them to the calling thread.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subsystem</strong> (<em>str</em>) – String specifying the subsystem to use. Must be one of
+<code class="code docutils literal notranslate"><span class="pre">python</span></code>, <code class="code docutils literal notranslate"><span class="pre">tkinter</span></code> or <code class="code docutils literal notranslate"><span class="pre">loop</span></code> (case-insensitive).
+The <a class="reference internal" href="#CBD.realtime.threadingBackend.Platform" title="CBD.realtime.threadingBackend.Platform"><code class="xref py py-class docutils literal notranslate"><span class="pre">Platform</span></code></a> class may be used to help identifying
+the subsystem.</p></li>
+<li><p><strong>args</strong> (<em>list</em>) – All additional arguments that should be passed to the subsystem’s
+constructor (must be a list). Only used for the <code class="code docutils literal notranslate"><span class="pre">tkinter</span></code>
+subsystem.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.realtime.threadingBackend.ThreadingBackend.is_alive">
+<span class="sig-name descname"><span class="pre">is_alive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/realtime/threadingBackend.html#ThreadingBackend.is_alive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.realtime.threadingBackend.ThreadingBackend.is_alive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that the main thread is alive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>code`True` when it is alive, otherwise <code class="code docutils literal notranslate"><span class="pre">False</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.realtime.threadingBackend.ThreadingBackend.wait">
+<span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/realtime/threadingBackend.html#ThreadingBackend.wait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.realtime.threadingBackend.ThreadingBackend.wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>A non-blocking call, which will call the <code class="code docutils literal notranslate"><span class="pre">func</span></code> parameter after
+<code class="code docutils literal notranslate"><span class="pre">time</span></code> seconds. It will use the provided backend to do this.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>float</em>) – Time to wait in seconds.</p></li>
+<li><p><strong>func</strong> (<em>callable</em>) – The function to call after the time has passed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.realtime.threadingBackend.ThreadingBackend.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/realtime/threadingBackend.html#ThreadingBackend.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.realtime.threadingBackend.ThreadingBackend.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a step in the backend; only supported for the game loop backend.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<em>float</em>) – The current simulation time. Only used if the alternative
+gameloop backend is used.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.realtime.threadingBackend.ThreadingBackend.run_on_new_thread">
+<span class="sig-name descname"><span class="pre">run_on_new_thread</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/realtime/threadingBackend.html#ThreadingBackend.run_on_new_thread"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.realtime.threadingBackend.ThreadingBackend.run_on_new_thread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs a function on a new thread.
+:param func: The function to execute.
+:type func: callable
+:param args: The arguments for the function.
+:type args: iter</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="install.html">How to install the CBD framework?</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#installation">Installation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="install.html#standalone">Standalone</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CBD.html">CBD package</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="CBD.realtime.plotting.html"
+                          title="previous chapter">CBD.realtime.plotting module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="CBD.realtime.threadingGameLoop.html"
+                          title="next chapter">CBD.realtime.threadingGameLoop module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.realtime.threadingGameLoop.html" title="CBD.realtime.threadingGameLoop module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="CBD.realtime.plotting.html" title="CBD.realtime.plotting module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="install.html" >How to install the CBD framework?</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="CBD.realtime.html" >CBD.realtime package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.realtime.threadingBackend module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

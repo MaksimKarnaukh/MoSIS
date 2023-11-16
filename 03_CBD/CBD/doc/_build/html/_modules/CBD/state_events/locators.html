@@ -1,0 +1,513 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CBD.state_events.locators &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../state_events.html" accesskey="U">CBD.state_events</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.state_events.locators</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for CBD.state_events.locators</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains the standard State Event locators.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">CBD.state_events</span> <span class="kn">import</span> <span class="n">Direction</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;PreCrossingStateEventLocator&#39;</span><span class="p">,</span> <span class="s1">&#39;PostCrossingStateEventLocator&#39;</span><span class="p">,</span> <span class="s1">&#39;LinearStateEventLocator&#39;</span><span class="p">,</span>
+           <span class="s1">&#39;BisectionStateEventLocator&#39;</span><span class="p">,</span> <span class="s1">&#39;RegulaFalsiStateEventLocator&#39;</span><span class="p">,</span> <span class="s1">&#39;ITPStateEventLocator&#39;</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">StateEventLocator</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Computes the exact level crossing time and locates when a state event must be scheduled.</span>
+
+<span class="sd">	Attributes:</span>
+<span class="sd">		sim (CBD.simulator.Simulator):  The simulator to which the locator belongs.</span>
+<span class="sd">		t_lower (float):                The lower range of the level crossing. It is certain</span>
+<span class="sd">										that the crossing happens at a time later than (or</span>
+<span class="sd">										equal to) this time.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sim</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">t_lower</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+	<span class="k">def</span> <span class="nf">setSimulator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sim</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the simulator to the event locator.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			sim (CBD.simulator.Simulator):  The current simulator.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sim</span> <span class="o">=</span> <span class="n">sim</span>
+
+	<span class="k">def</span> <span class="nf">detect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prev</span><span class="p">,</span> <span class="n">curr</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">ANY</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Detects that a crossing through zero happened between prev and curr.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			prev (numeric):         The previous value.</span>
+<span class="sd">			curr (numeric):         The current value.</span>
+<span class="sd">			direction (Direction):  The direction of the crossing to detect.</span>
+<span class="sd">									Defaults to :attr:`Direction.ANY`.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			:code:`True` when the crossing happened, otherwise :code:`False`.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">Direction</span><span class="o">.</span><span class="n">FROM_BELOW</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">prev</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">curr</span>
+		<span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">Direction</span><span class="o">.</span><span class="n">FROM_ABOVE</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">prev</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&gt;=</span> <span class="n">curr</span>
+		<span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">Direction</span><span class="o">.</span><span class="n">ANY</span><span class="p">:</span>
+			<span class="k">return</span> <span class="p">(</span><span class="n">prev</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">curr</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">prev</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&gt;=</span> <span class="n">curr</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="kc">False</span>
+
+	<span class="k">def</span> <span class="nf">detect_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">ANY</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Detects that an output port has a crossing through a specific level.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			output_name (str):      The name of the output port.</span>
+<span class="sd">			level (numeric):        The level through which the value must go.</span>
+<span class="sd">									Defaults to 0.</span>
+<span class="sd">			direction (Direction):  The direction of the crossing to detect.</span>
+<span class="sd">									Defaults to :attr:`Direction.ANY`.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			:code:`True` when the crossing happened, otherwise :code:`False`.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">sig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getSignalHistory</span><span class="p">(</span><span class="n">output_name</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sig</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+			<span class="c1"># No crossing possible (yet)</span>
+			<span class="k">return</span> <span class="kc">False</span>
+		<span class="n">prev</span> <span class="o">=</span> <span class="n">sig</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="n">level</span>
+		<span class="n">curr</span> <span class="o">=</span> <span class="n">sig</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="n">level</span>
+
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">prev</span><span class="p">,</span> <span class="n">curr</span><span class="p">,</span> <span class="n">direction</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">noop</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		The internal function. Whenever an algorithm requires the computation of the</span>
+<span class="sd">		CBD model at another time, this function can be executed.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			output_name (str):  The output port name for which the crossing point must</span>
+<span class="sd">								be computed.</span>
+<span class="sd">			time (float):       The time at which the CBD must be computed. Must be</span>
+<span class="sd">								larger than the lower bound time.</span>
+<span class="sd">			level (float):      The level through which the crossing must be identified.</span>
+<span class="sd">								This mainly shifts the signal towards 0, as most algorithms</span>
+<span class="sd">								are basically root finders. If the algorithm incorporates</span>
+<span class="sd">								the level itself, keep this value at 0 for correct behaviour.</span>
+<span class="sd">								Defaults to 0.</span>
+<span class="sd">			noop (bool):        When :code:`True`, this function will be a no-op. Otherwise,</span>
+<span class="sd">								the model will remain at the given time.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			The signal value of the output at the given time, shifted towards 0.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">output_name</span><span class="p">):</span>
+			<span class="k">return</span> <span class="n">output_name</span><span class="p">(</span><span class="n">time</span><span class="p">)</span> <span class="o">-</span> <span class="n">level</span>
+		<span class="k">assert</span> <span class="n">time</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_lower</span>
+
+		<span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getClock</span><span class="p">()</span><span class="o">.</span><span class="n">getDeltaT</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">_rewind</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">setDeltaT</span><span class="p">(</span><span class="n">time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">t_lower</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">_lcc_compute</span><span class="p">()</span>
+		<span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getSignalHistory</span><span class="p">(</span><span class="n">output_name</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="n">level</span>
+
+		<span class="k">if</span> <span class="n">noop</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">_rewind</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">setDeltaT</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">noop</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">_lcc_compute</span><span class="p">()</span>
+		<span class="k">return</span> <span class="n">s</span>
+
+	<span class="k">def</span> <span class="nf">setDeltaT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		&#39;Forces&#39; the time-delta to be this value for the next computation.</span>
+<span class="sd">		Args:</span>
+<span class="sd">			dt (float): New time-delta.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># TODO: make this work for non-fixed rate clocks?</span>
+		<span class="n">clock</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getClock</span><span class="p">()</span>
+		<span class="n">clock</span><span class="o">.</span><span class="n">getPortConnectedToInput</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">ANY</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Executes the locator for an output.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			output_name (str):      The output port name for which the crossing</span>
+<span class="sd">									point must be computed.</span>
+<span class="sd">			level (float):          The level through which the crossing must be</span>
+<span class="sd">									identified. Defaults to 0.</span>
+<span class="sd">			direction (Direction):  The direction of the crossing to detect.</span>
+<span class="sd">									Defaults to :attr:`Direction.ANY`.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			The detected time at which the crossing is suspected to occur.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="n">sig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getSignalHistory</span><span class="p">(</span><span class="n">output_name</span><span class="p">)</span>
+		<span class="n">p1</span> <span class="o">=</span> <span class="n">sig</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">sig</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="n">level</span>
+		<span class="n">p2</span> <span class="o">=</span> <span class="n">sig</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">sig</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">-</span> <span class="n">level</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">t_lower</span> <span class="o">=</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+		<span class="c1"># begin the algorithm on the left</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">_rewind</span><span class="p">()</span>
+		<span class="n">t_crossing</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">direction</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="n">t_crossing</span>
+
+	<span class="k">def</span> <span class="nf">algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">ANY</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		The algorithm that identifies the locator functionality. Must be implemented</span>
+<span class="sd">		in sub-classes. Should only ever be called if a crossing exists.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			p1 (tuple):         The (time, value) coordinate before the crossing,</span>
+<span class="sd">								shifted towards zero.</span>
+<span class="sd">			p2 (tuple):         The (time, value) coordinate after the crossing,</span>
+<span class="sd">								shifted towards zero.</span>
+<span class="sd">			output_name:        The output port name for which the crossing point</span>
+<span class="sd">								must be computed, if a CBD is given. Otherwise, a</span>
+<span class="sd">								single-argument callable :math`f(t)` is accepted</span>
+<span class="sd">								as well.</span>
+<span class="sd">			level (float):      The level through which the crossing must be</span>
+<span class="sd">								identified. Defaults to 0.</span>
+<span class="sd">			direction (Direction):  The direction of the crossing to detect. This</span>
+<span class="sd">								value ensures a valid crossing is identified if there</span>
+<span class="sd">								are multiple between :attr:`p1` and :attr:`p2`. Will</span>
+<span class="sd">								only provide an acceptable result if the direction of</span>
+<span class="sd">								the crossing can be identified. For instance, if</span>
+<span class="sd">								there is a crossing from below, according to the</span>
+<span class="sd">								:meth:`detect` function, the algorithm will usually</span>
+<span class="sd">								not accurately identify any crossings from above.</span>
+<span class="sd">								Defaults to :attr:`Direction.ANY`.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			A suspected time of the crossing.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="PreCrossingStateEventLocator"><a class="viewcode-back" href="../../../CBD.state_events.locators.html#CBD.state_events.locators.PreCrossingStateEventLocator">[docs]</a><span class="k">class</span> <span class="nc">PreCrossingStateEventLocator</span><span class="p">(</span><span class="n">StateEventLocator</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Assumes that the crossing happens at the start of the interval.</span>
+<span class="sd">	Can be used if a precise detection is not a requirement.</span>
+
+<span class="sd">	This implementation computes a rough under-estimate.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="PreCrossingStateEventLocator.algorithm"><a class="viewcode-back" href="../../../CBD.state_events.locators.html#CBD.state_events.locators.PreCrossingStateEventLocator.algorithm">[docs]</a>	<span class="k">def</span> <span class="nf">algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">ANY</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="PostCrossingStateEventLocator"><a class="viewcode-back" href="../../../CBD.state_events.locators.html#CBD.state_events.locators.PostCrossingStateEventLocator">[docs]</a><span class="k">class</span> <span class="nc">PostCrossingStateEventLocator</span><span class="p">(</span><span class="n">StateEventLocator</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Assumes that the crossing happens at the end of the interval.</span>
+<span class="sd">	Can be used if a precise detection is not a requirement.</span>
+
+<span class="sd">	This implementation computes a rough over-estimate.</span>
+
+<span class="sd">	Corresponds to the :code:`if` statement in `Modelica &lt;https://modelica.org/&gt;`_,</span>
+<span class="sd">	whereas the other locators can be seen as the :code:`when` statement.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="PostCrossingStateEventLocator.algorithm"><a class="viewcode-back" href="../../../CBD.state_events.locators.html#CBD.state_events.locators.PostCrossingStateEventLocator.algorithm">[docs]</a>	<span class="k">def</span> <span class="nf">algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">ANY</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="LinearStateEventLocator"><a class="viewcode-back" href="../../../CBD.state_events.locators.html#CBD.state_events.locators.LinearStateEventLocator">[docs]</a><span class="k">class</span> <span class="nc">LinearStateEventLocator</span><span class="p">(</span><span class="n">StateEventLocator</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Uses simple linear interpolation to compute the time of the crossing.</span>
+<span class="sd">	This is usually a rough, yet centered estimate.</span>
+
+<span class="sd">	This locator should only be used if it is known that the signal is</span>
+<span class="sd">	(mostly) linear between the lower and upper bounds.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LinearStateEventLocator.algorithm"><a class="viewcode-back" href="../../../CBD.state_events.locators.html#CBD.state_events.locators.LinearStateEventLocator.algorithm">[docs]</a>	<span class="k">def</span> <span class="nf">algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">ANY</span><span class="p">):</span>
+		<span class="n">t1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">p1</span>
+		<span class="n">t2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">p2</span>
+		<span class="k">if</span> <span class="n">y1</span> <span class="o">==</span> <span class="n">y2</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">t1</span>
+		<span class="c1"># Use the equation of a line between two points</span>
+		<span class="c1"># Formula is easier if x and y axes are swapped.</span>
+		<span class="k">return</span> <span class="p">(</span><span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">level</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span> <span class="o">+</span> <span class="n">t1</span></div></div>
+
+
+<div class="viewcode-block" id="BisectionStateEventLocator"><a class="viewcode-back" href="../../../CBD.state_events.locators.html#CBD.state_events.locators.BisectionStateEventLocator">[docs]</a><span class="k">class</span> <span class="nc">BisectionStateEventLocator</span><span class="p">(</span><span class="n">StateEventLocator</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Uses the bisection method to compute the crossing. This method is more accurate</span>
+<span class="sd">	than a linear algorithm :class:`LinearStateEventLocator`, but less accurate than</span>
+<span class="sd">	regula falsi (:class:`RegulaFalsiStateEventLocator`).</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		n (int):    The maximal amount of iterations to compute. Roughly very 3 iterations,</span>
+<span class="sd">					a decimal place of accuracy is gained. Defaults to 10.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+		<span class="k">assert</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;There must be at least 1 iteration for this method.&quot;</span>
+		<span class="nb">super</span><span class="p">(</span><span class="n">BisectionStateEventLocator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+
+<div class="viewcode-block" id="BisectionStateEventLocator.algorithm"><a class="viewcode-back" href="../../../CBD.state_events.locators.html#CBD.state_events.locators.BisectionStateEventLocator.algorithm">[docs]</a>	<span class="k">def</span> <span class="nf">algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">ANY</span><span class="p">):</span>
+		<span class="n">tc</span> <span class="o">=</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">):</span>
+			<span class="n">tc</span> <span class="o">=</span> <span class="p">((</span><span class="n">p2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">p1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="n">yc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">(</span><span class="n">output_name</span><span class="p">,</span> <span class="n">tc</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">p1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">yc</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+				<span class="n">p2</span> <span class="o">=</span> <span class="n">tc</span><span class="p">,</span> <span class="n">yc</span>
+			<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">yc</span><span class="p">,</span> <span class="n">p2</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">direction</span><span class="p">):</span>
+				<span class="n">p1</span> <span class="o">=</span> <span class="n">tc</span><span class="p">,</span> <span class="n">yc</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">break</span>
+				<span class="c1"># raise ValueError(&quot;Cannot find a viable crossing.&quot;)</span>
+		<span class="k">return</span> <span class="n">tc</span></div></div>
+
+
+<div class="viewcode-block" id="RegulaFalsiStateEventLocator"><a class="viewcode-back" href="../../../CBD.state_events.locators.html#CBD.state_events.locators.RegulaFalsiStateEventLocator">[docs]</a><span class="k">class</span> <span class="nc">RegulaFalsiStateEventLocator</span><span class="p">(</span><span class="n">StateEventLocator</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Implements the Illinois algorithm for finding the root for a crossing problem.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		eps (float):    Half of the upper bound for the relative error.</span>
+<span class="sd">						Defaults to 1e-5.</span>
+<span class="sd">		n (int):        The maximal amount of iterations to compute. Defaults to</span>
+<span class="sd">						5 million iterations.</span>
+
+<span class="sd">	See Also:</span>
+<span class="sd">		https://en.wikipedia.org/wiki/Regula_falsi</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">5_000_000</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">(</span><span class="n">RegulaFalsiStateEventLocator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="n">eps</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span>
+
+<div class="viewcode-block" id="RegulaFalsiStateEventLocator.algorithm"><a class="viewcode-back" href="../../../CBD.state_events.locators.html#CBD.state_events.locators.RegulaFalsiStateEventLocator.algorithm">[docs]</a>	<span class="k">def</span> <span class="nf">algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">ANY</span><span class="p">):</span>
+		<span class="c1"># direction unused, because the algorithm will automatically maintain</span>
+		<span class="c1">#   the crossing direction</span>
+		<span class="n">t1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">p1</span>
+		<span class="n">t2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">p2</span>
+		<span class="n">tn</span><span class="p">,</span> <span class="n">yn</span> <span class="o">=</span> <span class="n">t1</span><span class="p">,</span> <span class="n">y1</span>
+
+		<span class="n">y1</span> <span class="o">-=</span> <span class="n">level</span>
+		<span class="n">y2</span> <span class="o">-=</span> <span class="n">level</span>
+
+		<span class="n">side</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">):</span>
+			<span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">t1</span> <span class="o">-</span> <span class="n">t2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">t1</span> <span class="o">+</span> <span class="n">t2</span><span class="p">):</span> <span class="k">break</span>
+			<span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">:</span>
+				<span class="n">tn</span> <span class="o">=</span> <span class="p">(</span><span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">t1</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">tn</span> <span class="o">=</span> <span class="p">(</span><span class="n">y1</span> <span class="o">*</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">y2</span> <span class="o">*</span> <span class="n">t1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span>
+			<span class="n">yn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">(</span><span class="n">output_name</span><span class="p">,</span> <span class="n">tn</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">yn</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+				<span class="n">t2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">tn</span><span class="p">,</span> <span class="n">yn</span>
+				<span class="k">if</span> <span class="n">side</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+					<span class="n">y1</span> <span class="o">/=</span> <span class="mi">2</span>
+				<span class="n">side</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+			<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">yn</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+				<span class="n">t1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">tn</span><span class="p">,</span> <span class="n">yn</span>
+				<span class="k">if</span> <span class="n">side</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+					<span class="n">y2</span> <span class="o">/=</span> <span class="mi">2</span>
+				<span class="n">side</span> <span class="o">=</span> <span class="mi">1</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">break</span>
+		<span class="k">return</span> <span class="n">tn</span></div></div>
+
+
+<div class="viewcode-block" id="ITPStateEventLocator"><a class="viewcode-back" href="../../../CBD.state_events.locators.html#CBD.state_events.locators.ITPStateEventLocator">[docs]</a><span class="k">class</span> <span class="nc">ITPStateEventLocator</span><span class="p">(</span><span class="n">StateEventLocator</span><span class="p">):</span>
+	<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Implements the Interpolation-Truncation-Projection algorithm for finding</span>
+<span class="sd">	the root of a function.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		eps (float):    Minimal interval size. Defaults to 1e-5.</span>
+<span class="sd">		k1 (float):     First truncation size hyperparameter. Must be in the</span>
+<span class="sd">						range of :math:`(0, \infty)`. Defaults to 0.1.</span>
+<span class="sd">		k2 (float):     Second truncation size hyperparameter. Must be in the</span>
+<span class="sd">						range of :math:`[1, 1 + \frac{1}{2}(1 + \sqrt{5})]`.</span>
+<span class="sd">						Defaults to 1.5.</span>
+<span class="sd">		n0 (float):     Slack variable to control the size of the interval for</span>
+<span class="sd">						the projection step. Must be in :math:`[0, \infty)`.</span>
+<span class="sd">						When 0, the average number of iterations will be less</span>
+<span class="sd">						than that of the bisection method. Defaults to 0.</span>
+
+<span class="sd">	See Also:</span>
+<span class="sd">		https://en.wikipedia.org/wiki/ITP_method</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="n">k1</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">k2</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">n0</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+		<span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">k1</span><span class="p">,</span> <span class="s2">&quot;For ITP, k1 must be strictly positive.&quot;</span>
+		<span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">k2</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">),</span> <span class="s2">&quot;For ITP, k2 must be in [1, 1 + phi].&quot;</span>
+		<span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">n0</span><span class="p">,</span> <span class="s2">&quot;For ITP, n0 must be positive or zero.&quot;</span>
+
+		<span class="nb">super</span><span class="p">(</span><span class="n">ITPStateEventLocator</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="n">eps</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">=</span> <span class="n">k1</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">k2</span> <span class="o">=</span> <span class="n">k2</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">n0</span> <span class="o">=</span> <span class="n">n0</span>
+
+<div class="viewcode-block" id="ITPStateEventLocator.algorithm"><a class="viewcode-back" href="../../../CBD.state_events.locators.html#CBD.state_events.locators.ITPStateEventLocator.algorithm">[docs]</a>	<span class="k">def</span> <span class="nf">algorithm</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="n">Direction</span><span class="o">.</span><span class="n">ANY</span><span class="p">):</span>
+		<span class="n">sign</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+
+		<span class="n">a</span><span class="p">,</span> <span class="n">ya</span> <span class="o">=</span> <span class="n">p1</span>
+		<span class="n">b</span><span class="p">,</span> <span class="n">yb</span> <span class="o">=</span> <span class="n">p2</span>
+
+		<span class="n">ya</span> <span class="o">-=</span> <span class="n">level</span>
+		<span class="n">yb</span> <span class="o">-=</span> <span class="n">level</span>
+
+		<span class="k">if</span> <span class="n">ya</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">a</span>
+		<span class="k">if</span> <span class="n">yb</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">b</span>
+
+		<span class="c1"># Preprocessing</span>
+		<span class="n">nh</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span>
+		<span class="n">nm</span> <span class="o">=</span> <span class="n">nh</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">n0</span>
+		<span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+
+		<span class="k">while</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">):</span>
+			<span class="n">xh</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">a</span>
+			<span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">nm</span> <span class="o">-</span> <span class="n">j</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+			<span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">k1</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">**</span> <span class="bp">self</span><span class="o">.</span><span class="n">k2</span>
+
+			<span class="c1"># Interpolation</span>
+			<span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">yb</span> <span class="o">-</span> <span class="n">ya</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">:</span>
+				<span class="n">xf</span> <span class="o">=</span> <span class="n">xh</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">xf</span> <span class="o">=</span> <span class="p">(</span><span class="n">yb</span> <span class="o">*</span> <span class="n">a</span> <span class="o">-</span> <span class="n">ya</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">yb</span> <span class="o">-</span> <span class="n">ya</span><span class="p">)</span>
+
+			<span class="c1"># Truncation</span>
+			<span class="n">s</span> <span class="o">=</span> <span class="n">sign</span><span class="p">(</span><span class="n">xh</span> <span class="o">-</span> <span class="n">xf</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">d</span> <span class="o">&lt;=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xh</span> <span class="o">-</span> <span class="n">xf</span><span class="p">):</span>
+				<span class="n">xt</span> <span class="o">=</span> <span class="n">xf</span> <span class="o">+</span> <span class="n">s</span> <span class="o">*</span> <span class="n">d</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">xt</span> <span class="o">=</span> <span class="n">xh</span>
+
+			<span class="c1"># Projection</span>
+			<span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xt</span> <span class="o">-</span> <span class="n">xh</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">:</span>
+				<span class="n">xI</span> <span class="o">=</span> <span class="n">xt</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">xI</span> <span class="o">=</span> <span class="n">xh</span> <span class="o">-</span> <span class="n">s</span> <span class="o">*</span> <span class="n">r</span>
+
+			<span class="c1"># Update Interval</span>
+			<span class="n">yI</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_function</span><span class="p">(</span><span class="n">output_name</span><span class="p">,</span> <span class="n">xI</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">ya</span> <span class="o">-</span> <span class="n">yb</span><span class="p">)</span> <span class="o">*</span> <span class="n">yI</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">ya</span><span class="p">,</span> <span class="n">yI</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+				<span class="n">b</span> <span class="o">=</span> <span class="n">xI</span>
+				<span class="n">yb</span> <span class="o">=</span> <span class="n">yI</span>
+			<span class="k">elif</span> <span class="p">(</span><span class="n">ya</span> <span class="o">-</span> <span class="n">yb</span><span class="p">)</span> <span class="o">*</span> <span class="n">yI</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">yI</span><span class="p">,</span> <span class="n">yb</span><span class="p">,</span> <span class="n">direction</span><span class="p">):</span>
+				<span class="n">a</span> <span class="o">=</span> <span class="n">xI</span>
+				<span class="n">ya</span> <span class="o">=</span> <span class="n">yI</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">a</span> <span class="o">=</span> <span class="n">xI</span>
+				<span class="n">b</span> <span class="o">=</span> <span class="n">xI</span>
+			<span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+
+		<span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../CBD.html">CBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../state_events.html" >CBD.state_events</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.state_events.locators</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

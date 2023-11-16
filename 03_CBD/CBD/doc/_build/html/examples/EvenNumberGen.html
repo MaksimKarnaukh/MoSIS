@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Hierarchical Even Number Generator &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/math.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Fibonacci Sequence Generator" href="Fibonacci.html" />
+    <link rel="prev" title="Sine Generator" href="SinGen.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Fibonacci.html" title="Fibonacci Sequence Generator"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="SinGen.html" title="Sine Generator"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Hierarchical Even Number Generator</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="hierarchical-even-number-generator">
+<h1>Hierarchical Even Number Generator<a class="headerlink" href="#hierarchical-even-number-generator" title="Permalink to this headline">¶</a></h1>
+<p>Assuming you have seen the basics from the <a class="reference internal" href="SinGen.html"><span class="doc">Sine Generator</span></a>, this
+section will describe a simplistic even number generator, using
+hierarchical CBD modelling.</p>
+<p>At every timestep in the model, the generator is required to
+output its double. We can split it up into two components: a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.TimeBlock</span></code> and a <code class="code docutils literal notranslate"><span class="pre">Double</span></code> CBD class,
+which computes the double of its input. The generator block
+can be constructed just like the <code class="code docutils literal notranslate"><span class="pre">SinGen</span></code> block was created
+in the <a class="reference internal" href="SinGen.html"><span class="doc">Sine Generator</span></a> example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.Core</span> <span class="kn">import</span> <span class="n">CBD</span>
+<span class="kn">from</span> <span class="nn">CBD.lib.std</span> <span class="kn">import</span> <span class="n">TimeBlock</span>
+
+<span class="k">class</span> <span class="nc">EvenNumberGen</span><span class="p">(</span><span class="n">CBD</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;EvenNumberGen&quot;</span><span class="p">):</span>
+        <span class="n">CBD</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">input_ports</span><span class="o">=</span><span class="p">[],</span> <span class="n">output_ports</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;OUT1&quot;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">TimeBlock</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">Double</span><span class="p">(</span><span class="s2">&quot;double&quot;</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;double&quot;</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="s1">&#39;OUT1&#39;</span><span class="p">,</span>
+                                             <span class="n">input_port_name</span><span class="o">=</span><span class="s1">&#39;IN1&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;double&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT1&quot;</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="s1">&#39;OUT1&#39;</span><span class="p">)</span>
+
+
+<span class="n">numGen</span> <span class="o">=</span> <span class="n">EvenNumberGen</span><span class="p">(</span><span class="s2">&quot;NumGen&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, we’re left with the construction of the <code class="code docutils literal notranslate"><span class="pre">Double</span></code> block, which basically
+multiplies its input with 2:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.lib.std</span> <span class="kn">import</span> <span class="n">ProductBlock</span><span class="p">,</span> <span class="n">ConstantBlock</span>
+
+<span class="k">class</span> <span class="nc">Double</span><span class="p">(</span><span class="n">CBD</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Double&quot;</span><span class="p">):</span>
+        <span class="n">CBD</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">input_ports</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;IN1&quot;</span><span class="p">],</span> <span class="n">output_ports</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;OUT1&quot;</span><span class="p">])</span>
+
+        <span class="c1"># Create the blocks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ProductBlock</span><span class="p">(</span><span class="s2">&quot;mult&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Connect the blocks</span>
+        <span class="c1"># Default ports are &quot;INx&quot; and &quot;OUT1&quot;, with &#39;x&#39; the index of the connection</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">,</span> <span class="s2">&quot;mult&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;IN1&quot;</span><span class="p">,</span> <span class="s2">&quot;mult&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;mult&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And that’s it. Now your models can have hierarchy!</p>
+<section id="flattening">
+<h2>Flattening<a class="headerlink" href="#flattening" title="Permalink to this headline">¶</a></h2>
+<p>Of course, when building highly hierarchical models, it may be useful to be able to
+create a full model, ignoring all hierarchical model conceptions. Flattening is the
+reverse of hierarchical composition. By calling the <code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.Core.CBD.flatten()</span></code>
+method, the CBD model will be transformed into a single CBD model without hierarchy.</p>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Hierarchical Even Number Generator</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#flattening">Flattening</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pyCBD.html">pyCBD package</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="SinGen.html"
+                          title="previous chapter">Sine Generator</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="Fibonacci.html"
+                          title="next chapter">Fibonacci Sequence Generator</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Fibonacci.html" title="Fibonacci Sequence Generator"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="SinGen.html" title="Sine Generator"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Hierarchical Even Number Generator</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

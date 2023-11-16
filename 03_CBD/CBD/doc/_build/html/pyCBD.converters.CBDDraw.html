@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Generate GraphViz from CBD Models &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Encapsulating CBD Models in PythonPDEVS" href="pyCBD.converters.hybrid.html" />
+    <link rel="prev" title="Generate C code from CBDs" href="pyCBD.converters.CBD2C.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.converters.hybrid.html" title="Encapsulating CBD Models in PythonPDEVS"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.converters.CBD2C.html" title="Generate C code from CBDs"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" >pyCBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="pyCBD.converters.html" accesskey="U">pyCBD.converters</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Generate GraphViz from CBD Models</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-pyCBD.converters.CBDDraw">
+<span id="generate-graphviz-from-cbd-models"></span><h1>Generate GraphViz from CBD Models<a class="headerlink" href="#module-pyCBD.converters.CBDDraw" title="Permalink to this headline">¶</a></h1>
+<p>Useful drawing function to easily draw a CBD model in Graphviz.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyCBD.converters.CBDDraw.gvDraw">
+<span class="sig-prename descclassname"><span class="pre">pyCBD.converters.CBDDraw.</span></span><span class="sig-name descname"><span class="pre">gvDraw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cbd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rankdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'LR'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/converters/CBDDraw.html#gvDraw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.converters.CBDDraw.gvDraw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Outputs a <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD</span></code> as a <a class="reference external" href="https://graphviz.org/">GraphViz</a> script to filename.</p>
+<p>For instance, drawing the CBD given in the <a class="reference internal" href="examples/EvenNumberGen.html"><span class="doc">Hierarchical Even Number Generator</span></a> example, the following figure
+can be obtained:</p>
+<figure class="align-default">
+<img alt="_images/EvenNumberGV.svg" src="_images/EvenNumberGV.svg" /></figure>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The resulting Graphviz file might look “clunky” and messy when rendering with
+the standard <code class="code docutils literal notranslate"><span class="pre">dot</span></code> engine. The <code class="code docutils literal notranslate"><span class="pre">neato</span></code>, <code class="code docutils literal notranslate"><span class="pre">twopi</span></code> and <code class="code docutils literal notranslate"><span class="pre">circo</span></code>
+engines might provide a cleaner and more readable result.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cbd</strong> (<a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.CBD" title="pyCBD.Core.CBD"><em>CBD</em></a>) – The <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD</span></code> to draw.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the dot-file.</p></li>
+<li><p><strong>rankdir</strong> (<em>str</em>) – The GraphViz rankdir of the plot. Must be either <code class="code docutils literal notranslate"><span class="pre">TB</span></code>
+or <code class="code docutils literal notranslate"><span class="pre">LR</span></code>.</p></li>
+<li><p><strong>colors</strong> (<em>dict</em>) – An optional dictionary of <code class="code docutils literal notranslate"><span class="pre">blockname</span> <span class="pre">-&gt;</span> <span class="pre">color</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pyCBD.html">pyCBD package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pyCBD.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.lib.html">Standard CBD Library (BBL)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.html">pyCBD.realtime package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.tracers.html">pyCBD.tracers package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="pyCBD.converters.html">pyCBD.converters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.loopsolvers.html">pyCBD.loopsolvers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.state_events.html">pyCBD.state_events module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.preprocessing.html">pyCBD.preprocessing package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="pyCBD.converters.CBD2C.html"
+                          title="previous chapter">Generate C code from CBDs</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="pyCBD.converters.hybrid.html"
+                          title="next chapter">Encapsulating CBD Models in PythonPDEVS</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.converters.hybrid.html" title="Encapsulating CBD Models in PythonPDEVS"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.converters.CBD2C.html" title="Generate C code from CBDs"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" >pyCBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="pyCBD.converters.html" >pyCBD.converters</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Generate GraphViz from CBD Models</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

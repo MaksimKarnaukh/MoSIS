@@ -1,0 +1,403 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CBD.loopsolvers.linearsolver &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.loopsolvers.linearsolver</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for CBD.loopsolvers.linearsolver</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides a Gauss-Jordan solver to solve linear algebraic loops.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">CBD.Core</span> <span class="kn">import</span> <span class="n">CBD</span>
+<span class="kn">from</span> <span class="nn">CBD.util</span> <span class="kn">import</span> <span class="n">PYTHON_VERSION</span>
+<span class="kn">from</span> <span class="nn">CBD.loopsolvers.solver</span> <span class="kn">import</span> <span class="n">Solver</span>
+
+
+<span class="k">class</span> <span class="nc">_StrVar</span><span class="p">:</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">vals</span> <span class="o">=</span> <span class="n">val</span>
+
+	<span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">vals</span> <span class="o">+=</span> <span class="s1">&#39; + &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span>
+
+	<span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">vals</span> <span class="o">+=</span> <span class="s1">&#39; * &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span>
+
+	<span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vals</span>
+
+	<span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="LinearSolver"><a class="viewcode-back" href="../../../CBD.loopsolvers.linearsolver.html#CBD.loopsolvers.linearsolver.LinearSolver">[docs]</a><span class="k">class</span> <span class="nc">LinearSolver</span><span class="p">(</span><span class="n">Solver</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Solves linear algebraic loops using matrices.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LinearSolver.checkValidity"><a class="viewcode-back" href="../../../CBD.loopsolvers.linearsolver.html#CBD.loopsolvers.linearsolver.LinearSolver.checkValidity">[docs]</a>	<span class="k">def</span> <span class="nf">checkValidity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">component</span><span class="p">):</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__isLinear</span><span class="p">(</span><span class="n">component</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s2">&quot;Cannot solve non-linear algebraic loop.</span><span class="se">\n</span><span class="s2">Self: </span><span class="si">{}</span><span class="se">\n</span><span class="s2">Components: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">component</span><span class="p">),</span> <span class="n">extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;blockname&quot;</span><span class="p">:</span> <span class="s2">&quot;Algebraic Loop&quot;</span><span class="p">})</span></div>
+
+	<span class="k">def</span> <span class="nf">__isLinear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strongComponent</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Determines if an algebraic loop describes a linear equation or not.</span>
+
+<span class="sd">		For a block to comprise the strong component, at least one of its dependencies must be in the strong</span>
+<span class="sd">		component as well.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			strongComponent (list): The detected loop, in a list (of BaseBlock instances)</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			:class:`True` if the loop is linear, else :code:`False`.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># TO IMPLEMENT</span>
+
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		A non-linear equation is generated when the following conditions occur:</span>
+<span class="sd">		 (1) there is a multiplication operation being performed between two unknowns.</span>
+<span class="sd">		 (2) there is an invertion operation being performed in an unknown.</span>
+<span class="sd">		 (3) some non-linear block belongs to the strong component</span>
+<span class="sd">	</span>
+<span class="sd">		The condition (1) can be operationalized by finding a product block that has two dependencies belonging to</span>
+<span class="sd">		the strong component. This will immediatly tell us that it is a product between two unknowns.</span>
+<span class="sd">		The condition (2) can be operationalized simply by finding an inverter block in the strong component. </span>
+<span class="sd">		Because the inverter block only has one input, if it is in the strong component, it means that its only</span>
+<span class="sd">		dependency is in the strong component.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+		<span class="c1"># WON&#39;T APPEAR: Constant, Sequence, Time, Logging</span>
+		<span class="c1"># LINEAR: Negator, Adder, Delay, Input, Output, Wire</span>
+		<span class="c1"># NON-LINEAR: Inverter, Modulo, Root, LT, EQ, LTE, Not, Or, And, MUX, Generic, ABS, Int, Power, Min, Max, Clamp</span>
+		<span class="c1"># SEMI-LINEAR: Product // MUX?</span>
+
+		<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">strongComponent</span><span class="p">:</span>
+			<span class="c1"># condition (1)</span>
+			<span class="k">if</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ProductBlock&quot;</span><span class="p">:</span>
+				<span class="n">dependenciesUnknown</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">getDependencies</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">block</span> <span class="ow">in</span> <span class="n">strongComponent</span><span class="p">]</span>
+				<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dependenciesUnknown</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+					<span class="k">return</span> <span class="kc">False</span>
+
+			<span class="c1"># condition (2) and (3)</span>
+			<span class="k">if</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;InverterBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;ModuloBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;RootBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;LessThanBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;EqualsBlock&quot;</span><span class="p">,</span>
+										<span class="s2">&quot;LessThanOrEqualsBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;NotBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;OrBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;AndBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;MinBlock&quot;</span><span class="p">,</span>
+										<span class="s2">&quot;MaxBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;MultiplexerBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;GenericBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;AbsBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;IntBlock&quot;</span><span class="p">,</span>
+										<span class="s2">&quot;PowerBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;ClampBlock&quot;</span><span class="p">]:</span>
+				<span class="k">return</span> <span class="kc">False</span>
+
+		<span class="k">return</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="LinearSolver.constructInput"><a class="viewcode-back" href="../../../CBD.loopsolvers.linearsolver.html#CBD.loopsolvers.linearsolver.LinearSolver.constructInput">[docs]</a>	<span class="k">def</span> <span class="nf">constructInput</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">strongComponent</span><span class="p">,</span> <span class="n">curIteration</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Constructs input for a solver of systems of linear equations</span>
+<span class="sd">		Input consists of two matrices:</span>
+
+<span class="sd">			- M1: coefficient matrix, where each row represents an equation of the system</span>
+<span class="sd">			- M2: result matrix, where each element is the result for the corresponding equation in M1</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">sep</span> <span class="o">=</span> <span class="s1">&#39;.&#39;</span>
+		<span class="n">known</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">strongComponent</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">getInputPorts</span><span class="p">():</span>
+				<span class="n">fblock</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">getPreviousPortClosure</span><span class="p">()</span><span class="o">.</span><span class="n">block</span>
+				<span class="c1"># fblock = block.getPortConnectedToInput(inp.name).block</span>
+				<span class="k">if</span> <span class="n">fblock</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">strongComponent</span><span class="p">:</span>
+					<span class="n">val</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">getHistory</span><span class="p">()[</span><span class="n">curIteration</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+					<span class="n">known</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span> <span class="o">+</span> <span class="n">sep</span> <span class="o">+</span> <span class="n">inp</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+					<span class="n">known</span><span class="p">[</span><span class="n">fblock</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="n">sep</span><span class="p">)]</span> <span class="o">=</span> <span class="n">val</span>
+		<span class="k">try</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_matrix</span><span class="p">(</span><span class="n">strongComponent</span><span class="p">,</span> <span class="n">sep</span><span class="p">,</span> <span class="n">known</span><span class="p">)</span>
+		<span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_logger</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;block&quot;</span><span class="p">:</span> <span class="s2">&quot;Strong Component&quot;</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="LinearSolver.get_matrix"><a class="viewcode-back" href="../../../CBD.loopsolvers.linearsolver.html#CBD.loopsolvers.linearsolver.LinearSolver.get_matrix">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">get_matrix</span><span class="p">(</span><span class="n">strongComponent</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">known</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">known</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="n">known</span> <span class="o">=</span> <span class="p">{}</span>
+
+		<span class="c1"># Initialize matrices with zeros</span>
+		<span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">strongComponent</span><span class="p">)</span>
+		<span class="n">M1</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+		<span class="n">M2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">size</span>
+
+		<span class="c1"># block -&gt; index of block</span>
+		<span class="n">indexdict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">strongComponent</span><span class="p">):</span>
+			<span class="n">indexdict</span><span class="p">[</span><span class="n">block</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+
+		<span class="c1"># Get list of low-level dependencies from n inputs</span>
+		<span class="k">def</span> <span class="nf">getBlockDependencies2</span><span class="p">(</span><span class="n">block</span><span class="p">):</span>
+			<span class="k">return</span> <span class="p">(</span><span class="n">port</span><span class="o">.</span><span class="n">block</span> <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">getPreviousPortClosure</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">getInputPorts</span><span class="p">()])</span>
+
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">strongComponent</span><span class="p">):</span>
+			<span class="k">if</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;AdderBlock&quot;</span><span class="p">:</span>
+				<span class="k">for</span> <span class="n">external</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">getBlockDependencies2</span><span class="p">(</span><span class="n">block</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">strongComponent</span><span class="p">]:</span>
+					<span class="k">if</span> <span class="n">external</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span> <span class="ow">in</span> <span class="n">known</span><span class="p">:</span>
+						<span class="n">M2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">known</span><span class="p">[</span><span class="n">external</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="n">sep</span><span class="p">)]</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">getInputPortNames</span><span class="p">():</span>
+							<span class="k">if</span> <span class="n">block</span><span class="o">.</span><span class="n">getPortConnectedToInput</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span><span class="o">.</span><span class="n">block</span> <span class="o">==</span> <span class="n">external</span><span class="p">:</span>
+								<span class="n">path</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span> <span class="o">+</span> <span class="n">sep</span> <span class="o">+</span> <span class="n">inp</span>
+								<span class="n">M2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">_StrVar</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">M2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; - &quot;</span> <span class="o">+</span> <span class="n">known</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+								<span class="k">break</span>
+				<span class="n">M1</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+
+				<span class="k">for</span> <span class="n">compInStrong</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">getBlockDependencies2</span><span class="p">(</span><span class="n">block</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">strongComponent</span><span class="p">]:</span>
+					<span class="n">M1</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">indexdict</span><span class="p">[</span><span class="n">compInStrong</span><span class="p">]]</span> <span class="o">+=</span> <span class="mi">1</span>
+			<span class="k">elif</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;ProductBlock&quot;</span><span class="p">:</span>
+				<span class="c1"># M2 can stay 0</span>
+				<span class="n">M1</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+				<span class="n">fact</span> <span class="o">=</span> <span class="mi">1</span>
+				<span class="k">for</span> <span class="n">external</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">getBlockDependencies2</span><span class="p">(</span><span class="n">block</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">strongComponent</span><span class="p">]:</span>
+					<span class="k">if</span> <span class="n">external</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span> <span class="ow">in</span> <span class="n">known</span><span class="p">:</span>
+						<span class="n">fact</span> <span class="o">*=</span> <span class="n">known</span><span class="p">[</span><span class="n">external</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="n">sep</span><span class="p">)]</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">getInputPortNames</span><span class="p">():</span>
+							<span class="k">if</span> <span class="n">block</span><span class="o">.</span><span class="n">getPortConnectedToInput</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span><span class="o">.</span><span class="n">block</span> <span class="o">==</span> <span class="n">external</span><span class="p">:</span>
+								<span class="n">path</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span> <span class="o">+</span> <span class="n">sep</span> <span class="o">+</span> <span class="n">inp</span>
+								<span class="n">fact</span> <span class="o">=</span> <span class="n">_StrVar</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">fact</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; * &quot;</span> <span class="o">+</span> <span class="n">known</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+								<span class="k">break</span>
+				<span class="k">for</span> <span class="n">compInStrong</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">getBlockDependencies2</span><span class="p">(</span><span class="n">block</span><span class="p">)</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">strongComponent</span><span class="p">]:</span>
+					<span class="n">M1</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">indexdict</span><span class="p">[</span><span class="n">compInStrong</span><span class="p">]]</span> <span class="o">=</span> <span class="n">fact</span> <span class="o">+</span> <span class="n">M1</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">indexdict</span><span class="p">[</span><span class="n">compInStrong</span><span class="p">]]</span>
+			<span class="k">elif</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;NegatorBlock&quot;</span><span class="p">:</span>
+				<span class="c1"># M2 can stay 0</span>
+				<span class="n">M1</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+				<span class="n">possibleDep</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">getInputPortByName</span><span class="p">(</span><span class="s2">&quot;IN1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">getPreviousPortClosure</span><span class="p">()</span>
+				<span class="n">M1</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">indexdict</span><span class="p">[</span><span class="n">possibleDep</span><span class="o">.</span><span class="n">block</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span> <span class="mi">1</span>
+			<span class="k">elif</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;DelayBlock&quot;</span><span class="p">:</span>
+				<span class="c1"># If a delay is in a strong component, this is the first iteration</span>
+				<span class="c1"># And so the dependency is the IC</span>
+				<span class="c1"># M2 can stay 0 because we have an equation of the type -x = -ic &lt;=&gt; -x + ic = 0</span>
+				<span class="n">M1</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+				<span class="n">possibleDep</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">getPortConnectedToInput</span><span class="p">(</span><span class="s2">&quot;IC&quot;</span><span class="p">)</span>
+				<span class="n">dependency</span> <span class="o">=</span> <span class="n">possibleDep</span><span class="o">.</span><span class="n">block</span>
+				<span class="k">assert</span> <span class="n">dependency</span> <span class="ow">in</span> <span class="n">strongComponent</span>
+				<span class="n">M1</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">indexdict</span><span class="p">[</span><span class="n">dependency</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">1</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown element &#39;</span><span class="si">{}</span><span class="s2">&#39;, please implement&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()))</span>
+		<span class="k">return</span> <span class="n">M1</span><span class="p">,</span> <span class="n">M2</span></div>
+
+<div class="viewcode-block" id="LinearSolver.solve"><a class="viewcode-back" href="../../../CBD.loopsolvers.linearsolver.html#CBD.loopsolvers.linearsolver.LinearSolver.solve">[docs]</a>	<span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solverInput</span><span class="p">):</span>
+		<span class="n">M1</span><span class="p">,</span> <span class="n">M2</span> <span class="o">=</span> <span class="n">solverInput</span>
+		<span class="n">n</span> <span class="o">=</span> <span class="n">M1</span><span class="o">.</span><span class="n">rows</span>
+		<span class="n">indxc</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+		<span class="n">indxr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+		<span class="n">ipiv</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
+		<span class="n">icol</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="n">irow</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+			<span class="n">big</span> <span class="o">=</span> <span class="mf">0.0</span>
+			<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+				<span class="k">if</span> <span class="n">ipiv</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+					<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+						<span class="k">if</span> <span class="n">ipiv</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+							<span class="n">nb</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">fabs</span><span class="p">(</span><span class="n">M1</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">])</span>
+							<span class="k">if</span> <span class="n">nb</span> <span class="o">&gt;=</span> <span class="n">big</span><span class="p">:</span>
+								<span class="n">big</span> <span class="o">=</span> <span class="n">nb</span>
+								<span class="n">irow</span> <span class="o">=</span> <span class="n">j</span>
+								<span class="n">icol</span> <span class="o">=</span> <span class="n">k</span>
+						<span class="k">elif</span> <span class="n">ipiv</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+							<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;GAUSSJ: Singular Matrix-1&quot;</span><span class="p">)</span>
+			<span class="n">ipiv</span><span class="p">[</span><span class="n">icol</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+			<span class="k">if</span> <span class="n">irow</span> <span class="o">!=</span> <span class="n">icol</span><span class="p">:</span>
+				<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+					<span class="n">M1</span><span class="p">[</span><span class="n">irow</span><span class="p">,</span> <span class="n">l</span><span class="p">],</span> <span class="n">M1</span><span class="p">[</span><span class="n">icol</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">=</span> <span class="n">M1</span><span class="p">[</span><span class="n">icol</span><span class="p">,</span> <span class="n">l</span><span class="p">],</span> <span class="n">M1</span><span class="p">[</span><span class="n">irow</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span>
+				<span class="n">M2</span><span class="p">[</span><span class="n">irow</span><span class="p">],</span> <span class="n">M2</span><span class="p">[</span><span class="n">icol</span><span class="p">]</span> <span class="o">=</span> <span class="n">M2</span><span class="p">[</span><span class="n">icol</span><span class="p">],</span> <span class="n">M2</span><span class="p">[</span><span class="n">irow</span><span class="p">]</span>
+			<span class="n">indxr</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">irow</span>
+			<span class="n">indxc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">icol</span>
+			<span class="k">if</span> <span class="n">M1</span><span class="p">[</span><span class="n">icol</span><span class="p">,</span> <span class="n">icol</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+				<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;GAUSSJ: Singular Matrix-2&quot;</span><span class="p">)</span>
+			<span class="n">pivinv</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">M1</span><span class="p">[</span><span class="n">icol</span><span class="p">,</span> <span class="n">icol</span><span class="p">]</span>
+			<span class="n">M1</span><span class="p">[</span><span class="n">icol</span><span class="p">,</span> <span class="n">icol</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+			<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+				<span class="n">M1</span><span class="p">[</span><span class="n">icol</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">*=</span> <span class="n">pivinv</span>
+			<span class="n">M2</span><span class="p">[</span><span class="n">icol</span><span class="p">]</span> <span class="o">*=</span> <span class="n">pivinv</span>
+			<span class="k">for</span> <span class="n">ll</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+				<span class="k">if</span> <span class="n">ll</span> <span class="o">!=</span> <span class="n">icol</span><span class="p">:</span>
+					<span class="n">dum</span> <span class="o">=</span> <span class="n">M1</span><span class="p">[</span><span class="n">ll</span><span class="p">,</span> <span class="n">icol</span><span class="p">]</span>
+					<span class="n">M1</span><span class="p">[</span><span class="n">ll</span><span class="p">,</span> <span class="n">icol</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+					<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+						<span class="n">M1</span><span class="p">[</span><span class="n">ll</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">-=</span> <span class="n">M1</span><span class="p">[</span><span class="n">icol</span><span class="p">,</span> <span class="n">l</span><span class="p">]</span> <span class="o">*</span> <span class="n">dum</span>
+					<span class="n">M2</span><span class="p">[</span><span class="n">ll</span><span class="p">]</span> <span class="o">-=</span> <span class="n">M2</span><span class="p">[</span><span class="n">icol</span><span class="p">]</span> <span class="o">*</span> <span class="n">dum</span>
+
+		<span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+			<span class="k">if</span> <span class="n">indxr</span><span class="p">[</span><span class="n">l</span><span class="p">]</span> <span class="o">!=</span> <span class="n">indxc</span><span class="p">[</span><span class="n">l</span><span class="p">]:</span>
+				<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+					<span class="n">M1</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">indxr</span><span class="p">[</span><span class="n">l</span><span class="p">]],</span> <span class="n">M1</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">indxc</span><span class="p">[</span><span class="n">l</span><span class="p">]]</span> <span class="o">=</span> <span class="n">M1</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">indxc</span><span class="p">[</span><span class="n">l</span><span class="p">]],</span> <span class="n">M1</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">indxr</span><span class="p">[</span><span class="n">l</span><span class="p">]]</span>
+
+		<span class="k">return</span> <span class="n">solverInput</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="Matrix"><a class="viewcode-back" href="../../../CBD.loopsolvers.linearsolver.html#CBD.loopsolvers.linearsolver.Matrix">[docs]</a><span class="k">class</span> <span class="nc">Matrix</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;Custom, efficient matrix class. This class is used for efficiency purposes.</span>
+
+<span class="sd">		- Using a while/for loop is slow.</span>
+<span class="sd">		- Using :class:`[[0] * n] * n` will have n references to the same list.</span>
+<span class="sd">		- Using :class:`[[0] * size for _ in range(size)]` can be 5 times slower</span>
+<span class="sd">		  than this class!</span>
+
+<span class="sd">	Numpy could be used to even further increase efficiency, but this increases the</span>
+<span class="sd">	required dependencies for external hardware systems (that may not provide these options).</span>
+
+<span class="sd">	Note:</span>
+<span class="sd">		Internally, the matrix is segmented into chunks of 500.000.000 items.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">rows</span> <span class="o">=</span> <span class="n">rows</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="o">=</span> <span class="n">cols</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">rows</span> <span class="o">*</span> <span class="n">cols</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__max_list_size</span> <span class="o">=</span> <span class="mi">500</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">1000</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">((</span><span class="n">rows</span> <span class="o">*</span> <span class="n">cols</span><span class="p">)</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_list_size</span><span class="p">)]</span>
+		<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_list_size</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_list_size</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+		<span class="n">absolute</span> <span class="o">=</span> <span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="o">+</span> <span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+		<span class="n">outer</span> <span class="o">=</span> <span class="n">absolute</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_list_size</span>
+		<span class="n">inner</span> <span class="o">=</span> <span class="n">absolute</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_list_size</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">outer</span><span class="p">][</span><span class="n">inner</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+		<span class="n">absolute</span> <span class="o">=</span> <span class="n">idx</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="o">+</span> <span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+		<span class="n">outer</span> <span class="o">=</span> <span class="n">absolute</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_list_size</span>
+		<span class="n">inner</span> <span class="o">=</span> <span class="n">absolute</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">__max_list_size</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">outer</span><span class="p">][</span><span class="n">inner</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+	<span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Matrix.format"><a class="viewcode-back" href="../../../CBD.loopsolvers.linearsolver.html#CBD.loopsolvers.linearsolver.Matrix.format">[docs]</a>	<span class="k">def</span> <span class="nf">format</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">paren</span><span class="o">=</span><span class="s1">&#39;[]&#39;</span><span class="p">,</span> <span class="n">floats</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%8.4f</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">eol</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">):</span>
+		<span class="n">res</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">):</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="n">res</span> <span class="o">+=</span> <span class="n">eol</span>
+			<span class="n">res</span> <span class="o">+=</span> <span class="n">paren</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">):</span>
+				<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">],</span> <span class="n">_StrVar</span><span class="p">):</span>
+					<span class="n">res</span> <span class="o">+=</span> <span class="n">sep</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">])</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">res</span> <span class="o">+=</span> <span class="n">sep</span> <span class="o">+</span> <span class="n">floats</span> <span class="o">%</span> <span class="bp">self</span><span class="p">[</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">]</span>
+			<span class="n">res</span> <span class="o">+=</span> <span class="n">sep</span> <span class="o">+</span> <span class="n">paren</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+		<span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="Matrix.concat"><a class="viewcode-back" href="../../../CBD.loopsolvers.linearsolver.html#CBD.loopsolvers.linearsolver.Matrix.concat">[docs]</a>	<span class="k">def</span> <span class="nf">concat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+			<span class="n">om</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">other</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+				<span class="n">om</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">e</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">om</span><span class="p">)</span>
+		<span class="k">assert</span> <span class="n">other</span><span class="o">.</span><span class="n">rows</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows</span>
+		<span class="n">res</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">cols</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rows</span><span class="p">):</span>
+			<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">):</span>
+				<span class="n">res</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span>
+			<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">cols</span><span class="p">):</span>
+				<span class="n">res</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">other</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span>
+		<span class="k">return</span> <span class="n">res</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../CBD.html">CBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.loopsolvers.linearsolver</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

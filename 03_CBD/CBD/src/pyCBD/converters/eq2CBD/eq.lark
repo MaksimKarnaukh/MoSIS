@@ -1,0 +1,39 @@
+// Equation grammar, used for converting textual syntax to CBD models
+%import common.NUMBER
+%import common.NEWLINE
+%import common.WS_INLINE
+%ignore WS_INLINE
+
+start   :   eqn* eq NEWLINE*
+?eq     :   stmt
+stmt    :   VNAME EQUALS oper
+?eqn    :   eq NEWLINE
+poper   :   "(" oper ")"
+?oper   :   sum | expr
+?sum    :   prod ((ADD|MINUS) prod)*
+?prod   :   (pow ((MUL|DIV) pow)*)
+?expr   :   mod | bool
+mod     :   pow MOD pow
+bool    :   pow BOP pow
+?pow    :   var (POW var)?
+neg     :   MINUS var
+not_    :   NOT var
+var     :   NUMBER
+        |   VNAME
+        |   func
+        |   neg
+        |   not_
+        |   poper
+func    :   FNAME "(" oper ("," oper)* ")"
+
+EQUALS  :   "=" | ":="
+ADD     :   "+"
+MINUS   :   "-"
+MUL     :   "*"
+DIV     :   "/"
+MOD     :   "%" | "mod"
+POW     :   "^"
+BOP     :   "==" | "<" | "<=" | ">" | ">=" | "or" | "and" | "&&" | "||"
+NOT     :   "!" | "not" | "~"
+VNAME   :   /[a-zA-Z_][a-zA-Z0-9_]*/
+FNAME   :   /[a-zA-Z_][a-zA-Z0-9_]*/

@@ -1,0 +1,1010 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CBD.realtime.plotting &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.realtime.plotting</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for CBD.realtime.plotting</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains all classes and structures needed for live plotting of data via</span>
+<span class="sd">polling an object. While specifically made for the CBD simulator, it is independent</span>
+<span class="sd">of any internal workings.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># import CBD.realtime.accurate_time as time</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="k">try</span><span class="p">:</span>
+	<span class="kn">import</span> <span class="nn">matplotlib</span>
+	<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+	<span class="kn">import</span> <span class="nn">matplotlib.animation</span> <span class="k">as</span> <span class="nn">animation</span>
+	<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Arrow</span> <span class="k">as</span> <span class="n">mplArrow</span>
+	<span class="n">_MPL_FOUND</span> <span class="o">=</span> <span class="kc">True</span>
+
+	<span class="k">try</span><span class="p">:</span>
+		<span class="c1"># Note: Seaborn is built on top of matplotlib</span>
+		<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+		<span class="n">_SNS_FOUND</span> <span class="o">=</span> <span class="kc">True</span>
+	<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+		<span class="n">_SNS_FOUND</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+	<span class="n">_MPL_FOUND</span> <span class="o">=</span> <span class="kc">False</span>
+	<span class="n">_SNS_FOUND</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">try</span><span class="p">:</span>
+	<span class="kn">import</span> <span class="nn">bokeh.plotting</span> <span class="k">as</span> <span class="nn">bkplt</span>
+	<span class="kn">import</span> <span class="nn">bokeh.io</span>
+	<span class="kn">import</span> <span class="nn">bokeh.models</span>
+	<span class="n">_BOKEH_FOUND</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+	<span class="n">_BOKEH_FOUND</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="c1"># __all__ = [&#39;Backend&#39;, &#39;PlotKind&#39;, &#39;PlotHandler&#39;, &#39;PlotManager&#39;, &#39;plot&#39;, &#39;follow&#39;, &#39;set_xlim&#39;, &#39;set_ylim&#39;,</span>
+<span class="c1">#            &#39;Arrow&#39;, &#39;StepPlot&#39;, &#39;ScatterPlot&#39;, &#39;LinePlot&#39;]</span>
+
+<span class="c1"># TODO: More Plot Kinds</span>
+
+<div class="viewcode-block" id="Backend"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.Backend">[docs]</a><span class="k">class</span> <span class="nc">Backend</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	In which framework the plots need to be made.</span>
+
+<span class="sd">	Note:</span>
+<span class="sd">		Some attributes won&#39;t be available if the corresponding framework is not installed.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="n">_MPL_FOUND</span><span class="p">:</span>
+		<span class="n">MPL</span>         <span class="o">=</span> <span class="mi">1</span>
+		<span class="sd">&quot;&quot;&quot; : : Use `Matplotlib &lt;https://matplotlib.org/&gt;`_.&quot;&quot;&quot;</span>
+		<span class="n">MATPLOTLIB</span>  <span class="o">=</span> <span class="mi">1</span>
+		<span class="sd">&quot;&quot;&quot; : : Use `Matplotlib &lt;https://matplotlib.org/&gt;`_.&quot;&quot;&quot;</span>
+
+	<span class="k">if</span> <span class="n">_BOKEH_FOUND</span><span class="p">:</span>
+		<span class="n">BKH</span>         <span class="o">=</span> <span class="mi">2</span>
+		<span class="n">BOKEH</span>       <span class="o">=</span> <span class="mi">2</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		 : : Use `Bokeh &lt;//docs.bokeh.org/en/latest/index.html&gt;`_.</span>
+<span class="sd">		</span>
+<span class="sd">		Important:</span>
+<span class="sd">			For :code:`BOKEH`, a server must be started with:</span>
+<span class="sd">	</span>
+<span class="sd">			.. code-block:: bash</span>
+<span class="sd">	</span>
+<span class="sd">			   bokeh serve &lt;experiment file&gt;</span>
+<span class="sd">			</span>
+<span class="sd">		Warning:</span>
+<span class="sd">			Because of how Bokeh works, it is currently impossible to capture premature</span>
+<span class="sd">			close events on a system. The plots will always remain active once started.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+
+	<span class="k">if</span> <span class="n">_SNS_FOUND</span><span class="p">:</span>
+		<span class="n">SNS</span>         <span class="o">=</span> <span class="mi">3</span>
+		<span class="sd">&quot;&quot;&quot; : : Use `Seaborn &lt;https://seaborn.pydata.org/&gt;`_.&quot;&quot;&quot;</span>
+		<span class="n">SEABORN</span>     <span class="o">=</span> <span class="mi">3</span>
+		<span class="sd">&quot;&quot;&quot; : : Use `Seaborn &lt;https://seaborn.pydata.org/&gt;`_.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Backend.exists"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.Backend.exists">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks that a given backend exists.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">getattr</span><span class="p">(</span><span class="n">Backend</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">Backend</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">and</span> \
+		                                                                <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">Backend</span><span class="p">,</span> <span class="n">x</span><span class="p">))]</span></div>
+
+<div class="viewcode-block" id="Backend.compare"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.Backend.compare">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Compares the value against a backend name.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			name (str):     The name of the backend to check for.</span>
+<span class="sd">			value (int):    The value to compare.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">Backend</span><span class="p">)</span> <span class="ow">and</span> <span class="n">Backend</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">Backend</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="n">value</span></div>
+
+<div class="viewcode-block" id="Backend.get"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.Backend.get">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Gets the backend with a specific name if it exists and if it&#39;s installed.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			name (str):     The name of the backend to get.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">Backend</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span> <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">Backend</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span></div></div>
+
+
+<div class="viewcode-block" id="PlotHandler"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler">[docs]</a><span class="k">class</span> <span class="nc">PlotHandler</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Handles Real-Time plotting, independent of a plotting framework.</span>
+
+<span class="sd">	Every :code:`interval` time, data will be polled from the :code:`object`,</span>
+<span class="sd">	w.r.t. the given plotting :code:`backend`. The handler will use the knowledge</span>
+<span class="sd">	of a backend to determine how the given :code:`figure` must be updated.</span>
+
+<span class="sd">	This class can be used in any simulation context, where plotting data can be</span>
+<span class="sd">	polled from an object or a resource.</span>
+
+<span class="sd">	Note:</span>
+<span class="sd">		While technically framework-independent, matplotlib has the least external</span>
+<span class="sd">		overhead in your code.</span>
+
+<span class="sd">	Tip:</span>
+<span class="sd">		When using multiple plots/plotting instances, you should make use of the</span>
+<span class="sd">		:class:`PlotManager`.</span>
+
+<span class="sd">	Warning:</span>
+<span class="sd">		Bokeh is still in active development. Not all features will work as required.</span>
+
+<span class="sd">	Raises:</span>
+<span class="sd">		AssertionError: if the backend cannot be located.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		object (Any):       The object from which data needs to be polled. By default,</span>
+<span class="sd">							the :code:`data_xy` attribute will be used on the object,</span>
+<span class="sd">							which should result in a 2xN array in the form of</span>
+<span class="sd">							:code:`[[x1, x2, x3...], [y1, y2, y3...]]`. Change this</span>
+<span class="sd">							behaviour with the :func:`set_data_getter` function.</span>
+<span class="sd">		figure:             The figure object required for plotting. This has been made</span>
+<span class="sd">							externally to allow for full manipulation of the plotting</span>
+<span class="sd">							framework itself. The following explains the axxepted data</span>
+<span class="sd">							types:</span>
+
+<span class="sd">							- **matplotlib:** Tuple (pair) of :code:`(Figure, Axes)`</span>
+<span class="sd">							- **bokeh:** :code:`Figure`</span>
+<span class="sd">							- **seaborn:** Tuple (pair) of :code:`(Figure, Axes)`</span>
+
+<span class="sd">		kind (PlotKind):    What needs to be plotted. See :class:`PlotKind` for more</span>
+<span class="sd">							info.</span>
+<span class="sd">		backend (Backend):  The backend to use for plotting. Defaults to</span>
+<span class="sd">							:attr:`Backend.MPL` (= matplotlib).</span>
+<span class="sd">		interval (int):     Amount of milliseconds between plot refreshes.</span>
+<span class="sd">		frames (int):       The amount of frames for the animation. Only used if the</span>
+<span class="sd">							animation needs to be saved.</span>
+<span class="sd">		static (bool):      When :code:`True`, no animation will be created.</span>
+
+<span class="sd">	See Also:</span>
+<span class="sd">		- :class:`Backend`</span>
+<span class="sd">		- :class:`PlotKind`</span>
+<span class="sd">		- :class:`PlotManager`</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">figure</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">Backend</span><span class="o">.</span><span class="n">MPL</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">static</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+		<span class="k">assert</span> <span class="n">Backend</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">backend</span><span class="p">),</span> <span class="s2">&quot;Invalid backend.&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">object</span> <span class="o">=</span> <span class="nb">object</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">kind</span> <span class="o">=</span> <span class="n">kind</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">figure</span> <span class="o">=</span> <span class="n">figure</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">interval</span> <span class="o">=</span> <span class="n">interval</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="n">backend</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">elm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">figure</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__opened</span> <span class="o">=</span> <span class="kc">True</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__finished</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__hidden</span> <span class="o">=</span> <span class="kc">False</span>
+
+		<span class="c1"># obtaining information</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__get_data</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">obj</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">data_xy</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__event_bus</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__event_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__event_thread_loop</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__event_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__events</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;preupdate&quot;</span><span class="p">:</span> <span class="p">[],</span>
+			<span class="s2">&quot;update&quot;</span><span class="p">:</span> <span class="p">[],</span>
+			<span class="s2">&quot;closed&quot;</span><span class="p">:</span> <span class="p">[]</span>
+		<span class="p">}</span>
+
+		<span class="c1"># backend info:</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">static</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">Backend</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span> <span class="ow">or</span> <span class="n">Backend</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="s2">&quot;SNS&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__ani</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">figure</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(),</span>
+				                                     <span class="n">interval</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">interval</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="n">frames</span><span class="p">)</span>
+				<span class="n">figure</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">mpl_connect</span><span class="p">(</span><span class="s1">&#39;close_event&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">_</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__close_event</span><span class="p">())</span>
+			<span class="k">elif</span> <span class="n">Backend</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="s2">&quot;BOKEH&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__periodic_callback</span> <span class="o">=</span> <span class="n">bokeh</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">curdoc</span><span class="p">()</span><span class="o">.</span><span class="n">add_periodic_callback</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(),</span> <span class="n">interval</span><span class="p">)</span>
+				<span class="c1"># No need to do closing callback -- automatically done by simulator</span>
+
+<div class="viewcode-block" id="PlotHandler.signal"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler.signal">[docs]</a>	<span class="k">def</span> <span class="nf">signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Raise a signal with a specific name and arguments.</span>
+
+<span class="sd">		The accepted signals are:</span>
+
+<span class="sd">		- :code:`preupdate(data)`: Raised whenever the plot is about to update.</span>
+<span class="sd">		  It takes the new plot data that has been polled.</span>
+<span class="sd">		- :code:`update(data)`: Raised whenever the plot updates. It takes the</span>
+<span class="sd">		  new plot data that has been polled.</span>
+<span class="sd">		- :code:`closed`: Raised whenever the plot closes. No additional arguments</span>
+<span class="sd">		  are associated with this event.</span>
+
+<span class="sd">		Note:</span>
+<span class="sd">			Normally, users do not need to call this function.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			name (str):     The name of the signal to raise.</span>
+<span class="sd">			*args:          Additional arguments to pass to the connected events.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`PlotHandler.connect`</span>
+<span class="sd">			- :func:`PlotManager.connect`</span>
+<span class="sd">			- :func:`follow`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__events</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid signal &#39;</span><span class="si">%s</span><span class="s2">&#39; in PlotHandler.&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__event_bus</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="PlotHandler.connect"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler.connect">[docs]</a>	<span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Connect an event with an additional function.</span>
+<span class="sd">		Useful for e.g. updating the plot axes w.r.t. the data.</span>
+
+<span class="sd">		The functions will be called in the order they were connected to the</span>
+<span class="sd">		events, with the associated arguments. The accepted signals are:</span>
+
+<span class="sd">		- :code:`preupdate(data)`: Raised whenever the plot is about to update.</span>
+<span class="sd">		  It takes the new plot data that has been polled.</span>
+<span class="sd">		- :code:`update(data)`: Raised whenever the plot updates. It takes the</span>
+<span class="sd">		  new plot data that has been polled.</span>
+<span class="sd">		- :code:`closed`: Raised whenever the plot closes. No additional arguments</span>
+<span class="sd">		  are associated with this event.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			name (str):     The name of the signal to raise.</span>
+<span class="sd">			function:       A function that will be called with the optional arguments</span>
+<span class="sd">							whenever the event is raised.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`PlotHandler.signal`</span>
+<span class="sd">			- :func:`PlotManager.connect`</span>
+<span class="sd">			- :func:`follow`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__events</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid signal &#39;</span><span class="si">%s</span><span class="s2">&#39; in PlotHandler.&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__events</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">function</span><span class="p">)</span></div>
+
+	<span class="k">def</span> <span class="nf">__event_thread_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__finished</span><span class="p">:</span>
+			<span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__event_bus</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="n">name</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__event_bus</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+				<span class="k">for</span> <span class="n">evt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__events</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
+					<span class="n">evt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+			<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interval</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PlotHandler.set_data_getter"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler.set_data_getter">[docs]</a>	<span class="k">def</span> <span class="nf">set_data_getter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the data getter function call. By default, the :code:`data_xy` attribute</span>
+<span class="sd">		is polled, but this function provides the flexibility to alter this behaviour.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			function:   The function to obtain the data. Takes the :code:`object` as an</span>
+<span class="sd">						input and should return a 2xN array in the form of</span>
+<span class="sd">						:code:`[[x1, x2, x3...], [y1, y2, y3...]]`.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__get_data</span> <span class="o">=</span> <span class="n">function</span></div>
+
+<div class="viewcode-block" id="PlotHandler.get_data"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler.get_data">[docs]</a>	<span class="k">def</span> <span class="nf">get_data</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Actually gets the data from the object.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PlotHandler.get_animation"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler.get_animation">[docs]</a>	<span class="k">def</span> <span class="nf">get_animation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Returns the animation object, if MatPlotLib is used as a backend.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__ani</span></div>
+
+<div class="viewcode-block" id="PlotHandler.close_event"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler.close_event">[docs]</a>	<span class="k">def</span> <span class="nf">close_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Closes the plot/figure associated with this handler.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			:func:`PlotHandler.close_event`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">,</span> <span class="s2">&quot;SNS&quot;</span><span class="p">):</span>
+			<span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">figure</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+		<span class="c1"># Make sure we close the plot if the backend fails to do so</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__close_event</span><span class="p">()</span></div>
+
+	<span class="k">def</span> <span class="nf">__close_event</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Raises the `closed` signal.</span>
+
+<span class="sd">		Note:</span>
+<span class="sd">			This function is only used in the backend to prevent double</span>
+<span class="sd">			closing of the plots.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__opened</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__opened</span> <span class="o">=</span> <span class="kc">False</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s1">&#39;closed&#39;</span><span class="p">)</span>
+			<span class="c1"># self.__event_thread.join()</span>
+
+<div class="viewcode-block" id="PlotHandler.is_opened"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler.is_opened">[docs]</a>	<span class="k">def</span> <span class="nf">is_opened</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks if the plots are still open.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__opened</span></div>
+
+<div class="viewcode-block" id="PlotHandler.update"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler.update">[docs]</a>	<span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Updates the plot information.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># print(&quot;update&quot;)</span>
+		<span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__hidden</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s1">&#39;preupdate&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+			<span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">elm</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">elm</span> <span class="o">=</span> <span class="n">res</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s1">&#39;preupdate&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+			<span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">elm</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[])</span>
+			<span class="k">if</span> <span class="n">res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">elm</span> <span class="o">=</span> <span class="n">res</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__finished</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PlotHandler.stop"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler.stop">[docs]</a>	<span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Requests the process to finish polling.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__finished</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+	<span class="k">def</span> <span class="nf">_stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Stops polling for updates, but keeps the plot alive.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">,</span> <span class="s2">&quot;SNS&quot;</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__ani</span><span class="o">.</span><span class="n">event_source</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;BOKEH&quot;</span><span class="p">):</span>
+			<span class="n">bokeh</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">curdoc</span><span class="p">()</span><span class="o">.</span><span class="n">remove_periodic_callback</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__periodic_callback</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PlotHandler.terminate"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler.terminate">[docs]</a>	<span class="k">def</span> <span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Terminate the animation and close the plot.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_stop</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">close_event</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PlotHandler.set_kind_args"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler.set_kind_args">[docs]</a>	<span class="k">def</span> <span class="nf">set_kind_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the (keyword) arguments used for the plot.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span></div>
+		<span class="c1"># TODO: pass the args on for the full plot.</span>
+		<span class="c1">#  Redrawing only changes the x, y coords!</span>
+
+<div class="viewcode-block" id="PlotHandler.hide"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler.hide">[docs]</a>	<span class="k">def</span> <span class="nf">hide</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Hides the plot in the view.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`show`</span>
+<span class="sd">			- :func:`toggle`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__hidden</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="PlotHandler.show"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler.show">[docs]</a>	<span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Shows the plot in the view.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`hide`</span>
+<span class="sd">			- :func:`toggle`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__hidden</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="PlotHandler.toggle"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotHandler.toggle">[docs]</a>	<span class="k">def</span> <span class="nf">toggle</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Toggles between hiding and showing the plot in the view.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`hide`</span>
+<span class="sd">			- :func:`show`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__hidden</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__hidden</span></div></div>
+
+
+<div class="viewcode-block" id="follow"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.follow">[docs]</a><span class="k">def</span> <span class="nf">follow</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;-inf&#39;</span><span class="p">),</span> <span class="n">upper_bound</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">),</span>
+           <span class="n">lower_lim</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">upper_lim</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">perc_keep</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Compute the new limits for the given dataset if the last data point must be followed.</span>
+<span class="sd">	This is a convenience function for updating the plotting axes&#39; limits. Whenever not</span>
+<span class="sd">	enough data is available, the axis won&#39;t scale down.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		data (list):            The data that must be plotted on the axes. Can be a</span>
+<span class="sd">								shortened version of only the final n values (n &gt; 0).</span>
+<span class="sd">		size (float):           The total size of the axis to show, even if the data</span>
+<span class="sd">								did not get there. When :code:`None`, the size is taken</span>
+<span class="sd">								from the bounds or limits. Defaults to :code:`None`.</span>
+<span class="sd">		lower_bound (float):    The lower bound of the axis, i.e. the minimal value to</span>
+<span class="sd">								show, even if the data lies outside of this interval.</span>
+<span class="sd">								Defaults to :code:`-float(&#39;inf&#39;)` (-infinity = no limit).</span>
+<span class="sd">		upper_bound (float):    The upper bound of the axis, i.e. the maximal value to</span>
+<span class="sd">								show, even if the data lies outside of this interval.</span>
+<span class="sd">								Defaults to :code:`float(&#39;inf&#39;)` (infinity = no limit).</span>
+<span class="sd">		lower_lim (float):      Lowest value to show, even if this value is not reached.</span>
+<span class="sd">								While :attr:`lower_bound` bounds this point, so no smaller</span>
+<span class="sd">								values can be shown, :attr:`lower_limit` makes it so this</span>
+<span class="sd">								valus is always shown, but smaller values may still rescale</span>
+<span class="sd">								beyond this point. Will be ignored when :attr:`size` is set.</span>
+<span class="sd">								Defaults to :code:`0.0`.</span>
+<span class="sd">		upper_lim (float):      Highest value to show, even if this value is not reached.</span>
+<span class="sd">								While :attr:`upper_bound` bounds this point, so no higher</span>
+<span class="sd">								values can be shown, :attr:`upper_limit` makes it so this</span>
+<span class="sd">								valus is always shown, but larger values may still rescale</span>
+<span class="sd">								beyond this point. Will be ignored when :attr:`size` is set.</span>
+<span class="sd">								Defaults to :code:`0.0`.</span>
+<span class="sd">		perc_keep (float):      The percentage at which the final data point must be</span>
+<span class="sd">								shown. When :code:`0.0`, this point is the lowest value</span>
+<span class="sd">								shown. When :code:`1.0`, this point is the highest value</span>
+<span class="sd">								shown. Use this value to change how &quot;centered&quot; the last</span>
+<span class="sd">								datapoint will be. When the axis grows in a positive</span>
+<span class="sd">								direction, a value of :code:`0.0` will never show the</span>
+<span class="sd">								data. When growing negatively, the opposite is true:</span>
+<span class="sd">								the data will not be shown for a value of :code:`1.0`.</span>
+<span class="sd">								Defaults to :code:`0.5` (= the middle).</span>
+
+<span class="sd">	Warning:</span>
+<span class="sd">		* The lower bound must be strictly smaller than the upper bound.</span>
+<span class="sd">		* The size is :code:`None` and the bounds are infinity and the limits are equal.</span>
+<span class="sd">		* The size cannot be larger than the distance between the bounds.</span>
+<span class="sd">		* The lower limit must be smaller than (or equal to) the upper limit.</span>
+
+<span class="sd">	Examples:</span>
+<span class="sd">		- Follow a sine wave in the positive-x direction, always keeping a width of 10, in matplotlib.</span>
+
+<span class="sd">		.. code-block:: python</span>
+
+<span class="sd">			manager = PlotManager()</span>
+<span class="sd">			manager.register(&quot;sin&quot;, cbd.find(&quot;plot&quot;)[0], (fig, ax), LinePlot())</span>
+<span class="sd">			manager.connect(&#39;sin&#39;, &#39;update&#39;, lambda d, a=ax: a.set_xlim(follow(d[0], 10.0, lower_bound=0.0)))</span>
+
+<span class="sd">		- Follow a sine wave in the negative-x direction, always keeping a width of 10, in matplotlib.</span>
+
+<span class="sd">		.. code-block:: python</span>
+
+<span class="sd">			manager = PlotManager()</span>
+<span class="sd">			manager.register(&quot;sin&quot;, cbd.find(&quot;plot&quot;)[0], (fig, ax), LinePlot())</span>
+<span class="sd">			manager.connect(&#39;sin&#39;, &#39;update&#39;, lambda d, a=ax: a.set_xlim(follow(d[0], 10.0, upper_bound=0.0)))</span>
+
+<span class="sd">		- Follow a positive sine-wave, but keep a 10% margin from the right edge of the plot, in matplotlib.</span>
+
+<span class="sd">		.. code-block:: python</span>
+
+<span class="sd">			manager = PlotManager()</span>
+<span class="sd">			manager.register(&quot;sin&quot;, cbd.find(&quot;plot&quot;)[0], (fig, ax), LinePlot())</span>
+<span class="sd">			manager.connect(&#39;sin&#39;, &#39;update&#39;, lambda d, a=ax: a.set_xlim(follow(d[0], 10.0, 0.0, perc_keep=0.9)))</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">if</span> <span class="n">lower_bound</span> <span class="o">&gt;=</span> <span class="n">upper_bound</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Lower bound must be strictly smaller than the upper bound.&quot;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="n">lower_bound</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;-inf&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">upper_bound</span> <span class="o">==</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">))</span> <span class="ow">and</span> <span class="n">lower_lim</span> <span class="o">==</span> <span class="n">upper_lim</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;When size is unset, the bounds may not be infinity and the limits may not equal each other.&quot;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">upper_bound</span> <span class="o">-</span> <span class="n">lower_bound</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid size: outside bounds.&quot;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">lower_lim</span> <span class="o">&gt;</span> <span class="n">upper_lim</span><span class="p">:</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Lower limit must be smaller than (or equal to) the upper limit.&quot;</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">lower_lim</span><span class="p">,</span> <span class="n">upper_lim</span>
+		<span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">lower_lim</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">upper_lim</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">upper_bound</span> <span class="o">-</span> <span class="n">lower_bound</span> <span class="o">==</span> <span class="n">size</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">lower_bound</span><span class="p">,</span> <span class="n">upper_bound</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+		<span class="k">return</span> <span class="o">-</span><span class="n">size</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">size</span> <span class="o">/</span> <span class="mf">2.0</span>
+	<span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+	<span class="n">low</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">value</span> <span class="o">-</span> <span class="n">size</span> <span class="o">*</span> <span class="n">perc_keep</span><span class="p">,</span> <span class="n">lower_bound</span><span class="p">)</span>
+	<span class="n">high</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">low</span> <span class="o">+</span> <span class="n">size</span><span class="p">,</span> <span class="n">upper_bound</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">high</span> <span class="o">==</span> <span class="n">upper_bound</span><span class="p">:</span>
+		<span class="n">low</span> <span class="o">=</span> <span class="n">high</span> <span class="o">-</span> <span class="n">size</span>
+	<span class="k">return</span> <span class="n">low</span><span class="p">,</span> <span class="n">high</span></div>
+
+
+<div class="viewcode-block" id="PlotKind"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotKind">[docs]</a><span class="k">class</span> <span class="nc">PlotKind</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	The kind of plot that needs to be rendered. This class is an abstract superclass.</span>
+
+<span class="sd">	Not all backends provide the same functionality for plotting the same shape.</span>
+<span class="sd">	This class provides a wrapper around all those functionalities to allow for users</span>
+<span class="sd">	that they only need to change the figure information.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		*args:      The arguments to add to the &#39;shape&#39;, excluding the data points.</span>
+
+<span class="sd">					.. note::</span>
+<span class="sd">						The :code:`seaborn` backend does not require any normal args.</span>
+
+<span class="sd">		**kwargs:   The keyword arguments to add to the &#39;shape&#39;.</span>
+
+<span class="sd">	See Also:</span>
+<span class="sd">		- :class:`LinePlot`</span>
+<span class="sd">		- :class:`StepPlot`</span>
+<span class="sd">		- :class:`ScatterPlot`</span>
+<span class="sd">		- Information on the individual plot instances in the corresponding frameworks.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+<div class="viewcode-block" id="PlotKind.is_backend"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotKind.is_backend">[docs]</a>	<span class="k">def</span> <span class="nf">is_backend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">backends</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks the backend for the plot.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">back</span> <span class="ow">in</span> <span class="n">backends</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">Backend</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="n">back</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span><span class="p">):</span>
+				<span class="k">return</span> <span class="kc">True</span>
+		<span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="PlotKind.create"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotKind.create">[docs]</a>	<span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Called when the figure is first created in the manager.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			The &#39;shape&#39; information that is created on the plot.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PlotKind.update"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotKind.update">[docs]</a>	<span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Called when the figure is updated in the manager.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			element:    The shape that was returned from the :func:`PlotKind.create`</span>
+<span class="sd">						method.</span>
+<span class="sd">			*data:      The data with which to update the plot.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="LinePlot"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.LinePlot">[docs]</a><span class="k">class</span> <span class="nc">LinePlot</span><span class="p">(</span><span class="n">PlotKind</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Draws a line between all given coordinates.</span>
+
+<span class="sd">	Backend Information:</span>
+<span class="sd">		- **matplotlib:** :func:`matplotlib.axes.Axes.plot`</span>
+<span class="sd">		- **bokeh:** :func:`bokeh.plotting.Figure.line`</span>
+<span class="sd">		- **seaborn:** :func:`seaborn.lineplot`</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="LinePlot.create"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.LinePlot.create">[docs]</a>	<span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">):</span>
+			<span class="c1"># matplotlib: figure[1] is the axis</span>
+			<span class="n">line</span><span class="p">,</span> <span class="o">=</span> <span class="n">figure</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">line</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;BOKEH&quot;</span><span class="p">):</span>
+			<span class="k">return</span> <span class="n">figure</span><span class="o">.</span><span class="n">line</span><span class="p">([],</span> <span class="p">[],</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;SNS&quot;</span><span class="p">):</span>
+			<span class="c1"># matplotlib: figure[1] is the axis</span>
+			<span class="n">a</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">figure</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">get_lines</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="LinePlot.update"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.LinePlot.update">[docs]</a>	<span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">,</span> <span class="s2">&quot;SNS&quot;</span><span class="p">):</span>
+			<span class="n">element</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;BOKEH&quot;</span><span class="p">):</span>
+			<span class="n">element</span><span class="o">.</span><span class="n">data_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div></div>
+
+
+<div class="viewcode-block" id="StepPlot"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.StepPlot">[docs]</a><span class="k">class</span> <span class="nc">StepPlot</span><span class="p">(</span><span class="n">PlotKind</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Draws a stepped line between all given coordinates.</span>
+<span class="sd">	See the corresponding backend information to change the step &quot;levels&quot;.</span>
+
+<span class="sd">	Backend Information:</span>
+<span class="sd">		- **matplotlib:** :func:`matplotlib.axes.Axes.step`</span>
+<span class="sd">		- **bokeh:** :func:`bokeh.plotting.Figure.step`</span>
+<span class="sd">		- **seaborn:** :func:`seaborn.lineplot` with :code:`drawstyle=&#39;steps-pre&#39;`</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="StepPlot.create"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.StepPlot.create">[docs]</a>	<span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">):</span>
+			<span class="c1"># matplotlib: figure[1] is the axis</span>
+			<span class="n">line</span><span class="p">,</span> <span class="o">=</span> <span class="n">figure</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">step</span><span class="p">([],</span> <span class="p">[],</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">line</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;BOKEH&quot;</span><span class="p">):</span>
+			<span class="k">return</span> <span class="n">figure</span><span class="o">.</span><span class="n">step</span><span class="p">([],</span> <span class="p">[],</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;SNS&quot;</span><span class="p">):</span>
+			<span class="c1"># matplotlib: figure[1] is the axis</span>
+			<span class="n">a</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">lineplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[],</span> <span class="n">y</span><span class="o">=</span><span class="p">[],</span> <span class="n">ax</span><span class="o">=</span><span class="n">figure</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">drawstyle</span><span class="o">=</span><span class="s1">&#39;steps-pre&#39;</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">get_lines</span><span class="p">()[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="StepPlot.update"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.StepPlot.update">[docs]</a>	<span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">,</span> <span class="s2">&quot;SNS&quot;</span><span class="p">):</span>
+			<span class="n">element</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;BOKEH&quot;</span><span class="p">):</span>
+			<span class="n">element</span><span class="o">.</span><span class="n">data_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div></div>
+
+
+<div class="viewcode-block" id="ScatterPlot"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.ScatterPlot">[docs]</a><span class="k">class</span> <span class="nc">ScatterPlot</span><span class="p">(</span><span class="n">PlotKind</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Draws all given coordinates as points in a 2D space.</span>
+<span class="sd">	See the corresponding backend information to change the shape of the indicators.</span>
+
+<span class="sd">	Backend Information:</span>
+<span class="sd">		- **matplotlib:** :func:`matplotlib.axes.Axes.scatter`</span>
+<span class="sd">		- **bokeh:** :func:`bokeh.plotting.Figure.scatter`</span>
+<span class="sd">		- **seaborn:** :func:`seaborn.scatterplot`</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="ScatterPlot.create"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.ScatterPlot.create">[docs]</a>	<span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">):</span>
+			<span class="c1"># matplotlib: figure[1] is the axis</span>
+			<span class="n">pathc</span> <span class="o">=</span> <span class="n">figure</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">([],</span> <span class="p">[],</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">pathc</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;BOKEH&quot;</span><span class="p">):</span>
+			<span class="k">return</span> <span class="n">figure</span><span class="o">.</span><span class="n">scatter</span><span class="p">([],</span> <span class="p">[],</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;SNS&quot;</span><span class="p">):</span>
+			<span class="c1"># matplotlib: figure[1] is the axis</span>
+			<span class="n">a</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">figure</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">findobj</span><span class="p">(</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">collections</span><span class="o">.</span><span class="n">PathCollection</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="ScatterPlot.update"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.ScatterPlot.update">[docs]</a>	<span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">,</span> <span class="s2">&quot;SNS&quot;</span><span class="p">):</span>
+			<span class="n">element</span><span class="o">.</span><span class="n">set_offsets</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">)))</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;BOKEH&quot;</span><span class="p">):</span>
+			<span class="n">element</span><span class="o">.</span><span class="n">data_source</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div></div>
+
+<span class="kn">import</span> <span class="nn">math</span>
+
+<div class="viewcode-block" id="Arrow"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.Arrow">[docs]</a><span class="k">class</span> <span class="nc">Arrow</span><span class="p">(</span><span class="n">PlotKind</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Draws a &quot;direction&quot; arrow at a position, indicative of an angle.</span>
+<span class="sd">	This :class:`PlotKind` assumes that the y-component indicates the</span>
+<span class="sd">	angle.</span>
+
+<span class="sd">	Backend Information:</span>
+<span class="sd">		- **matplotlib:** :func:`matplotlib.axes.Axes.scatter`</span>
+<span class="sd">		- **bokeh:** Not available.</span>
+<span class="sd">		- **seaborn:** Not available.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">PlotKind</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">size</span>
+
+<div class="viewcode-block" id="Arrow.create"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.Arrow.create">[docs]</a>	<span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="p">):</span>
+		<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">,</span> <span class="s2">&quot;SNS&quot;</span><span class="p">):</span>
+			<span class="c1"># matplotlib: figure[1] is the axis</span>
+			<span class="n">arrow</span> <span class="o">=</span> <span class="n">mplArrow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="n">line</span> <span class="o">=</span> <span class="n">figure</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">arrow</span><span class="p">)</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">set_zorder</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">line</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;BKH&quot;</span><span class="p">):</span>
+			<span class="n">arrow</span> <span class="o">=</span> <span class="n">bokeh</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Arrow</span><span class="p">(</span><span class="n">x_start</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y_start</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">x_end</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> <span class="n">y_end</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="n">figure</span><span class="o">.</span><span class="n">add_layout</span><span class="p">(</span><span class="n">arrow</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">arrow</span></div>
+
+<div class="viewcode-block" id="Arrow.update"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.Arrow.update">[docs]</a>	<span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">element</span><span class="p">,</span> <span class="o">*</span><span class="n">data</span><span class="p">):</span>
+		<span class="n">heading</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+		<span class="n">dx</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">heading</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span>
+		<span class="n">dy</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">heading</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span>
+		<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">position</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">,</span> <span class="s2">&quot;SNS&quot;</span><span class="p">):</span>
+			<span class="n">ax</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">axes</span>
+			<span class="n">element</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+			<span class="n">arrow</span> <span class="o">=</span> <span class="n">mplArrow</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span>
+			<span class="n">line</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">arrow</span><span class="p">)</span>
+			<span class="n">line</span><span class="o">.</span><span class="n">set_zorder</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">line</span>
+		<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_backend</span><span class="p">(</span><span class="s2">&quot;BKH&quot;</span><span class="p">):</span>
+			<span class="n">element</span><span class="o">.</span><span class="n">x_start</span> <span class="o">=</span> <span class="n">x</span>
+			<span class="n">element</span><span class="o">.</span><span class="n">y_start</span> <span class="o">=</span> <span class="n">y</span>
+			<span class="n">element</span><span class="o">.</span><span class="n">x_end</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">dx</span>
+			<span class="n">element</span><span class="o">.</span><span class="n">y_end</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="n">dy</span>
+			<span class="k">return</span> <span class="n">element</span></div></div>
+
+
+<div class="viewcode-block" id="PlotManager"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotManager">[docs]</a><span class="k">class</span> <span class="nc">PlotManager</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Manages multiple :class:`PlotHandler` instances.</span>
+<span class="sd">	Use this class as a centralized unit to manage one or more plots in the system.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		backend (Backend):  The backend to use.</span>
+
+<span class="sd">	Raises:</span>
+<span class="sd">		AssertionError: if the backend cannot be located.</span>
+
+<span class="sd">	See Also:</span>
+<span class="sd">		- :class:`Backend`</span>
+<span class="sd">		- :class:`PlotHandler`</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">Backend</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">)):</span>
+		<span class="k">assert</span> <span class="n">Backend</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">backend</span><span class="p">),</span> <span class="s2">&quot;Invalid backend.&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__handlers</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span>
+
+<div class="viewcode-block" id="PlotManager.is_opened"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotManager.is_opened">[docs]</a>	<span class="k">def</span> <span class="nf">is_opened</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks if there is at least a single plot left open.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="nb">any</span><span class="p">([</span><span class="n">h</span><span class="o">.</span><span class="n">is_opened</span><span class="p">()</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__handlers</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span></div>
+
+<div class="viewcode-block" id="PlotManager.all_opened"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotManager.all_opened">[docs]</a>	<span class="k">def</span> <span class="nf">all_opened</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks if all plots are still open.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="nb">all</span><span class="p">([</span><span class="n">h</span><span class="o">.</span><span class="n">is_opened</span><span class="p">()</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__handlers</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span></div>
+
+<div class="viewcode-block" id="PlotManager.register"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotManager.register">[docs]</a>	<span class="k">def</span> <span class="nf">register</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">figure</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Register a single :class:`PlotHandler` to plot information.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			name (str):         The name for this handler. Will be used to optionally</span>
+<span class="sd">								access it afterwards.</span>
+<span class="sd">			object (Any):       The object from which data needs to be polled. By default,</span>
+<span class="sd">								the :code:`data_xy` attribute will be used on the object,</span>
+<span class="sd">								which should result in a 2xN array in the form of</span>
+<span class="sd">								:code:`([x1, x2, x3...], [y1, y2, y3...])`.</span>
+<span class="sd">			figure:             The figure object required for plotting. This has been made</span>
+<span class="sd">								externally to allow for full manipulation of the plotting</span>
+<span class="sd">								framework itself.</span>
+<span class="sd">			kind (PlotKind):    What needs to be plotted. See :class:`PlotKind` for more</span>
+<span class="sd">								info.</span>
+<span class="sd">			**kwargs:           Additional arguments to pass to the :class:`PlotHandler`</span>
+<span class="sd">								constructor.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			:class:`PlotHandler`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__handlers</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;PlotManager: PlotHandler &#39;</span><span class="si">%s</span><span class="s2">&#39; already registered.&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__handlers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">PlotHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">figure</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PlotManager.unregister"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotManager.unregister">[docs]</a>	<span class="k">def</span> <span class="nf">unregister</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Removes a single :class:`PlotHandler` from the manager.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			name (str): The identifying name for the handler.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+		<span class="n">h</span><span class="o">.</span><span class="n">close_event</span><span class="p">()</span>
+		<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">__handlers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PlotManager.get"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotManager.get">[docs]</a>	<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Obtains a single :class:`PlotHandler`, given its name.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			name (str): The identifying name for the handler to obtain.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__handlers</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;PlotManager: No PlotHandler exists with name &#39;</span><span class="si">%s</span><span class="s2">&#39;.&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__handlers</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PlotManager.connect"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotManager.connect">[docs]</a>	<span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">handler_name</span><span class="p">,</span> <span class="n">event_name</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Connect an event to a specific handler.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			handler_name (str): The identifying name for the handler.</span>
+<span class="sd">			event_name (str):   The name for the event.</span>
+<span class="sd">			function:           A function to execute whenever the event is raised.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`PlotHandler.connect`</span>
+<span class="sd">			- :func:`PlotHandler.signal`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">handler_name</span><span class="p">)</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">event_name</span><span class="p">,</span> <span class="n">function</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PlotManager.terminate"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotManager.terminate">[docs]</a>	<span class="k">def</span> <span class="nf">terminate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Forcibly terminate the manager and all its handlers.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__handlers</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+			<span class="n">handler</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PlotManager.stop"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotManager.stop">[docs]</a>	<span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Stop polling for all updates.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">handler</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__handlers</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+			<span class="n">handler</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PlotManager.set_xlim"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotManager.set_xlim">[docs]</a>	<span class="k">def</span> <span class="nf">set_xlim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Shorthand method for setting the x limits of the figure.</span>
+
+<span class="sd">		Warning:</span>
+<span class="sd">			Bokeh requires this method to be called in a &quot;clean&quot; tick. Call</span>
+<span class="sd">			:meth:`bokeh_set_xlim` instead.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			figure:             The figure to alter.</span>
+<span class="sd">			values (tuple):     The new limits for the x-axis.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span>
+		<span class="k">if</span> <span class="n">Backend</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span> <span class="ow">or</span> <span class="n">Backend</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="s2">&quot;SNS&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
+			<span class="n">figure</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">Backend</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="s2">&quot;BKH&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
+			<span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">values</span>
+			<span class="n">figure</span><span class="o">.</span><span class="n">x_range</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">lower</span>
+			<span class="n">figure</span><span class="o">.</span><span class="n">x_range</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">upper</span></div>
+
+<div class="viewcode-block" id="PlotManager.set_ylim"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotManager.set_ylim">[docs]</a>	<span class="k">def</span> <span class="nf">set_ylim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Shorthand method for setting the y limits of the figure.</span>
+
+<span class="sd">		Warning:</span>
+<span class="sd">			Bokeh requires this method to be called in a &quot;clean&quot; tick. Call</span>
+<span class="sd">			:meth:`bokeh_set_ylim` instead.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			figure:             The figure to alter.</span>
+<span class="sd">			values (tuple):     The new limits for the y-axis.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span>
+		<span class="k">if</span> <span class="n">Backend</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span> <span class="ow">or</span> <span class="n">Backend</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="s2">&quot;SNS&quot;</span><span class="p">):</span>
+			<span class="n">figure</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">Backend</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="s2">&quot;BKH&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
+			<span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">values</span>
+			<span class="n">figure</span><span class="o">.</span><span class="n">y_range</span><span class="o">.</span><span class="n">start</span> <span class="o">=</span> <span class="n">lower</span>
+			<span class="n">figure</span><span class="o">.</span><span class="n">y_range</span><span class="o">.</span><span class="n">end</span> <span class="o">=</span> <span class="n">upper</span></div>
+
+	<span class="k">if</span> <span class="n">_BOKEH_FOUND</span><span class="p">:</span>
+<div class="viewcode-block" id="PlotManager.bokeh_set_xlim"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotManager.bokeh_set_xlim">[docs]</a>		<span class="k">def</span> <span class="nf">bokeh_set_xlim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+			<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">			Helper function to set the x limits in Bokeh, as it should be called in a &quot;safe&quot; tick.</span>
+
+<span class="sd">			Args:</span>
+<span class="sd">				figure:     The figure to set the x limits for.</span>
+<span class="sd">				doc:        The Bokeh document to which the figure belongs.</span>
+<span class="sd">				values:     The new x limits.</span>
+<span class="sd">			&quot;&quot;&quot;</span>
+			<span class="k">assert</span> <span class="n">Backend</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="s2">&quot;BKH&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">),</span> <span class="s2">&quot;Can only be called for a Bokeh backend!&quot;</span>
+			<span class="n">doc</span><span class="o">.</span><span class="n">add_next_tick_callback</span><span class="p">(</span><span class="k">lambda</span> <span class="n">lim</span><span class="o">=</span><span class="n">values</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">figure</span><span class="p">,</span> <span class="n">lim</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="PlotManager.bokeh_set_ylim"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.PlotManager.bokeh_set_ylim">[docs]</a>		<span class="k">def</span> <span class="nf">bokeh_set_ylim</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">figure</span><span class="p">,</span> <span class="n">doc</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+			<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">			Helper function to set the y limits in Bokeh, as it should be called in a &quot;safe&quot; tick.</span>
+
+<span class="sd">			Args:</span>
+<span class="sd">				figure:     The figure to set the y limits for.</span>
+<span class="sd">				doc:        The Bokeh document to which the figure belongs.</span>
+<span class="sd">				values:     The new y limits.</span>
+<span class="sd">			&quot;&quot;&quot;</span>
+			<span class="k">assert</span> <span class="n">Backend</span><span class="o">.</span><span class="n">compare</span><span class="p">(</span><span class="s2">&quot;BKH&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">backend</span><span class="p">),</span> <span class="s2">&quot;Can only be called for a Bokeh backend!&quot;</span>
+			<span class="n">doc</span><span class="o">.</span><span class="n">add_next_tick_callback</span><span class="p">(</span><span class="k">lambda</span> <span class="n">lim</span><span class="o">=</span><span class="n">values</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">figure</span><span class="p">,</span> <span class="n">lim</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="plot"><a class="viewcode-back" href="../../../CBD.realtime.plotting.html#CBD.realtime.plotting.plot">[docs]</a><span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">figure</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">Backend</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MPL&quot;</span><span class="p">),</span> <span class="n">margin</span><span class="o">=</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">)):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Plot data on a figure after the simulation has finished.</span>
+<span class="sd">	This will automatically plot the full graph, so all axis scaling needs to be done afterwards.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		object (Any):       The object from which data needs to be polled. By default,</span>
+<span class="sd">							the :code:`data_xy` attribute will be used on the object,</span>
+<span class="sd">							which should result in a 2xN array in the form of</span>
+<span class="sd">							:code:`([x1, x2, x3...], [y1, y2, y3...])`.</span>
+<span class="sd">		figure:             The figure object required for plotting. This has been made</span>
+<span class="sd">							externally to allow for full manipulation of the plotting</span>
+<span class="sd">							framework itself.</span>
+<span class="sd">		kind (PlotKind):    What needs to be plotted. See :class:`PlotKind` for more</span>
+<span class="sd">							info.</span>
+<span class="sd">		backend (Backend):  The backend to use.</span>
+<span class="sd">		margin (tuple):     A margin for the limits of the axes.</span>
+
+<span class="sd">	See Also:</span>
+<span class="sd">		:class:`PlotHandler`</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">assert</span> <span class="n">Backend</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">backend</span><span class="p">),</span> <span class="s2">&quot;Invalid backend.&quot;</span>
+	<span class="n">ph</span> <span class="o">=</span> <span class="n">PlotHandler</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">figure</span><span class="p">,</span> <span class="n">kind</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">static</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+	<span class="n">ph</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+	<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">ph</span><span class="o">.</span><span class="n">get_data</span><span class="p">()</span>
+	<span class="n">xlim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+	<span class="n">ylim</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+	<span class="n">xlim</span> <span class="o">=</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">margin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">margin</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+	<span class="n">ylim</span> <span class="o">=</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">margin</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">margin</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+	<span class="n">set_xlim</span><span class="p">(</span><span class="n">figure</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">xlim</span><span class="p">)</span>
+	<span class="n">set_ylim</span><span class="p">(</span><span class="n">figure</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">ylim</span><span class="p">)</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../CBD.html">CBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.realtime.plotting</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

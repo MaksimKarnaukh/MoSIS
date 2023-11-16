@@ -1,0 +1,483 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CBD.converters.latexify.CBD2Latex &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/style.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.converters.latexify.CBD2Latex</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for CBD.converters.latexify.CBD2Latex</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">CBD.converters.latexify.functions</span> <span class="kn">import</span> <span class="n">BLOCK_MAP</span> <span class="k">as</span> <span class="n">_BLOCK_MAP</span>
+<span class="kn">from</span> <span class="nn">CBD.converters.latexify.functions</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<span class="c1"># TODO: memory blocks</span>
+<div class="viewcode-block" id="CBD2Latex"><a class="viewcode-back" href="../../../../CBD.converters.latexify.CBD2Latex.html#CBD.converters.latexify.CBD2Latex.CBD2Latex">[docs]</a><span class="k">class</span> <span class="nc">CBD2Latex</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Creates a corresponding set of LaTeX-equations for a CBD model.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		model (CBD.Core.CBD):    The model to create the equations for.</span>
+
+<span class="sd">	Keyword Arguments:</span>
+<span class="sd">		show_steps (bool):      When :code:`True`, all intermediary steps will</span>
+<span class="sd">								be shown. Defaults to :code:`False`.</span>
+<span class="sd">		ignore_path (bool):     When :code:`True`, the name of the original model</span>
+<span class="sd">								will be removed from all path names. This name is</span>
+<span class="sd">								a common prefix over the system.</span>
+<span class="sd">								Defaults to :code:`True`.</span>
+<span class="sd">		escape_nonlatex (bool): When :code:`True`, non-latex characters (e.g., underscores)</span>
+<span class="sd">								are escaped from the rendered result, if rendered as LaTeX.</span>
+<span class="sd">								Defaults to :code:`True`.</span>
+<span class="sd">		time_variable (str):    The name for the variable that represents the time</span>
+<span class="sd">								(i.e., the current iteration). Defaults to :code:`&#39;i&#39;`.</span>
+<span class="sd">		render_latex (bool):    When :code:`True`, the :func:`render` method will</span>
+<span class="sd">								output a latex-formatted string. Otherwise, simple</span>
+<span class="sd">								text formatting is done. Defaults to :code:`True`.</span>
+<span class="sd">		time_format (str):      How the time must be formatted when rendered. By default,</span>
+<span class="sd">								it will be placed in parentheses at the end. Use</span>
+<span class="sd">								:code:`{time}` to identify the time constant.</span>
+<span class="sd">		delta_t (str):          Representation of the used delta in the render. This will</span>
+<span class="sd">								be appended to values that have been computed for a delay</span>
+<span class="sd">								block. This is only to be used when the time does not</span>
+<span class="sd">								identify the iteration, but the actual simulation time.</span>
+<span class="sd">								Defaults to :code:`&#39;i&#39;`.</span>
+<span class="sd">		replace_par (bool):     When :code:`True`, the parentheses will be replaced by the</span>
+<span class="sd">								much cleaner :code:`\\left(` and :code:`\\right)`, if rendered</span>
+<span class="sd">								in LaTeX-format. Defaults to :code:`True`.</span>
+<span class="sd">		type_formats (dict):    A dictionary of :code:`{ operationType -&gt; callable }` that</span>
+<span class="sd">								allows for the remapping of mathematical descriptions based,</span>
+<span class="sd">								where :code:`operationType` identifies the operation to remap</span>
+<span class="sd">								and :code:`callable` a function that takes the name/symbol and</span>
+<span class="sd">								the arguments as input and produces a list of function objects.</span>
+
+<span class="sd">								See Also:</span>
+<span class="sd">									:attr:`CBD.converters.latexify.functions.BLOCK_MAP`.</span>
+<span class="sd">		path_sep (str):         The separator to use for the paths. Defaults to :code:`&quot;.&quot;`.</span>
+<span class="sd">		path_prefix (str):      The prefix to use for the paths. Defaults to the empty strig.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="n">DEFAULT_CONFIG</span> <span class="o">=</span> <span class="p">{</span>
+		<span class="s2">&quot;show_steps&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+		<span class="s2">&quot;ignore_path&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+		<span class="s2">&quot;escape_nonlatex&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+		<span class="s2">&quot;time_variable&quot;</span><span class="p">:</span> <span class="s1">&#39;i&#39;</span><span class="p">,</span>
+		<span class="s2">&quot;render_latex&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+		<span class="s2">&quot;time_format&quot;</span><span class="p">:</span> <span class="s2">&quot;(</span><span class="si">{time}</span><span class="s2">)&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;delta_t&quot;</span><span class="p">:</span> <span class="s2">&quot;i&quot;</span><span class="p">,</span>
+		<span class="s2">&quot;replace_par&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+		<span class="s2">&quot;type_formats&quot;</span><span class="p">:</span> <span class="p">{},</span>
+		<span class="s2">&quot;path_sep&quot;</span><span class="p">:</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span>
+		<span class="s2">&quot;path_prefix&quot;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span>
+	<span class="p">}</span>
+	<span class="sd">&quot;&quot;&quot;Default configuration setup.&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">flattened</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DEFAULT_CONFIG</span>
+
+		<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">equations</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_rename</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;path_sep&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;path_sep&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getSignals</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span>
+		<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Cannot create latex representation without outputs.&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_collect_equations</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_step</span> <span class="o">=</span> <span class="mi">0</span>
+
+	<span class="k">def</span> <span class="nf">_rename</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">CBD2Latex</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CBD2Latex.rename"><a class="viewcode-back" href="../../../../CBD.converters.latexify.CBD2Latex.html#CBD.converters.latexify.CBD2Latex.CBD2Latex.rename">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">rename</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Makes the name of a path accurate.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			name (str):     The name to convert.</span>
+<span class="sd">			config (dict):  Configuration dictionary (see above).</span>
+<span class="sd">			model (CBD):    The parent CBD model.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;ignore_path&quot;</span><span class="p">]:</span>
+			<span class="n">mname</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;path_sep&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;path_sep&#39;</span><span class="p">]</span>
+			<span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">mname</span><span class="p">):</span>
+				<span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">mname</span><span class="p">):]</span>
+		<span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;render_latex&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;escape_nonlatex&quot;</span><span class="p">]:</span>
+			<span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\_&quot;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">config</span><span class="p">[</span><span class="s2">&quot;path_prefix&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">name</span></div>
+
+<div class="viewcode-block" id="CBD2Latex.get_block_equation"><a class="viewcode-back" href="../../../../CBD.converters.latexify.CBD2Latex.html#CBD.converters.latexify.CBD2Latex.CBD2Latex.get_block_equation">[docs]</a>	<span class="k">def</span> <span class="nf">get_block_equation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">):</span>
+		<span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_rename</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;path_sep&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;path_sep&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">getInputPortNames</span><span class="p">()]</span>
+		<span class="n">bdata</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;type_formats&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">(),</span> <span class="n">_BLOCK_MAP</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">(),</span> <span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="p">[</span><span class="n">Fnc</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">getFunctionName</span><span class="p">())]))</span>
+		<span class="n">fncs</span> <span class="o">=</span> <span class="n">bdata</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">fncs</span><span class="p">:</span>
+			<span class="n">f</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">VarFnc</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">]</span>
+		<span class="n">eqs</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_rename</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;path_sep&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;path_sep&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">getOutputPortNames</span><span class="p">()]</span>
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">fnc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fncs</span><span class="p">):</span>
+			<span class="n">eqs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Eq</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">fnc</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">eqs</span></div>
+
+	<span class="k">def</span> <span class="nf">_collect_equations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Loads the equations from the model in.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			`Cláudio Gomes, Joachim Denil and Hans Vangheluwe. 2016. &quot;Causal-Block Diagrams&quot;,</span>
+<span class="sd">			Technical Report &lt;https://repository.uantwerpen.be/docman/irua/d28eb1/151279.pdf&gt;`_</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># Add all blocks</span>
+		<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getBlocks</span><span class="p">():</span>
+			<span class="n">eq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_block_equation</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">eq</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+		<span class="c1"># Add all connections</span>
+		<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getBlocks</span><span class="p">():</span>
+			<span class="n">path</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;path_sep&#39;</span><span class="p">])</span>
+			<span class="k">for</span> <span class="n">in_port</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">getInputPorts</span><span class="p">():</span>
+				<span class="n">out_port</span> <span class="o">=</span> <span class="n">in_port</span><span class="o">.</span><span class="n">getIncoming</span><span class="p">()</span><span class="o">.</span><span class="n">source</span>
+				<span class="n">v_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rename</span><span class="p">(</span><span class="n">out_port</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;path_sep&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;path_sep&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">out_port</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+				<span class="n">lhs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rename</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;path_sep&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">in_port</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+				<span class="n">rhs</span> <span class="o">=</span> <span class="n">VarFnc</span><span class="p">(</span><span class="n">v_path</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Eq</span><span class="p">(</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">))</span>
+
+		<span class="c1"># Add all outputs</span>
+		<span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getOutputPorts</span><span class="p">():</span>
+			<span class="n">prev</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">getIncoming</span><span class="p">()</span><span class="o">.</span><span class="n">source</span>
+			<span class="n">p_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rename</span><span class="p">(</span>
+				<span class="n">prev</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;path_sep&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;path_sep&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">prev</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+			<span class="n">n_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rename</span><span class="p">(</span>
+				<span class="n">port</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;path_sep&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;path_sep&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">port</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Eq</span><span class="p">(</span><span class="n">n_path</span><span class="p">,</span> <span class="n">VarFnc</span><span class="p">(</span><span class="n">p_path</span><span class="p">)))</span>
+
+<div class="viewcode-block" id="CBD2Latex.render"><a class="viewcode-back" href="../../../../CBD.converters.latexify.CBD2Latex.html#CBD.converters.latexify.CBD2Latex.CBD2Latex.render">[docs]</a>	<span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rl</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Creates the LaTeX string for the model, based on the current level of simplifications.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			rl (bool):      Identifies if the rendering must result in a LaTeX-renderable string.</span>
+<span class="sd">							This argument basically overwrites the :attr:`render_latex` config</span>
+<span class="sd">							attribute. When :code:`None`, the value from the config is used.</span>
+<span class="sd">							Defaults to :code:`None`.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">rl</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="n">rl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;render_latex&quot;</span><span class="p">]</span>
+		<span class="k">if</span> <span class="n">rl</span><span class="p">:</span>
+			<span class="n">lat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">latex</span><span class="p">()</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;replace_par&quot;</span><span class="p">]:</span>
+				<span class="n">lat</span> <span class="o">=</span> <span class="n">lat</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">left(&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">right)&quot;</span><span class="p">)</span>
+			<span class="k">return</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">left</span><span class="se">\\</span><span class="s2">{</span><span class="se">\\</span><span class="s2">begin</span><span class="si">{array}{lcl}</span><span class="se">\n</span><span class="si">%s</span><span class="se">\\</span><span class="s2">end</span><span class="si">{array}</span><span class="se">\\</span><span class="s2">right.&quot;</span> <span class="o">%</span> <span class="n">lat</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="CBD2Latex.eq"><a class="viewcode-back" href="../../../../CBD.converters.latexify.CBD2Latex.html#CBD.converters.latexify.CBD2Latex.CBD2Latex.eq">[docs]</a>	<span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">()):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Obtains the current set of equations in a format that can be parsed by</span>
+<span class="sd">		the :mod:`CBD.converters.eq2CBD` converter.</span>
+<span class="sd">		This allows model simplifications and optimizations.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			time (Time):    The time at which to obtain the equations.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">res</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">eq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="p">:</span>
+			<span class="n">eqs</span> <span class="o">=</span> <span class="n">eq</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">eqs</span><span class="p">:</span>
+				<span class="n">eq_time_fmt</span><span class="p">,</span> <span class="n">time_fmt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_time_formats</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+				<span class="n">res</span> <span class="o">+=</span> <span class="n">e</span><span class="o">.</span><span class="n">eq</span><span class="p">()</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">time_fmt</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="n">eq_time_fmt</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;delta_t&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+		<span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="CBD2Latex.latex"><a class="viewcode-back" href="../../../../CBD.converters.latexify.CBD2Latex.html#CBD.converters.latexify.CBD2Latex.CBD2Latex.latex">[docs]</a>	<span class="k">def</span> <span class="nf">latex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Obtains the current set of equations in LaTeX format.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">res</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">eq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="p">:</span>
+			<span class="n">eqs</span> <span class="o">=</span> <span class="n">eq</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+			<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">eqs</span><span class="p">:</span>
+				<span class="n">eq_time_fmt</span><span class="p">,</span> <span class="n">time_fmt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_time_formats</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+				<span class="n">res</span> <span class="o">+=</span> <span class="n">e</span><span class="o">.</span><span class="n">latex</span><span class="p">()</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">T</span><span class="o">=</span><span class="n">time_fmt</span><span class="p">,</span> <span class="n">E</span><span class="o">=</span><span class="n">eq_time_fmt</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;delta_t&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\\\\\n</span><span class="s1">&#39;</span>
+		<span class="k">return</span> <span class="n">res</span></div>
+
+	<span class="k">def</span> <span class="nf">_get_time_formats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+		<span class="n">dt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;delta_t&quot;</span><span class="p">]</span>
+		<span class="k">if</span> <span class="n">dt</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+			<span class="n">dt</span> <span class="o">=</span> <span class="s2">&quot; * &quot;</span> <span class="o">+</span> <span class="n">dt</span>
+		<span class="n">time_fmt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;time_format&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">time</span><span class="p">))</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+			<span class="n">i</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;time_variable&quot;</span><span class="p">],</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">)</span>
+		<span class="n">eq_time_fmt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;time_format&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">eq_time</span><span class="p">))</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+			<span class="n">i</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;time_variable&quot;</span><span class="p">],</span> <span class="n">dt</span><span class="o">=</span><span class="n">dt</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">eq_time_fmt</span><span class="p">,</span> <span class="n">time_fmt</span>
+
+<div class="viewcode-block" id="CBD2Latex.simplify_links"><a class="viewcode-back" href="../../../../CBD.converters.latexify.CBD2Latex.html#CBD.converters.latexify.CBD2Latex.CBD2Latex.simplify_links">[docs]</a>	<span class="k">def</span> <span class="nf">simplify_links</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		First step to execute is a link simplification. Generally, there are more links</span>
+<span class="sd">		than blocks, so this function will take care of the largest simplification.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">links</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+		<span class="n">numeric</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+		<span class="k">for</span> <span class="n">ix</span><span class="p">,</span> <span class="n">eq</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="p">):</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eq</span><span class="o">.</span><span class="n">rhs</span><span class="p">,</span> <span class="n">ConstantFnc</span><span class="p">):</span>
+				<span class="n">numeric</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ix</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">eq</span><span class="o">.</span><span class="n">rhs</span><span class="p">,</span> <span class="n">VarFnc</span><span class="p">):</span>
+				<span class="n">links</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">ix</span><span class="p">)</span>
+
+		<span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="n">links</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">eq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="p">:</span>
+				<span class="n">eq</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="p">[</span><span class="n">ix</span><span class="p">])</span>
+
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">eq</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="p">):</span>
+			<span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="n">numeric</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">ix</span><span class="p">:</span> <span class="k">continue</span>
+				<span class="n">eq</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="p">[</span><span class="n">ix</span><span class="p">])</span>
+
+		<span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">numeric</span> <span class="o">|</span> <span class="n">links</span><span class="p">))):</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span><span class="o">.</span><span class="n">lhs</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">ix</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CBD2Latex.substitute"><a class="viewcode-back" href="../../../../CBD.converters.latexify.CBD2Latex.html#CBD.converters.latexify.CBD2Latex.CBD2Latex.substitute">[docs]</a>	<span class="k">def</span> <span class="nf">substitute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Combines multiple equations into one, based on the requested output, by</span>
+<span class="sd">		means of substitution. This function will be called multiple times: once</span>
+<span class="sd">		for each &quot;step&quot; in the simplification.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			:func:`simplify`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">_MEMORY</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;D&quot;</span><span class="p">]</span>
+		<span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[:]</span>
+		<span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="n">_MEMORY</span><span class="p">:</span>
+				<span class="n">outputs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">lhs</span><span class="p">)</span>
+		<span class="n">to_delete</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+		<span class="k">for</span> <span class="n">output</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
+			<span class="n">oeq</span> <span class="o">=</span> <span class="kc">None</span>
+			<span class="k">for</span> <span class="n">eq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">eq</span><span class="o">.</span><span class="n">lhs</span> <span class="o">==</span> <span class="n">output</span><span class="p">:</span>
+					<span class="n">oeq</span> <span class="o">=</span> <span class="n">eq</span>
+					<span class="k">break</span>
+			<span class="k">if</span> <span class="n">oeq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">continue</span>
+			<span class="n">deps</span> <span class="o">=</span> <span class="n">oeq</span><span class="o">.</span><span class="n">get_dependencies</span><span class="p">()</span>
+			<span class="n">deqs</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">deps</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span> <span class="k">continue</span>
+				<span class="k">for</span> <span class="n">eq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="p">:</span>
+					<span class="k">if</span> <span class="n">eq</span><span class="o">.</span><span class="n">lhs</span> <span class="o">==</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+						<span class="n">deqs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">deq</span> <span class="ow">in</span> <span class="n">deqs</span><span class="p">:</span>
+				<span class="c1"># prevent cyclic dependency</span>
+				<span class="k">if</span> <span class="n">deq</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">deq</span><span class="o">.</span><span class="n">lhs</span><span class="p">):</span>
+					<span class="k">continue</span>
+				<span class="k">if</span> <span class="n">deq</span><span class="o">.</span><span class="n">lhs</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
+					<span class="n">oeq</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">deq</span><span class="p">)</span>
+					<span class="n">to_delete</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">deq</span><span class="o">.</span><span class="n">lhs</span><span class="p">)</span>
+
+		<span class="c1"># simplify functions</span>
+		<span class="n">neq</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">eq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="p">:</span>
+			<span class="n">neq</span> <span class="o">+=</span> <span class="n">eq</span><span class="o">.</span><span class="n">simplify</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">equations</span> <span class="o">=</span> <span class="n">neq</span>
+
+		<span class="c1"># TODO: check no removal of outputs?</span>
+		<span class="c1"># Remove obsolete equations</span>
+		<span class="n">tdl</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">while</span> <span class="n">tdl</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">to_delete</span> <span class="o">!=</span> <span class="n">tdl</span><span class="p">:</span>
+			<span class="n">tdl</span> <span class="o">=</span> <span class="n">to_delete</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+			<span class="k">for</span> <span class="n">eq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">eq</span><span class="o">.</span><span class="n">lhs</span> <span class="ow">in</span> <span class="n">to_delete</span><span class="p">:</span> <span class="k">continue</span>
+				<span class="n">deps</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">eq</span><span class="o">.</span><span class="n">get_dependencies</span><span class="p">()])</span>
+				<span class="n">to_delete</span> <span class="o">-=</span> <span class="n">deps</span>
+
+		<span class="n">tdix</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">ix</span><span class="p">,</span> <span class="n">eq</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="p">):</span>
+			<span class="k">if</span> <span class="n">eq</span><span class="o">.</span><span class="n">lhs</span> <span class="ow">in</span> <span class="n">to_delete</span> <span class="ow">and</span> <span class="n">eq</span><span class="o">.</span><span class="n">lhs</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">:</span>
+				<span class="n">tdix</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ix</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="n">tdix</span><span class="p">):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">equations</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">ix</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CBD2Latex.simplify"><a class="viewcode-back" href="../../../../CBD.converters.latexify.CBD2Latex.html#CBD.converters.latexify.CBD2Latex.CBD2Latex.simplify">[docs]</a>	<span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steps</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Simplifies the system of equations to become a more optimal solution.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			steps (int):        When positive, this indicates the amount of steps</span>
+<span class="sd">								that must be taken. When negative, the equations</span>
+<span class="sd">								will be simplified until a convergence (i.e. no</span>
+<span class="sd">								possible changes) is reached. Defaults to -1.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`simplify_links`</span>
+<span class="sd">			- :func:`substitute`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;show_steps&quot;</span><span class="p">]:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_trace</span><span class="p">(</span><span class="s2">&quot;INITIAL SYSTEM&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">simplify_links</span><span class="p">()</span>
+		<span class="n">txt</span> <span class="o">=</span> <span class="s2">&quot; substituted all connections and constant values&quot;</span>
+		<span class="n">peq</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+		<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="k">while</span> <span class="n">peq</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq</span><span class="p">():</span>
+			<span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">steps</span> <span class="o">&lt;=</span> <span class="n">i</span><span class="p">:</span> <span class="k">break</span>
+			<span class="n">peq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq</span><span class="p">()</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;show_steps&quot;</span><span class="p">]:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">_trace</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">substitute</span><span class="p">()</span>
+			<span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+			<span class="n">txt</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span></div>
+
+	<span class="k">def</span> <span class="nf">_trace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Traces a step in the solution.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			text (str): Additional text to print.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span> <span class="o">+</span> <span class="n">text</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;STEP </span><span class="si">%d</span><span class="s2">:&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_step</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+	<span class="kn">from</span> <span class="nn">CBD.Core</span> <span class="kn">import</span> <span class="n">CBD</span>
+	<span class="kn">from</span> <span class="nn">CBD.lib.std</span> <span class="kn">import</span> <span class="n">AdderBlock</span><span class="p">,</span> <span class="n">ConstantBlock</span><span class="p">,</span> <span class="n">InverterBlock</span><span class="p">,</span> <span class="n">ProductBlock</span><span class="p">,</span> <span class="n">DelayBlock</span>
+	<span class="kn">from</span> <span class="nn">CBD.converters.CBDDraw</span> <span class="kn">import</span> <span class="n">gvDraw</span>
+
+	<span class="n">model</span> <span class="o">=</span> <span class="n">CBD</span><span class="p">(</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">])</span>
+	<span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;C2&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+	<span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">DelayBlock</span><span class="p">(</span><span class="s2">&quot;delay1&quot;</span><span class="p">))</span>
+	<span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">DelayBlock</span><span class="p">(</span><span class="s2">&quot;delay2&quot;</span><span class="p">))</span>
+	<span class="c1"># model.addBlock(ConstantBlock(&quot;C3&quot;, 3))</span>
+	<span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;C4&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+	<span class="c1"># model.addBlock(AdderBlock(&quot;sum&quot;))</span>
+	<span class="c1"># model.addBlock(ProductBlock(&quot;prod&quot;))</span>
+	<span class="c1"># model.addBlock(ProductBlock(&quot;div&quot;))</span>
+	<span class="c1"># model.addBlock(InverterBlock(&quot;inv&quot;))</span>
+	<span class="c1">#</span>
+	<span class="c1"># model.addConnection(&quot;C2&quot;, &quot;sum&quot;)</span>
+	<span class="c1"># model.addConnection(&quot;prod&quot;, &quot;sum&quot;)</span>
+	<span class="c1"># model.addConnection(&quot;sum&quot;, &quot;div&quot;)</span>
+	<span class="c1"># model.addConnection(&quot;sum&quot;, &quot;x&quot;)</span>
+	<span class="c1"># model.addConnection(&quot;C4&quot;, &quot;inv&quot;)</span>
+	<span class="c1"># model.addConnection(&quot;inv&quot;, &quot;div&quot;)</span>
+	<span class="c1"># model.addConnection(&quot;div&quot;, &quot;y&quot;)</span>
+	<span class="c1"># model.addConnection(&quot;div&quot;, &quot;prod&quot;)</span>
+	<span class="c1"># model.addConnection(&quot;C3&quot;, &quot;prod&quot;)</span>
+	<span class="c1"># model.addConnection(&quot;C2&quot;, &quot;delay&quot;, input_port_name=&quot;IC&quot;)</span>
+	<span class="c1"># model.addConnection(&quot;x&quot;, &quot;delay&quot;, input_port_name=&quot;IN1&quot;)</span>
+	<span class="c1"># model.addConnection(&quot;delay&quot;, &quot;y&quot;)</span>
+
+	<span class="n">model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;delay1&quot;</span><span class="p">,</span> <span class="s2">&quot;delay2&quot;</span><span class="p">)</span>
+	<span class="n">model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;delay2&quot;</span><span class="p">,</span> <span class="s2">&quot;delay1&quot;</span><span class="p">)</span>
+	<span class="n">model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;C2&quot;</span><span class="p">,</span> <span class="s2">&quot;delay1&quot;</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;IC&quot;</span><span class="p">)</span>
+	<span class="n">model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;C4&quot;</span><span class="p">,</span> <span class="s2">&quot;delay2&quot;</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;IC&quot;</span><span class="p">)</span>
+	<span class="n">model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;delay2&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span>
+	<span class="n">c2l</span> <span class="o">=</span> <span class="n">CBD2Latex</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">show_steps</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">render_latex</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+	<span class="n">gvDraw</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;test.gv&quot;</span><span class="p">)</span>
+
+	<span class="n">c2l</span><span class="o">.</span><span class="n">simplify</span><span class="p">()</span>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../CBD.html">CBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.converters.latexify.CBD2Latex</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,209 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CBD.loopsolvers.sympysolver &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.loopsolvers.sympysolver</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for CBD.loopsolvers.sympysolver</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides a Sympy solver to solve the algebraic loops efficiently.</span>
+<span class="sd">It should be able to handle non-linear equations as well.</span>
+
+<span class="sd">Warning:</span>
+<span class="sd">	This module requires :code:`sympy` to be installed.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sympy</span>
+
+<span class="kn">from</span> <span class="nn">CBD.Core</span> <span class="kn">import</span> <span class="n">CBD</span>
+<span class="kn">from</span> <span class="nn">CBD.loopsolvers.solver</span> <span class="kn">import</span> <span class="n">Solver</span>
+
+
+<div class="viewcode-block" id="reduce"><a class="viewcode-back" href="../../../CBD.loopsolvers.sympysolver.html#CBD.loopsolvers.sympysolver.reduce">[docs]</a><span class="k">def</span> <span class="nf">reduce</span><span class="p">(</span><span class="n">fnc</span><span class="p">,</span> <span class="n">lst</span><span class="p">):</span>
+	<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lst</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+		<span class="k">return</span> <span class="n">lst</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+	<span class="n">res</span> <span class="o">=</span> <span class="n">fnc</span><span class="p">(</span><span class="n">lst</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lst</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+	<span class="k">for</span> <span class="n">elm</span> <span class="ow">in</span> <span class="n">lst</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+		<span class="n">res</span> <span class="o">=</span> <span class="n">fnc</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">elm</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="SympySolver"><a class="viewcode-back" href="../../../CBD.loopsolvers.sympysolver.html#CBD.loopsolvers.sympysolver.SympySolver">[docs]</a><span class="k">class</span> <span class="nc">SympySolver</span><span class="p">(</span><span class="n">Solver</span><span class="p">):</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="n">Solver</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logger</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__cache</span> <span class="o">=</span> <span class="p">{}</span>
+
+<div class="viewcode-block" id="SympySolver.checkValidity"><a class="viewcode-back" href="../../../CBD.loopsolvers.sympysolver.html#CBD.loopsolvers.sympysolver.SympySolver.checkValidity">[docs]</a>	<span class="k">def</span> <span class="nf">checkValidity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">component</span><span class="p">):</span>
+		<span class="k">if</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">component</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cache</span><span class="p">:</span>
+			<span class="n">eqs</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">component</span><span class="p">):</span>
+				<span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+				<span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">port</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dependencies</span><span class="p">(</span><span class="n">block</span><span class="p">):</span>
+					<span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">component</span><span class="p">:</span>
+						<span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">port</span><span class="p">))</span>
+					<span class="k">else</span><span class="p">:</span>
+						<span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">port</span><span class="p">))</span>
+
+				<span class="n">eqs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">block</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_OUT1&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__OPERATIONS</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()](</span><span class="n">args</span><span class="p">,</span> <span class="n">block</span><span class="p">)))</span>
+
+			<span class="n">sol</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="n">rqs</span> <span class="o">=</span> <span class="p">[]</span>
+			<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">eqs</span><span class="p">:</span>
+				<span class="n">x</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+				<span class="n">sol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+				<span class="n">rqs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="n">x</span><span class="p">)</span>
+			<span class="n">solution</span> <span class="o">=</span> <span class="n">sympy</span><span class="o">.</span><span class="n">nonlinsolve</span><span class="p">(</span><span class="n">rqs</span><span class="p">,</span> <span class="n">sol</span><span class="p">)</span>
+
+			<span class="bp">self</span><span class="o">.</span><span class="n">__cache</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">component</span><span class="p">)]</span> <span class="o">=</span> <span class="n">solution</span><span class="p">,</span> <span class="n">sol</span>
+
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">solution</span><span class="o">.</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;There are multiple solutions for this system. Please add constraints.&quot;</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="SympySolver.getComponentCache"><a class="viewcode-back" href="../../../CBD.loopsolvers.sympysolver.html#CBD.loopsolvers.sympysolver.SympySolver.getComponentCache">[docs]</a>	<span class="k">def</span> <span class="nf">getComponentCache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cache</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">component</span><span class="p">)]</span></div>
+
+<div class="viewcode-block" id="SympySolver.constructInput"><a class="viewcode-back" href="../../../CBD.loopsolvers.sympysolver.html#CBD.loopsolvers.sympysolver.SympySolver.constructInput">[docs]</a>	<span class="k">def</span> <span class="nf">constructInput</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">curIt</span><span class="p">):</span>
+		<span class="n">vrs</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">component</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">port</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dependencies</span><span class="p">(</span><span class="n">block</span><span class="p">):</span>
+				<span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">component</span><span class="p">:</span>
+					<span class="n">vrs</span><span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">getPath</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="n">port</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">getSignalHistory</span><span class="p">()[</span><span class="n">curIt</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+		<span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__cache</span><span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">component</span><span class="p">)]</span>
+		<span class="k">return</span> <span class="n">res</span><span class="p">,</span> <span class="n">vrs</span></div>
+
+<div class="viewcode-block" id="SympySolver.solve"><a class="viewcode-back" href="../../../CBD.loopsolvers.sympysolver.html#CBD.loopsolvers.sympysolver.SympySolver.solve">[docs]</a>	<span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solverInput</span><span class="p">):</span>
+		<span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">symbols</span><span class="p">),</span> <span class="n">variables</span> <span class="o">=</span> <span class="n">solverInput</span>
+		<span class="k">return</span> <span class="n">solution</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">variables</span><span class="p">)</span></div>
+
+
+	<span class="c1"># TODO: Clamp, MUX, Split, LTE, Eq, LT, not, and, or, delay</span>
+	<span class="n">__OPERATIONS</span> <span class="o">=</span> <span class="p">{</span>
+		<span class="s2">&quot;AdderBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">l</span><span class="p">),</span>
+		<span class="s2">&quot;ProductBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">reduce</span><span class="p">((</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">),</span> <span class="n">l</span><span class="p">),</span>
+		<span class="s2">&quot;NegatorBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="o">-</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+		<span class="s2">&quot;InverterBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+		<span class="s2">&quot;ModuloBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">%</span> <span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+		<span class="s2">&quot;RootBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">sympy</span><span class="o">.</span><span class="n">root</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+		<span class="s2">&quot;PowerBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="n">l</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+		<span class="s2">&quot;AbsBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+		<span class="s2">&quot;IntBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">,</span> <span class="n">_</span><span class="p">:</span> <span class="n">sympy</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+		<span class="s2">&quot;GenericBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sympy</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">getBlockOperator</span><span class="p">())(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+		<span class="s2">&quot;MaxBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">sympy</span><span class="o">.</span><span class="n">Max</span><span class="p">(</span><span class="o">*</span><span class="n">l</span><span class="p">),</span>
+		<span class="s2">&quot;MinBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">l</span><span class="p">:</span> <span class="n">sympy</span><span class="o">.</span><span class="n">Min</span><span class="p">(</span><span class="o">*</span><span class="n">l</span><span class="p">),</span>
+	<span class="p">}</span>
+
+	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">__dependencies</span><span class="p">(</span><span class="n">block</span><span class="p">):</span>
+		<span class="n">blocks</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">getInputPortNames</span><span class="p">():</span>
+			<span class="n">b</span><span class="p">,</span> <span class="n">op</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">getPortConnectedToInput</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+			<span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">CBD</span><span class="p">):</span>
+				<span class="n">b</span><span class="p">,</span> <span class="n">op</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">getBlockByName</span><span class="p">(</span><span class="n">op</span><span class="p">)</span><span class="o">.</span><span class="n">getPortConnectedToInput</span><span class="p">(</span><span class="s2">&quot;IN1&quot;</span><span class="p">)</span>
+			<span class="n">blocks</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">b</span><span class="p">,</span> <span class="n">op</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">blocks</span></div>
+
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../CBD.html">CBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.loopsolvers.sympysolver</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,648 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyCBD.converters.latexify.functions &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/style.css" />
+    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.converters.latexify.functions</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pyCBD.converters.latexify.functions</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">New and improved LaTeX-generation module.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+
+
+<div class="viewcode-block" id="Time"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Time">[docs]</a><span class="k">class</span> <span class="nc">Time</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Represents the time variable to be used in the equations.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		value (numeric):    The value of the time.</span>
+<span class="sd">		relative (bool):    When :code:`True`, the time is relative to some time variable.</span>
+<span class="sd">							When :code:`False`, the time is meant to be an absolute time.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">relative</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">relative</span> <span class="o">=</span> <span class="n">relative</span>
+
+	<span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">relative</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative</span>
+
+	<span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+			<span class="k">return</span> <span class="n">Time</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative</span><span class="p">)</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_relative</span><span class="p">()</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">is_relative</span><span class="p">():</span>
+			<span class="k">return</span> <span class="n">Time</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="ow">or</span> <span class="n">other</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+			<span class="k">return</span> <span class="n">Time</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+		<span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;unsupported operand type(s) for +: &#39;</span><span class="si">%s</span><span class="s2">&#39; and &#39;Time&#39;&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">))</span>
+
+	<span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_relative</span><span class="p">():</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="k">return</span> <span class="s2">&quot;</span><span class="si">{i}</span><span class="s2">&quot;</span>
+			<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="k">return</span> <span class="s2">&quot;</span><span class="si">{i}</span><span class="s2"> + &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{dt}</span><span class="s2">&quot;</span>
+			<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="k">return</span> <span class="s2">&quot;</span><span class="si">{i}</span><span class="s2"> - &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="si">{dt}</span><span class="s2">&quot;</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Time.is_absolute"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Time.is_absolute">[docs]</a>	<span class="k">def</span> <span class="nf">is_absolute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative</span></div>
+
+<div class="viewcode-block" id="Time.is_relative"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Time.is_relative">[docs]</a>	<span class="k">def</span> <span class="nf">is_relative</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">relative</span></div>
+
+<div class="viewcode-block" id="Time.now"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Time.now">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">now</span><span class="p">():</span>
+		<span class="k">return</span> <span class="n">Time</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="Eq"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Eq">[docs]</a><span class="k">class</span> <span class="nc">Eq</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Represents an equation in the form of :math:`y = f(x)` .</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		lhs (str):      The lefthandside of the equation, i.e.,</span>
+<span class="sd">						a variable name.</span>
+<span class="sd">		rhs (Fnc):      The righthandside of the equation, i.e.,</span>
+<span class="sd">						a function call.</span>
+<span class="sd">		time (Time):    A time constraint for the full equation.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">()):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">lhs</span> <span class="o">=</span> <span class="n">lhs</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">rhs</span> <span class="o">=</span> <span class="n">rhs</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+
+	<span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> = </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lhs</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Eq.at"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Eq.at">[docs]</a>	<span class="k">def</span> <span class="nf">at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Some equations have multiple solutions for a specific time.</span>
+<span class="sd">		This function will obtain all corresponding equations for</span>
+<span class="sd">		solving the current one at time :attr:`time`.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			time (Time):    The current time to solve the equation at.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			A list of new equations, solved at a specific time.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">rhs_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+		<span class="n">eq_list</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">rhs</span> <span class="ow">in</span> <span class="n">rhs_list</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">rhs</span><span class="p">,</span> <span class="n">ConstantFnc</span><span class="p">):</span>
+				<span class="n">rhs</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">rhs</span><span class="o">.</span><span class="n">eq_time</span>
+			<span class="n">eq_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Eq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="p">,</span> <span class="n">rhs</span><span class="o">.</span><span class="n">eq_time</span><span class="p">))</span>
+		<span class="k">return</span> <span class="n">eq_list</span></div>
+
+<div class="viewcode-block" id="Eq.get_dependencies"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Eq.get_dependencies">[docs]</a>	<span class="k">def</span> <span class="nf">get_dependencies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="p">,</span> <span class="n">VarFnc</span><span class="p">):</span>
+			<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="p">]</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">get_dependencies</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Eq.eq"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Eq.eq">[docs]</a>	<span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;</span><span class="si">{lhs}</span><span class="s2">{{E}} = </span><span class="si">{rhs}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lhs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">eq</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Eq.latex"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Eq.latex">[docs]</a>	<span class="k">def</span> <span class="nf">latex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;</span><span class="si">{lhs}</span><span class="s2">{{E}} = </span><span class="si">{rhs}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">lhs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lhs</span><span class="p">,</span> <span class="n">rhs</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">latex</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="Eq.apply"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Eq.apply">[docs]</a>	<span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">rhs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">other</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Eq.simplify"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Eq.simplify">[docs]</a>	<span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Simplifies the rhs.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">rhs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="o">.</span><span class="n">simplify</span><span class="p">()</span>
+		<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rhs</span><span class="p">:</span>
+			<span class="n">eq</span> <span class="o">=</span> <span class="n">Eq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lhs</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">)</span>
+			<span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">res</span></div></div>
+
+
+<div class="viewcode-block" id="Fnc"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Fnc">[docs]</a><span class="k">class</span> <span class="nc">Fnc</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Representation of a righthandside of an equation.</span>
+<span class="sd">	This is an superclass for all specific function types.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		name (str):     The name for the function.</span>
+
+<span class="sd">	Keyword Args:</span>
+<span class="sd">		time (Time):    The current time for this function.</span>
+<span class="sd">		eq_time (Time): The current equation time for this function.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">()):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+
+		<span class="c1"># Time properties</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">eq_time</span> <span class="o">=</span> <span class="n">eq_time</span>
+
+	<span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">){</span><span class="si">%s</span><span class="s2">}&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">]),</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">))</span>
+
+	<span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">time</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq_time</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">time</span> <span class="ow">and</span> \
+				<span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">args</span>
+
+	<span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Fnc.simplify"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Fnc.simplify">[docs]</a>	<span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Simplifies the function in-line, based on its arguments.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Fnc.latex"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Fnc.latex">[docs]</a>	<span class="k">def</span> <span class="nf">latex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Returns the LaTeX-representation of the function.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">latex</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="Fnc.eq"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Fnc.eq">[docs]</a>	<span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Returns the textual equation-based representation of the function.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">x</span><span class="o">.</span><span class="n">eq</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="Fnc.get_dependencies"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Fnc.get_dependencies">[docs]</a>	<span class="k">def</span> <span class="nf">get_dependencies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Recursively obtains the dependencies of the current function.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">VarFnc</span><span class="p">):</span>
+				<span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">res</span> <span class="o">+=</span> <span class="n">a</span><span class="o">.</span><span class="n">get_dependencies</span><span class="p">()</span>
+		<span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="Fnc.at"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Fnc.at">[docs]</a>	<span class="k">def</span> <span class="nf">at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Computes the function at a specific point in time.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			time (Time):    The time when to evaluate the function.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			A list of new functions.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">fncsets</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+			<span class="n">fncsets</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">arg</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">time</span><span class="p">)])</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fncsets</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">fncsets</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">fncsets</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cross_product_fncs</span><span class="p">(</span><span class="o">*</span><span class="n">fncsets</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+			<span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">eq_time</span><span class="p">)</span>
+			<span class="n">k</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">a</span>
+			<span class="k">yield</span> <span class="n">k</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Fnc.create"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Fnc.create">[docs]</a>	<span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Fnc.apply"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Fnc.apply">[docs]</a>	<span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eq</span><span class="p">):</span>
+		<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">a</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">):</span>
+			<span class="n">res</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">eq</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span>
+		<span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="Fnc.contains"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.Fnc.contains">[docs]</a>	<span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks if the function relies on another value.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			other (str):    The name that must be checked.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">arg</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">other</span><span class="p">):</span>
+				<span class="k">return</span> <span class="kc">True</span>
+		<span class="k">return</span> <span class="kc">False</span></div>
+
+	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">_cross_product_fncs</span><span class="p">(</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">,</span> <span class="o">*</span><span class="n">lists</span><span class="p">):</span>
+		<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">e1n</span> <span class="ow">in</span> <span class="n">l1</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">e2n</span> <span class="ow">in</span> <span class="n">l2</span><span class="p">:</span>
+				<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e1n</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+					<span class="n">e1</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">e1n</span><span class="p">)</span>
+					<span class="n">e1</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">e2n</span><span class="p">))</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">e1</span> <span class="o">=</span> <span class="p">[</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">e1n</span><span class="p">),</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">e2n</span><span class="p">)]</span>
+				<span class="c1"># TODO: Only do this if</span>
+				<span class="c1">#       all elements have the same equation time</span>
+				<span class="c1">#       (assuming the equation time is either NOW or at some absolute time)</span>
+				<span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">e1</span><span class="p">)</span>
+					<span class="c1"># if e1.eq_time == e2.eq_time:</span>
+					<span class="c1"># 	res.append(Fnc(self.name, e1, e2, eq_time=e1.eq_time))</span>
+					<span class="c1"># elif e1.eq_time.is_absolute() and e2.eq_time.is_relative():</span>
+					<span class="c1"># 	e2.eq_time += e1.eq_time</span>
+					<span class="c1"># 	e2.time += e1.eq_time</span>
+					<span class="c1"># 	res.append(Fnc(self.name, e1, e2, time=e1.time, eq_time=e2.eq_time))</span>
+					<span class="c1"># elif e2.eq_time.is_absolute() and e1.eq_time.is_relative():</span>
+					<span class="c1"># 	e1.eq_time += e2.eq_time</span>
+					<span class="c1"># 	e1.time += e2.eq_time</span>
+					<span class="c1"># 	res.append(Fnc(self.name, e1, e2, time=e2.time, eq_time=e2.eq_time))</span>
+					<span class="c1"># elif e1.eq_time.is_relative() and e2.eq_time.is_relative():</span>
+					<span class="c1"># 	eq_time = e1.eq_time + e2.eq_time</span>
+					<span class="c1"># 	if eq_time != e1.eq_time:</span>
+					<span class="c1"># 		e1.eq_time = eq_time</span>
+					<span class="c1"># 		e1.time += eq_time</span>
+					<span class="c1"># 	if eq_time != e2.eq_time:</span>
+					<span class="c1"># 		e2.eq_time = eq_time</span>
+					<span class="c1"># 		e2.time += eq_time</span>
+					<span class="c1"># 	res.append(Fnc(self.name, e1, e2))</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lists</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">Fnc</span><span class="o">.</span><span class="n">_cross_product_fncs</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="o">*</span><span class="n">lists</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">res</span></div>
+
+
+<div class="viewcode-block" id="MultiFnc"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.MultiFnc">[docs]</a><span class="k">class</span> <span class="nc">MultiFnc</span><span class="p">(</span><span class="n">Fnc</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Collection function for both the adder and the product blocks</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">()):</span>
+		<span class="n">Fnc</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">eq_time</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">symbol</span>
+
+<div class="viewcode-block" id="MultiFnc.create"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.MultiFnc.create">[docs]</a>	<span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MultiFnc.eq"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.MultiFnc.eq">[docs]</a>	<span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">eq</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span></div>
+
+<div class="viewcode-block" id="MultiFnc.latex"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.MultiFnc.latex">[docs]</a>	<span class="k">def</span> <span class="nf">latex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">latex</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span></div>
+
+<div class="viewcode-block" id="MultiFnc.simplify"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.MultiFnc.simplify">[docs]</a>	<span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">unary</span> <span class="o">=</span> <span class="mf">0.0</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;*&quot;</span><span class="p">:</span>
+			<span class="n">unary</span> <span class="o">=</span> <span class="mf">1.0</span>
+		<span class="n">const</span> <span class="o">=</span> <span class="n">ConstantFnc</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="n">unary</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq_time</span><span class="p">)</span>
+		<span class="n">counts</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">ConstantFnc</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+				<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
+					<span class="n">const</span><span class="o">.</span><span class="n">val</span> <span class="o">+=</span> <span class="n">arg</span><span class="o">.</span><span class="n">val</span>
+				<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span><span class="p">:</span>
+					<span class="n">const</span><span class="o">.</span><span class="n">val</span> <span class="o">*=</span> <span class="n">arg</span><span class="o">.</span><span class="n">val</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">arg</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+					<span class="n">counts</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+				<span class="n">counts</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">const</span><span class="o">.</span><span class="n">val</span> <span class="o">!=</span> <span class="n">unary</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">const</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+				<span class="n">counts</span><span class="p">[</span><span class="n">const</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+			<span class="n">counts</span><span class="p">[</span><span class="n">const</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+		<span class="n">others</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">counts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="n">others</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;+&#39;</span><span class="p">:</span>
+					<span class="n">na</span> <span class="o">=</span> <span class="n">BLOCK_MAP</span><span class="p">[</span><span class="s2">&quot;ProductBlock&quot;</span><span class="p">](</span><span class="kc">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+				<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;*&#39;</span><span class="p">:</span>
+					<span class="n">na</span> <span class="o">=</span> <span class="n">BLOCK_MAP</span><span class="p">[</span><span class="s2">&quot;PowerBlock&quot;</span><span class="p">](</span><span class="kc">None</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="k">continue</span>
+				<span class="n">na</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span>
+				<span class="n">na</span><span class="o">.</span><span class="n">eq_time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq_time</span>
+				<span class="n">na</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span> <span class="n">ConstantFnc</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq_time</span><span class="p">)]</span>
+				<span class="n">others</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">na</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="k">return</span> <span class="p">[</span><span class="n">others</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">others</span>
+		<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="UnaryFnc"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.UnaryFnc">[docs]</a><span class="k">class</span> <span class="nc">UnaryFnc</span><span class="p">(</span><span class="n">Fnc</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Collection function for unary input functions</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">()):</span>
+		<span class="n">Fnc</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">eq_time</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">symbol</span>
+
+<div class="viewcode-block" id="UnaryFnc.create"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.UnaryFnc.create">[docs]</a>	<span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UnaryFnc.eq"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.UnaryFnc.eq">[docs]</a>	<span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span></div>
+
+<div class="viewcode-block" id="UnaryFnc.latex"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.UnaryFnc.latex">[docs]</a>	<span class="k">def</span> <span class="nf">latex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">latex</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span></div>
+
+<div class="viewcode-block" id="UnaryFnc.simplify"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.UnaryFnc.simplify">[docs]</a>	<span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ConstantFnc</span><span class="p">):</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+				<span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eq_time</span><span class="p">)</span>
+				<span class="n">ret</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[:]</span>
+				<span class="k">return</span> <span class="p">[</span><span class="n">ret</span><span class="p">]</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">val</span> <span class="o">*=</span> <span class="o">-</span><span class="mi">1</span>
+				<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+			<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;~&#39;</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">val</span>
+				<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+			<span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;!&#39;</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">val</span>
+				<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">UnaryFnc</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+			<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+		<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="BinaryFnc"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.BinaryFnc">[docs]</a><span class="k">class</span> <span class="nc">BinaryFnc</span><span class="p">(</span><span class="n">Fnc</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Collection function for binary input functions</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">symbol</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">()):</span>
+		<span class="n">Fnc</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">eq_time</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">symbol</span> <span class="o">=</span> <span class="n">symbol</span>
+
+<div class="viewcode-block" id="BinaryFnc.create"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.BinaryFnc.create">[docs]</a>	<span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BinaryFnc.eq"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.BinaryFnc.eq">[docs]</a>	<span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(),</span> <span class="n">b</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span></div>
+
+<div class="viewcode-block" id="BinaryFnc.latex"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.BinaryFnc.latex">[docs]</a>	<span class="k">def</span> <span class="nf">latex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;(&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">symbol</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">latex</span><span class="p">(),</span> <span class="n">b</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">latex</span><span class="p">())</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span></div>
+
+<div class="viewcode-block" id="BinaryFnc.simplify"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.BinaryFnc.simplify">[docs]</a>	<span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">{a}</span><span class="s2">^(1/</span><span class="si">{b}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{a}</span><span class="s2">^</span><span class="si">{b}</span><span class="s2">&quot;</span><span class="p">]:</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ConstantFnc</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+			<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ConstantFnc</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+			<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ConstantFnc</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ConstantFnc</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eq</span><span class="p">())</span>
+				<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+		<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="ConstantFnc"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.ConstantFnc">[docs]</a><span class="k">class</span> <span class="nc">ConstantFnc</span><span class="p">(</span><span class="n">Fnc</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Function that represents a constant value</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">()):</span>
+		<span class="n">Fnc</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">eq_time</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span>
+
+<div class="viewcode-block" id="ConstantFnc.create"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.ConstantFnc.create">[docs]</a>	<span class="k">def</span> <span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="p">)</span></div>
+
+	<span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">Fnc</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">val</span>
+
+	<span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ConstantFnc.eq"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.ConstantFnc.eq">[docs]</a>	<span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConstantFnc.latex"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.ConstantFnc.latex">[docs]</a>	<span class="k">def</span> <span class="nf">latex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ConstantFnc.at"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.ConstantFnc.at">[docs]</a>	<span class="k">def</span> <span class="nf">at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">eq_time</span> <span class="o">=</span> <span class="n">time</span>
+		<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="VarFnc"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.VarFnc">[docs]</a><span class="k">class</span> <span class="nc">VarFnc</span><span class="p">(</span><span class="n">Fnc</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Function that represents a variable name</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">()):</span>
+		<span class="n">Fnc</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">eq_time</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="VarFnc.eq"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.VarFnc.eq">[docs]</a>	<span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s{T}</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VarFnc.latex"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.VarFnc.latex">[docs]</a>	<span class="k">def</span> <span class="nf">latex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;</span><span class="si">%s{T}</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VarFnc.at"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.VarFnc.at">[docs]</a>	<span class="k">def</span> <span class="nf">at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">eq_time</span> <span class="o">=</span> <span class="n">time</span>
+		<span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="VarFnc.apply"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.VarFnc.apply">[docs]</a>	<span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eq</span><span class="p">):</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">eq</span><span class="o">.</span><span class="n">lhs</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">eq</span><span class="o">.</span><span class="n">rhs</span>
+		<span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="VarFnc.contains"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.VarFnc.contains">[docs]</a>	<span class="k">def</span> <span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span></div></div>
+
+
+<div class="viewcode-block" id="DelayFnc"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.DelayFnc">[docs]</a><span class="k">class</span> <span class="nc">DelayFnc</span><span class="p">(</span><span class="n">Fnc</span><span class="p">):</span>
+<div class="viewcode-block" id="DelayFnc.at"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.DelayFnc.at">[docs]</a>	<span class="k">def</span> <span class="nf">at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+		<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="n">res</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">Time</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+		<span class="k">if</span> <span class="n">time</span> <span class="o">!=</span> <span class="n">Time</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+			<span class="n">res</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">time</span> <span class="o">+</span> <span class="n">Time</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+			<span class="n">res</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">eq_time</span> <span class="o">=</span> <span class="n">time</span>
+		<span class="k">return</span> <span class="n">res</span></div></div>
+
+
+<div class="viewcode-block" id="DerivatorFnc"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.DerivatorFnc">[docs]</a><span class="k">class</span> <span class="nc">DerivatorFnc</span><span class="p">(</span><span class="n">Fnc</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Function that represents a derivative</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">()):</span>
+		<span class="n">Fnc</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">eq_time</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DerivatorFnc.eq"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.DerivatorFnc.eq">[docs]</a>	<span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;der(</span><span class="si">%s</span><span class="s2">, 0, </span><span class="si">{T}</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DerivatorFnc.latex"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.DerivatorFnc.latex">[docs]</a>	<span class="k">def</span> <span class="nf">latex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">frac{</span><span class="se">\\</span><span class="s2">partial}{</span><span class="se">\\</span><span class="s2">partial </span><span class="si">{dt}</span><span class="s2">} (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">latex</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DerivatorFnc.at"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.DerivatorFnc.at">[docs]</a>	<span class="k">def</span> <span class="nf">at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">time</span> <span class="o">==</span> <span class="n">Time</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">Fnc</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="IntegratorFnc"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.IntegratorFnc">[docs]</a><span class="k">class</span> <span class="nc">IntegratorFnc</span><span class="p">(</span><span class="n">Fnc</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Function that represents an integral</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">Time</span><span class="o">.</span><span class="n">now</span><span class="p">()):</span>
+		<span class="n">Fnc</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">eq_time</span><span class="p">)</span>
+
+<div class="viewcode-block" id="IntegratorFnc.eq"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.IntegratorFnc.eq">[docs]</a>	<span class="k">def</span> <span class="nf">eq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;integ(</span><span class="si">%s</span><span class="s2">, 0, </span><span class="si">{T}</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="IntegratorFnc.latex"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.IntegratorFnc.latex">[docs]</a>	<span class="k">def</span> <span class="nf">latex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">int_0^{{T}} (</span><span class="si">%s</span><span class="s2">) d</span><span class="si">{dt}</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">latex</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="IntegratorFnc.at"><a class="viewcode-back" href="../../../../pyCBD.converters.latexify.functions.html#pyCBD.converters.latexify.functions.IntegratorFnc.at">[docs]</a>	<span class="k">def</span> <span class="nf">at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+		<span class="k">if</span> <span class="n">time</span> <span class="o">==</span> <span class="n">Time</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">Fnc</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span></div></div>
+
+
+<span class="n">BLOCK_MAP</span> <span class="o">=</span> <span class="p">{</span>
+	<span class="s2">&quot;ConstantBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">ConstantFnc</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">getValue</span><span class="p">())],</span>
+	<span class="s2">&quot;NegatorBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">UnaryFnc</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;InverterBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">UnaryFnc</span><span class="p">(</span><span class="s2">&quot;~&quot;</span><span class="p">,</span> <span class="s2">&quot;1 / &quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;AdderBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">MultiFnc</span><span class="p">(</span><span class="s2">&quot;+&quot;</span><span class="p">,</span> <span class="s2">&quot;+&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;ProductBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">MultiFnc</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">cdot&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;ModuloBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">BinaryFnc</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{a}</span><span class="s2"> mod </span><span class="si">{b}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{a}</span><span class="s2"> % </span><span class="si">{b}</span><span class="s2">&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;RootBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">BinaryFnc</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{a}</span><span class="s2">^(1/</span><span class="si">{b}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{a}</span><span class="s2">^(1/</span><span class="si">{b}</span><span class="s2">)&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;PowerBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">BinaryFnc</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{a}</span><span class="s2">^</span><span class="si">{b}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{a}</span><span class="s2">^</span><span class="si">{b}</span><span class="s2">&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;GenericBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">Fnc</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockOperator</span><span class="p">())],</span>
+	<span class="s2">&quot;LessThanBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">BinaryFnc</span><span class="p">(</span><span class="s2">&quot;&lt;&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{a}</span><span class="s2"> &lt; </span><span class="si">{b}</span><span class="s2">&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;LessThanOrEqualsBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">BinaryFnc</span><span class="p">(</span><span class="s2">&quot;&lt;=&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{a}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">lte </span><span class="si">{b}</span><span class="s2">&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;EqualsBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">BinaryFnc</span><span class="p">(</span><span class="s2">&quot;==&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{a}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">leftrightarrow </span><span class="si">{b}</span><span class="s2">&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;NotBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">UnaryFnc</span><span class="p">(</span><span class="s2">&quot;!&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">neg&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;OrBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">BinaryFnc</span><span class="p">(</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{a}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">wedge </span><span class="si">{b}</span><span class="s2">&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;AndBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">BinaryFnc</span><span class="p">(</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{a}</span><span class="s2"> </span><span class="se">\\</span><span class="s2">vee </span><span class="si">{b}</span><span class="s2">&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;TimeBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">VarFnc</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;DeltaTBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">ConstantFnc</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{dt}</span><span class="s2">&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;DelayBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">DelayFnc</span><span class="p">(</span><span class="s2">&quot;D&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;DerivatorBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">DerivatorFnc</span><span class="p">(</span><span class="s2">&quot;Der&quot;</span><span class="p">)],</span>
+	<span class="s2">&quot;IntegratorBlock&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">block</span><span class="p">:</span> <span class="p">[</span><span class="n">IntegratorFnc</span><span class="p">(</span><span class="s2">&quot;Int&quot;</span><span class="p">)],</span>
+<span class="p">}</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The mapping for all known blocks in CBDs. If you created your own block with its own representation,</span>
+<span class="sd">you need to set it in the :code:`type_formats` of the :class:`pyCBD.converters.latexify.CBD2Latex` class.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+	<span class="n">l1</span> <span class="o">=</span> <span class="p">[</span><span class="n">Fnc</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">),</span> <span class="n">Fnc</span><span class="p">(</span><span class="s1">&#39;IC1&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">Time</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">Time</span><span class="p">(</span><span class="mi">0</span><span class="p">))]</span>
+	<span class="n">l2</span> <span class="o">=</span> <span class="p">[</span><span class="n">Fnc</span><span class="p">(</span><span class="s1">&#39;IC2&#39;</span><span class="p">)]</span>
+	<span class="n">l3</span> <span class="o">=</span> <span class="p">[</span><span class="n">Fnc</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">Time</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="kc">True</span><span class="p">)),</span> <span class="n">Fnc</span><span class="p">(</span><span class="s1">&#39;IC3&#39;</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="n">Time</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">eq_time</span><span class="o">=</span><span class="n">Time</span><span class="p">(</span><span class="mi">0</span><span class="p">))]</span>
+
+	<span class="n">fnc</span> <span class="o">=</span> <span class="n">Fnc</span><span class="p">(</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
+	<span class="n">fncs</span> <span class="o">=</span> <span class="n">fnc</span><span class="o">.</span><span class="n">_cross_product_fncs</span><span class="p">(</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">)</span>
+	<span class="nb">print</span><span class="p">(</span><span class="n">fncs</span><span class="p">)</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pyCBD.html">pyCBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.converters.latexify.functions</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,529 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyCBD.converters.eq2CBD &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.converters.eq2CBD</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pyCBD.converters.eq2CBD</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Transforms equations/textual denotations to CBD models.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">lark</span> <span class="kn">import</span> <span class="n">Lark</span><span class="p">,</span> <span class="n">Transformer</span><span class="p">,</span> <span class="n">Token</span><span class="p">,</span> <span class="n">ParseError</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;eq2CBD&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="eq2CBD"><a class="viewcode-back" href="../../../pyCBD.converters.eq2CBD.html#pyCBD.converters.eq2CBD.eq2CBD">[docs]</a><span class="k">class</span> <span class="nc">eq2CBD</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Converts equations (textual denotation) into corresponding CBD models.</span>
+
+<span class="sd">	After instantiating this class, the :func:`parse` method may be called to</span>
+<span class="sd">	obtain the CBD model(s).</span>
+
+<span class="sd">	All equations must be in the form of :code:`&lt;output&gt; = &lt;expression&gt;`, where</span>
+<span class="sd">	:code:`&lt;output&gt;` identifies the name of an output of the resulting CBD and</span>
+<span class="sd">	:code:`&lt;expression&gt;` defines the corresponding logic. To prevent the creation</span>
+<span class="sd">	of an output, :code:`:=` may be used instead of :code:`=`. Multiple equations</span>
+<span class="sd">	can be listed, separated by newlines. Variables used in the expressions will</span>
+<span class="sd">	be linked to one another if needs be. When a variable is used without any</span>
+<span class="sd">	descriptive reference, it will be used as an input. For instance, the text</span>
+<span class="sd">	:code:`y = 6 * x` will be transformed into a CBD with a single output :code:`y`</span>
+<span class="sd">	and a single input :code:`x`.</span>
+
+<span class="sd">	Variable names must match the regex :code:`[a-zA-Z_][a-zA-Z0-9_]*` and must not</span>
+<span class="sd">	be any allowed function name (see below). The variable :code:`time` is reserved</span>
+<span class="sd">	and will be replaced by a :code:`TimeBlock`.</span>
+
+<span class="sd">	The following operations are allowed and transformed w.r.t. the standard library&#39;s</span>
+<span class="sd">	building blocks (:mod:`pyCBD.lib.std`). The order of operations applied is: parentheses,</span>
+<span class="sd">	function calls, exponents, multiplication/division and addition/subtraction.</span>
+
+<span class="sd">	- :code:`(A)`: Places sub-equation :code:`A` in parentheses, giving precedence on</span>
+<span class="sd">	  the computation of that equation.</span>
+<span class="sd">	- :code:`-A`: Negation of a variable or value. In the case of a constant value, no</span>
+<span class="sd">	  additional negator will be added to the CBD, **unless** explicitly requested by</span>
+<span class="sd">	  placing the value within parentheses: i.e. :code:`-(4)`.</span>
+<span class="sd">	- :code:`1/A`: Inversion of a variable or value. In the case of a constant value, no</span>
+<span class="sd">	  additional inverter will be added to the CBD, **unless** explicitly requested by</span>
+<span class="sd">	  placing the value within parentheses: i.e. :code:`1/(4)`.</span>
+<span class="sd">	- :code:`~A` or :code:`!A` or :code:`not A`: Adds a :code:`NotBlock` before sub-equation</span>
+<span class="sd">	  :code:`A`.</span>
+<span class="sd">	- :code:`A + B + C - D`: Sum of two (or more) sub-equations. Whenever a subtraction</span>
+<span class="sd">	  is encountered, it will be replaced by an addition of the negator and the other</span>
+<span class="sd">	  terms. In the case of a constant value, the same logic as mentioned above is applied.</span>
+<span class="sd">	- :code:`A * B * C / D`: Multiplication of two (or more) sub-equations. Whenever a</span>
+<span class="sd">	  division is encountered, it will be replaced by the multiplication of the inverted</span>
+<span class="sd">	  value and other factors. In the case of a constant value, the same logic as mentioned</span>
+<span class="sd">	  above is applied.</span>
+<span class="sd">	- :code:`A^B`: Raises sub-equation :code:`A` to the power of sub-equation :code:`B`.</span>
+<span class="sd">	- :code:`A % B` or :code:`A mod B`: Modulo-divides sub-equation :code:`A` by sub-equation</span>
+<span class="sd">	  :code:`B`.</span>
+<span class="sd">	- :code:`A == B`: Tests equality between sub-equations :code:`A` and :code:`B`.</span>
+<span class="sd">	- :code:`A &lt;= B`: Tests inequality between sub-equations :code:`A` and :code:`B`. The</span>
+<span class="sd">	  :code:`LessThanOrEqualsBlock` will be used here.</span>
+<span class="sd">	- :code:`A &lt; B`: Tests inequality between sub-equations :code:`A` and :code:`B`. The</span>
+<span class="sd">	  :code:`LessThanBlock` will be used here.</span>
+<span class="sd">	- :code:`A &gt;= B`: Tests inequality between sub-equations :code:`A` and :code:`B`. Behind</span>
+<span class="sd">	  the scenes, this code will be handled as if it were :code:`B &lt;= A`.</span>
+<span class="sd">	- :code:`A &gt; B`: Tests inequality between sub-equations :code:`A` and :code:`B`. Behind</span>
+<span class="sd">	  the scenes, this code will be handled as if it were :code:`B &lt; A`.</span>
+<span class="sd">	- :code:`A or B` or :code:`A || B`: Merges both :code:`A` and :code:`B` in an</span>
+<span class="sd">	  :code:`OrBlock`.</span>
+<span class="sd">	- :code:`A and B` or :code:`A &amp;&amp; B`: Merges both :code:`A` and :code:`B` in an</span>
+<span class="sd">	  :code:`AndBlock`.</span>
+<span class="sd">	- :code:`f(A)`: executes function :code:`f` on sub-equation :code:`A`. Besides all</span>
+<span class="sd">	  single-argument functions from the :mod:`math` module (see the :class:`pyCBD.lib.std.GenericBlock`),</span>
+<span class="sd">	  the allowed functions (case-insensitive) are:</span>
+
+<span class="sd">	.. list-table::</span>
+<span class="sd">	   :widths: 30 30 40</span>
+<span class="sd">	   :header-rows: 1</span>
+
+<span class="sd">	   * - function</span>
+<span class="sd">	     - argument/input port count</span>
+<span class="sd">	     - CBD block</span>
+<span class="sd">	   * - :code:`int`</span>
+<span class="sd">	     - 1</span>
+<span class="sd">	     - :class:`pyCBD.lib.std.IntBlock`</span>
+<span class="sd">	   * - :code:`abs`</span>
+<span class="sd">	     - 1</span>
+<span class="sd">	     - :class:`pyCBD.lib.std.AbsBlock`</span>
+<span class="sd">	   * - :code:`root`</span>
+<span class="sd">	     - 2</span>
+<span class="sd">	     - :class:`pyCBD.lib.std.RootBlock`</span>
+<span class="sd">	   * - :code:`sqrt`</span>
+<span class="sd">	     - 1</span>
+<span class="sd">	     - :class:`pyCBD.lib.std.RootBlock` with second input fixed to 2</span>
+<span class="sd">	   * - :code:`clamp` or :code:`sat`</span>
+<span class="sd">	     - 3</span>
+<span class="sd">	     - :class:`pyCBD.lib.std.ClampBlock`</span>
+<span class="sd">	   * - :code:`mux`</span>
+<span class="sd">	     - 3 (last argument is the :code:`select` input)</span>
+<span class="sd">	     - :class:`pyCBD.lib.std.MultiplexerBlock`</span>
+<span class="sd">	   * - :code:`d`</span>
+<span class="sd">	     - 2 (second argument is the :code:`IC`)</span>
+<span class="sd">	     - :class:`pyCBD.lib.std.DelayBlock`</span>
+<span class="sd">	   * - :code:`der`</span>
+<span class="sd">	     - 3 (second argument is the :code:`IC`, third is the :code:`delta_t`)</span>
+<span class="sd">	     - :class:`pyCBD.lib.std.DerivatorBlock`</span>
+<span class="sd">	   * - :code:`i`</span>
+<span class="sd">	     - 3 (second argument is the :code:`IC`, third is the :code:`delta_t`)</span>
+<span class="sd">	     - :class:`pyCBD.lib.std.IntegratorBlock`</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)),</span> <span class="s2">&quot;eq.lark&quot;</span><span class="p">)</span>
+		<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+			<span class="n">contents</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">Lark</span><span class="p">(</span><span class="n">contents</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="s2">&quot;earley&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="eq2CBD.parse"><a class="viewcode-back" href="../../../pyCBD.converters.eq2CBD.html#pyCBD.converters.eq2CBD.eq2CBD.parse">[docs]</a>	<span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Parses the text and constructs a CBD model thereof.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			text (str): The text to parse.</span>
+<span class="sd">			model:      An optional CBD model to use for the construction.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">tree</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+		<span class="n">transformer</span> <span class="o">=</span> <span class="n">EqTransformer</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">tree</span><span class="p">)</span></div></div>
+
+
+<span class="kn">from</span> <span class="nn">pyCBD.Core</span> <span class="kn">import</span> <span class="n">CBD</span>
+<span class="kn">from</span> <span class="nn">pyCBD.lib.std</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="k">class</span> <span class="nc">EqFunctions</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Collection class for all the functions that can be called in the</span>
+<span class="sd">	textual mode. They are given as member functions of this class.</span>
+<span class="sd">	Each of these functions should return a tuple of</span>
+<span class="sd">	:code:`block, n[, mapping]`, where :code:`block` indicates the block</span>
+<span class="sd">	to link in the transformer, :code:`n` identifies the amount of arguments</span>
+<span class="sd">	and the optional :code:`mapping` is a dictionary used when the ports are</span>
+<span class="sd">	not named w.r.t. :code:`IN\\d+`.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		model:  The model to add the blocks to.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+
+	<span class="k">def</span> <span class="nf">_has_func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks if a function exists.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">fname</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">x</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)]</span>
+
+	<span class="k">def</span> <span class="nf">int</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">IntBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span><span class="p">,</span> <span class="mi">1</span>
+
+	<span class="k">def</span> <span class="nf">abs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">AbsBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span><span class="p">,</span> <span class="mi">1</span>
+
+	<span class="k">def</span> <span class="nf">root</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">RootBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span><span class="p">,</span> <span class="mi">2</span>
+
+	<span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">two</span> <span class="o">=</span> <span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">RootBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">two</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">two</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;IN2&quot;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span><span class="p">,</span> <span class="mi">1</span>
+
+	<span class="k">def</span> <span class="nf">clamp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">ClampBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">use_const</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span><span class="p">,</span> <span class="mi">3</span>
+
+	<span class="n">sat</span> <span class="o">=</span> <span class="n">clamp</span>
+
+	<span class="k">def</span> <span class="nf">mux</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">MultiplexerBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;IN3&quot;</span><span class="p">:</span> <span class="s2">&quot;select&quot;</span><span class="p">}</span>
+
+	<span class="k">def</span> <span class="nf">d</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">DelayBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;IN2&quot;</span><span class="p">:</span> <span class="s2">&quot;IC&quot;</span><span class="p">}</span>
+
+	<span class="k">def</span> <span class="nf">i</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">IntegratorBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;IN2&quot;</span><span class="p">:</span> <span class="s2">&quot;IC&quot;</span><span class="p">,</span> <span class="s2">&quot;IN3&quot;</span><span class="p">:</span> <span class="s2">&quot;delta_t&quot;</span><span class="p">}</span>
+
+	<span class="k">def</span> <span class="nf">der</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">DerivatorBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;IN2&quot;</span><span class="p">:</span> <span class="s2">&quot;IC&quot;</span><span class="p">,</span> <span class="s2">&quot;IN3&quot;</span><span class="p">:</span> <span class="s2">&quot;delta_t&quot;</span><span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">EqTransformer</span><span class="p">(</span><span class="n">Transformer</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Transforms the AST into a CBD model.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		model:  The CBD model to start from. When :code:`None`, a</span>
+<span class="sd">				new model will be created. Defaults to :code:`None`.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="c1"># TODO: multiple output ports?</span>
+	<span class="c1"># TODO: constant folding</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">CBD</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">model</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">functions</span> <span class="o">=</span> <span class="n">EqFunctions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">vars</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">var_results</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">nocollapse</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">link</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">what</span><span class="p">,</span> <span class="n">to</span><span class="p">,</span> <span class="n">opn</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ipn</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">what</span><span class="p">,</span> <span class="n">Token</span><span class="p">)</span> <span class="ow">and</span> <span class="n">what</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;VNAME&quot;</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">linkVar</span><span class="p">(</span><span class="n">what</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="n">to</span><span class="p">,</span> <span class="n">ipn</span><span class="p">))</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">what</span><span class="p">,</span> <span class="n">to</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="n">ipn</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="n">opn</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">linkVar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">to</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">to</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_</span><span class="p">):</span>
+		<span class="n">all_vars</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+		<span class="n">output_vars</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">var_results</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+		<span class="n">input_vars</span> <span class="o">=</span> <span class="n">all_vars</span> <span class="o">-</span> <span class="n">output_vars</span>
+		<span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">input_vars</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addInputPort</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">var_results</span><span class="p">[</span><span class="n">inp</span><span class="p">]</span> <span class="o">=</span> <span class="n">inp</span>
+		<span class="k">for</span> <span class="n">var</span><span class="p">,</span> <span class="n">cons</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="n">from_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_results</span><span class="p">[</span><span class="n">var</span><span class="p">]</span>
+			<span class="k">for</span> <span class="n">con</span><span class="p">,</span> <span class="n">ipn</span> <span class="ow">in</span> <span class="n">cons</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">from_</span><span class="p">,</span> <span class="n">con</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="n">ipn</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span>
+
+	<span class="k">def</span> <span class="nf">eqn</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="nf">stmt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+		<span class="n">vname</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">var_results</span><span class="p">[</span><span class="n">vname</span><span class="p">]</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+		<span class="k">if</span> <span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;=&quot;</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addOutputPort</span><span class="p">(</span><span class="n">vname</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">vname</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="nf">poper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">nocollapse</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">())</span>
+		<span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="n">N</span> <span class="o">=</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+			<span class="n">block</span> <span class="o">=</span> <span class="n">AdderBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">block</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+				<span class="n">idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+				<span class="k">if</span> <span class="n">items</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;ADD&quot;</span><span class="p">:</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">block</span><span class="p">)</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">neg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">neg</span><span class="p">([</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]])</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">neg</span><span class="p">,</span> <span class="n">block</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">block</span>
+		<span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="nf">prod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="n">N</span> <span class="o">=</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+			<span class="n">block</span> <span class="o">=</span> <span class="n">ProductBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">block</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+				<span class="n">idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+				<span class="k">if</span> <span class="n">items</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;MUL&quot;</span><span class="p">:</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">block</span><span class="p">)</span>
+				<span class="k">elif</span> <span class="n">items</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;DIV&quot;</span><span class="p">:</span>
+					<span class="n">inv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">inv</span><span class="p">([</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]])</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">inv</span><span class="p">,</span> <span class="n">block</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">block</span>
+		<span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="nf">pow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="n">block</span> <span class="o">=</span> <span class="n">PowerBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">block</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">block</span><span class="p">,</span> <span class="n">ipn</span><span class="o">=</span><span class="s2">&quot;IN2&quot;</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">block</span>
+		<span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="nf">mod</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">ModuloBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">block</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">block</span><span class="p">,</span> <span class="n">ipn</span><span class="o">=</span><span class="s2">&quot;IN2&quot;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span>
+
+	<span class="k">def</span> <span class="nf">neg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ConstantBlock</span><span class="p">)</span> \
+				<span class="ow">and</span> <span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nocollapse</span><span class="p">:</span>
+			<span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="o">-</span><span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">getValue</span><span class="p">())</span>
+			<span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">NegatorBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">block</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span>
+
+	<span class="k">def</span> <span class="nf">not_</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">NotBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">block</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span>
+
+	<span class="k">def</span> <span class="nf">delay</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">DelayBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">block</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span>
+
+	<span class="k">def</span> <span class="nf">inv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ConstantBlock</span><span class="p">)</span> \
+				<span class="ow">and</span> <span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nocollapse</span><span class="p">:</span>
+			<span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">getValue</span><span class="p">())</span>
+			<span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">InverterBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">block</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span>
+
+	<span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+	<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+		<span class="n">fname</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+		<span class="n">args</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">_has_func</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+			<span class="n">vals</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">functions</span><span class="p">,</span> <span class="n">fname</span><span class="p">)()</span>
+			<span class="n">block</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="n">acnt</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+			<span class="n">mapper</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+			<span class="k">if</span> <span class="n">acnt</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+				<span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">&quot;Function &#39;</span><span class="si">%s</span><span class="s2">&#39; has too few arguments (got </span><span class="si">%d</span><span class="s2">, expected </span><span class="si">%d</span><span class="s2">); &quot;</span>
+				                 <span class="s2">&quot;at line </span><span class="si">%d</span><span class="s2">, column </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="n">acnt</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">line</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">end_column</span><span class="p">))</span>
+			<span class="k">if</span> <span class="n">acnt</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+				<span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">&quot;Function &#39;</span><span class="si">%s</span><span class="s2">&#39; has too many arguments (got </span><span class="si">%d</span><span class="s2">, expected </span><span class="si">%d</span><span class="s2">); &quot;</span>
+				                 <span class="s2">&quot;at line </span><span class="si">%d</span><span class="s2">, column </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="n">acnt</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">line</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">end_column</span><span class="p">))</span>
+			<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">ipn</span><span class="o">=</span><span class="n">mapper</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;IN</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;IN</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span>
+			<span class="k">return</span> <span class="n">block</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">math</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">&quot;Function &#39;</span><span class="si">%s</span><span class="s2">&#39; does not exist at line </span><span class="si">%d</span><span class="s2">, column </span><span class="si">%d</span><span class="s2">&quot;</span> \
+			                    <span class="o">%</span> <span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">line</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">end_column</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">&quot;Function &#39;</span><span class="si">%s</span><span class="s2">&#39; has too many arguments (got </span><span class="si">%d</span><span class="s2">, expected 1); &quot;</span>
+			                 <span class="s2">&quot;at line </span><span class="si">%d</span><span class="s2">, column </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">line</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">end_column</span><span class="p">))</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">GenericBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">block</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span>
+
+	<span class="k">def</span> <span class="nf">bool</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
+		<span class="n">oper</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+		<span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">items</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+		<span class="k">if</span> <span class="n">oper</span> <span class="o">==</span> <span class="s2">&quot;==&quot;</span><span class="p">:</span>
+			<span class="n">block</span> <span class="o">=</span> <span class="n">EqualsBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">oper</span> <span class="o">==</span> <span class="s2">&quot;&lt;=&quot;</span><span class="p">:</span>
+			<span class="n">block</span> <span class="o">=</span> <span class="n">LessThanOrEqualsBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">oper</span> <span class="o">==</span> <span class="s2">&quot;&lt;&quot;</span><span class="p">:</span>
+			<span class="n">block</span> <span class="o">=</span> <span class="n">LessThanBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">oper</span> <span class="o">==</span> <span class="s2">&quot;&gt;=&quot;</span><span class="p">:</span>
+			<span class="n">block</span> <span class="o">=</span> <span class="n">LessThanOrEqualsBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+			<span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">second</span><span class="p">,</span> <span class="n">first</span>
+		<span class="k">elif</span> <span class="n">oper</span> <span class="o">==</span> <span class="s2">&quot;&gt;&quot;</span><span class="p">:</span>
+			<span class="n">block</span> <span class="o">=</span> <span class="n">LessThanBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+			<span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="o">=</span> <span class="n">second</span><span class="p">,</span> <span class="n">first</span>
+		<span class="k">elif</span> <span class="n">oper</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;or&quot;</span><span class="p">,</span> <span class="s2">&quot;||&quot;</span><span class="p">]:</span>
+			<span class="n">block</span> <span class="o">=</span> <span class="n">OrBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="n">oper</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;and&quot;</span><span class="p">,</span> <span class="s2">&quot;&amp;&amp;&quot;</span><span class="p">]:</span>
+			<span class="n">block</span> <span class="o">=</span> <span class="n">AndBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Impossible condition: uncaught, invalid boolean operator!&quot;</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">ipn</span><span class="o">=</span><span class="s2">&quot;IN1&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">link</span><span class="p">(</span><span class="n">second</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">ipn</span><span class="o">=</span><span class="s2">&quot;IN2&quot;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span>
+
+	<span class="k">def</span> <span class="nf">VNAME</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tok</span><span class="p">):</span>
+		<span class="n">vname</span> <span class="o">=</span> <span class="n">tok</span><span class="o">.</span><span class="n">value</span>
+		<span class="k">if</span> <span class="n">vname</span> <span class="o">==</span> <span class="s2">&quot;time&quot;</span><span class="p">:</span>
+			<span class="n">block</span> <span class="o">=</span> <span class="n">TimeBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">block</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">functions</span><span class="o">.</span><span class="n">_has_func</span><span class="p">(</span><span class="n">vname</span><span class="p">):</span>
+			<span class="k">raise</span> <span class="n">ParseError</span><span class="p">(</span><span class="s2">&quot;Invalid variable name &#39;</span><span class="si">%s</span><span class="s2">&#39; at line </span><span class="si">%d</span><span class="s2">, column </span><span class="si">%d</span><span class="s2">&quot;</span> \
+			                 <span class="o">%</span> <span class="p">(</span><span class="n">vname</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">line</span><span class="p">,</span> <span class="n">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">end_column</span><span class="p">))</span>
+		<span class="k">if</span> <span class="n">vname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="n">vname</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">return</span> <span class="n">tok</span>
+
+	<span class="k">def</span> <span class="nf">NUMBER</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tok</span><span class="p">):</span>
+		<span class="n">block</span> <span class="o">=</span> <span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">tok</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">block</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+	<span class="kn">from</span> <span class="nn">pyCBD.converters.CBDDraw</span> <span class="kn">import</span> <span class="n">gvDraw</span>
+
+	<span class="n">parser</span> <span class="o">=</span> <span class="n">eq2CBD</span><span class="p">()</span>
+	<span class="n">gvDraw</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;x := 7 + 6&quot;</span><span class="p">),</span> <span class="s2">&quot;test.dot&quot;</span><span class="p">)</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pyCBD.html">pyCBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.converters.eq2CBD</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

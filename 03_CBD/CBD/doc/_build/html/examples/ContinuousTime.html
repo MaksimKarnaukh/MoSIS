@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Continuous Time Simulation &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/math.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyCBD package" href="../pyCBD.html" />
+    <link rel="prev" title="pyCBD.converters.latexify.functions module" href="../pyCBD.converters.latexify.functions.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../pyCBD.html" title="pyCBD package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../pyCBD.converters.latexify.functions.html" title="pyCBD.converters.latexify.functions module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Continuous Time Simulation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="continuous-time-simulation">
+<h1>Continuous Time Simulation<a class="headerlink" href="#continuous-time-simulation" title="Permalink to this headline">¶</a></h1>
+<p>Given that continuous time simulation will always have to be discretized when
+executed, it is important to ask <em>how</em> this discretization happens. In the
+<a class="reference internal" href="SinGen.html"><span class="doc">Sine Generator</span></a> example, this was done by reducing the delta inbetween multiple
+steps. However, this may compute too often for what is required in a given
+simulation. Assume we have the following data (from a sine wave):</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../_images/sine.png"><img alt="../_images/sine.png" src="../_images/sine.png" style="width: 600px;" /></a>
+</figure>
+<section id="fixed-step-size">
+<h2>Fixed Step Size<a class="headerlink" href="#fixed-step-size" title="Permalink to this headline">¶</a></h2>
+<p>With the previously discussed technique, the data could be plot using a fixed
+step size, where the new data is being computed every <code class="code docutils literal notranslate"><span class="pre">dt</span></code> time. The
+smaller this <code class="code docutils literal notranslate"><span class="pre">dt</span></code> value is, the more precise the plot. Below, the same
+function has been plot twice, for <code class="code docutils literal notranslate"><span class="pre">dt</span> <span class="pre">=</span> <span class="pre">0.5</span></code> and <code class="code docutils literal notranslate"><span class="pre">dt</span> <span class="pre">=</span> <span class="pre">0.1</span></code>, where
+the marked points on the plot highlight <em>when</em> the data has been recomputed. It
+is clear from these plots that a smaller step size identifies more accurate
+results.</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../_images/sine-5.png"><img alt="../_images/sine-5.png" src="../_images/sine-5.png" style="width: 600px;" /></a>
+</figure>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../_images/sine-1.png"><img alt="../_images/sine-1.png" src="../_images/sine-1.png" style="width: 600px;" /></a>
+</figure>
+<p>This behaviour is the default in the simulator. This can be explicitly set as follows
+(assuming <code class="code docutils literal notranslate"><span class="pre">sim</span></code> is the simulator object):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span><span class="o">.</span><span class="n">setDeltaT</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This was done for academic reasons, as it is much easier to explain CBDs with a
+fixed step size, as compared to varying step sizes. By default, the <code class="code docutils literal notranslate"><span class="pre">dt</span></code> is
+set to 1.</p>
+</section>
+<section id="manipulating-the-clock">
+<h2>Manipulating the Clock<a class="headerlink" href="#manipulating-the-clock" title="Permalink to this headline">¶</a></h2>
+<p>To maintain the block structure of the simulator, the simulation clock
+(see <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.Clock</span></code>) is implemented as an actual block. If this clock is
+not used in the model to simulate, the simulator will automatically add a fixed-rate
+clock, given the <code class="code docutils literal notranslate"><span class="pre">dt</span></code> information, as explained above. This can also be done
+manually via calling <code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.Core.CBD.addFixedRateClock()</span></code>. The clock will actually
+be used to compute the simulation time. The <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.TimeBlock</span></code> outputs the
+current simulation time and can therefore be used to access the current time without
+the need for the actual clock. However, blocks that depend on the <code class="code docutils literal notranslate"><span class="pre">dt</span></code> value
+either need to be linked to a Clock block, or should have an input that yields the
+correct value; i.e., a <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.ConstantBlock</span></code>.</p>
+</section>
+<section id="adaptive-step-size">
+<h2>Adaptive Step Size<a class="headerlink" href="#adaptive-step-size" title="Permalink to this headline">¶</a></h2>
+<p>Adaptive step size (or variable step size) is a simulation method in which the delta
+changes throughout the simulation time. The clock-as-a-block structure allows the
+variation of the <code class="code docutils literal notranslate"><span class="pre">dt</span></code>, as is required for adaptive step size. This can be done
+manually by computing some simulation outputs, or via RK-preprocessing.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Runge-Kutta preprocessing is only available if there are one or more instances of
+<code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.IntegratorBlock</span></code> in the original model. Also make sure not to
+use a flattened model to prevent errors.</p>
+</div>
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.preprocessing.rungekutta.RKPreprocessor</span></code> transforms the original CBD
+model into a new block diagram that applies the Runge-Kutta algorithm with error
+estimation. The full family of Runge-Kutta algorithms can be used as long as they are
+representable in a Butcher tableau. Take a look at
+<code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.preprocessing.butcher.ButcherTableau</span></code> to see which algorithms are automatically
+included.</p>
+<p>For instance, to apply the Runge-Kutta Fehlberg method for 4th and 5th order to ensure
+adaptive step size of a CBD model called <code class="code docutils literal notranslate"><span class="pre">sinGen</span></code>, the following code can be used:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.preprocessing.butcher</span> <span class="kn">import</span> <span class="n">ButcherTableau</span> <span class="k">as</span> <span class="n">BT</span>
+<span class="kn">from</span> <span class="nn">CBD.preprocessing.rungekutta</span> <span class="kn">import</span> <span class="n">RKPreprocessor</span>
+
+<span class="c1"># Add a clock to the model, or RK will not work, 1e-4 is the starting delta</span>
+<span class="n">sinGen</span><span class="o">.</span><span class="n">addFixedRateClock</span><span class="p">(</span><span class="s2">&quot;clock&quot;</span><span class="p">,</span> <span class="mf">1e-4</span><span class="p">)</span>
+
+<span class="n">tableau</span> <span class="o">=</span> <span class="n">BT</span><span class="o">.</span><span class="n">RKF45</span><span class="p">()</span>
+<span class="n">RKP</span> <span class="o">=</span> <span class="n">RKPreprocessor</span><span class="p">(</span><span class="n">tableau</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">2e-5</span><span class="p">,</span> <span class="n">hmin</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">safety</span><span class="o">=</span><span class="mf">.84</span><span class="p">)</span>
+<span class="n">newModel</span> <span class="o">=</span> <span class="n">RKP</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">oldModel</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Notice how the <code class="code docutils literal notranslate"><span class="pre">preprocess</span></code> method returns a new model that must be used in the simulation.
+Make sure to refer to this model when reading output traces or changing constants (see also
+<a class="reference internal" href="Dashboard.html"><span class="doc">TkInter Dashboard with Editable Values</span></a>).</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>To obtain a block from the original model, the path <code class="code docutils literal notranslate"><span class="pre">RK.RK-K_0.block_name</span></code> could be used. However,
+because of the way RK works, it is perfectly possible there are multiple copies in the transformed model.
+It is discouraged to use the internal blocks for signal information. Therefore, please only read data
+from the output ports and not from blocks in the model itself. This is an unfortunate side-effect
+of “transforming” the model to comply to adaptive step size simulation.</p>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Continuous Time Simulation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fixed-step-size">Fixed Step Size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#manipulating-the-clock">Manipulating the Clock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adaptive-step-size">Adaptive Step Size</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pyCBD.html">pyCBD package</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../pyCBD.converters.latexify.functions.html"
+                          title="previous chapter">pyCBD.converters.latexify.functions module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../pyCBD.html"
+                          title="next chapter">pyCBD package</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../pyCBD.html" title="pyCBD package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../pyCBD.converters.latexify.functions.html" title="pyCBD.converters.latexify.functions module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Continuous Time Simulation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,458 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>pyCBD.state_events.locators module &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyCBD.preprocessing package" href="pyCBD.preprocessing.html" />
+    <link rel="prev" title="pyCBD.state_events module" href="pyCBD.state_events.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.preprocessing.html" title="pyCBD.preprocessing package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.state_events.html" title="pyCBD.state_events module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" >pyCBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="pyCBD.state_events.html" accesskey="U">pyCBD.state_events module</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.state_events.locators module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-pyCBD.state_events.locators">
+<span id="pycbd-state-events-locators-module"></span><h1>pyCBD.state_events.locators module<a class="headerlink" href="#module-pyCBD.state_events.locators" title="Permalink to this headline">¶</a></h1>
+<p>This module contains the standard State Event locators.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.state_events.locators.PreCrossingStateEventLocator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.state_events.locators.</span></span><span class="sig-name descname"><span class="pre">PreCrossingStateEventLocator</span></span><a class="reference internal" href="_modules/pyCBD/state_events/locators.html#PreCrossingStateEventLocator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.state_events.locators.PreCrossingStateEventLocator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.state_events.locators.StateEventLocator</span></code></p>
+<p>Assumes that the crossing happens at the start of the interval.
+Can be used if a precise detection is not a requirement.</p>
+<p>This implementation computes a rough under-estimate.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.state_events.locators.PreCrossingStateEventLocator.algorithm">
+<span class="sig-name descname"><span class="pre">algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Direction.ANY</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/state_events/locators.html#PreCrossingStateEventLocator.algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.state_events.locators.PreCrossingStateEventLocator.algorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>The algorithm that identifies the locator functionality. Must be implemented
+in sub-classes. Should only ever be called if a crossing exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>tuple</em>) – The (time, value) coordinate before the crossing,
+shifted towards zero.</p></li>
+<li><p><strong>p2</strong> (<em>tuple</em>) – The (time, value) coordinate after the crossing,
+shifted towards zero.</p></li>
+<li><p><strong>output_name</strong> – The output port name for which the crossing point
+must be computed, if a CBD is given. Otherwise, a
+single-argument callable :math`f(t)` is accepted
+as well.</p></li>
+<li><p><strong>level</strong> (<em>float</em>) – The level through which the crossing must be
+identified. Defaults to 0.</p></li>
+<li><p><strong>direction</strong> (<a class="reference internal" href="pyCBD.state_events.html#pyCBD.state_events.Direction" title="pyCBD.state_events.Direction"><em>Direction</em></a>) – The direction of the crossing to detect. This
+value ensures a valid crossing is identified if there
+are multiple between <code class="xref py py-attr docutils literal notranslate"><span class="pre">p1</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">p2</span></code>. Will
+only provide an acceptable result if the direction of
+the crossing can be identified. For instance, if
+there is a crossing from below, according to the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">detect()</span></code> function, the algorithm will usually
+not accurately identify any crossings from above.
+Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">Direction.ANY</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A suspected time of the crossing.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.state_events.locators.PostCrossingStateEventLocator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.state_events.locators.</span></span><span class="sig-name descname"><span class="pre">PostCrossingStateEventLocator</span></span><a class="reference internal" href="_modules/pyCBD/state_events/locators.html#PostCrossingStateEventLocator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.state_events.locators.PostCrossingStateEventLocator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.state_events.locators.StateEventLocator</span></code></p>
+<p>Assumes that the crossing happens at the end of the interval.
+Can be used if a precise detection is not a requirement.</p>
+<p>This implementation computes a rough over-estimate.</p>
+<p>Corresponds to the <code class="code docutils literal notranslate"><span class="pre">if</span></code> statement in <a class="reference external" href="https://modelica.org/">Modelica</a>,
+whereas the other locators can be seen as the <code class="code docutils literal notranslate"><span class="pre">when</span></code> statement.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.state_events.locators.PostCrossingStateEventLocator.algorithm">
+<span class="sig-name descname"><span class="pre">algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Direction.ANY</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/state_events/locators.html#PostCrossingStateEventLocator.algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.state_events.locators.PostCrossingStateEventLocator.algorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>The algorithm that identifies the locator functionality. Must be implemented
+in sub-classes. Should only ever be called if a crossing exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>tuple</em>) – The (time, value) coordinate before the crossing,
+shifted towards zero.</p></li>
+<li><p><strong>p2</strong> (<em>tuple</em>) – The (time, value) coordinate after the crossing,
+shifted towards zero.</p></li>
+<li><p><strong>output_name</strong> – The output port name for which the crossing point
+must be computed, if a CBD is given. Otherwise, a
+single-argument callable :math`f(t)` is accepted
+as well.</p></li>
+<li><p><strong>level</strong> (<em>float</em>) – The level through which the crossing must be
+identified. Defaults to 0.</p></li>
+<li><p><strong>direction</strong> (<a class="reference internal" href="pyCBD.state_events.html#pyCBD.state_events.Direction" title="pyCBD.state_events.Direction"><em>Direction</em></a>) – The direction of the crossing to detect. This
+value ensures a valid crossing is identified if there
+are multiple between <code class="xref py py-attr docutils literal notranslate"><span class="pre">p1</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">p2</span></code>. Will
+only provide an acceptable result if the direction of
+the crossing can be identified. For instance, if
+there is a crossing from below, according to the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">detect()</span></code> function, the algorithm will usually
+not accurately identify any crossings from above.
+Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">Direction.ANY</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A suspected time of the crossing.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.state_events.locators.LinearStateEventLocator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.state_events.locators.</span></span><span class="sig-name descname"><span class="pre">LinearStateEventLocator</span></span><a class="reference internal" href="_modules/pyCBD/state_events/locators.html#LinearStateEventLocator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.state_events.locators.LinearStateEventLocator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.state_events.locators.StateEventLocator</span></code></p>
+<p>Uses simple linear interpolation to compute the time of the crossing.
+This is usually a rough, yet centered estimate.</p>
+<p>This locator should only be used if it is known that the signal is
+(mostly) linear between the lower and upper bounds.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.state_events.locators.LinearStateEventLocator.algorithm">
+<span class="sig-name descname"><span class="pre">algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Direction.ANY</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/state_events/locators.html#LinearStateEventLocator.algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.state_events.locators.LinearStateEventLocator.algorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>The algorithm that identifies the locator functionality. Must be implemented
+in sub-classes. Should only ever be called if a crossing exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>tuple</em>) – The (time, value) coordinate before the crossing,
+shifted towards zero.</p></li>
+<li><p><strong>p2</strong> (<em>tuple</em>) – The (time, value) coordinate after the crossing,
+shifted towards zero.</p></li>
+<li><p><strong>output_name</strong> – The output port name for which the crossing point
+must be computed, if a CBD is given. Otherwise, a
+single-argument callable :math`f(t)` is accepted
+as well.</p></li>
+<li><p><strong>level</strong> (<em>float</em>) – The level through which the crossing must be
+identified. Defaults to 0.</p></li>
+<li><p><strong>direction</strong> (<a class="reference internal" href="pyCBD.state_events.html#pyCBD.state_events.Direction" title="pyCBD.state_events.Direction"><em>Direction</em></a>) – The direction of the crossing to detect. This
+value ensures a valid crossing is identified if there
+are multiple between <code class="xref py py-attr docutils literal notranslate"><span class="pre">p1</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">p2</span></code>. Will
+only provide an acceptable result if the direction of
+the crossing can be identified. For instance, if
+there is a crossing from below, according to the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">detect()</span></code> function, the algorithm will usually
+not accurately identify any crossings from above.
+Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">Direction.ANY</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A suspected time of the crossing.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.state_events.locators.BisectionStateEventLocator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.state_events.locators.</span></span><span class="sig-name descname"><span class="pre">BisectionStateEventLocator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/state_events/locators.html#BisectionStateEventLocator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.state_events.locators.BisectionStateEventLocator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.state_events.locators.StateEventLocator</span></code></p>
+<p>Uses the bisection method to compute the crossing. This method is more accurate
+than a linear algorithm <a class="reference internal" href="#pyCBD.state_events.locators.LinearStateEventLocator" title="pyCBD.state_events.locators.LinearStateEventLocator"><code class="xref py py-class docutils literal notranslate"><span class="pre">LinearStateEventLocator</span></code></a>, but less accurate than
+regula falsi (<a class="reference internal" href="#pyCBD.state_events.locators.RegulaFalsiStateEventLocator" title="pyCBD.state_events.locators.RegulaFalsiStateEventLocator"><code class="xref py py-class docutils literal notranslate"><span class="pre">RegulaFalsiStateEventLocator</span></code></a>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – The maximal amount of iterations to compute. Roughly very 3 iterations,
+a decimal place of accuracy is gained. Defaults to 10.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.state_events.locators.BisectionStateEventLocator.algorithm">
+<span class="sig-name descname"><span class="pre">algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Direction.ANY</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/state_events/locators.html#BisectionStateEventLocator.algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.state_events.locators.BisectionStateEventLocator.algorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>The algorithm that identifies the locator functionality. Must be implemented
+in sub-classes. Should only ever be called if a crossing exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>tuple</em>) – The (time, value) coordinate before the crossing,
+shifted towards zero.</p></li>
+<li><p><strong>p2</strong> (<em>tuple</em>) – The (time, value) coordinate after the crossing,
+shifted towards zero.</p></li>
+<li><p><strong>output_name</strong> – The output port name for which the crossing point
+must be computed, if a CBD is given. Otherwise, a
+single-argument callable :math`f(t)` is accepted
+as well.</p></li>
+<li><p><strong>level</strong> (<em>float</em>) – The level through which the crossing must be
+identified. Defaults to 0.</p></li>
+<li><p><strong>direction</strong> (<a class="reference internal" href="pyCBD.state_events.html#pyCBD.state_events.Direction" title="pyCBD.state_events.Direction"><em>Direction</em></a>) – The direction of the crossing to detect. This
+value ensures a valid crossing is identified if there
+are multiple between <code class="xref py py-attr docutils literal notranslate"><span class="pre">p1</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">p2</span></code>. Will
+only provide an acceptable result if the direction of
+the crossing can be identified. For instance, if
+there is a crossing from below, according to the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">detect()</span></code> function, the algorithm will usually
+not accurately identify any crossings from above.
+Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">Direction.ANY</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A suspected time of the crossing.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.state_events.locators.RegulaFalsiStateEventLocator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.state_events.locators.</span></span><span class="sig-name descname"><span class="pre">RegulaFalsiStateEventLocator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5000000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/state_events/locators.html#RegulaFalsiStateEventLocator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.state_events.locators.RegulaFalsiStateEventLocator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.state_events.locators.StateEventLocator</span></code></p>
+<p>Implements the Illinois algorithm for finding the root for a crossing problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eps</strong> (<em>float</em>) – Half of the upper bound for the relative error.
+Defaults to 1e-5.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – The maximal amount of iterations to compute. Defaults to
+5 million iterations.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Regula_falsi">https://en.wikipedia.org/wiki/Regula_falsi</a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.state_events.locators.RegulaFalsiStateEventLocator.algorithm">
+<span class="sig-name descname"><span class="pre">algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Direction.ANY</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/state_events/locators.html#RegulaFalsiStateEventLocator.algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.state_events.locators.RegulaFalsiStateEventLocator.algorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>The algorithm that identifies the locator functionality. Must be implemented
+in sub-classes. Should only ever be called if a crossing exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>tuple</em>) – The (time, value) coordinate before the crossing,
+shifted towards zero.</p></li>
+<li><p><strong>p2</strong> (<em>tuple</em>) – The (time, value) coordinate after the crossing,
+shifted towards zero.</p></li>
+<li><p><strong>output_name</strong> – The output port name for which the crossing point
+must be computed, if a CBD is given. Otherwise, a
+single-argument callable :math`f(t)` is accepted
+as well.</p></li>
+<li><p><strong>level</strong> (<em>float</em>) – The level through which the crossing must be
+identified. Defaults to 0.</p></li>
+<li><p><strong>direction</strong> (<a class="reference internal" href="pyCBD.state_events.html#pyCBD.state_events.Direction" title="pyCBD.state_events.Direction"><em>Direction</em></a>) – The direction of the crossing to detect. This
+value ensures a valid crossing is identified if there
+are multiple between <code class="xref py py-attr docutils literal notranslate"><span class="pre">p1</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">p2</span></code>. Will
+only provide an acceptable result if the direction of
+the crossing can be identified. For instance, if
+there is a crossing from below, according to the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">detect()</span></code> function, the algorithm will usually
+not accurately identify any crossings from above.
+Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">Direction.ANY</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A suspected time of the crossing.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.state_events.locators.ITPStateEventLocator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.state_events.locators.</span></span><span class="sig-name descname"><span class="pre">ITPStateEventLocator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/state_events/locators.html#ITPStateEventLocator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.state_events.locators.ITPStateEventLocator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.state_events.locators.StateEventLocator</span></code></p>
+<p>Implements the Interpolation-Truncation-Projection algorithm for finding
+the root of a function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eps</strong> (<em>float</em>) – Minimal interval size. Defaults to 1e-5.</p></li>
+<li><p><strong>k1</strong> (<em>float</em>) – First truncation size hyperparameter. Must be in the
+range of <span class="math notranslate nohighlight">\((0, \infty)\)</span>. Defaults to 0.1.</p></li>
+<li><p><strong>k2</strong> (<em>float</em>) – Second truncation size hyperparameter. Must be in the
+range of <span class="math notranslate nohighlight">\([1, 1 + \frac{1}{2}(1 + \sqrt{5})]\)</span>.
+Defaults to 1.5.</p></li>
+<li><p><strong>n0</strong> (<em>float</em>) – Slack variable to control the size of the interval for
+the projection step. Must be in <span class="math notranslate nohighlight">\([0, \infty)\)</span>.
+When 0, the average number of iterations will be less
+than that of the bisection method. Defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/ITP_method">https://en.wikipedia.org/wiki/ITP_method</a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.state_events.locators.ITPStateEventLocator.algorithm">
+<span class="sig-name descname"><span class="pre">algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Direction.ANY</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/state_events/locators.html#ITPStateEventLocator.algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.state_events.locators.ITPStateEventLocator.algorithm" title="Permalink to this definition">¶</a></dt>
+<dd><p>The algorithm that identifies the locator functionality. Must be implemented
+in sub-classes. Should only ever be called if a crossing exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<em>tuple</em>) – The (time, value) coordinate before the crossing,
+shifted towards zero.</p></li>
+<li><p><strong>p2</strong> (<em>tuple</em>) – The (time, value) coordinate after the crossing,
+shifted towards zero.</p></li>
+<li><p><strong>output_name</strong> – The output port name for which the crossing point
+must be computed, if a CBD is given. Otherwise, a
+single-argument callable :math`f(t)` is accepted
+as well.</p></li>
+<li><p><strong>level</strong> (<em>float</em>) – The level through which the crossing must be
+identified. Defaults to 0.</p></li>
+<li><p><strong>direction</strong> (<a class="reference internal" href="pyCBD.state_events.html#pyCBD.state_events.Direction" title="pyCBD.state_events.Direction"><em>Direction</em></a>) – The direction of the crossing to detect. This
+value ensures a valid crossing is identified if there
+are multiple between <code class="xref py py-attr docutils literal notranslate"><span class="pre">p1</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">p2</span></code>. Will
+only provide an acceptable result if the direction of
+the crossing can be identified. For instance, if
+there is a crossing from below, according to the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">detect()</span></code> function, the algorithm will usually
+not accurately identify any crossings from above.
+Defaults to <code class="xref py py-attr docutils literal notranslate"><span class="pre">Direction.ANY</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A suspected time of the crossing.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pyCBD.html">pyCBD package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pyCBD.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.lib.html">Standard CBD Library (BBL)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.html">pyCBD.realtime package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.tracers.html">pyCBD.tracers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.converters.html">pyCBD.converters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.loopsolvers.html">pyCBD.loopsolvers module</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="pyCBD.state_events.html">pyCBD.state_events module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.preprocessing.html">pyCBD.preprocessing package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="pyCBD.state_events.html"
+                          title="previous chapter">pyCBD.state_events module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="pyCBD.preprocessing.html"
+                          title="next chapter">pyCBD.preprocessing package</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.preprocessing.html" title="pyCBD.preprocessing package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.state_events.html" title="pyCBD.state_events module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" >pyCBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="pyCBD.state_events.html" >pyCBD.state_events module</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.state_events.locators module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

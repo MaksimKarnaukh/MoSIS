@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>How to install the pyCBD framework? &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyCBD.util module" href="pyCBD.util.html" />
+    <link rel="prev" title="Welcome to the pyCBD Simulator’s Documentation!" href="index.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.util.html" title="pyCBD.util module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to the pyCBD Simulator’s Documentation!"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How to install the pyCBD framework?</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="how-to-install-the-pycbd-framework">
+<h1>How to install the pyCBD framework?<a class="headerlink" href="#how-to-install-the-pycbd-framework" title="Permalink to this headline">¶</a></h1>
+<p>This section describes the necessary components and steps to take to install
+the CBD framework.</p>
+<section id="dependencies">
+<h2>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this headline">¶</a></h2>
+<p>The following dependencies are required:</p>
+<ul class="simple">
+<li><p>Python <code class="code docutils literal notranslate"><span class="pre">&gt;=</span> <span class="pre">3.6</span></code>, as identified by <a class="reference external" href="https://pypi.org/project/vermin/">vermin</a>.</p></li>
+<li><p>All additional libraries should be bundled with Python, so no extra installations should be needed.</p></li>
+</ul>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.5: </span>Python 2 is no longer supported.</p>
+</div>
+<p>Next, there are some additional <strong>optional</strong> requirements:</p>
+<ul class="simple">
+<li><p><strong>Simulation:</strong></p>
+<ul>
+<li><p><a class="reference external" href="https://tqdm.github.io/">tqdm</a> when using a progress-bar of the simulation.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/tkinter.html">TkInter</a> for realtime simulation using the
+<code class="code docutils literal notranslate"><span class="pre">Tk</span></code> backend/platform.</p></li>
+</ul>
+</li>
+<li><p><strong>Visualization and Plotting:</strong></p>
+<ul>
+<li><p><a class="reference external" href="https://www.graphviz.org/download/">GraphViz</a> for generating a graphical version of the dependency graph.</p></li>
+<li><p><a class="reference external" href="https://matplotlib.org/">MatPlotLib</a> for plotting data in Matplotlib.</p></li>
+<li><p><a class="reference external" href="https://seaborn.pydata.org/">Seaborn</a> for plotting data using Seaborn.</p></li>
+<li><p><a class="reference external" href="https://docs.bokeh.org/en/latest/index.html">Bokeh</a> for plotting data in Bokeh.</p></li>
+</ul>
+</li>
+<li><p><strong>Conversion:</strong></p>
+<ul>
+<li><p><a class="reference external" href="https://lark-parser.readthedocs.io/en/latest/">Lark</a> for the <a class="reference internal" href="pyCBD.converters.eq2CBD.html#module-pyCBD.converters.eq2CBD" title="pyCBD.converters.eq2CBD"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyCBD.converters.eq2CBD</span></code></a> converter, to
+allow the creation of CBDs directly from a textual language.</p></li>
+<li><p><a class="reference external" href="http://msdl.cs.mcgill.ca/projects/DEVS/PythonPDEVS">PythonPDEVS</a> for the <a class="reference internal" href="pyCBD.converters.hybrid.html#module-pyCBD.converters.hybrid" title="pyCBD.converters.hybrid"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pyCBD.converters.hybrid</span></code></a>
+module. This allows CBDs to be run inside of DEVS simulations.</p></li>
+</ul>
+</li>
+<li><p><strong>Documentation:</strong></p>
+<ul>
+<li><p><a class="reference external" href="https://pypi.org/project/sphinx-theme/">Sphinx-Theme</a> for creating the docs.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>There are a few ways of using the framework:</p>
+<ol class="arabic">
+<li><p>Use it as a project dependency. Simply add the <code class="code docutils literal notranslate"><span class="pre">src/pyCBD</span></code> folder to your project and
+import it w.r.t. the provided path.</p></li>
+<li><p>Edit the <code class="code docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> or <code class="code docutils literal notranslate"><span class="pre">sys.path</span></code> variables to point to the <code class="code docutils literal notranslate"><span class="pre">src</span></code> folder.
+This way, the execution of your program will recognize things like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyCBD.Core</span> <span class="kn">import</span> <span class="n">CBD</span>
+</pre></div>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Some code editors (like <a class="reference external" href="https://www.jetbrains.com/pycharm/">PyCharm</a>) allow you to mark
+a directory as “Sources Root”, which basically adds it to your path upon execution.</p>
+</div>
+</li>
+<li><p>Execute one of the following commands in the <code class="code docutils literal notranslate"><span class="pre">src</span></code> folder to install the project to your
+user directory or update it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># BUILDING:</span>
+python setup.py install --user
+
+<span class="c1"># UPDATING:</span>
+python -m pip install .
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="standalone">
+<h2>Standalone<a class="headerlink" href="#standalone" title="Permalink to this headline">¶</a></h2>
+<p>There are some additional standalone components that have been made to work with
+the framework, but can technically be used without the connection to CBDs. These are:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.util.html">pyCBD.util module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.naivelog.html">pyCBD.naivelog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.realtime.html">pyCBD.realtime package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.realtime.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.accurate_time.html">pyCBD.realtime.accurate_time module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.plotting.html">pyCBD.realtime.plotting module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.threadingBackend.html">pyCBD.realtime.threadingBackend module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.threadingGameLoop.html">pyCBD.realtime.threadingGameLoop module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.threadingGameLoopAlt.html">pyCBD.realtime.threadingGameLoopAlt module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.threadingPython.html">pyCBD.realtime.threadingPython module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.threadingTkInter.html">pyCBD.realtime.threadingTkInter module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to install the pyCBD framework?</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#standalone">Standalone</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.html">pyCBD package</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="index.html"
+                          title="previous chapter">Welcome to the pyCBD Simulator’s Documentation!</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="pyCBD.util.html"
+                          title="next chapter">pyCBD.util module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.util.html" title="pyCBD.util module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to the pyCBD Simulator’s Documentation!"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">How to install the pyCBD framework?</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

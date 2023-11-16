@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>pyCBD package &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Standard CBD Library (BBL)" href="pyCBD.lib.html" />
+    <link rel="prev" title="Continuous Time Simulation" href="examples/ContinuousTime.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.lib.html" title="Standard CBD Library (BBL)"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="examples/ContinuousTime.html" title="Continuous Time Simulation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD package</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-pyCBD">
+<span id="pycbd-package"></span><h1>pyCBD package<a class="headerlink" href="#module-pyCBD" title="Permalink to this headline">¶</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.lib.html">Standard CBD Library (BBL)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.lib.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.lib.std.html">pyCBD.lib.std module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.lib.io.html">pyCBD.lib.io module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.lib.endpoints.html">pyCBD.lib.endpoints module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.lib.extra.html">pyCBD.lib.extra module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.lib.ev3.html">Using CBDs with LEGO MINDSTORMS EV3</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.realtime.html">pyCBD.realtime package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.realtime.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.accurate_time.html">pyCBD.realtime.accurate_time module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.plotting.html">pyCBD.realtime.plotting module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.threadingBackend.html">pyCBD.realtime.threadingBackend module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.threadingGameLoop.html">pyCBD.realtime.threadingGameLoop module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.threadingGameLoopAlt.html">pyCBD.realtime.threadingGameLoopAlt module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.threadingPython.html">pyCBD.realtime.threadingPython module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.threadingTkInter.html">pyCBD.realtime.threadingTkInter module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.tracers.html">pyCBD.tracers package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.tracers.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.tracers.color.html">pyCBD.tracers.color module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.tracers.baseTracer.html">pyCBD.tracers.baseTracer module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.tracers.tracerVerbose.html">pyCBD.tracers.tracerVerbose module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.converters.html">pyCBD.converters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.converters.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.converters.eq2CBD.html">Generate CBD Models from Equations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyCBD.converters.latexify.html#submodules">Submodules</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pyCBD.converters.latexify.CBD2Latex.html">pyCBD.converters.latexify.CBD2Latex module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="pyCBD.converters.latexify.functions.html">pyCBD.converters.latexify.functions module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.converters.CBD2C.html">Generate C code from CBDs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.converters.CBDDraw.html">Generate GraphViz from CBD Models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.converters.hybrid.html">Encapsulating CBD Models in PythonPDEVS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.loopsolvers.html">pyCBD.loopsolvers module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.loopsolvers.solver.html">pyCBD.loopsolvers.solver module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.loopsolvers.linearsolver.html">pyCBD.loopsolvers.linearsolver module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.loopsolvers.sympysolver.html">pyCBD.loopsolvers.sympysolver module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.state_events.html">pyCBD.state_events module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.state_events.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.state_events.locators.html">pyCBD.state_events.locators module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.preprocessing.html">pyCBD.preprocessing package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.preprocessing.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.preprocessing.butcher.html">pyCBD.preprocessing.butcher module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.preprocessing.rungekutta.html">pyCBD.preprocessing.rungekutta module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.Core.html">pyCBD.Core module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.depGraph.html">pyCBD.depGraph module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.naivelog.html">pyCBD.naivelog module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.scheduling.html">pyCBD.scheduling module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.simulator.html">pyCBD.simulator module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.util.html">pyCBD.util module</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyCBD package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.lib.html">Standard CBD Library (BBL)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.html">pyCBD.realtime package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.tracers.html">pyCBD.tracers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.converters.html">pyCBD.converters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.loopsolvers.html">pyCBD.loopsolvers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.state_events.html">pyCBD.state_events module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.preprocessing.html">pyCBD.preprocessing package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.Core.html">pyCBD.Core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.depGraph.html">pyCBD.depGraph module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.naivelog.html">pyCBD.naivelog module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.scheduling.html">pyCBD.scheduling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.simulator.html">pyCBD.simulator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.util.html">pyCBD.util module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="examples/ContinuousTime.html"
+                          title="previous chapter">Continuous Time Simulation</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="pyCBD.lib.html"
+                          title="next chapter">Standard CBD Library (BBL)</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.lib.html" title="Standard CBD Library (BBL)"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="examples/ContinuousTime.html" title="Continuous Time Simulation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

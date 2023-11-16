@@ -1,0 +1,59 @@
+// CBD model of the brakeODE block
+// Created with CBD.converters.CBDDraw
+digraph model {
+ splines=ortho;
+ label=<<B>brakeODE (CBD)</B>>;
+ labelloc="t";
+ fontsize=20;
+ node_139653222925456 [label="v", shape=none];
+ inter_139653221454608_OUT1 -> node_139653222925456 [headlabel="", arrowhead="normal", arrowtail="none", dir=both];
+ node_139653217796000 [label="x", shape=none];
+ inter_139653221454608_OUT2 -> node_139653217796000 [headlabel="", arrowhead="normal", arrowtail="none", dir=both];
+ node_139653221454608 [label="CBD\n(RK)", shape=Msquare];
+ inter_139653220909840_OUT1 -> node_139653221454608 [headlabel="k", arrowhead="normal", arrowtail="none", dir=both];
+ inter_139653219342128_time -> node_139653221454608 [headlabel="time", arrowhead="normal", arrowtail="none", dir=both];
+ inter_139653219342128_rel_time -> node_139653221454608 [headlabel="rel_time", arrowhead="normal", arrowtail="none", dir=both];
+ inter_139653219342128_delta -> node_139653221454608 [headlabel="h", arrowhead="normal", arrowtail="none", dir=both];
+ inter_139653220911952_OUT1 -> node_139653221454608 [headlabel="IC1", arrowhead="normal", arrowtail="none", dir=both];
+ inter_139653216706128_OUT1 -> node_139653221454608 [headlabel="IC2", arrowhead="normal", arrowtail="none", dir=both];
+ inter_139653221454608_OUT1 [shape=point, width=0.01, height=0.01];
+ node_139653221454608 -> inter_139653221454608_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+ inter_139653221454608_OUT2 [shape=point, width=0.01, height=0.01];
+ node_139653221454608 -> inter_139653221454608_OUT2 [taillabel="OUT2", arrowtail="invempty", arrowhead="none", dir=both];
+ inter_139653221454608_h_new [shape=point, width=0.01, height=0.01];
+ node_139653221454608 -> inter_139653221454608_h_new [taillabel="h_new", arrowtail="invempty", arrowhead="none", dir=both];
+ node_139653219342128 [label="Clock\n(clock)", shape=Msquare];
+ inter_139653220910464_OUT1 -> node_139653219342128 [headlabel="h", arrowhead="normal", arrowtail="none", dir=both];
+ inter_139653219342128_time [shape=point, width=0.01, height=0.01];
+ node_139653219342128 -> inter_139653219342128_time [taillabel="time", arrowtail="invempty", arrowhead="none", dir=both];
+ inter_139653219342128_rel_time [shape=point, width=0.01, height=0.01];
+ node_139653219342128 -> inter_139653219342128_rel_time [taillabel="rel_time", arrowtail="invempty", arrowhead="none", dir=both];
+ inter_139653219342128_delta [shape=point, width=0.01, height=0.01];
+ node_139653219342128 -> inter_139653219342128_delta [taillabel="delta", arrowtail="invempty", arrowhead="none", dir=both];
+ node_139653222130112 [label=" ConstantBlock\n(HIC)\n0.1", shape=ellipse];
+ inter_139653222130112_OUT1 [shape=point, width=0.01, height=0.01];
+ node_139653222130112 -> inter_139653222130112_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+ node_139653219583552 [label="DelayBlock\n(HDelay)", shape=box];
+ inter_139653221454608_h_new -> node_139653219583552 [headlabel="IN1", arrowhead="normal", arrowtail="none", dir=both];
+ inter_139653222130112_OUT1 -> node_139653219583552 [headlabel="IC", arrowhead="normal", arrowtail="none", dir=both];
+ inter_139653219583552_OUT1 [shape=point, width=0.01, height=0.01];
+ node_139653219583552 -> inter_139653219583552_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+ node_139653216706128 [label=" ConstantBlock\n(x0)\n0.0", shape=ellipse];
+ inter_139653216706128_OUT1 [shape=point, width=0.01, height=0.01];
+ node_139653216706128 -> inter_139653216706128_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+ node_139653220911952 [label=" ConstantBlock\n(v0)\n0.0", shape=ellipse];
+ inter_139653220911952_OUT1 [shape=point, width=0.01, height=0.01];
+ node_139653220911952 -> inter_139653220911952_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+ node_139653220909840 [label=" ConstantBlock\n(k)\n0.08", shape=ellipse];
+ inter_139653220909840_OUT1 [shape=point, width=0.01, height=0.01];
+ node_139653220909840 -> inter_139653220909840_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+ node_139653220910944 [label=" ConstantBlock\n(H)\ninf", shape=ellipse];
+ inter_139653220910944_OUT1 [shape=point, width=0.01, height=0.01];
+ node_139653220910944 -> inter_139653220910944_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+ node_139653220910464 [label="MinBlock\n(Min)", shape=box];
+ inter_139653220910944_OUT1 -> node_139653220910464 [headlabel="IN1", arrowhead="normal", arrowtail="none", dir=both];
+ inter_139653219583552_OUT1 -> node_139653220910464 [headlabel="IN2", arrowhead="normal", arrowtail="none", dir=both];
+ inter_139653220910464_OUT1 [shape=point, width=0.01, height=0.01];
+ node_139653220910464 -> inter_139653220910464_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+
+}

@@ -1,0 +1,4 @@
+matplotlib
+bokeh
+tqdm          # for progress bar
+sphinx_theme  # for docs

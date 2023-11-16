@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Sine Generator &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/math.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hierarchical Even Number Generator" href="EvenNumberGen.html" />
+    <link rel="prev" title="Common Issues and Solutions" href="../issues.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="EvenNumberGen.html" title="Hierarchical Even Number Generator"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="../issues.html" title="Common Issues and Solutions"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sine Generator</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="sine-generator">
+<h1>Sine Generator<a class="headerlink" href="#sine-generator" title="Permalink to this headline">¶</a></h1>
+<p>A very simple example usage of the framework is to create a CBD model
+that implements the equation <span class="math notranslate nohighlight">\(y = sin(t)\)</span>, where <span class="math notranslate nohighlight">\(t\)</span> is
+the simulation time and <span class="math notranslate nohighlight">\(y\)</span> an output signal we’re interested in.</p>
+<p>Luckily, the standard library provides some functionalities to help us
+solve this problem. Let’s import three blocks:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.Core</span> <span class="kn">import</span> <span class="o">*</span>   <span class="c1"># To prevent circular dependency</span>
+<span class="kn">from</span> <span class="nn">CBD.lib.std</span> <span class="kn">import</span> <span class="n">TimeBlock</span><span class="p">,</span> <span class="n">GenericBlock</span>
+</pre></div>
+</div>
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.TimeBlock</span></code> will output the current simulation time
+every delta timeunits. This block will be used to obtain the <span class="math notranslate nohighlight">\(t\)</span>
+variable. The <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.GenericBlock</span></code> is a generic interface to
+Python’s <code class="xref py py-mod docutils literal notranslate"><span class="pre">math</span></code> module. We will use this block to implement the sine
+function itself.</p>
+<p>Next, we need a container to group these blocks in. This is done in the
+hierarchical <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.Core.CBD</span></code> class. Let’s call this “grouping” block
+<code class="code docutils literal notranslate"><span class="pre">SinGen</span></code> and give it a single output port, named <code class="code docutils literal notranslate"><span class="pre">OUT1</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SinGen</span><span class="p">(</span><span class="n">CBD</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;SinGen&quot;</span><span class="p">):</span>
+        <span class="n">CBD</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">input_ports</span><span class="o">=</span><span class="p">[],</span> <span class="n">output_ports</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;OUT1&quot;</span><span class="p">])</span>
+
+        <span class="c1"># Add the &#39;t&#39; parameter</span>
+        <span class="c1"># Let&#39;s call it &#39;time&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">TimeBlock</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Add the block that computes the actual sine function</span>
+        <span class="c1"># Let&#39;s call it &#39;sin&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">GenericBlock</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="n">block_operator</span><span class="o">=</span><span class="s2">&quot;sin&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Connect them together</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="s1">&#39;OUT1&#39;</span><span class="p">,</span>
+                                            <span class="n">input_port_name</span><span class="o">=</span><span class="s1">&#39;IN1&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Connect the output port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT1&quot;</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="s1">&#39;OUT1&#39;</span><span class="p">)</span>
+
+
+<span class="n">sinGen</span> <span class="o">=</span> <span class="n">SinGen</span><span class="p">(</span><span class="s2">&quot;SinGen&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Notice how this is semantically equivelent to:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.Core</span> <span class="kn">import</span> <span class="n">CBD</span>
+
+<span class="n">sinGen</span> <span class="o">=</span> <span class="n">CBD</span><span class="p">(</span><span class="s2">&quot;SinGen&quot;</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="s2">&quot;OUT1&quot;</span><span class="p">])</span>
+
+<span class="c1"># Add the time, just like above</span>
+<span class="n">sinGen</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">TimeBlock</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">))</span>
+
+<span class="n">sinGen</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">GenericBlock</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="n">block_operator</span><span class="o">=</span><span class="s2">&quot;sin&quot;</span><span class="p">))</span>
+<span class="n">sinGen</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="s1">&#39;OUT1&#39;</span><span class="p">,</span>
+                                    <span class="n">input_port_name</span><span class="o">=</span><span class="s1">&#39;IN1&#39;</span><span class="p">)</span>
+<span class="n">sinGen</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="s2">&quot;OUT1&quot;</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="s1">&#39;OUT1&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>If we now want to simulate our model for 20 seconds (of simulation-time), we can
+simply do:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.simulator</span> <span class="kn">import</span> <span class="n">Simulator</span>
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span><span class="n">sinGen</span><span class="p">)</span>
+<span class="c1"># The termination time can be set as argument to the run call</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Next, we would like to obtain the accumulated simulation data on the <code class="code docutils literal notranslate"><span class="pre">OUT1</span></code>
+output port of the <code class="code docutils literal notranslate"><span class="pre">sinGen</span></code> block, which can be plotted against their iteration
+(which is equivalent to the time in this case).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">sinGen</span><span class="o">.</span><span class="n">getSignalHistory</span><span class="p">(</span><span class="s1">&#39;OUT1&#39;</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">data</span><span class="p">],</span> <span class="p">[</span><span class="n">y</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">data</span><span class="p">]</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<img alt="../_images/sin-disc.png" src="../_images/sin-disc.png" />
+</figure>
+<p>Now, this is obviously not the sine wave we know and love. This is because our simulator
+only computes at 0, 1, 2, 3… seconds, but not in-between. This can be changed by altering
+the time delta <strong>before</strong> the start of a simulation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span><span class="o">.</span><span class="n">setDeltaT</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Now, we interpolate the sine-wave every 10th of a second, which looks much better:</p>
+<figure class="align-default">
+<img alt="../_images/sin-cont.png" src="../_images/sin-cont.png" />
+</figure>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">CBD.lib.std</span></code>: The standard set of CBD building blocks that can be used.</p>
+</div>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pyCBD.html">pyCBD package</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="../issues.html"
+                          title="previous chapter">Common Issues and Solutions</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="EvenNumberGen.html"
+                          title="next chapter">Hierarchical Even Number Generator</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="EvenNumberGen.html" title="Hierarchical Even Number Generator"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="../issues.html" title="Common Issues and Solutions"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Sine Generator</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

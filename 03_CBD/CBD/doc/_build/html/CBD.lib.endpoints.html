@@ -1,0 +1,390 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>CBD.lib.endpoints module &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CBD.lib.extra module" href="CBD.lib.extra.html" />
+    <link rel="prev" title="CBD.lib.io module" href="CBD.lib.io.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.lib.extra.html" title="CBD.lib.extra module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="CBD.lib.io.html" title="CBD.lib.io module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.html" >CBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="CBD.lib.html" accesskey="U">Standard CBD Library (BBL)</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.lib.endpoints module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-CBD.lib.endpoints">
+<span id="cbd-lib-endpoints-module"></span><h1>CBD.lib.endpoints module<a class="headerlink" href="#module-CBD.lib.endpoints" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.CollectorBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.lib.endpoints.</span></span><span class="sig-name descname"><span class="pre">CollectorBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_ports</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#CollectorBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.CollectorBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="CBD.Core.html#CBD.Core.BaseBlock" title="CBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.Core.BaseBlock</span></code></a></p>
+<p>Abstract class, representing a basic collection unit.
+In the data attribute, a set of values is stored for
+external access (possibly during the simulation).
+This should allow for live plots w.r.t. an independent
+plotting framework.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>input_ports</strong> (<em>list</em>) – The inputs for the collector.</p></li>
+<li><p><strong>data</strong> (<em>Any</em>) – The data that is being tracked.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.CollectorBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#CollectorBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.CollectorBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.CollectorBlock.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#CollectorBlock.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.CollectorBlock.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the contents of the block. Must be called in-between
+simulations if the obtainable statistics do not need to
+interfere/retain information about previous simulations.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.CollectorBlock.data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><a class="headerlink" href="#CBD.lib.endpoints.CollectorBlock.data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Property to obtain the internal data.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.SignalCollectorBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.lib.endpoints.</span></span><span class="sig-name descname"><span class="pre">SignalCollectorBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#SignalCollectorBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.SignalCollectorBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#CBD.lib.endpoints.CollectorBlock" title="CBD.lib.endpoints.CollectorBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.endpoints.CollectorBlock</span></code></a></p>
+<p>Collects a single signal to store w.r.t. the arrival time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>buffer_size</strong> (<em>int</em>) – The maximal amount of values to keep track of.
+When negative, no buffering will happen.
+Defaults to <code class="code docutils literal notranslate"><span class="pre">-1</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.SignalCollectorBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#SignalCollectorBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.SignalCollectorBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.SignalCollectorBlock.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#SignalCollectorBlock.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.SignalCollectorBlock.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the contents of the block. Must be called in-between
+simulations if the obtainable statistics do not need to
+interfere/retain information about previous simulations.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.SignalCollectorBlock.data_xy">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_xy</span></span><a class="headerlink" href="#CBD.lib.endpoints.SignalCollectorBlock.data_xy" title="Permalink to this definition">¶</a></dt>
+<dd><p>The collected data, as a pair of lists; i.e. the unzipped form of
+<code class="code docutils literal notranslate"><span class="pre">xs,</span> <span class="pre">ys</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.PositionCollectorBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.lib.endpoints.</span></span><span class="sig-name descname"><span class="pre">PositionCollectorBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">buffer_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#PositionCollectorBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.PositionCollectorBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#CBD.lib.endpoints.CollectorBlock" title="CBD.lib.endpoints.CollectorBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.endpoints.CollectorBlock</span></code></a></p>
+<p>Collects a X/Y position, to be used for a parametric plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>buffer_size</strong> (<em>int</em>) – The maximal amount of values to keep track of.
+When negative, no buffering will happen.
+Defaults to <code class="code docutils literal notranslate"><span class="pre">-1</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.PositionCollectorBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#PositionCollectorBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.PositionCollectorBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.PositionCollectorBlock.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#PositionCollectorBlock.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.PositionCollectorBlock.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears the contents of the block. Must be called in-between
+simulations if the obtainable statistics do not need to
+interfere/retain information about previous simulations.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.PositionCollectorBlock.distance_from_last">
+<span class="sig-name descname"><span class="pre">distance_from_last</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#PositionCollectorBlock.distance_from_last"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.PositionCollectorBlock.distance_from_last" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the distance between the last point and the given point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x1</strong> (<em>numeric</em>) – The x position of the given point.</p></li>
+<li><p><strong>y1</strong> (<em>numeric</em>) – The y position of the given point.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.PositionCollectorBlock.distance_from_start">
+<span class="sig-name descname"><span class="pre">distance_from_start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#PositionCollectorBlock.distance_from_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.PositionCollectorBlock.distance_from_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the distance from the starting position (in the buffer).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.PositionCollectorBlock.data_xy">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_xy</span></span><a class="headerlink" href="#CBD.lib.endpoints.PositionCollectorBlock.data_xy" title="Permalink to this definition">¶</a></dt>
+<dd><p>The collected data, as a pair of lists; i.e. the unzipped form of
+<code class="code docutils literal notranslate"><span class="pre">xs,</span> <span class="pre">ys</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.StatisticsCollectorBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.lib.endpoints.</span></span><span class="sig-name descname"><span class="pre">StatisticsCollectorBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#StatisticsCollectorBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.StatisticsCollectorBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#CBD.lib.endpoints.CollectorBlock" title="CBD.lib.endpoints.CollectorBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.endpoints.CollectorBlock</span></code></a></p>
+<p>Collects all inputs and allows for statistical data summaries.</p>
+<p>While this can be done on the <a class="reference internal" href="#CBD.lib.endpoints.SignalCollectorBlock" title="CBD.lib.endpoints.SignalCollectorBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">SignalCollectorBlock</span></code></a>,
+this class uses a less memory-intensive algorithm to do so.
+When only statistical info is required and a lot of data needs to
+be analyzed, this algorithm should be used!</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This block only works for <strong>NUMERICAL</strong> data.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.StatisticsCollectorBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#StatisticsCollectorBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.StatisticsCollectorBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.StatisticsCollectorBlock.clear">
+<span class="sig-name descname"><span class="pre">clear</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#StatisticsCollectorBlock.clear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.StatisticsCollectorBlock.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the values of the statistics.
+Should be called when the model is used in multiple
+simulations back-to-back to make sure the statistics
+remain valid.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.StatisticsCollectorBlock.count">
+<span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#StatisticsCollectorBlock.count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.StatisticsCollectorBlock.count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the amount of items that have been captured.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.StatisticsCollectorBlock.min">
+<span class="sig-name descname"><span class="pre">min</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#StatisticsCollectorBlock.min"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.StatisticsCollectorBlock.min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the smallest value that was seen.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.StatisticsCollectorBlock.max">
+<span class="sig-name descname"><span class="pre">max</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#StatisticsCollectorBlock.max"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.StatisticsCollectorBlock.max" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the largest value that was seen.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.StatisticsCollectorBlock.sum">
+<span class="sig-name descname"><span class="pre">sum</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#StatisticsCollectorBlock.sum"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.StatisticsCollectorBlock.sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the sum of all items that have been captured.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.StatisticsCollectorBlock.sumOfSquares">
+<span class="sig-name descname"><span class="pre">sumOfSquares</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#StatisticsCollectorBlock.sumOfSquares"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.StatisticsCollectorBlock.sumOfSquares" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the sum of the squares for all items that have been captured.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.StatisticsCollectorBlock.mean">
+<span class="sig-name descname"><span class="pre">mean</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#StatisticsCollectorBlock.mean"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.StatisticsCollectorBlock.mean" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the average/mean value of the data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.StatisticsCollectorBlock.variance">
+<span class="sig-name descname"><span class="pre">variance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#StatisticsCollectorBlock.variance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.StatisticsCollectorBlock.variance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the variance of the data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.lib.endpoints.StatisticsCollectorBlock.std">
+<span class="sig-name descname"><span class="pre">std</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/lib/endpoints.html#StatisticsCollectorBlock.std"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.lib.endpoints.StatisticsCollectorBlock.std" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the standard deviation value of the data.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="CBD.html">CBD package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="CBD.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="CBD.lib.html">Standard CBD Library (BBL)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.realtime.html">CBD.realtime package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.tracers.html">CBD.tracers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.converters.html">CBD.converters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.loopsolvers.html">CBD.loopsolvers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.state_events.html">CBD.state_events module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.preprocessing.html">CBD.preprocessing package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="CBD.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="CBD.lib.io.html"
+                          title="previous chapter">CBD.lib.io module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="CBD.lib.extra.html"
+                          title="next chapter">CBD.lib.extra module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.lib.extra.html" title="CBD.lib.extra module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="CBD.lib.io.html" title="CBD.lib.io module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.html" >CBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="CBD.lib.html" >Standard CBD Library (BBL)</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.lib.endpoints module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

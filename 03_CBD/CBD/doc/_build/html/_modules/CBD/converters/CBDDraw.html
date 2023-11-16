@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CBD.converters.CBDDraw &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.converters.CBDDraw</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for CBD.converters.CBDDraw</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Useful drawing function to easily draw a CBD model in Graphviz.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">CBD.Core</span> <span class="kn">import</span> <span class="n">CBD</span>
+<span class="kn">from</span> <span class="nn">CBD.lib.std</span> <span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="gvDraw"><a class="viewcode-back" href="../../../CBD.converters.CBDDraw.html#CBD.converters.CBDDraw.gvDraw">[docs]</a><span class="k">def</span> <span class="nf">gvDraw</span><span class="p">(</span><span class="n">cbd</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">rankdir</span><span class="o">=</span><span class="s2">&quot;LR&quot;</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Outputs a :class:`CBD` as a `GraphViz &lt;https://graphviz.org/&gt;`_ script to filename.</span>
+
+<span class="sd">	For instance, drawing the CBD given in the :doc:`examples/EvenNumberGen` example, the following figure</span>
+<span class="sd">	can be obtained:</span>
+
+<span class="sd">	.. figure:: _figures/EvenNumberGV.svg</span>
+
+<span class="sd">	Note:</span>
+<span class="sd">		The resulting Graphviz file might look &quot;clunky&quot; and messy when rendering with</span>
+<span class="sd">		the standard :code:`dot` engine. The :code:`neato`, :code:`twopi` and :code:`circo`</span>
+<span class="sd">		engines might provide a cleaner and more readable result.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		cbd (CBD):          The :class:`CBD` to draw.</span>
+<span class="sd">		filename (str):     The name of the dot-file.</span>
+<span class="sd">		rankdir (str):      The GraphViz rankdir of the plot. Must be either :code:`TB`</span>
+<span class="sd">							or :code:`LR`.</span>
+<span class="sd">		colors (dict):      An optional dictionary of :code:`blockname -&gt; color`.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="c1"># f = sys.stdout</span>
+	<span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+	<span class="n">write</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+
+	<span class="n">write</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;// CBD model of the </span><span class="si">{n}</span><span class="s2"> block</span>
+<span class="s2">// Created with CBD.converters.CBDDraw</span>
+<span class="s2">digraph model {{</span>
+<span class="s2"> splines=ortho;</span>
+<span class="s2"> label=&lt;&lt;B&gt;</span><span class="si">{n}</span><span class="s2"> (</span><span class="si">{t}</span><span class="s2">)&lt;/B&gt;&gt;;</span>
+<span class="s2"> labelloc=</span><span class="se">\&quot;</span><span class="s2">t</span><span class="se">\&quot;</span><span class="s2">;</span>
+<span class="s2"> fontsize=20;</span>
+<span class="s2"> rankdir=</span><span class="se">\&quot;</span><span class="si">{rd}</span><span class="se">\&quot;</span><span class="s2">;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">cbd</span><span class="o">.</span><span class="n">getPath</span><span class="p">(),</span> <span class="n">t</span><span class="o">=</span><span class="n">cbd</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">(),</span> <span class="n">rd</span><span class="o">=</span><span class="n">rankdir</span><span class="p">))</span>
+
+	<span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+		<span class="n">colors</span> <span class="o">=</span> <span class="p">{}</span>
+
+	<span class="k">def</span> <span class="nf">writeBlock</span><span class="p">(</span><span class="n">block</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Writes a block to graphviz.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			block:  The block to write.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">ConstantBlock</span><span class="p">):</span>
+			<span class="n">label</span> <span class="o">=</span> <span class="s2">&quot; </span><span class="si">{}</span><span class="se">\\</span><span class="s2">n(</span><span class="si">{}</span><span class="s2">)</span><span class="se">\\</span><span class="s2">n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">(),</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">block</span><span class="o">.</span><span class="n">getValue</span><span class="p">())</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">GenericBlock</span><span class="p">):</span>
+			<span class="n">label</span> <span class="o">=</span> <span class="s2">&quot; </span><span class="si">{}</span><span class="se">\\</span><span class="s2">n(</span><span class="si">{}</span><span class="s2">)</span><span class="se">\\</span><span class="s2">n</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">(),</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockOperator</span><span class="p">())</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">ClampBlock</span><span class="p">)</span> <span class="ow">and</span> <span class="n">block</span><span class="o">.</span><span class="n">_use_const</span><span class="p">:</span>
+			<span class="n">label</span> <span class="o">=</span> <span class="s2">&quot; </span><span class="si">{}</span><span class="se">\\</span><span class="s2">n(</span><span class="si">{}</span><span class="s2">)</span><span class="se">\\</span><span class="s2">n[</span><span class="si">{}</span><span class="s2">, </span><span class="si">{}</span><span class="s2">]&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">(),</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">block</span><span class="o">.</span><span class="n">min</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">max</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">label</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">n(&quot;</span> <span class="o">+</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;)&quot;</span>
+
+		<span class="n">shape</span> <span class="o">=</span> <span class="s2">&quot;box&quot;</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">CBD</span><span class="p">):</span>
+			<span class="n">shape</span> <span class="o">=</span> <span class="s2">&quot;Msquare&quot;</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">ConstantBlock</span><span class="p">):</span>
+			<span class="n">shape</span> <span class="o">=</span> <span class="s2">&quot;ellipse&quot;</span>
+
+		<span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span> <span class="ow">in</span> <span class="n">colors</span><span class="p">:</span>
+			<span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;, color=</span><span class="se">\&quot;</span><span class="si">{0}</span><span class="se">\&quot;</span><span class="s2">, fontcolor=</span><span class="se">\&quot;</span><span class="si">{0}</span><span class="se">\&quot;</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">colors</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()])</span>
+
+		<span class="n">write</span><span class="p">(</span><span class="s2">&quot; </span><span class="si">{b}</span><span class="s2"> [label=</span><span class="se">\&quot;</span><span class="si">{lbl}</span><span class="se">\&quot;</span><span class="s2">, shape=</span><span class="si">{shape}{col}</span><span class="s2">];</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="n">nodeName</span><span class="p">(</span><span class="n">block</span><span class="p">),</span>
+			<span class="n">lbl</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
+			<span class="n">shape</span><span class="o">=</span><span class="n">shape</span><span class="p">,</span>
+			<span class="n">col</span><span class="o">=</span><span class="n">col</span><span class="p">))</span>
+
+	<span class="k">def</span> <span class="nf">nodeName</span><span class="p">(</span><span class="n">block</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;node_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">id</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+
+	<span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">cbd</span><span class="o">.</span><span class="n">getInputPorts</span><span class="p">():</span>
+		<span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nodeName</span><span class="p">(</span><span class="n">cbd</span><span class="p">),</span> <span class="n">port</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+		<span class="n">write</span><span class="p">(</span><span class="s2">&quot; </span><span class="si">{s}</span><span class="s2"> [shape=point, width=0.01, height=0.01];</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">s</span><span class="o">=</span><span class="n">s</span><span class="p">))</span>
+		<span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;inter_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">port</span><span class="o">.</span><span class="n">block</span><span class="p">),</span> <span class="n">port</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+		<span class="n">write</span><span class="p">(</span><span class="s2">&quot; </span><span class="si">{i}</span><span class="s2"> [shape=point, width=0.01, height=0.01];</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">))</span>
+		<span class="n">write</span><span class="p">(</span><span class="s2">&quot; </span><span class="si">{b}</span><span class="s2"> -&gt; </span><span class="si">{i}</span><span class="s2"> [taillabel=</span><span class="se">\&quot;</span><span class="si">{inp}</span><span class="se">\&quot;</span><span class="s2">, arrowhead=</span><span class="se">\&quot;</span><span class="s2">none</span><span class="se">\&quot;</span><span class="s2">, arrowtail=</span><span class="se">\&quot;</span><span class="s2">inv</span><span class="se">\&quot;</span><span class="s2">, dir=both];</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="n">inp</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+	<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">cbd</span><span class="o">.</span><span class="n">getBlocks</span><span class="p">():</span>
+		<span class="n">writeBlock</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">in_port</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">getInputPorts</span><span class="p">():</span>
+			<span class="n">other</span> <span class="o">=</span> <span class="n">in_port</span><span class="o">.</span><span class="n">getIncoming</span><span class="p">()</span><span class="o">.</span><span class="n">source</span>
+			<span class="n">op</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span>
+			<span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;inter_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">block</span><span class="p">),</span> <span class="n">op</span><span class="p">)</span>
+			<span class="n">write</span><span class="p">(</span><span class="s2">&quot; </span><span class="si">{i}</span><span class="s2"> -&gt; </span><span class="si">{b}</span><span class="s2"> [headlabel=</span><span class="se">\&quot;</span><span class="si">{inp}</span><span class="se">\&quot;</span><span class="s2">, arrowhead=</span><span class="se">\&quot;</span><span class="s2">normal</span><span class="se">\&quot;</span><span class="s2">, arrowtail=</span><span class="se">\&quot;</span><span class="s2">none</span><span class="se">\&quot;</span><span class="s2">, dir=both];</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">nodeName</span><span class="p">(</span><span class="n">block</span><span class="p">),</span> <span class="n">inp</span><span class="o">=</span><span class="n">in_port</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+		<span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">getOutputPortNames</span><span class="p">():</span>
+			<span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;inter_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">block</span><span class="p">),</span> <span class="n">op</span><span class="p">)</span>
+			<span class="c1"># if i not in conn: continue</span>
+			<span class="n">write</span><span class="p">(</span><span class="s2">&quot; </span><span class="si">{i}</span><span class="s2"> [shape=point, width=0.01, height=0.01];</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">))</span>
+			<span class="n">write</span><span class="p">(</span><span class="s2">&quot; </span><span class="si">{a}</span><span class="s2"> -&gt; </span><span class="si">{i}</span><span class="s2"> [taillabel=</span><span class="se">\&quot;</span><span class="si">{out}</span><span class="se">\&quot;</span><span class="s2">, arrowtail=</span><span class="se">\&quot;</span><span class="s2">oinv</span><span class="se">\&quot;</span><span class="s2">, arrowhead=</span><span class="se">\&quot;</span><span class="s2">none</span><span class="se">\&quot;</span><span class="s2">, dir=both];</span><span class="se">\n</span><span class="s2">&quot;</span>\
+			      <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">nodeName</span><span class="p">(</span><span class="n">block</span><span class="p">),</span> <span class="n">out</span><span class="o">=</span><span class="n">op</span><span class="p">))</span>
+	<span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">cbd</span><span class="o">.</span><span class="n">getOutputPorts</span><span class="p">():</span>
+		<span class="n">other</span> <span class="o">=</span> <span class="n">port</span><span class="o">.</span><span class="n">getIncoming</span><span class="p">()</span><span class="o">.</span><span class="n">source</span>
+		<span class="n">i</span> <span class="o">=</span> <span class="s2">&quot;inter_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">id</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">block</span><span class="p">),</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+		<span class="n">t</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">_</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">nodeName</span><span class="p">(</span><span class="n">cbd</span><span class="p">),</span> <span class="n">port</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+		<span class="n">write</span><span class="p">(</span><span class="s2">&quot; </span><span class="si">{b}</span><span class="s2"> [shape=point, width=0.01, height=0.01];</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">b</span><span class="o">=</span><span class="n">t</span><span class="p">))</span>
+		<span class="n">write</span><span class="p">(</span><span class="s2">&quot; </span><span class="si">{i}</span><span class="s2"> -&gt; </span><span class="si">{b}</span><span class="s2"> [headlabel=</span><span class="se">\&quot;</span><span class="si">{inp}</span><span class="se">\&quot;</span><span class="s2">, arrowhead=</span><span class="se">\&quot;</span><span class="s2">onormal</span><span class="se">\&quot;</span><span class="s2">, arrowtail=</span><span class="se">\&quot;</span><span class="s2">none</span><span class="se">\&quot;</span><span class="s2">, dir=both];</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">inp</span><span class="o">=</span><span class="n">port</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+	<span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">}&quot;</span><span class="p">)</span>
+	<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../CBD.html">CBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.converters.CBDDraw</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

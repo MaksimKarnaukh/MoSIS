@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>TkInter Dashboard with Editable Values &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../_static/math.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Generate LaTeX from CBD Models" href="../pyCBD.converters.latexify.html" />
+    <link rel="prev" title="Live Plotting of Data During the Simulation" href="LivePlot.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../pyCBD.converters.latexify.html" title="Generate LaTeX from CBD Models"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="LivePlot.html" title="Live Plotting of Data During the Simulation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">TkInter Dashboard with Editable Values</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="tkinter-dashboard-with-editable-values">
+<h1>TkInter Dashboard with Editable Values<a class="headerlink" href="#tkinter-dashboard-with-editable-values" title="Permalink to this headline">¶</a></h1>
+<p>Often, users would like to have interaction with certain values during the simulation.
+This reduces the need to run multiple simulations in which only small values need to
+be changed. Seeing as the simulator provides a way of interacting with TkInter, building
+such a dashboard is quite easy.</p>
+<section id="example-model">
+<h2>Example Model<a class="headerlink" href="#example-model" title="Permalink to this headline">¶</a></h2>
+<p>The normal <a class="reference internal" href="SinGen.html"><span class="doc">Sine Generator</span></a> will be slightly extended to comply to the following (more generic)
+formula:</p>
+<div class="math notranslate nohighlight">
+\[y(t) = A \cdot \sin(B \cdot t)\]</div>
+<p>The CBD model therefore becomes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.Core</span> <span class="kn">import</span> <span class="n">CBD</span>
+<span class="kn">from</span> <span class="nn">CBD.lib.std</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">CBD.lib.endpoints</span> <span class="kn">import</span> <span class="n">SignalCollectorBlock</span>
+
+<span class="k">class</span> <span class="nc">SinGen</span><span class="p">(</span><span class="n">CBD</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">):</span>
+        <span class="n">CBD</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">input_ports</span><span class="o">=</span><span class="p">[],</span> <span class="n">output_ports</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="c1"># Create the Blocks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">TimeBlock</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">GenericBlock</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="n">block_operator</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ProductBlock</span><span class="p">(</span><span class="s2">&quot;amp&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ProductBlock</span><span class="p">(</span><span class="s2">&quot;per&quot;</span><span class="p">))</span>
+        <span class="c1">#   Using a buffer, the memory won&#39;t be flooded</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">SignalCollectorBlock</span><span class="p">(</span><span class="s2">&quot;plot&quot;</span><span class="p">,</span> <span class="n">buffer_size</span><span class="o">=</span><span class="mi">500</span><span class="p">))</span>
+
+        <span class="c1"># Create the Connections</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;per&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;per&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;per&quot;</span><span class="p">,</span> <span class="s2">&quot;sin&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;amp&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="s2">&quot;amp&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;amp&quot;</span><span class="p">,</span> <span class="s2">&quot;plot&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="the-dashboard">
+<h2>The Dashboard<a class="headerlink" href="#the-dashboard" title="Permalink to this headline">¶</a></h2>
+<p>As per <a class="reference internal" href="LivePlot.html"><span class="doc">Live Plotting of Data During the Simulation</span></a>, a TkInter window is being created and a <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.plotting.PlotManager</span></code>
+is assigned to display the plot. Notice there is an additional callback to ensure the y-axis will remain
+in the range of <code class="code docutils literal notranslate"><span class="pre">[-1.0,</span> <span class="pre">1.0]</span></code> if the values are smaller, but the axis may grow to a larger scope if
+needs be.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.realtime.plotting</span> <span class="kn">import</span> <span class="n">PlotManager</span><span class="p">,</span> <span class="n">LinePlot</span><span class="p">,</span> <span class="n">follow</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">tkinter</span> <span class="k">as</span> <span class="nn">tk</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_tkagg</span> <span class="kn">import</span> <span class="n">FigureCanvasTkAgg</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="n">cbd</span> <span class="o">=</span> <span class="n">SinGen</span><span class="p">(</span><span class="s2">&quot;SinGen&quot;</span><span class="p">)</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Tk</span><span class="p">()</span>
+
+<span class="n">canvas</span> <span class="o">=</span> <span class="n">FigureCanvasTkAgg</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>  <span class="c1"># A Tk DrawingArea</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">get_tk_widget</span><span class="p">()</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">manager</span> <span class="o">=</span> <span class="n">PlotManager</span><span class="p">()</span>
+<span class="n">manager</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="n">cbd</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;plot&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">),</span> <span class="n">LinePlot</span><span class="p">())</span>
+<span class="n">manager</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;sin&#39;</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">,</span>
+                <span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">ax</span><span class="p">:</span> <span class="n">axis</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">follow</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)))</span>
+<span class="n">manager</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;sin&#39;</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">,</span>
+                <span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">ax</span><span class="p">:</span> <span class="n">axis</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">follow</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">lower_lim</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">upper_lim</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>Next, let’s provide a way of obtaining user information. We will use two TkInter <code class="code docutils literal notranslate"><span class="pre">Scale</span></code> objects to provide easy
+input fields for the variables <code class="code docutils literal notranslate"><span class="pre">A</span></code> (the amplitude) and <code class="code docutils literal notranslate"><span class="pre">B</span></code> (proportional to the period). Additionally, a
+<code class="code docutils literal notranslate"><span class="pre">Label</span></code> will show the current equation that is being plotted as additional information. The <code class="xref py py-func docutils literal notranslate"><span class="pre">set_amplitude()</span></code>
+and <code class="xref py py-func docutils literal notranslate"><span class="pre">set_period()</span></code> functions make use of the ability of setting a <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.ConstantBlock</span></code>’s value
+during runtime. Take a look at the corresponding documentations for more information.</p>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>Do not alter the window closing protocol of the <code class="code docutils literal notranslate"><span class="pre">tkinter</span></code> root! It is automatically altered to ensure all
+threads are closed.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">label</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;y = 1.00 * sin(1.00 * t)&quot;</span><span class="p">)</span>
+<span class="n">label</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">set_amplitude</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+    <span class="n">cbd</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+    <span class="n">update_label</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">set_period</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+    <span class="n">cbd</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">))</span>
+    <span class="n">update_label</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">update_label</span><span class="p">():</span>
+    <span class="n">label</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;y = </span><span class="si">{:.2f}</span><span class="s2"> * sin(</span><span class="si">{:.2f}</span><span class="s2"> * t)&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cbd</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getValue</span><span class="p">(),</span>
+                                                          <span class="n">cbd</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;B&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getValue</span><span class="p">())</span>
+
+<span class="n">amplitude</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Scale</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Amplitude&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">1200</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">,</span> <span class="n">from_</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                     <span class="n">resolution</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="n">set_amplitude</span><span class="p">)</span>
+<span class="n">amplitude</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">amplitude</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">period</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Scale</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Period&quot;</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">1200</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">,</span> <span class="n">from_</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">to</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                  <span class="n">resolution</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="n">set_period</span><span class="p">)</span>
+<span class="n">period</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">period</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>And that’s it! All that is left to do is to run the simulation and see how the plot interacts to user input.
+Notice how no time constraint is set on the simulation. This will ensure there can be plenty of experimentation
+by the user. Also, the <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.endpoints.SignalCollectorBlock</span></code> that is used was given a buffer size of
+500 datapoints. This prevents the memory being flooded with data while this simulation is running (for an infinite
+time).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.simulator</span> <span class="kn">import</span> <span class="n">Simulator</span>
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span><span class="n">cbd</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setRealTime</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setRealTimePlatformTk</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setDeltaT</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>While changing the values (especially the period), a lot of noice will appear. This is caused by the fact that
+every update to a slider alters a result from another function that may be at a completely different location.
+Lower the resolution for the scales to minimize this effect.</p>
+<figure class="align-default">
+<img alt="../_images/sin-dashboard.png" src="../_images/sin-dashboard.png" />
+</figure>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">TkInter Dashboard with Editable Values</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example-model">Example Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-dashboard">The Dashboard</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pyCBD.html">pyCBD package</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="LivePlot.html"
+                          title="previous chapter">Live Plotting of Data During the Simulation</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="../pyCBD.converters.latexify.html"
+                          title="next chapter">Generate LaTeX from CBD Models</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../pyCBD.converters.latexify.html" title="Generate LaTeX from CBD Models"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="LivePlot.html" title="Live Plotting of Data During the Simulation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">TkInter Dashboard with Editable Values</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

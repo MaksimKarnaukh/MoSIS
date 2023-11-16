@@ -1,0 +1,473 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyCBD.depGraph &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/style.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.depGraph</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pyCBD.depGraph</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module implements a dependency graph</span>
+
+<span class="sd">:Original Author:        Marc Provost</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">.Core</span> <span class="kn">import</span> <span class="n">CBD</span><span class="p">,</span> <span class="n">BaseBlock</span><span class="p">,</span> <span class="n">Port</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+
+<div class="viewcode-block" id="DepNode"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepNode">[docs]</a><span class="k">class</span> <span class="nc">DepNode</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;Class implementing a node in the dependency graph.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		object: Reference to a semantic object identifying the node</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__object</span> <span class="o">=</span> <span class="nb">object</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__isMarked</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="DepNode.mark"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepNode.mark">[docs]</a>	<span class="k">def</span> <span class="nf">mark</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Marks the node.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__isMarked</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="DepNode.unMark"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepNode.unMark">[docs]</a>	<span class="k">def</span> <span class="nf">unMark</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Unmarks the node.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__isMarked</span> <span class="o">=</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="DepNode.isMarked"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepNode.isMarked">[docs]</a>	<span class="k">def</span> <span class="nf">isMarked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks if the node is marked.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__isMarked</span></div>
+
+<div class="viewcode-block" id="DepNode.getMappedObj"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepNode.getMappedObj">[docs]</a>	<span class="k">def</span> <span class="nf">getMappedObj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Gets the object that this node refers to.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__object</span></div>
+
+	<span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="k">return</span> <span class="s2">&quot;DepNode :: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__object</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DepGraph"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepGraph">[docs]</a><span class="k">class</span> <span class="nc">DepGraph</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Class implementing dependency graph.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ignore_hierarchy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">ignore_hierarchy</span> <span class="o">=</span> <span class="n">ignore_hierarchy</span>
+
+		<span class="c1"># Dict holding a mapping &quot;Object -&gt; DepNode&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__semanticMapping</span> <span class="o">=</span> <span class="p">{}</span>
+
+		<span class="c1"># map object-&gt;list of objects depending on object</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__dependents</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="c1"># map object-&gt;list of objects that influences object</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__influencers</span> <span class="o">=</span> <span class="p">{}</span>
+
+	<span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="nb">repr</span> <span class="o">=</span> <span class="s2">&quot;Dependents: </span><span class="se">\n</span><span class="s2">&quot;</span>
+		<span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dependents</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dep</span><span class="p">,</span> <span class="n">Port</span><span class="p">):</span>
+				<span class="n">name</span> <span class="o">=</span> <span class="n">dep</span><span class="o">.</span><span class="n">name</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">name</span> <span class="o">=</span> <span class="n">dep</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span>
+			<span class="nb">repr</span> <span class="o">+=</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dependents</span><span class="p">[</span><span class="n">dep</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+		<span class="nb">repr</span> <span class="o">+=</span> <span class="s2">&quot;Influencers: </span><span class="se">\n</span><span class="s2">&quot;</span>
+		<span class="k">for</span> <span class="n">infl</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__influencers</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">infl</span><span class="p">,</span> <span class="n">Port</span><span class="p">):</span>
+				<span class="n">name</span> <span class="o">=</span> <span class="n">infl</span><span class="o">.</span><span class="n">name</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">name</span> <span class="o">=</span> <span class="n">infl</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span>
+			<span class="nb">repr</span> <span class="o">+=</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__influencers</span><span class="p">[</span><span class="n">infl</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+		<span class="k">return</span> <span class="nb">repr</span>
+
+<div class="viewcode-block" id="DepGraph.addMember"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepGraph.addMember">[docs]</a>	<span class="k">def</span> <span class="nf">addMember</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Add an object mapped to this graph.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			object:     the object to be added</span>
+
+<span class="sd">		Raises:</span>
+<span class="sd">			ValueError: If object is already in the graph</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">object</span><span class="p">,</span> <span class="n">CBD</span><span class="p">)</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_hierarchy</span><span class="p">:</span>
+				<span class="n">node</span> <span class="o">=</span> <span class="n">DepNode</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__dependents</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__influencers</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__semanticMapping</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="n">node</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="nb">object</span><span class="o">.</span><span class="n">getBlocks</span><span class="p">():</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">addMember</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+			<span class="c1"># if isinstance(object, BaseBlock):</span>
+			<span class="c1"># 	for port in object.getInputPorts() + object.getOutputPorts():</span>
+			<span class="c1"># 		self.addMember(port)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specified object is already member of this graph&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DepGraph.hasMember"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepGraph.hasMember">[docs]</a>	<span class="k">def</span> <span class="nf">hasMember</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks if the object is already mapped.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			object: The object to be checked.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="nb">object</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__semanticMapping</span></div>
+
+<div class="viewcode-block" id="DepGraph.removeMember"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepGraph.removeMember">[docs]</a>	<span class="k">def</span> <span class="nf">removeMember</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; Remove a object from this graph.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			object:     the object to be removed</span>
+
+<span class="sd">		Raises:</span>
+<span class="sd">			ValueError: If object is not in the graph</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+			<span class="k">for</span> <span class="n">dependent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getDependents</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__influencers</span><span class="p">[</span><span class="n">dependent</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">influencer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">getInfluencers</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__dependents</span><span class="p">[</span><span class="n">influencer</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+
+			<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dependents</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span>
+			<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">__influencers</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span>
+			<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">__semanticMapping</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specified object is not member of this graph&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DepGraph.setDependency"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepGraph.setDependency">[docs]</a>	<span class="k">def</span> <span class="nf">setDependency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dependent</span><span class="p">,</span> <span class="n">influencer</span><span class="p">,</span> <span class="n">curIt</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;Creates a dependency between two objects.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">		   dependent:   The object which depends on the :attr:`influencer`.</span>
+<span class="sd">		   influencer:  The object which influences the :attr:`dependent`.</span>
+
+<span class="sd">		Raises:</span>
+<span class="sd">			ValueError: if depedent or influencer is not member of this graph</span>
+<span class="sd">			ValueError: if the dependency already exists</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># TODO: fix infinite cycle when passing straight through</span>
+		<span class="c1"># TODO: fix errors when multi-level connection</span>
+
+		<span class="c1"># Link CBD outputs</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">influencer</span><span class="p">,</span> <span class="n">CBD</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_hierarchy</span><span class="p">:</span>
+			<span class="c1"># When there is more than one connection from a CBD to one and the same block,</span>
+			<span class="c1"># more than one dependency should be set, as there is more than one underlying</span>
+			<span class="c1"># connection</span>
+			<span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">dependent</span><span class="o">.</span><span class="n">getInputPorts</span><span class="p">():</span>
+				<span class="n">inf_out</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">getIncoming</span><span class="p">()</span><span class="o">.</span><span class="n">source</span>
+				<span class="k">if</span> <span class="n">inf_out</span><span class="o">.</span><span class="n">block</span> <span class="o">==</span> <span class="n">influencer</span><span class="p">:</span>
+					<span class="n">inf</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">getPreviousPortClosure</span><span class="p">()</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">setDependency</span><span class="p">(</span><span class="n">dependent</span><span class="p">,</span> <span class="n">inf</span><span class="o">.</span><span class="n">block</span><span class="p">,</span> <span class="n">curIt</span><span class="p">)</span>
+			<span class="k">return</span>
+
+		<span class="c1"># Link CBD inputs</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dependent</span><span class="p">,</span> <span class="n">CBD</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ignore_hierarchy</span><span class="p">:</span>
+			<span class="c1"># When there is more than one connection from a CBD to one and the same block,</span>
+			<span class="c1"># more than one dependency should be set, as there is more than one underlying</span>
+			<span class="c1"># connection</span>
+			<span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">dependent</span><span class="o">.</span><span class="n">getInputPorts</span><span class="p">():</span>
+				<span class="n">inf_out</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">getPreviousPortClosure</span><span class="p">()</span>
+				<span class="k">if</span> <span class="n">inf_out</span><span class="o">.</span><span class="n">block</span> <span class="o">==</span> <span class="n">influencer</span><span class="p">:</span>
+					<span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">inp</span><span class="o">.</span><span class="n">getNextPortClosure</span><span class="p">():</span>
+						<span class="c1"># When direction == OUT; the port is simply unused!</span>
+						<span class="k">if</span> <span class="n">dep</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="n">Port</span><span class="o">.</span><span class="n">Direction</span><span class="o">.</span><span class="n">IN</span><span class="p">:</span>
+							<span class="bp">self</span><span class="o">.</span><span class="n">setDependency</span><span class="p">(</span><span class="n">dep</span><span class="o">.</span><span class="n">block</span><span class="p">,</span> <span class="n">influencer</span><span class="p">,</span> <span class="n">curIt</span><span class="p">)</span>
+			<span class="k">return</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="n">dependent</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="n">influencer</span><span class="p">):</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">influencer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__influencers</span><span class="p">[</span><span class="n">dependent</span><span class="p">]</span> <span class="ow">and</span> \
+					<span class="ow">not</span> <span class="n">dependent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dependents</span><span class="p">[</span><span class="n">influencer</span><span class="p">]:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__influencers</span><span class="p">[</span><span class="n">dependent</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">influencer</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__dependents</span><span class="p">[</span><span class="n">influencer</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dependent</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="n">dependent</span><span class="p">):</span>
+				<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specified dependent object is not member of this graph&quot;</span><span class="p">)</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="n">influencer</span><span class="p">):</span>
+				<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specified influencer object is not member of this graph&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DepGraph.hasDependency"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepGraph.hasDependency">[docs]</a>	<span class="k">def</span> <span class="nf">hasDependency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dependent</span><span class="p">,</span> <span class="n">influencer</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks if the influencer influences the dependent and if the dependent is dependent</span>
+<span class="sd">		on the influencer.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			dependent:  The object which depends on the other</span>
+<span class="sd">			influencer: The object which influences the other</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="n">dependent</span><span class="p">),</span> <span class="s2">&quot;Specified dependent object is not member of this graph&quot;</span>
+		<span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="n">influencer</span><span class="p">),</span> <span class="s2">&quot;Specified influencer object is not member of this graph&quot;</span>
+		<span class="k">return</span> <span class="n">influencer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__influencers</span><span class="p">[</span><span class="n">dependent</span><span class="p">]</span> <span class="ow">and</span> \
+		       <span class="n">dependent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dependents</span><span class="p">[</span><span class="n">influencer</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DepGraph.unsetDependency"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepGraph.unsetDependency">[docs]</a>	<span class="k">def</span> <span class="nf">unsetDependency</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dependent</span><span class="p">,</span> <span class="n">influencer</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot; Removes a dependency between two objects.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			dependent:  The object which depends on the other</span>
+<span class="sd">			influencer: The object which influences the other</span>
+
+<span class="sd">		Raises:</span>
+<span class="sd">			ValueError: if depedent or influencer is not member of this graph</span>
+<span class="sd">			ValueError: if the dependency does not exists</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="n">dependent</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="n">influencer</span><span class="p">):</span>
+			<span class="k">if</span> <span class="n">influencer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__influencers</span><span class="p">[</span><span class="n">dependent</span><span class="p">]</span> <span class="ow">and</span> \
+					<span class="n">dependent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__dependents</span><span class="p">[</span><span class="n">influencer</span><span class="p">]:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__influencers</span><span class="p">[</span><span class="n">dependent</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">influencer</span><span class="p">)</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__dependents</span><span class="p">[</span><span class="n">influencer</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">dependent</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specified dependency does not exists&quot;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="n">dependent</span><span class="p">):</span>
+				<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specified dependent object is not member of this graph&quot;</span><span class="p">)</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="n">influencer</span><span class="p">):</span>
+				<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specified influencer object is not member of this graph&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DepGraph.getDependents"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepGraph.getDependents">[docs]</a>	<span class="k">def</span> <span class="nf">getDependents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Obtains all dependents of a specific object.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			object: The object to get the dependents from.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+			<span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__dependents</span><span class="p">[</span><span class="nb">object</span><span class="p">])</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specified object is not member of this graph&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DepGraph.getInfluencers"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepGraph.getInfluencers">[docs]</a>	<span class="k">def</span> <span class="nf">getInfluencers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Obtains all influencers of a specific object.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			object: The object to get the influencers from.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+			<span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__influencers</span><span class="p">[</span><span class="nb">object</span><span class="p">])</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specified object is not member of this graph&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="DepGraph.getSemanticMapping"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepGraph.getSemanticMapping">[docs]</a>	<span class="k">def</span> <span class="nf">getSemanticMapping</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Obtains the semantic mapping of the graph.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			A dictionary of object -&gt; :class:`DepNode`.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__semanticMapping</span></div>
+
+	<span class="k">def</span> <span class="nf">__getDepNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Gets the :class:`DepNode` of a specific object if it is</span>
+<span class="sd">		in the semantic mapping.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			object:     The object to get the node of.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__semanticMapping</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Specified object is not a member of this graph&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DepGraph.mark"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepGraph.mark">[docs]</a>	<span class="k">def</span> <span class="nf">mark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Marks an object in the graph.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			object: The object to mark</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__getDepNode</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">mark</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DepGraph.unMark"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepGraph.unMark">[docs]</a>	<span class="k">def</span> <span class="nf">unMark</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Unmarks an object in the graph.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			object: The object to unmark</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__getDepNode</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">unMark</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DepGraph.isMarked"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.DepGraph.isMarked">[docs]</a>	<span class="k">def</span> <span class="nf">isMarked</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks if an object is marked in the graph.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			object: The object to check</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__getDepNode</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span><span class="o">.</span><span class="n">isMarked</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="createDepGraph"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.createDepGraph">[docs]</a><span class="k">def</span> <span class="nf">createDepGraph</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">curIteration</span><span class="p">,</span> <span class="n">ignore_hierarchy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Create a dependency graph of the CBD model.</span>
+<span class="sd">	Use the curIteration to differentiate between the first and other iterations</span>
+<span class="sd">	Watch out for dependencies with sub-models.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		model:              The model for which the dependency graph must be computed.</span>
+<span class="sd">		curIteration:       The current iteration for the dependency graph.</span>
+<span class="sd">		ignore_hierarchy:   Assume the CBD model is flat and don&#39;t call this recursively.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">blocks</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">getBlocks</span><span class="p">()</span>
+	<span class="n">depGraph</span> <span class="o">=</span> <span class="n">DepGraph</span><span class="p">(</span><span class="n">ignore_hierarchy</span><span class="p">)</span>
+
+	<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+		<span class="n">depGraph</span><span class="o">.</span><span class="n">addMember</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">getInputPorts</span><span class="p">()</span> <span class="o">+</span> <span class="n">model</span><span class="o">.</span><span class="n">getOutputPorts</span><span class="p">():</span>
+		<span class="n">depGraph</span><span class="o">.</span><span class="n">addMember</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
+
+	<span class="k">def</span> <span class="nf">recSetInternalDependencies</span><span class="p">(</span><span class="n">blocks</span><span class="p">,</span> <span class="n">curIteration</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Recursive call for setting the internal dependencies of the graph.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			blocks (iter):      The list of blocks to set as dependency</span>
+<span class="sd">			curIteration (int): The current iteration number</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">getDependencies</span><span class="p">(</span><span class="n">curIteration</span><span class="p">):</span>
+				<span class="k">if</span> <span class="n">dep</span><span class="o">.</span><span class="n">block</span> <span class="o">==</span> <span class="n">model</span><span class="p">:</span>
+					<span class="n">depGraph</span><span class="o">.</span><span class="n">setDependency</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">dep</span><span class="p">,</span> <span class="n">curIteration</span><span class="p">)</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">depGraph</span><span class="o">.</span><span class="n">setDependency</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">dep</span><span class="o">.</span><span class="n">block</span><span class="p">,</span> <span class="n">curIteration</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">CBD</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">ignore_hierarchy</span><span class="p">:</span>
+				<span class="n">recSetInternalDependencies</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">getBlocks</span><span class="p">(),</span> <span class="n">curIteration</span><span class="p">)</span>
+
+	<span class="n">recSetInternalDependencies</span><span class="p">(</span><span class="n">blocks</span> <span class="o">+</span> <span class="n">model</span><span class="o">.</span><span class="n">getOutputPorts</span><span class="p">(),</span> <span class="n">curIteration</span><span class="p">)</span>
+
+	<span class="k">return</span> <span class="n">depGraph</span></div>
+
+
+<div class="viewcode-block" id="gvDepGraph"><a class="viewcode-back" href="../../pyCBD.depGraph.html#pyCBD.depGraph.gvDepGraph">[docs]</a><span class="k">def</span> <span class="nf">gvDepGraph</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">curIt</span><span class="p">,</span> <span class="n">ignore_hierarchy</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Create a Graphviz string that corresponds to the dependency graph</span>
+<span class="sd">	at the given iteration cycle.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		model (CBD):    The :class:`CBD` model to construct the graph for.</span>
+<span class="sd">		curIt (int):    The iteration for which the dependency graph will</span>
+<span class="sd">						be constructed.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">m2</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">ignore_hierarchy</span><span class="p">:</span>
+		<span class="n">m2</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+	<span class="n">depGraph</span> <span class="o">=</span> <span class="n">createDepGraph</span><span class="p">(</span><span class="n">m2</span><span class="p">,</span> <span class="n">curIt</span><span class="p">,</span> <span class="n">ignore_hierarchy</span><span class="p">)</span>
+	<span class="n">nodes</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">m2</span><span class="o">.</span><span class="n">getBlocks</span><span class="p">():</span>
+		<span class="n">bname</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span>
+		<span class="n">nodes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{namee}</span><span class="s1"> [label=&quot;</span><span class="si">{type}</span><span class="s1">(</span><span class="si">{name}</span><span class="s1">)&quot;];&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">bname</span><span class="p">,</span> <span class="n">namee</span><span class="o">=</span><span class="n">bname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">),</span> <span class="nb">type</span><span class="o">=</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()))</span>
+		<span class="k">for</span> <span class="n">inf</span> <span class="ow">in</span> <span class="n">depGraph</span><span class="o">.</span><span class="n">getInfluencers</span><span class="p">(</span><span class="n">block</span><span class="p">):</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inf</span><span class="p">,</span> <span class="n">BaseBlock</span><span class="p">):</span>
+				<span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> -&gt; </span><span class="si">{}</span><span class="s2">;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">),</span> <span class="n">inf</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)))</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2"> -&gt; </span><span class="si">{}</span><span class="s2">;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">),</span> <span class="n">inf</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)))</span>
+	<span class="k">return</span> <span class="s2">&quot;digraph {  // time = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">curIt</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">nodes</span> <span class="o">+</span> <span class="n">edges</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">}&quot;</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../pyCBD.html">pyCBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.depGraph</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

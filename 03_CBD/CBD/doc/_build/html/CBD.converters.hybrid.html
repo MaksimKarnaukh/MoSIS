@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Encapsulating CBD Models in PythonPDEVS &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CBD.loopsolvers module" href="CBD.loopsolvers.html" />
+    <link rel="prev" title="Generate GraphViz from CBD Models" href="CBD.converters.CBDDraw.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.loopsolvers.html" title="CBD.loopsolvers module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="CBD.converters.CBDDraw.html" title="Generate GraphViz from CBD Models"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.html" >CBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="CBD.converters.html" accesskey="U">CBD.converters</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Encapsulating CBD Models in PythonPDEVS</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-CBD.converters.hybrid">
+<span id="encapsulating-cbd-models-in-pythonpdevs"></span><h1>Encapsulating CBD Models in PythonPDEVS<a class="headerlink" href="#module-CBD.converters.hybrid" title="Permalink to this headline">¶</a></h1>
+<p>This module allows CBD models to be executed inside of a DEVS simulation.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="http://msdl.cs.mcgill.ca/projects/DEVS/PythonPDEVS">PythonPDEVS</a></p>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CBDRunner">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.hybrid.</span></span><span class="sig-name descname"><span class="pre">CBDRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cbd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initials=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stopped=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crossings=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algo=&lt;function</span> <span class="pre">CrossingDetection.ITP&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CBDRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CBDRunner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pypdevs.DEVS.AtomicDEVS</span></code></p>
+<p>Atomic DEVS model that can be used to execute a CBD model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the CBD model.</p></li>
+<li><p><strong>cbd</strong> (<a class="reference internal" href="CBD.Core.html#CBD.Core.CBD" title="CBD.Core.CBD"><em>CBD.Core.CBD</em></a>) – The CBD model to run.</p></li>
+<li><p><strong>initials</strong> (<em>dict</em>) – The initial conditions for all the inputs.</p></li>
+<li><p><strong>stopped</strong> (<em>bool</em>) – Whether to start from paused mode or not. In this paused mode, the
+model will not progress. Useful when in combination with multiple
+ODEs. Defaults to <code class="code docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>crossings</strong> (<em>dict</em>) – Dictionary of <code class="code docutils literal notranslate"><span class="pre">{</span> <span class="pre">name</span> <span class="pre">-&gt;</span> <span class="pre">value</span> <span class="pre">}</span></code> that defines which
+variable needs to be detected for a crossing through a certain value.
+The value can be a string, starting with either <code class="code docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="code docutils literal notranslate"><span class="pre">&gt;</span></code>
+or <code class="code docutils literal notranslate"><span class="pre">=</span></code>, which respectively means a crossing from low to high,
+high to low or either side. Notice that <code class="code docutils literal notranslate"><span class="pre">=</span></code> is the default
+starting character assumed when the value is a float. When
+<code class="code docutils literal notranslate"><span class="pre">None</span></code>, no detection will happen. Defaults to <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>algo</strong> – The root finding algorithm function. See <a class="reference internal" href="#CBD.converters.hybrid.CrossingDetection" title="CBD.converters.hybrid.CrossingDetection"><code class="xref py py-class docutils literal notranslate"><span class="pre">CrossingDetection</span></code></a>
+for more info.</p></li>
+<li><p><strong>**kwargs</strong> – Optional parameters for the zero-crossing detection algorithm.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CBDRunner.reinit">
+<span class="sig-name descname"><span class="pre">reinit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CBDRunner.reinit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CBDRunner.reinit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Re-initializes the CBD model.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Use this function with care. It is expected a simulation will commence
+after this function was called.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CBDRunner.apply_initials">
+<span class="sig-name descname"><span class="pre">apply_initials</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CBDRunner.apply_initials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CBDRunner.apply_initials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies the initial values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CBDRunner.get_signal">
+<span class="sig-name descname"><span class="pre">get_signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CBDRunner.get_signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CBDRunner.get_signal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the output for a given name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pname</strong> (<em>str</em>) – The name of the port.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CBDRunner.crossing_detection">
+<span class="sig-name descname"><span class="pre">crossing_detection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CBDRunner.crossing_detection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CBDRunner.crossing_detection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crossing root finder for a signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signal</strong> (<em>str</em>) – The port to detect.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – The value to cross.</p></li>
+<li><p><strong>y0</strong> (<em>float</em>) – Y-value of the lower end of the interval.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CBDRunner.crossing_function">
+<span class="sig-name descname"><span class="pre">crossing_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CBDRunner.crossing_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CBDRunner.crossing_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the function value of the simulation after a specified delay.
+This will be used in combination with <a class="reference internal" href="#CBD.converters.hybrid.CrossingDetection" title="CBD.converters.hybrid.CrossingDetection"><code class="xref py py-class docutils literal notranslate"><span class="pre">CrossingDetection</span></code></a> to
+find the roots of a function.</p>
+<p>This function will first rewind the simulator such that <code class="code docutils literal notranslate"><span class="pre">h</span></code> can be
+applied, before stepping until <code class="code docutils literal notranslate"><span class="pre">h</span></code> was found. Afterwards, the
+simulation is possibly restored to the original state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>h</strong> (<em>float</em>) – The delay.</p></li>
+<li><p><strong>signal</strong> (<em>str</em>) – The signal that must be read. When <code class="code docutils literal notranslate"><span class="pre">None</span></code>,
+no signal will be read.</p></li>
+<li><p><strong>restore</strong> (<em>bool</em>) – When <code class="code docutils literal notranslate"><span class="pre">True</span></code>, the simulation will be restored after
+the value was found. Defaults to <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CBDRunner.set_delta">
+<span class="sig-name descname"><span class="pre">set_delta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CBDRunner.set_delta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CBDRunner.set_delta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the maximal allowed delta of the clock.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>float</em>) – The maximal allowed delta.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CBDRunner.get_delta">
+<span class="sig-name descname"><span class="pre">get_delta</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CBDRunner.get_delta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CBDRunner.get_delta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the last used delta.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CBDRunner.timeAdvance">
+<span class="sig-name descname"><span class="pre">timeAdvance</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CBDRunner.timeAdvance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CBDRunner.timeAdvance" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://msdl.uantwerpen.be/documentation/PythonPDEVS/ADEVS_int.html">PythonPDEVS documentation</a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CBDRunner.outputFnc">
+<span class="sig-name descname"><span class="pre">outputFnc</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CBDRunner.outputFnc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CBDRunner.outputFnc" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://msdl.uantwerpen.be/documentation/PythonPDEVS/ADEVS_int.html">PythonPDEVS documentation</a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CBDRunner.intTransition">
+<span class="sig-name descname"><span class="pre">intTransition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CBDRunner.intTransition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CBDRunner.intTransition" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://msdl.uantwerpen.be/documentation/PythonPDEVS/ADEVS_int.html">PythonPDEVS documentation</a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CBDRunner.extTransition">
+<span class="sig-name descname"><span class="pre">extTransition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CBDRunner.extTransition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CBDRunner.extTransition" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://msdl.uantwerpen.be/documentation/PythonPDEVS/ADEVS_int.html">PythonPDEVS documentation</a></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.prepare_cbd">
+<span class="sig-prename descclassname"><span class="pre">CBD.converters.hybrid.</span></span><span class="sig-name descname"><span class="pre">prepare_cbd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initials</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#prepare_cbd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.prepare_cbd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains a CBD model that can be executed with the <a class="reference internal" href="#CBD.converters.hybrid.CBDRunner" title="CBD.converters.hybrid.CBDRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBDRunner</span></code></a>.
+The model will be cloned and all input ports will be altered to become constant
+blocks. Additionally, a <a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.ConstantBlock" title="CBD.lib.std.ConstantBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.ConstantBlock</span></code></a> and a
+<a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.MinBlock" title="CBD.lib.std.MinBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.MinBlock</span></code></a> will be added in-between the Clock and the block
+that connects to the Clock over the <code class="code docutils literal notranslate"><span class="pre">h</span></code> input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="CBD.Core.html#CBD.Core.CBD" title="CBD.Core.CBD"><em>CBD.Core.CBD</em></a>) – The CBD model to prepare.</p></li>
+<li><p><strong>initials</strong> (<em>dict</em>) – A dictionary in the form of
+<code class="code docutils literal notranslate"><span class="pre">input</span> <span class="pre">port</span> <span class="pre">name</span> <span class="pre">-&gt;</span> <span class="pre">initial</span> <span class="pre">value</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A tuple of <code class="code docutils literal notranslate"><span class="pre">(prepared</span> <span class="pre">CBD,</span> <span class="pre">name)</span></code> where <code class="code docutils literal notranslate"><span class="pre">name</span></code> identifies the
+name for the</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Usually, this function shouldn’t be called by a user.</p>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CrossingDetection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.hybrid.</span></span><span class="sig-name descname"><span class="pre">CrossingDetection</span></span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CrossingDetection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CrossingDetection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Helper class that implements the crossing detection algorithms.</p>
+<p>The following description concerns the default arguments for all functions.
+On top of that, there may be some additional arguments defined, as listed in
+the specific documentations below.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t1</strong> (<em>float</em>) – The x-value of the lower bound of the interval.</p></li>
+<li><p><strong>t2</strong> (<em>float</em>) – The x-value of the higher bound of the interval.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – The value for which a crossing must be checked.</p></li>
+<li><p><strong>f</strong> – A function that should return the y-value for a given x (or t).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CrossingDetection.linear">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CrossingDetection.linear"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CrossingDetection.linear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the root of the crossing using linear interpolation.
+No additional function calls or arguments are used.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CrossingDetection.regula_falsi">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">regula_falsi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CrossingDetection.regula_falsi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CrossingDetection.regula_falsi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements the Illinois algorithm for finding the root for a crossing problem.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eps</strong> (<em>float</em>) – Half of the upper bound for the relative error.
+Defaults to 1e-5.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – The maximal amount of iterations to compute. Defaults to
+5 million iterations.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/Regula_falsi">https://en.wikipedia.org/wiki/Regula_falsi</a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.hybrid.CrossingDetection.ITP">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ITP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/hybrid.html#CrossingDetection.ITP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.hybrid.CrossingDetection.ITP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implements the Interpolation-Truncation-Projection algorithm for finding
+the root of a function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eps</strong> (<em>float</em>) – Minimal interval size. Defaults to 1e-5.</p></li>
+<li><p><strong>k1</strong> (<em>float</em>) – First truncation size hyperparameter. Must be in the
+range of <span class="math notranslate nohighlight">\((0, \infty)\)</span>. Defaults to 0.1.</p></li>
+<li><p><strong>k2</strong> (<em>float</em>) – Second truncation size hyperparameter. Must be in the
+range of <span class="math notranslate nohighlight">\([1, 1 + \frac{1}{2}(1 + \sqrt{5})]\)</span>.
+Defaults to 1.5.</p></li>
+<li><p><strong>n0</strong> (<em>float</em>) – Slack variable to control the size of the interval for
+the projection step. Must be in <span class="math notranslate nohighlight">\([0, \infty)\)</span>.
+When 0, the average number of iterations will be less
+than that of the bisection method. Defaults to 0.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/ITP_method">https://en.wikipedia.org/wiki/ITP_method</a></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="CBD.html">CBD package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="CBD.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="CBD.lib.html">Standard CBD Library (BBL)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.realtime.html">CBD.realtime package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.tracers.html">CBD.tracers package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="CBD.converters.html">CBD.converters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.loopsolvers.html">CBD.loopsolvers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.state_events.html">CBD.state_events module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.preprocessing.html">CBD.preprocessing package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="CBD.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="CBD.converters.CBDDraw.html"
+                          title="previous chapter">Generate GraphViz from CBD Models</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="CBD.loopsolvers.html"
+                          title="next chapter">CBD.loopsolvers module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.loopsolvers.html" title="CBD.loopsolvers module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="CBD.converters.CBDDraw.html" title="Generate GraphViz from CBD Models"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.html" >CBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="CBD.converters.html" >CBD.converters</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Encapsulating CBD Models in PythonPDEVS</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

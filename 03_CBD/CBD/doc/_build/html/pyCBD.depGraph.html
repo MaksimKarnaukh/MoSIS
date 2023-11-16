@@ -1,0 +1,391 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>pyCBD.depGraph module &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyCBD.scheduling module" href="pyCBD.scheduling.html" />
+    <link rel="prev" title="pyCBD.Core module" href="pyCBD.Core.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.scheduling.html" title="pyCBD.scheduling module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.Core.html" title="pyCBD.Core module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" accesskey="U">pyCBD package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.depGraph module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-pyCBD.depGraph">
+<span id="pycbd-depgraph-module"></span><h1>pyCBD.depGraph module<a class="headerlink" href="#module-pyCBD.depGraph" title="Permalink to this headline">¶</a></h1>
+<p>This module implements a dependency graph</p>
+<dl class="field-list simple">
+<dt class="field-odd">Original Author</dt>
+<dd class="field-odd"><p>Marc Provost</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepNode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.depGraph.</span></span><span class="sig-name descname"><span class="pre">DepNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepNode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class implementing a node in the dependency graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>object</strong> – Reference to a semantic object identifying the node</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepNode.mark">
+<span class="sig-name descname"><span class="pre">mark</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepNode.mark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepNode.mark" title="Permalink to this definition">¶</a></dt>
+<dd><p>Marks the node.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepNode.unMark">
+<span class="sig-name descname"><span class="pre">unMark</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepNode.unMark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepNode.unMark" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unmarks the node.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepNode.isMarked">
+<span class="sig-name descname"><span class="pre">isMarked</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepNode.isMarked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepNode.isMarked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the node is marked.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepNode.getMappedObj">
+<span class="sig-name descname"><span class="pre">getMappedObj</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepNode.getMappedObj"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepNode.getMappedObj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the object that this node refers to.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepGraph">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.depGraph.</span></span><span class="sig-name descname"><span class="pre">DepGraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ignore_hierarchy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepGraph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepGraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class implementing dependency graph.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepGraph.addMember">
+<span class="sig-name descname"><span class="pre">addMember</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepGraph.addMember"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepGraph.addMember" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an object mapped to this graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>object</strong> – the object to be added</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If object is already in the graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepGraph.hasMember">
+<span class="sig-name descname"><span class="pre">hasMember</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepGraph.hasMember"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepGraph.hasMember" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the object is already mapped.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>object</strong> – The object to be checked.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepGraph.removeMember">
+<span class="sig-name descname"><span class="pre">removeMember</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepGraph.removeMember"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepGraph.removeMember" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove a object from this graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>object</strong> – the object to be removed</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If object is not in the graph</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepGraph.setDependency">
+<span class="sig-name descname"><span class="pre">setDependency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dependent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">influencer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curIt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepGraph.setDependency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepGraph.setDependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a dependency between two objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dependent</strong> – The object which depends on the <code class="xref py py-attr docutils literal notranslate"><span class="pre">influencer</span></code>.</p></li>
+<li><p><strong>influencer</strong> – The object which influences the <code class="xref py py-attr docutils literal notranslate"><span class="pre">dependent</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – if depedent or influencer is not member of this graph</p></li>
+<li><p><strong>ValueError</strong> – if the dependency already exists</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepGraph.hasDependency">
+<span class="sig-name descname"><span class="pre">hasDependency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dependent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">influencer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepGraph.hasDependency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepGraph.hasDependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the influencer influences the dependent and if the dependent is dependent
+on the influencer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dependent</strong> – The object which depends on the other</p></li>
+<li><p><strong>influencer</strong> – The object which influences the other</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepGraph.unsetDependency">
+<span class="sig-name descname"><span class="pre">unsetDependency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dependent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">influencer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepGraph.unsetDependency"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepGraph.unsetDependency" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes a dependency between two objects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dependent</strong> – The object which depends on the other</p></li>
+<li><p><strong>influencer</strong> – The object which influences the other</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – if depedent or influencer is not member of this graph</p></li>
+<li><p><strong>ValueError</strong> – if the dependency does not exists</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepGraph.getDependents">
+<span class="sig-name descname"><span class="pre">getDependents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepGraph.getDependents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepGraph.getDependents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains all dependents of a specific object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>object</strong> – The object to get the dependents from.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepGraph.getInfluencers">
+<span class="sig-name descname"><span class="pre">getInfluencers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepGraph.getInfluencers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepGraph.getInfluencers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains all influencers of a specific object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>object</strong> – The object to get the influencers from.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepGraph.getSemanticMapping">
+<span class="sig-name descname"><span class="pre">getSemanticMapping</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepGraph.getSemanticMapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepGraph.getSemanticMapping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the semantic mapping of the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A dictionary of object -&gt; <a class="reference internal" href="#pyCBD.depGraph.DepNode" title="pyCBD.depGraph.DepNode"><code class="xref py py-class docutils literal notranslate"><span class="pre">DepNode</span></code></a>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepGraph.mark">
+<span class="sig-name descname"><span class="pre">mark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepGraph.mark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepGraph.mark" title="Permalink to this definition">¶</a></dt>
+<dd><p>Marks an object in the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>object</strong> – The object to mark</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepGraph.unMark">
+<span class="sig-name descname"><span class="pre">unMark</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepGraph.unMark"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepGraph.unMark" title="Permalink to this definition">¶</a></dt>
+<dd><p>Unmarks an object in the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>object</strong> – The object to unmark</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.depGraph.DepGraph.isMarked">
+<span class="sig-name descname"><span class="pre">isMarked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#DepGraph.isMarked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.DepGraph.isMarked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if an object is marked in the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>object</strong> – The object to check</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyCBD.depGraph.createDepGraph">
+<span class="sig-prename descclassname"><span class="pre">pyCBD.depGraph.</span></span><span class="sig-name descname"><span class="pre">createDepGraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_hierarchy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#createDepGraph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.createDepGraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a dependency graph of the CBD model.
+Use the curIteration to differentiate between the first and other iterations
+Watch out for dependencies with sub-models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – The model for which the dependency graph must be computed.</p></li>
+<li><p><strong>curIteration</strong> – The current iteration for the dependency graph.</p></li>
+<li><p><strong>ignore_hierarchy</strong> – Assume the CBD model is flat and don’t call this recursively.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyCBD.depGraph.gvDepGraph">
+<span class="sig-prename descclassname"><span class="pre">pyCBD.depGraph.</span></span><span class="sig-name descname"><span class="pre">gvDepGraph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curIt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_hierarchy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/depGraph.html#gvDepGraph"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.depGraph.gvDepGraph" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Graphviz string that corresponds to the dependency graph
+at the given iteration cycle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.CBD" title="pyCBD.Core.CBD"><em>CBD</em></a>) – The <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD</span></code> model to construct the graph for.</p></li>
+<li><p><strong>curIt</strong> (<em>int</em>) – The iteration for which the dependency graph will
+be constructed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pyCBD.html">pyCBD package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pyCBD.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.Core.html">pyCBD.Core module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pyCBD.depGraph module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.naivelog.html">pyCBD.naivelog module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.scheduling.html">pyCBD.scheduling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.simulator.html">pyCBD.simulator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.util.html">pyCBD.util module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="pyCBD.Core.html"
+                          title="previous chapter">pyCBD.Core module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="pyCBD.scheduling.html"
+                          title="next chapter">pyCBD.scheduling module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.scheduling.html" title="pyCBD.scheduling module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.Core.html" title="pyCBD.Core module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" >pyCBD package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.depGraph module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

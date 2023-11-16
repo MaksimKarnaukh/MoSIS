@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>CBD.converters.latexify.CBD2Latex module &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CBD.converters.latexify.functions module" href="CBD.converters.latexify.functions.html" />
+    <link rel="prev" title="Generate LaTeX from CBD Models" href="CBD.converters.latexify.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.converters.latexify.functions.html" title="CBD.converters.latexify.functions module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="CBD.converters.latexify.html" title="Generate LaTeX from CBD Models"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.converters.latexify.html" accesskey="U">Generate LaTeX from CBD Models</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.converters.latexify.CBD2Latex module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-CBD.converters.latexify.CBD2Latex">
+<span id="cbd-converters-latexify-cbd2latex-module"></span><h1>CBD.converters.latexify.CBD2Latex module<a class="headerlink" href="#module-CBD.converters.latexify.CBD2Latex" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.latexify.CBD2Latex.CBD2Latex">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.latexify.CBD2Latex.</span></span><span class="sig-name descname"><span class="pre">CBD2Latex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/CBD2Latex.html#CBD2Latex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.CBD2Latex.CBD2Latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Creates a corresponding set of LaTeX-equations for a CBD model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="CBD.Core.html#CBD.Core.CBD" title="CBD.Core.CBD"><em>CBD.Core.CBD</em></a>) – The model to create the equations for.</p>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>show_steps</strong> (<em>bool</em>) – When <code class="code docutils literal notranslate"><span class="pre">True</span></code>, all intermediary steps will
+be shown. Defaults to <code class="code docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>ignore_path</strong> (<em>bool</em>) – When <code class="code docutils literal notranslate"><span class="pre">True</span></code>, the name of the original model
+will be removed from all path names. This name is
+a common prefix over the system.
+Defaults to <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>escape_nonlatex</strong> (<em>bool</em>) – When <code class="code docutils literal notranslate"><span class="pre">True</span></code>, non-latex characters (e.g., underscores)
+are escaped from the rendered result, if rendered as LaTeX.
+Defaults to <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>time_variable</strong> (<em>str</em>) – The name for the variable that represents the time
+(i.e., the current iteration). Defaults to <code class="code docutils literal notranslate"><span class="pre">'i'</span></code>.</p></li>
+<li><p><strong>render_latex</strong> (<em>bool</em>) – When <code class="code docutils literal notranslate"><span class="pre">True</span></code>, the <a class="reference internal" href="#CBD.converters.latexify.CBD2Latex.CBD2Latex.render" title="CBD.converters.latexify.CBD2Latex.CBD2Latex.render"><code class="xref py py-func docutils literal notranslate"><span class="pre">render()</span></code></a> method will
+output a latex-formatted string. Otherwise, simple
+text formatting is done. Defaults to <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>time_format</strong> (<em>str</em>) – How the time must be formatted when rendered. By default,
+it will be placed in parentheses at the end. Use
+<code class="code docutils literal notranslate"><span class="pre">{time}</span></code> to identify the time constant.</p></li>
+<li><p><strong>delta_t</strong> (<em>str</em>) – Representation of the used delta in the render. This will
+be appended to values that have been computed for a delay
+block. This is only to be used when the time does not
+identify the iteration, but the actual simulation time.
+Defaults to <code class="code docutils literal notranslate"><span class="pre">'i'</span></code>.</p></li>
+<li><p><strong>replace_par</strong> (<em>bool</em>) – When <code class="code docutils literal notranslate"><span class="pre">True</span></code>, the parentheses will be replaced by the
+much cleaner <code class="code docutils literal notranslate"><span class="pre">\left(</span></code> and <code class="code docutils literal notranslate"><span class="pre">\right)</span></code>, if rendered
+in LaTeX-format. Defaults to <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>type_formats</strong> (<em>dict</em>) – <p>A dictionary of <code class="code docutils literal notranslate"><span class="pre">{</span> <span class="pre">operationType</span> <span class="pre">-&gt;</span> <span class="pre">callable</span> <span class="pre">}</span></code> that
+allows for the remapping of mathematical descriptions based,
+where <code class="code docutils literal notranslate"><span class="pre">operationType</span></code> identifies the operation to remap
+and <code class="code docutils literal notranslate"><span class="pre">callable</span></code> a function that takes the name/symbol and
+the arguments as input and produces a list of function objects.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="CBD.converters.latexify.functions.html#CBD.converters.latexify.functions.BLOCK_MAP" title="CBD.converters.latexify.functions.BLOCK_MAP"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CBD.converters.latexify.functions.BLOCK_MAP</span></code></a>.</p>
+</div>
+</p></li>
+<li><p><strong>path_sep</strong> (<em>str</em>) – The separator to use for the paths. Defaults to <code class="code docutils literal notranslate"><span class="pre">&quot;.&quot;</span></code>.</p></li>
+<li><p><strong>path_prefix</strong> (<em>str</em>) – The prefix to use for the paths. Defaults to the empty strig.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="CBD.converters.latexify.CBD2Latex.CBD2Latex.DEFAULT_CONFIG">
+<span class="sig-name descname"><span class="pre">DEFAULT_CONFIG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'delta_t':</span> <span class="pre">'i',</span> <span class="pre">'escape_nonlatex':</span> <span class="pre">True,</span> <span class="pre">'ignore_path':</span> <span class="pre">True,</span> <span class="pre">'path_prefix':</span> <span class="pre">'',</span> <span class="pre">'path_sep':</span> <span class="pre">'.',</span> <span class="pre">'render_latex':</span> <span class="pre">True,</span> <span class="pre">'replace_par':</span> <span class="pre">True,</span> <span class="pre">'show_steps':</span> <span class="pre">False,</span> <span class="pre">'time_format':</span> <span class="pre">'({time})',</span> <span class="pre">'time_variable':</span> <span class="pre">'i',</span> <span class="pre">'type_formats':</span> <span class="pre">{}}</span></em><a class="headerlink" href="#CBD.converters.latexify.CBD2Latex.CBD2Latex.DEFAULT_CONFIG" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default configuration setup.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.CBD2Latex.CBD2Latex.rename">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/CBD2Latex.html#CBD2Latex.rename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.CBD2Latex.CBD2Latex.rename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the name of a path accurate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name to convert.</p></li>
+<li><p><strong>config</strong> (<em>dict</em>) – Configuration dictionary (see above).</p></li>
+<li><p><strong>model</strong> (<a class="reference internal" href="CBD.Core.html#CBD.Core.CBD" title="CBD.Core.CBD"><em>CBD</em></a>) – The parent CBD model.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.CBD2Latex.CBD2Latex.get_block_equation">
+<span class="sig-name descname"><span class="pre">get_block_equation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/CBD2Latex.html#CBD2Latex.get_block_equation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.CBD2Latex.CBD2Latex.get_block_equation" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.CBD2Latex.CBD2Latex.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/CBD2Latex.html#CBD2Latex.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.CBD2Latex.CBD2Latex.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the LaTeX string for the model, based on the current level of simplifications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>rl</strong> (<em>bool</em>) – Identifies if the rendering must result in a LaTeX-renderable string.
+This argument basically overwrites the <code class="xref py py-attr docutils literal notranslate"><span class="pre">render_latex</span></code> config
+attribute. When <code class="code docutils literal notranslate"><span class="pre">None</span></code>, the value from the config is used.
+Defaults to <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.CBD2Latex.CBD2Latex.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/CBD2Latex.html#CBD2Latex.eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.CBD2Latex.CBD2Latex.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the current set of equations in a format that can be parsed by
+the <a class="reference internal" href="CBD.converters.eq2CBD.html#module-CBD.converters.eq2CBD" title="CBD.converters.eq2CBD"><code class="xref py py-mod docutils literal notranslate"><span class="pre">CBD.converters.eq2CBD</span></code></a> converter.
+This allows model simplifications and optimizations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference internal" href="CBD.converters.latexify.functions.html#CBD.converters.latexify.functions.Time" title="CBD.converters.latexify.functions.Time"><em>Time</em></a>) – The time at which to obtain the equations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.CBD2Latex.CBD2Latex.latex">
+<span class="sig-name descname"><span class="pre">latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/CBD2Latex.html#CBD2Latex.latex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.CBD2Latex.CBD2Latex.latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the current set of equations in LaTeX format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.CBD2Latex.CBD2Latex.simplify_links">
+<span class="sig-name descname"><span class="pre">simplify_links</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/CBD2Latex.html#CBD2Latex.simplify_links"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.CBD2Latex.CBD2Latex.simplify_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>First step to execute is a link simplification. Generally, there are more links
+than blocks, so this function will take care of the largest simplification.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.CBD2Latex.CBD2Latex.substitute">
+<span class="sig-name descname"><span class="pre">substitute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/CBD2Latex.html#CBD2Latex.substitute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.CBD2Latex.CBD2Latex.substitute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Combines multiple equations into one, based on the requested output, by
+means of substitution. This function will be called multiple times: once
+for each “step” in the simplification.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#CBD.converters.latexify.CBD2Latex.CBD2Latex.simplify" title="CBD.converters.latexify.CBD2Latex.CBD2Latex.simplify"><code class="xref py py-func docutils literal notranslate"><span class="pre">simplify()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.CBD2Latex.CBD2Latex.simplify">
+<span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/CBD2Latex.html#CBD2Latex.simplify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.CBD2Latex.CBD2Latex.simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simplifies the system of equations to become a more optimal solution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>steps</strong> (<em>int</em>) – When positive, this indicates the amount of steps
+that must be taken. When negative, the equations
+will be simplified until a convergence (i.e. no
+possible changes) is reached. Defaults to -1.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#CBD.converters.latexify.CBD2Latex.CBD2Latex.simplify_links" title="CBD.converters.latexify.CBD2Latex.CBD2Latex.simplify_links"><code class="xref py py-func docutils literal notranslate"><span class="pre">simplify_links()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.converters.latexify.CBD2Latex.CBD2Latex.substitute" title="CBD.converters.latexify.CBD2Latex.CBD2Latex.substitute"><code class="xref py py-func docutils literal notranslate"><span class="pre">substitute()</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="CBD.converters.latexify.html">Generate LaTeX from CBD Models</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="CBD.converters.latexify.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CBD.html">CBD package</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="CBD.converters.latexify.html"
+                          title="previous chapter">Generate LaTeX from CBD Models</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="CBD.converters.latexify.functions.html"
+                          title="next chapter">CBD.converters.latexify.functions module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.converters.latexify.functions.html" title="CBD.converters.latexify.functions module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="CBD.converters.latexify.html" title="Generate LaTeX from CBD Models"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.converters.latexify.html" >Generate LaTeX from CBD Models</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.converters.latexify.CBD2Latex module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

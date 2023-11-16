@@ -1,0 +1,1680 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>pyCBD.lib.std module &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyCBD.lib.io module" href="pyCBD.lib.io.html" />
+    <link rel="prev" title="Standard CBD Library (BBL)" href="pyCBD.lib.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.lib.io.html" title="pyCBD.lib.io module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.lib.html" title="Standard CBD Library (BBL)"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" >pyCBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="pyCBD.lib.html" accesskey="U">Standard CBD Library (BBL)</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.lib.std module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-pyCBD.lib.std">
+<span id="pycbd-lib-std-module"></span><h1>pyCBD.lib.std module<a class="headerlink" href="#module-pyCBD.lib.std" title="Permalink to this headline">¶</a></h1>
+<p>This file contains the standard library for CBD building blocks.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.ConstantBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">ConstantBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#ConstantBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.ConstantBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>The constant block will always output its constant value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>value</strong> (<em>float</em>) – The constant value of the block.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Output Ports</dt>
+<dd class="field-even"><p><strong>OUT1</strong> – The (current) constant value.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This value may be “tuned” during a simulation, making
+it variable through time.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.ConstantBlock.getValue">
+<span class="sig-name descname"><span class="pre">getValue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#ConstantBlock.getValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.ConstantBlock.getValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the current value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.ConstantBlock.setValue">
+<span class="sig-name descname"><span class="pre">setValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#ConstantBlock.setValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.ConstantBlock.setValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alters the constant value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.ConstantBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#ConstantBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.ConstantBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.NegatorBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">NegatorBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#NegatorBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.NegatorBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>The negator will output the value of the input multiplied with -1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><p><strong>IN1</strong> – The value to be negated.</p>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The negated value.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.NegatorBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#NegatorBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.NegatorBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.InverterBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">InverterBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-30</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#InverterBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.InverterBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>The inverter will output the input’s inverse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>) – The maximal value when to throw a <code class="code docutils literal notranslate"><span class="pre">ZeroDivisionError</span></code>.
+When the input is larger than <code class="code docutils literal notranslate"><span class="pre">tolerance</span></code>, no error
+will be thrown. Defaults to <code class="code docutils literal notranslate"><span class="pre">1e-30</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><p><strong>IN1</strong> – The value to be inverted.</p>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The inverted value.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ZeroDivisionError</strong> – When the input is less than <code class="code docutils literal notranslate"><span class="pre">tolerance</span></code>.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.InverterBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#InverterBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.InverterBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.GainBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">GainBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#GainBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.GainBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>The gain will output the input, multiplied by a constant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>value</strong> (<em>numeric</em>) – The value of the block.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><p><strong>IN1</strong> – The value to be multiplied.</p>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The multiplied value.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.GainBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#GainBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.GainBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.AdderBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">AdderBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfInputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#AdderBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.AdderBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>The adderblock will add all the inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>numberOfInputs</strong> (<em>int</em>) – The amount of input ports.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The first addendend.</p></li>
+<li><p><strong>IN2</strong> – The second addendend.</p></li>
+<li><p>…</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The sum of all inputs.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.AdderBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#AdderBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.AdderBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.AdderBlock.getNumberOfInputs">
+<span class="sig-name descname"><span class="pre">getNumberOfInputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#AdderBlock.getNumberOfInputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.AdderBlock.getNumberOfInputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the total number of input ports.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.ProductBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">ProductBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfInputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#ProductBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.ProductBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>The product block will multiply all the inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>numberOfInputs</strong> (<em>int</em>) – The amount of input ports.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The first factor.</p></li>
+<li><p><strong>IN2</strong> – The second factor.</p></li>
+<li><p>…</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The product of all inputs.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.ProductBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#ProductBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.ProductBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.ProductBlock.getNumberOfInputs">
+<span class="sig-name descname"><span class="pre">getNumberOfInputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#ProductBlock.getNumberOfInputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.ProductBlock.getNumberOfInputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the total number of input ports.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.ModuloBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">ModuloBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#ModuloBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.ModuloBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>A basic block that computes the modulo division, w.r.t. the C-standard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The dividend.</p></li>
+<li><p><strong>IN2</strong> – The divisor.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The remainder after division.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3.8/library/math.html#math.fmod">math.fmod</a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.ModuloBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#ModuloBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.ModuloBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.ModuloBlock.defaultInputPortNameIdentifier">
+<span class="sig-name descname"><span class="pre">defaultInputPortNameIdentifier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#ModuloBlock.defaultInputPortNameIdentifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.ModuloBlock.defaultInputPortNameIdentifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Algorithm that identifies which input port name to select if no input port name
+is provided for a link/connection.</p>
+<p>Be default, all ports with name <code class="code docutils literal notranslate"><span class="pre">INx</span></code> are analyzed, where <code class="code docutils literal notranslate"><span class="pre">x</span></code> identifies
+an integer of the auto-increment port.
+E.g. if the last connected port was <code class="code docutils literal notranslate"><span class="pre">IN1</span></code>, <code class="code docutils literal notranslate"><span class="pre">IN2</span></code> will be returned (if
+there is no incoming connection yet).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The new input port.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.RootBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">RootBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-30</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#RootBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.RootBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>A basic block that computes the <code class="code docutils literal notranslate"><span class="pre">IN2</span></code>-th root of <code class="code docutils literal notranslate"><span class="pre">IN1</span></code>.
+Hence,</p>
+<div class="math notranslate nohighlight">
+\[OUT1 = \sqrt[IN2]{IN1}\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>) – The maximal value when to throw a <code class="code docutils literal notranslate"><span class="pre">ZeroDivisionError</span></code>.
+When the input is larger than <code class="code docutils literal notranslate"><span class="pre">tolerance</span></code>, no error
+will be thrown. Defaults to <code class="code docutils literal notranslate"><span class="pre">1e-30</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The radicand.</p></li>
+<li><p><strong>IN2</strong> – The root index.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The <code class="code docutils literal notranslate"><span class="pre">IN2</span></code>-th root of <code class="code docutils literal notranslate"><span class="pre">IN1</span></code>.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ZeroDivisionError</strong> – When the input is less than <code class="code docutils literal notranslate"><span class="pre">tolerance</span></code>.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.RootBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#RootBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.RootBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.RootBlock.defaultInputPortNameIdentifier">
+<span class="sig-name descname"><span class="pre">defaultInputPortNameIdentifier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#RootBlock.defaultInputPortNameIdentifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.RootBlock.defaultInputPortNameIdentifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Algorithm that identifies which input port name to select if no input port name
+is provided for a link/connection.</p>
+<p>Be default, all ports with name <code class="code docutils literal notranslate"><span class="pre">INx</span></code> are analyzed, where <code class="code docutils literal notranslate"><span class="pre">x</span></code> identifies
+an integer of the auto-increment port.
+E.g. if the last connected port was <code class="code docutils literal notranslate"><span class="pre">IN1</span></code>, <code class="code docutils literal notranslate"><span class="pre">IN2</span></code> will be returned (if
+there is no incoming connection yet).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The new input port.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.PowerBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">PowerBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#PowerBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.PowerBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>A basic block that computes the <code class="code docutils literal notranslate"><span class="pre">IN2</span></code>-th power of <code class="code docutils literal notranslate"><span class="pre">IN1</span></code>.
+Hence,</p>
+<div class="math notranslate nohighlight">
+\[OUT1 = IN1^{IN2}\]</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The base.</p></li>
+<li><p><strong>IN2</strong> – The exponent.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The <code class="code docutils literal notranslate"><span class="pre">IN2</span></code>-th power of <code class="code docutils literal notranslate"><span class="pre">IN1</span></code>.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.PowerBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#PowerBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.PowerBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.PowerBlock.defaultInputPortNameIdentifier">
+<span class="sig-name descname"><span class="pre">defaultInputPortNameIdentifier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#PowerBlock.defaultInputPortNameIdentifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.PowerBlock.defaultInputPortNameIdentifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Algorithm that identifies which input port name to select if no input port name
+is provided for a link/connection.</p>
+<p>Be default, all ports with name <code class="code docutils literal notranslate"><span class="pre">INx</span></code> are analyzed, where <code class="code docutils literal notranslate"><span class="pre">x</span></code> identifies
+an integer of the auto-increment port.
+E.g. if the last connected port was <code class="code docutils literal notranslate"><span class="pre">IN1</span></code>, <code class="code docutils literal notranslate"><span class="pre">IN2</span></code> will be returned (if
+there is no incoming connection yet).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The new input port.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.AbsBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">AbsBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#AbsBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.AbsBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>The abs block will output the absolute value of the input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><p><strong>IN1</strong> – The input.</p>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The absolute value of the input.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.AbsBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#AbsBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.AbsBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.IntBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">IntBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#IntBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.IntBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>The int block will output the integer value (floored) of the input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><p><strong>IN1</strong> – The input.</p>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The integer (i.e., floored) value of the input.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.IntBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#IntBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.IntBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.ClampBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">ClampBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#ClampBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.ClampBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>The clamp block will clamp the input between <code class="code docutils literal notranslate"><span class="pre">min</span></code> and <code class="code docutils literal notranslate"><span class="pre">max</span></code>.
+A <code class="code docutils literal notranslate"><span class="pre">clamp</span></code> function is sometimes also known as a <code class="code docutils literal notranslate"><span class="pre">limiter</span></code> or
+<code class="code docutils literal notranslate"><span class="pre">saturation</span></code> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>min</strong> (<em>numeric</em>) – The minimal value.</p></li>
+<li><p><strong>max</strong> (<em>numeric</em>) – The maximal value.</p></li>
+<li><p><strong>use_const</strong> (<em>bool</em>) – When <code class="code docutils literal notranslate"><span class="pre">True</span></code>, the <code class="xref py py-attr docutils literal notranslate"><span class="pre">min</span></code> and <code class="xref py py-attr docutils literal notranslate"><span class="pre">max</span></code>
+values will be used. Otherwise, the minimal and
+maximal values are expected as inputs 2 and 3,
+respectively.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The signal to clamp.</p></li>
+<li><p><strong>IN2</strong> – The minimal value. Only available when <code class="code docutils literal notranslate"><span class="pre">use_const</span></code>
+is <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>IN3</strong> – The maximal value. Only available when <code class="code docutils literal notranslate"><span class="pre">use_const</span></code>
+is <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The clamped value.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.ClampBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#ClampBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.ClampBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.ClampBlock.defaultInputPortNameIdentifier">
+<span class="sig-name descname"><span class="pre">defaultInputPortNameIdentifier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#ClampBlock.defaultInputPortNameIdentifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.ClampBlock.defaultInputPortNameIdentifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Algorithm that identifies which input port name to select if no input port name
+is provided for a link/connection.</p>
+<p>Be default, all ports with name <code class="code docutils literal notranslate"><span class="pre">INx</span></code> are analyzed, where <code class="code docutils literal notranslate"><span class="pre">x</span></code> identifies
+an integer of the auto-increment port.
+E.g. if the last connected port was <code class="code docutils literal notranslate"><span class="pre">IN1</span></code>, <code class="code docutils literal notranslate"><span class="pre">IN2</span></code> will be returned (if
+there is no incoming connection yet).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The new input port.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.GenericBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">GenericBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_operator</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#GenericBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.GenericBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>The generic block will evaluate an operator on the input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>block_operator</strong> (<em>str</em>) – The name (string) of a single-argument Python
+function that is available in the <code class="xref py py-mod docutils literal notranslate"><span class="pre">math</span></code>
+module. Defaults to <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><p><strong>IN1</strong> – The signal to transform.</p>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The input to which the operation was applied.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Multi-argument functions cannot be used.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When the CBD model is exported to be used in another simulator (e.g.,
+FMUs, plain C…), it is possible the function does not exist in the
+corresponding mathematics libraries. It is up to the user to ensure
+correctness in this case.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3.8/library/math.html">Python math module</a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.GenericBlock.getBlockOperator">
+<span class="sig-name descname"><span class="pre">getBlockOperator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#GenericBlock.getBlockOperator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.GenericBlock.getBlockOperator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the block operator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.GenericBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#GenericBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.GenericBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.MinBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">MinBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfInputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#MinBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.MinBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>The min block will output the minimal value of all its inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>numberOfInputs</strong> (<em>int</em>) – The amount of input ports. Defaults to 2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The first input.</p></li>
+<li><p><strong>IN2</strong> – The second input.</p></li>
+<li><p>…</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The minimal value of all inputs.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.MinBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#MinBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.MinBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.MinBlock.getNumberOfInputs">
+<span class="sig-name descname"><span class="pre">getNumberOfInputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#MinBlock.getNumberOfInputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.MinBlock.getNumberOfInputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the total number of input ports.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.MaxBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">MaxBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfInputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#MaxBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.MaxBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>The max block will output the maximal value of all its inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>numberOfInputs</strong> (<em>int</em>) – The amount of input ports. Defaults to 2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The first input.</p></li>
+<li><p><strong>IN2</strong> – The second input.</p></li>
+<li><p>…</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The maximal value of all inputs.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.MaxBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#MaxBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.MaxBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.MaxBlock.getNumberOfInputs">
+<span class="sig-name descname"><span class="pre">getNumberOfInputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#MaxBlock.getNumberOfInputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.MaxBlock.getNumberOfInputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the total number of input ports.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.LessThanBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">LessThanBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#LessThanBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.LessThanBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>A simple block that will test if <code class="code docutils literal notranslate"><span class="pre">IN1</span></code> is smaller than <code class="code docutils literal notranslate"><span class="pre">IN2</span></code>.
+This block will output a <em>falsy</em> or <em>truthy</em> value (i.e., 0 or 1), based on the signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The value that will be tested to be smaller.</p></li>
+<li><p><strong>IN2</strong> – The value that will be tested to be larger.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – Yields a 1 when <code class="code docutils literal notranslate"><span class="pre">IN1</span></code> is smaller than <code class="code docutils literal notranslate"><span class="pre">IN2</span></code>, otherwise 0.
+In Python, 0 is a <em>falsy</em> value and can therefore be used as boolean check, or as computation
+value for other equation in the CBD. Similaryly, 1 is a <em>truthy</em> value.</p>
+</dd>
+</dl>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>To check the “greater than” relationship, you can swap the <code class="code docutils literal notranslate"><span class="pre">IN1</span></code> and <code class="code docutils literal notranslate"><span class="pre">IN2</span></code> inputs
+around.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#truth-value-testing">Truthy and Falsy values in Python</a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.LessThanBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#LessThanBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.LessThanBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.LessThanBlock.defaultInputPortNameIdentifier">
+<span class="sig-name descname"><span class="pre">defaultInputPortNameIdentifier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#LessThanBlock.defaultInputPortNameIdentifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.LessThanBlock.defaultInputPortNameIdentifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Algorithm that identifies which input port name to select if no input port name
+is provided for a link/connection.</p>
+<p>Be default, all ports with name <code class="code docutils literal notranslate"><span class="pre">INx</span></code> are analyzed, where <code class="code docutils literal notranslate"><span class="pre">x</span></code> identifies
+an integer of the auto-increment port.
+E.g. if the last connected port was <code class="code docutils literal notranslate"><span class="pre">IN1</span></code>, <code class="code docutils literal notranslate"><span class="pre">IN2</span></code> will be returned (if
+there is no incoming connection yet).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The new input port.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.EqualsBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">EqualsBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#EqualsBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.EqualsBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>A simple block that will test if <code class="code docutils literal notranslate"><span class="pre">IN1</span></code> equals <code class="code docutils literal notranslate"><span class="pre">IN2</span></code>.
+This block will output a <em>falsy</em> or <em>truthy</em> value (i.e., 0 or 1), based on the signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The first value.</p></li>
+<li><p><strong>IN2</strong> – The second value.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – Yields a 1 when <code class="code docutils literal notranslate"><span class="pre">IN1</span></code> equals <code class="code docutils literal notranslate"><span class="pre">IN2</span></code>, otherwise 0.
+In Python, 0 is a <em>falsy</em> value and can therefore be used as boolean check, or as computation
+value for other equation in the CBD. Similaryly, 1 is a <em>truthy</em> value.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#truth-value-testing">Truthy and Falsy values in Python</a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.EqualsBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#EqualsBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.EqualsBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.LessThanOrEqualsBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">LessThanOrEqualsBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#LessThanOrEqualsBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.LessThanOrEqualsBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>A simple block that will test if <code class="code docutils literal notranslate"><span class="pre">IN1</span></code> is smaller than or equal to <code class="code docutils literal notranslate"><span class="pre">IN2</span></code>.
+This block will output a <em>falsy</em> or <em>truthy</em> value (i.e., 0 or 1), based on the signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The value that will be tested to be smaller (or equal).</p></li>
+<li><p><strong>IN2</strong> – The value that will be tested to be larger (or equal).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – Yields a 1 when <code class="code docutils literal notranslate"><span class="pre">IN1</span></code> is smaller than or equal to <code class="code docutils literal notranslate"><span class="pre">IN2</span></code>, otherwise 0.
+In Python, 0 is a <em>falsy</em> value and can therefore be used as boolean check, or as computation
+value for other equation in the CBD. Similaryly, 1 is a <em>truthy</em> value.</p>
+</dd>
+</dl>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>To check the “greater than or equal” relationship, you can swap the <code class="code docutils literal notranslate"><span class="pre">IN1</span></code> and <code class="code docutils literal notranslate"><span class="pre">IN2</span></code> inputs
+around.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#truth-value-testing">Truthy and Falsy values in Python</a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.LessThanOrEqualsBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#LessThanOrEqualsBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.LessThanOrEqualsBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.LessThanOrEqualsBlock.defaultInputPortNameIdentifier">
+<span class="sig-name descname"><span class="pre">defaultInputPortNameIdentifier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#LessThanOrEqualsBlock.defaultInputPortNameIdentifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.LessThanOrEqualsBlock.defaultInputPortNameIdentifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Algorithm that identifies which input port name to select if no input port name
+is provided for a link/connection.</p>
+<p>Be default, all ports with name <code class="code docutils literal notranslate"><span class="pre">INx</span></code> are analyzed, where <code class="code docutils literal notranslate"><span class="pre">x</span></code> identifies
+an integer of the auto-increment port.
+E.g. if the last connected port was <code class="code docutils literal notranslate"><span class="pre">IN1</span></code>, <code class="code docutils literal notranslate"><span class="pre">IN2</span></code> will be returned (if
+there is no incoming connection yet).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The new input port.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.NotBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">NotBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#NotBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.NotBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>A simple block that will (boolean) invert <code class="code docutils literal notranslate"><span class="pre">IN1</span></code>. This is similar to the <code class="code docutils literal notranslate"><span class="pre">not</span></code>
+operator in programming.
+This block expects a <em>falsy</em> or <em>truthy</em> value and outputs the (boolean) inverse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><p><strong>IN1</strong> – The value that will be (boolean) inverted.</p>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – Yields a 1 when <code class="code docutils literal notranslate"><span class="pre">IN1</span></code> is <em>falsy</em> and 0 when it’s <em>truthy</em>.
+In Python, 0 is a <em>falsy</em> value and can therefore be used as boolean check, or as computation
+value for other equation in the CBD. Similaryly, 1 is a <em>truthy</em> value.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#truth-value-testing">Truthy and Falsy values in Python</a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.NotBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#NotBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.NotBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.OrBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">OrBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfInputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#OrBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.OrBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>A simple block that will apply the <code class="code docutils literal notranslate"><span class="pre">or</span></code> operator to multiple inputs.
+This block expects and returns <em>falsy</em> and/or <em>truthy</em> values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>numberOfInputs</strong> (<em>int</em>) – The amount of inputs. Defaults to 2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The first input.</p></li>
+<li><p><strong>IN2</strong> – The second input.</p></li>
+<li><p>…</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – Yields a 1 when at least one of the inputs is <em>truthy</em>. Otherwise, 0.
+In Python, 0 is a <em>falsy</em> value and can therefore be used as boolean check, or as computation
+value for other equation in the CBD. Similaryly, 1 is a <em>truthy</em> value.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#truth-value-testing">Truthy and Falsy values in Python</a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.OrBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#OrBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.OrBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.OrBlock.getNumberOfInputs">
+<span class="sig-name descname"><span class="pre">getNumberOfInputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#OrBlock.getNumberOfInputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.OrBlock.getNumberOfInputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the total number of input ports.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.AndBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">AndBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfInputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#AndBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.AndBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>A simple block that will apply the <code class="code docutils literal notranslate"><span class="pre">and</span></code> operator to multiple inputs.
+This block expects and returns <em>falsy</em> and/or <em>truthy</em> values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>numberOfInputs</strong> (<em>int</em>) – The amount of inputs. Defaults to 2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The first input.</p></li>
+<li><p><strong>IN2</strong> – The second input.</p></li>
+<li><p>…</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – Yields a 1 when all inputs are <em>truthy</em>. Otherwise, 0.
+In Python, 0 is a <em>falsy</em> value and can therefore be used as boolean check, or as computation
+value for other equation in the CBD. Similaryly, 1 is a <em>truthy</em> value.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#truth-value-testing">Truthy and Falsy values in Python</a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.AndBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#AndBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.AndBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.AndBlock.getNumberOfInputs">
+<span class="sig-name descname"><span class="pre">getNumberOfInputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#AndBlock.getNumberOfInputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.AndBlock.getNumberOfInputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the total number of input ports.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.MultiplexerBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">MultiplexerBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfInputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#MultiplexerBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.MultiplexerBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>The multiplexer block will output the signal from an input, based on the index
+<code class="code docutils literal notranslate"><span class="pre">select</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>numberOfInputs</strong> (<em>int</em>) – The amount of input ports to choose from. Defaults to 2.</p></li>
+<li><p><strong>zero</strong> (<em>bool</em>) – When <code class="code docutils literal notranslate"><span class="pre">True</span></code>, the index is zero-based. Otherwise,
+the <code class="code docutils literal notranslate"><span class="pre">select</span></code> signal is interpreted as 1-indexed.
+Defaults to <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>select</strong> – The input index to choose from. When out of range, an exception
+is thrown.</p></li>
+<li><p><strong>IN1</strong> – The first option.</p></li>
+<li><p><strong>IN2</strong> – The second option.</p></li>
+<li><p>…</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The input to which the operation was applied.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>IndexError</strong> – When the <code class="code docutils literal notranslate"><span class="pre">select</span></code> input is out of range.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This block is not optimized in the simulator. Even though there can be a part of the
+block that is not necessary to be computed, the dependency graph still includes both
+inputs. While this is a definite optimization, recomputing the dependency graph at
+each iteration is much less ideal.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.MultiplexerBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#MultiplexerBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.MultiplexerBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.MultiplexerBlock.getNumberOfInputs">
+<span class="sig-name descname"><span class="pre">getNumberOfInputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#MultiplexerBlock.getNumberOfInputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.MultiplexerBlock.getNumberOfInputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the number of input ports to choose from.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.MultiplexerBlock.defaultInputPortNameIdentifier">
+<span class="sig-name descname"><span class="pre">defaultInputPortNameIdentifier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#MultiplexerBlock.defaultInputPortNameIdentifier"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.MultiplexerBlock.defaultInputPortNameIdentifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Algorithm that identifies which input port name to select if no input port name
+is provided for a link/connection.</p>
+<p>Be default, all ports with name <code class="code docutils literal notranslate"><span class="pre">INx</span></code> are analyzed, where <code class="code docutils literal notranslate"><span class="pre">x</span></code> identifies
+an integer of the auto-increment port.
+E.g. if the last connected port was <code class="code docutils literal notranslate"><span class="pre">IN1</span></code>, <code class="code docutils literal notranslate"><span class="pre">IN2</span></code> will be returned (if
+there is no incoming connection yet).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The new input port.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.SplitBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">SplitBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numberOfOutputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#SplitBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.SplitBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>The split block will split a signal over multiple paths.
+While this block can generally be omitted, it may still be used for clarity
+and clean-ness of the models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>numberOfOutputs</strong> (<em>int</em>) – The amount of paths to split into. Defaults to 2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><p><strong>IN1</strong> – The signal.</p>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>OUT1</strong> – The first output.</p></li>
+<li><p><strong>OUT2</strong> – The second output.</p></li>
+<li><p>…</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.SplitBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#SplitBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.SplitBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.SplitBlock.getNumberOfOutputs">
+<span class="sig-name descname"><span class="pre">getNumberOfOutputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#SplitBlock.getNumberOfOutputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.SplitBlock.getNumberOfOutputs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the total number of output ports.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.DelayBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">DelayBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#DelayBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.DelayBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>A block that delays the input for one iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The input.</p></li>
+<li><p><strong>IC</strong> – The value to output at iteration 0 (i.e., the first iteration).</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – Outputs the input of the previous iteration.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The delay block is the only base block that alters the default behaviour
+of the dependency graph, because of the difference at iteration 0 and
+iteration 1.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The block delays based on an iteration, not on a specific time-delay.
+When using adaptive stepsize simulation (either in the CBD simulator,
+or when exported), this block may be the cause for errors.</p>
+<p>For fixed step-size iterations, this block’s behaviour is predictable,
+however, in adaptive stepsize, it may be more complicated. You may need
+to use the <a class="reference internal" href="#pyCBD.lib.std.DeltaTBlock" title="pyCBD.lib.std.DeltaTBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">DeltaTBlock</span></code></a> for <em>frame-independent logic</em> (as it is
+called in the videogame-world) to ensure correct behaviour.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://drewcampbell92.medium.com/understanding-delta-time-b53bf4781a03">https://drewcampbell92.medium.com/understanding-delta-time-b53bf4781a03</a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.DelayBlock.getDependencies">
+<span class="sig-name descname"><span class="pre">getDependencies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#DelayBlock.getDependencies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.DelayBlock.getDependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to help the creation of the dependency graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The current simulation’s iteration, for which
+the dependency graph must be constructed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ports that must be computed in order to compute this block,
+at the time of the iteration.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.DelayBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#DelayBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.DelayBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.DeltaTBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">DeltaTBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#DeltaTBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.DeltaTBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>Helperblock that will always output the current time delta, even when using
+adaptive step-size simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>min</strong> (<em>numeric</em>) – The minimal value of the allowed delta T. Note that
+setting this argument will result in possibly invalid
+results. Defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Output Ports</dt>
+<dd class="field-even"><p><strong>OUT1</strong> – The current time-delta.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Technically, this block is extraneous, as it re-uses information from
+the <a class="reference internal" href="#pyCBD.lib.std.Clock" title="pyCBD.lib.std.Clock"><code class="xref py py-class docutils literal notranslate"><span class="pre">Clock</span></code></a>. However, it is meant to simplify the usage of time
+in CBD models. In general, this block is therefore preferred over the
+<code class="code docutils literal notranslate"><span class="pre">Clock</span></code> (unless you really know what you’re doing).</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>For fixed step-size iterations, you may need to use this block for
+<em>frame-independent logic</em> (as it is called in the videogame-world)
+to ensure correct behaviour.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#pyCBD.lib.std.TimeBlock" title="pyCBD.lib.std.TimeBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeBlock</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pyCBD.lib.std.Clock" title="pyCBD.lib.std.Clock"><code class="xref py py-class docutils literal notranslate"><span class="pre">Clock</span></code></a></p></li>
+<li><p><a class="reference external" href="https://drewcampbell92.medium.com/understanding-delta-time-b53bf4781a03">https://drewcampbell92.medium.com/understanding-delta-time-b53bf4781a03</a></p></li>
+</ul>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.DeltaTBlock.getValue">
+<span class="sig-name descname"><span class="pre">getValue</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#DeltaTBlock.getValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.DeltaTBlock.getValue" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the current time delta.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.DeltaTBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#DeltaTBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.DeltaTBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.TimeBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">TimeBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#TimeBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.TimeBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>Obtains the (current) absolute and relative time of the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p>
+</dd>
+<dt class="field-even">Output Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>OUT1</strong> – The absolute simulation time.</p></li>
+<li><p><strong>relative</strong> – The relative current simulation time. If the simulation
+started at a time <span class="math notranslate nohighlight">\(t\)</span> <span class="math notranslate nohighlight">\((t &gt; 0)\)</span>, this equals
+<code class="code docutils literal notranslate"><span class="pre">OUT1</span></code> - <span class="math notranslate nohighlight">\(t\)</span>.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Technically, this block is extraneous, as it re-uses information from
+the <a class="reference internal" href="#pyCBD.lib.std.Clock" title="pyCBD.lib.std.Clock"><code class="xref py py-class docutils literal notranslate"><span class="pre">Clock</span></code></a>. However, it is meant to simplify the usage of time
+in CBD models. In general, this block is therefore preferred over the
+<code class="code docutils literal notranslate"><span class="pre">Clock</span></code> (unless you really know what you’re doing).</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#pyCBD.lib.std.DeltaTBlock" title="pyCBD.lib.std.DeltaTBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">DeltaTBlock</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pyCBD.lib.std.Clock" title="pyCBD.lib.std.Clock"><code class="xref py py-class docutils literal notranslate"><span class="pre">Clock</span></code></a></p></li>
+</ul>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.TimeBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#TimeBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.TimeBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.LoggingBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">LoggingBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lev</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CBD'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#LoggingBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.LoggingBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>A simple logging block that logs a string if the input is <em>truthy</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>string</strong> (<em>str</em>) – The string to log.</p></li>
+<li><p><strong>lev</strong> (<em>int</em>) – The level at which to log. Defaults to <code class="xref py py-data docutils literal notranslate"><span class="pre">logging.WARNING</span></code>.</p></li>
+<li><p><strong>logger</strong> (<em>str</em>) – The name of the logger. Defaults to <code class="code docutils literal notranslate"><span class="pre">CBDLogger</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><p><strong>IN1</strong> – The input.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#truth-value-testing">Truthy and Falsy values in Python</a></p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.LoggingBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#LoggingBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.LoggingBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.AddOneBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">AddOneBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#AddOneBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.AddOneBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.CBD" title="pyCBD.Core.CBD"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.CBD</span></code></a></p>
+<p>Helperblock that adds 1 to the input. It is included as an example on how to
+create custom CBD blocks, while also really useful (it is used often for MUX).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><p><strong>IN1</strong> – The input.</p>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The input + 1.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.DerivatorBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">DerivatorBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#DerivatorBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.DerivatorBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.CBD" title="pyCBD.Core.CBD"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.CBD</span></code></a></p>
+<p>The derivator block is a CBD that calculates the derivative,
+using the backwards formula.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.4: </span>Replaced <strong>delta_t</strong> input port with internal <a class="reference internal" href="#pyCBD.lib.std.DeltaTBlock" title="pyCBD.lib.std.DeltaTBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">DeltaTBlock</span></code></a>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The input.</p></li>
+<li><p><strong>IC</strong> – The initial condition. I.e., this value is outputted
+at iteration 0.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The derivative of the input.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.IntegratorBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">IntegratorBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#IntegratorBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.IntegratorBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.CBD" title="pyCBD.Core.CBD"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.CBD</span></code></a></p>
+<p>The integrator block is a CBD that calculates the integration.
+The block is implemented according to the backwards Euler rule.</p>
+<div class="versionchanged">
+<p><span class="versionmodified changed">Changed in version 1.4: </span>Replaced <strong>delta_t</strong> input port with internal <a class="reference internal" href="#pyCBD.lib.std.DeltaTBlock" title="pyCBD.lib.std.DeltaTBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">DeltaTBlock</span></code></a>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>IN1</strong> – The input.</p></li>
+<li><p><strong>IC</strong> – The initial condition. I.e., this value is outputted
+at iteration 0.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><p><strong>OUT1</strong> – The integral of the input.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.Clock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">Clock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#Clock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.Clock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>System clock. <strong>Must be present in a simulation model.</strong></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>start_delta</strong> (<em>float</em>) – Time delta at the start of the simulation. Defaults to 0.1.</p></li>
+<li><p><strong>start_time</strong> (<em>float</em>) – Time at which the simulation starts. Defaults to 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Input Ports</dt>
+<dd class="field-even"><dl class="simple">
+<dt><strong>h</strong> – The delta for the next iteration. I.e., the time to wait until the next</dt><dd><p>iteration can be computed.</p>
+</dd>
+</dl>
+</dd>
+<dt class="field-odd">Output Ports</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> – The current simulation time.</p></li>
+<li><p><strong>rel_time</strong> – The relative simulation time, ignoring the start time.</p></li>
+<li><p><strong>delta_t</strong> – The current delta.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Clock Usage Assumption:</strong> When adding a (custom) clock to your model(s),
+its outputs will always represent the (relative) simulated time and time-delta,
+independent of the simulation algorithm used. I.e., changing the delay of a
+fixed-rate clock should only influence the accuracy of the signals, <strong>not</strong>
+the correctness of the signals. It is forbidden to misuse these outputs for
+specific simulations (e.g., using the <code class="code docutils literal notranslate"><span class="pre">time</span></code> as a counter, assuming
+<code class="code docutils literal notranslate"><span class="pre">delta_t</span></code> is a constant value…).</p>
+<p>In other words, the clock is guaranteed to output a correct value and should
+only be used in the context of “time”. When exporting the CBD model to other
+formalisms/simulators, the Clock’s outputs should be replaced with the
+corresponding simulator’s clock without loss of generality.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#pyCBD.lib.std.TimeBlock" title="pyCBD.lib.std.TimeBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">TimeBlock</span></code></a></p></li>
+<li><p><a class="reference internal" href="#pyCBD.lib.std.DeltaTBlock" title="pyCBD.lib.std.DeltaTBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">DeltaTBlock</span></code></a></p></li>
+</ul>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.Clock.getDependencies">
+<span class="sig-name descname"><span class="pre">getDependencies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#Clock.getDependencies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.Clock.getDependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper function to help the creation of the dependency graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The current simulation’s iteration, for which
+the dependency graph must be constructed.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of ports that must be computed in order to compute this block,
+at the time of the iteration.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.Clock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#Clock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.Clock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.Clock.getStartTime">
+<span class="sig-name descname"><span class="pre">getStartTime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#Clock.getStartTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.Clock.getStartTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the starting time of the model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.Clock.getTime">
+<span class="sig-name descname"><span class="pre">getTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#Clock.getTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.Clock.getTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the time of the clock at a certain iteration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIt</strong> (<em>int</em>) – The iteration to look at.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.Clock.getRelativeTime">
+<span class="sig-name descname"><span class="pre">getRelativeTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#Clock.getRelativeTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.Clock.getRelativeTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the relative simulation time (ignoring the start time).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIt</strong> (<em>int</em>) – The iteration to look at.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.Clock.setStartTime">
+<span class="sig-name descname"><span class="pre">setStartTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#Clock.setStartTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.Clock.setStartTime" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.Clock.setDeltaT">
+<span class="sig-name descname"><span class="pre">setDeltaT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#Clock.setDeltaT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.Clock.setDeltaT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.Clock.getDeltaT">
+<span class="sig-name descname"><span class="pre">getDeltaT</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#Clock.getDeltaT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.Clock.getDeltaT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.Clock.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#Clock.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.Clock.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the clock. Required for restarting a simulation.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.std.SequenceBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.std.</span></span><span class="sig-name descname"><span class="pre">SequenceBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sequence</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#SequenceBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.SequenceBlock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>A simple sequence block. Will output the sequence iteratively.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>sequence</strong> (<em>iter</em>) – The sequence that needs to be outputted.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Output Ports</dt>
+<dd class="field-even"><p><strong>OUT1</strong> – The values from the sequence.</p>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Preferably only use this block in the tests!</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.std.SequenceBlock.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/std.html#SequenceBlock.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.std.SequenceBlock.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pyCBD.html">pyCBD package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pyCBD.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="pyCBD.lib.html">Standard CBD Library (BBL)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.html">pyCBD.realtime package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.tracers.html">pyCBD.tracers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.converters.html">pyCBD.converters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.loopsolvers.html">pyCBD.loopsolvers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.state_events.html">pyCBD.state_events module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.preprocessing.html">pyCBD.preprocessing package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="pyCBD.lib.html"
+                          title="previous chapter">Standard CBD Library (BBL)</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="pyCBD.lib.io.html"
+                          title="next chapter">pyCBD.lib.io module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.lib.io.html" title="pyCBD.lib.io module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.lib.html" title="Standard CBD Library (BBL)"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" >pyCBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="pyCBD.lib.html" >Standard CBD Library (BBL)</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.lib.std module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,301 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Realtime Simulation &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/math.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Live Plotting of Data During the Simulation" href="LivePlot.html" />
+    <link rel="prev" title="Linear Congruential Generator" href="LCG.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="LivePlot.html" title="Live Plotting of Data During the Simulation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="LCG.html" title="Linear Congruential Generator"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Realtime Simulation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="realtime-simulation">
+<h1>Realtime Simulation<a class="headerlink" href="#realtime-simulation" title="Permalink to this headline">¶</a></h1>
+<p>Besides normal (as-fast-as-possible) simulation, it is also possible to simulate CBD models in realtime. Here, the
+time (and therefore <cite>delta t</cite> as well) will be interpreted as seconds and the simulator will wait <strong>non-blocking</strong>
+until the required time has passed. There are several supported backend that provide this functionality. These
+backends are based on the backends provided by <a class="reference external" href="https://msdl.uantwerpen.be/documentation/PythonPDEVS/realtime.html">PyPDEVS</a>.</p>
+<p>While there doesn’t have to be feedback duing a simulation, the <code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.simulator.Simulator.setProgressBar()</span></code>
+function provides a <a class="reference external" href="https://tqdm.github.io/">tqdm progress bar</a>. When running long simulations, this might
+be a useful feature. Note that, when combined with a termination condition, the progress bar may yield inaccurate
+values.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>When using progress bars, <a class="reference external" href="https://tqdm.github.io/">tqdm</a> must be installed.</p></li>
+<li><p>In <a class="reference internal" href="LivePlot.html"><span class="doc">Live Plotting of Data During the Simulation</span></a>, realtime simulation is used together with a variation of the <a class="reference internal" href="SinGen.html"><span class="doc">Sine Generator</span></a> example.</p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Unlike <a class="reference external" href="https://msdl.uantwerpen.be/documentation/PythonPDEVS/realtime.html">PyPDEVS</a>, interrupt events are not possible. However, as can be seen in the <a class="reference internal" href="Dashboard.html"><span class="doc">TkInter Dashboard with Editable Values</span></a>
+example, the <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.ConstantBlock</span></code> allows for altering the internal value it outputs
+<strong>during</strong> the simulation. This mechanism may be manipulated to allow for external interrupts if
+necessary.</p>
+</div>
+<section id="example-model">
+<h2>Example Model<a class="headerlink" href="#example-model" title="Permalink to this headline">¶</a></h2>
+<p>To simplify the explanations of the following sections, we will be using the <a class="reference internal" href="SinGen.html"><span class="doc">Sine Generator</span></a> as a basis model.
+To recap:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.Core</span> <span class="kn">import</span> <span class="n">CBD</span>
+<span class="kn">from</span> <span class="nn">CBD.simulator</span> <span class="kn">import</span> <span class="n">Simulator</span>
+<span class="kn">from</span> <span class="nn">CBD.lib.std</span> <span class="kn">import</span> <span class="n">TimeBlock</span><span class="p">,</span> <span class="n">GenericBlock</span>
+<span class="kn">from</span> <span class="nn">CBD.lib.endpoints</span> <span class="kn">import</span> <span class="n">SignalCollectorBlock</span>
+
+<span class="k">class</span> <span class="nc">SinGen</span><span class="p">(</span><span class="n">CBD</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;SinGen&quot;</span><span class="p">):</span>
+        <span class="n">CBD</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">input_ports</span><span class="o">=</span><span class="p">[],</span> <span class="n">output_ports</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="c1"># Create the blocks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">TimeBlock</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">GenericBlock</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="n">block_operator</span><span class="o">=</span><span class="s2">&quot;sin&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">SignalCollectorBlock</span><span class="p">(</span><span class="s2">&quot;collector&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Connect the blocks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;sin&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="s2">&quot;collector&quot;</span><span class="p">)</span>
+
+<span class="n">sinGen</span> <span class="o">=</span> <span class="n">SinGen</span><span class="p">(</span><span class="s2">&quot;SinGen&quot;</span><span class="p">)</span>
+<span class="n">sim</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span><span class="n">sinGen</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setRealTime</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Realtime simulation happens non-blocking. This means the <code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.simulator.Simulator.run()</span></code> method will be called
+asynchronously. Additionally, simulation runs as a daemon thread, so exiting the main thread will automatically
+terminate the simulation. To keep the script alive until after the simulation, you can use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">while</span> <span class="n">sim</span><span class="o">.</span><span class="n">is_running</span><span class="p">():</span>
+    <span class="k">pass</span>
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+</section>
+<section id="python-threading-backend">
+<h2>Python Threading Backend<a class="headerlink" href="#python-threading-backend" title="Permalink to this headline">¶</a></h2>
+<p>The threading (or Python) backend/platform will use the <code class="xref py py-mod docutils literal notranslate"><span class="pre">threading</span></code> module for delaying the simulation steps.
+This is the default simulation backend.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Python threads can sometimes have a rather low granularity in CPython 2. So while we are simulating in soft
+realtime anyway, it is important to note that delays could potentially become significant.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span><span class="o">.</span><span class="n">setRealTimePlatformThreading</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setDeltaT</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mf">100.0</span><span class="p">)</span>
+
+<span class="c1"># Keep it alive</span>
+<span class="k">while</span> <span class="n">sim</span><span class="o">.</span><span class="n">is_running</span><span class="p">():</span> <span class="k">pass</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FINISHED!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.simulator.Simulator.setRealTimePlatform()</span></code></p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.simulator.Simulator.setRealTimePlatformThreading()</span></code></p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.simulator.Simulator.is_running()</span></code></p></li>
+</ul>
+</div>
+</section>
+<section id="tkinter-backend">
+<h2>TkInter Backend<a class="headerlink" href="#tkinter-backend" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="https://docs.python.org/3/library/tkinter.html">TkInter</a> event loop can become quite complex, as it is
+required to interface to the GUI as wel as to the simulation. Luckily, this backend will wrap all the complexity
+into a white box. It is, however, required to define the GUI application and start the mainloop, but afterwards,
+all will be handled for you.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">tkinter</span> <span class="k">as</span> <span class="nn">tk</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Tk</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setRealTimePlatformTk</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setDeltaT</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mf">100.0</span><span class="p">)</span>
+<span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FINISHED!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.simulator.Simulator.setRealTimePlatform()</span></code></p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.simulator.Simulator.setRealTimePlatformTk()</span></code></p></li>
+</ul>
+</div>
+</section>
+<section id="gameloop-backend">
+<h2>GameLoop Backend<a class="headerlink" href="#gameloop-backend" title="Permalink to this headline">¶</a></h2>
+<p>Whenever it is required to control the invocation of delays from another execution loop, like e.g. a gameloop,
+it is pertinent to make use of the <cite>GameLoop</cite> backend. Delays won’t happen internally anymore, as they should be
+handled by the execution loop. By making use of the <code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.simulator.Simulator.realtime_gameloop_call()</span></code>, the
+simulation can advance to the next timestep.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">sim</span><span class="o">.</span><span class="n">setRealTimePlatformGameLoop</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setDeltaT</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mf">100.0</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="n">sim</span><span class="o">.</span><span class="n">is_running</span><span class="p">():</span>
+    <span class="c1"># do some fancy computations</span>
+    <span class="o">...</span>
+
+    <span class="c1"># do some rendering</span>
+    <span class="o">...</span>
+
+    <span class="c1"># advance the model&#39;s state</span>
+    <span class="n">sim</span><span class="o">.</span><span class="n">realtime_gameloop_call</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FINISHED!&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The simulation is still variable on the time constraints of your current system. Use the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.threadingGameLoopAlt.ThreadingGameLoopAlt</span></code> instead to fully control the time yourself.
+In this case, the <code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.simulator.Simulator.realtime_gameloop_call()</span></code> requires the simulation time to be
+passed as an argument.</p>
+<p>While this is an option, it is highly encouraged to use the other backends instead. The alternative gameloop
+runs on the bare bones of the simulator, making system invalidities possible when not fully understanding the
+simulator itself. Additionally, exploiting time in a simulation in this way is heavily discouraged and is
+considered to be a bad practice.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.simulator.Simulator.setRealTimePlatform()</span></code></p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.simulator.Simulator.setRealTimePlatformGameLoop()</span></code></p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">CBD.simulator.Simulator.realtime_gameloop_call()</span></code></p></li>
+<li><p><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.threadingGameLoopAlt.ThreadingGameLoopAlt</span></code></p></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Realtime Simulation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example-model">Example Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#python-threading-backend">Python Threading Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tkinter-backend">TkInter Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gameloop-backend">GameLoop Backend</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pyCBD.html">pyCBD package</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="LCG.html"
+                          title="previous chapter">Linear Congruential Generator</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="LivePlot.html"
+                          title="next chapter">Live Plotting of Data During the Simulation</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="LivePlot.html" title="Live Plotting of Data During the Simulation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="LCG.html" title="Linear Congruential Generator"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Realtime Simulation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,917 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CBD.simulator &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/style.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.simulator</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for CBD.simulator</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">threading</span>
+<span class="kn">from</span> <span class="nn">CBD.depGraph</span> <span class="kn">import</span> <span class="n">createDepGraph</span>
+<span class="kn">from</span> <span class="nn">CBD.loopsolvers.linearsolver</span> <span class="kn">import</span> <span class="n">LinearSolver</span>
+<span class="kn">from</span> <span class="nn">CBD.realtime.threadingBackend</span> <span class="kn">import</span> <span class="n">ThreadingBackend</span><span class="p">,</span> <span class="n">Platform</span>
+<span class="kn">from</span> <span class="nn">CBD.scheduling</span> <span class="kn">import</span> <span class="n">TopologicalScheduler</span>
+<span class="kn">from</span> <span class="nn">CBD.tracers</span> <span class="kn">import</span> <span class="n">Tracers</span>
+<span class="kn">from</span> <span class="nn">CBD.state_events.locators</span> <span class="kn">import</span> <span class="n">RegulaFalsiStateEventLocator</span>
+<span class="kn">import</span> <span class="nn">CBD.realtime.accurate_time</span> <span class="k">as</span> <span class="nn">time</span>
+
+<span class="n">_TQDM_FOUND</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">try</span><span class="p">:</span>
+	<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+	<span class="n">_TQDM_FOUND</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="Simulator"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator">[docs]</a><span class="k">class</span> <span class="nc">Simulator</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Simulator for a CBD model. Allows for execution of the simulation.</span>
+<span class="sd">	This class implements the semantics of CBDs.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		model (CBD.Core.CBD):    A :class:`CBD` model to simulate.</span>
+
+<span class="sd">	:Defaults:</span>
+<span class="sd">		The following properties further define the internal mechanisms of</span>
+<span class="sd">		the simulator. As a handy look-up table, all defaults are listed</span>
+<span class="sd">		in the table below. Take a look at the :code:`See Also` column for</span>
+<span class="sd">		more info on the property.</span>
+
+<span class="sd">	.. list-table::</span>
+<span class="sd">	   :widths: 20 40 40</span>
+<span class="sd">	   :header-rows: 1</span>
+
+<span class="sd">	   * - Property</span>
+<span class="sd">	     - Default</span>
+<span class="sd">	     - See Also</span>
+<span class="sd">	   * - real-time?</span>
+<span class="sd">	     - :code:`False`</span>
+<span class="sd">	     - :func:`setRealTime`</span>
+<span class="sd">	   * - real-time scale</span>
+<span class="sd">	     - 1.0</span>
+<span class="sd">	     - :func:`setRealTime`</span>
+<span class="sd">	   * - termination time</span>
+<span class="sd">	     - :code:`float(&#39;inf&#39;)`</span>
+<span class="sd">	     - :func:`setTerminationTime`</span>
+<span class="sd">	   * - termination condition</span>
+<span class="sd">	     - :code:`None`</span>
+<span class="sd">	     - :func:`setTerminationCondition`</span>
+<span class="sd">	   * - scheduler</span>
+<span class="sd">	     - :class:`CBD.scheduling.TopologicalScheduler`</span>
+<span class="sd">	     - :func:`setScheduler`</span>
+<span class="sd">	   * - threading platform (subsystem)</span>
+<span class="sd">	     - :class:`CBD.realtime.threadingPython.threadingPython`</span>
+<span class="sd">	     - :func:`setRealTimePlatform`, :func:`setRealTimePlatformThreading`,</span>
+<span class="sd">	       :func:`setRealTimePlatformTk`, :func:`setRealTimePlatformGameLoop`</span>
+<span class="sd">	   * - progress bar?</span>
+<span class="sd">	     - :code:`False`</span>
+<span class="sd">	     - :func:`setProgressBar`</span>
+<span class="sd">	   * - strong component system solver</span>
+<span class="sd">	     - :class:`CBD.linearsolver.LinearSolver`</span>
+<span class="sd">	     - :func:`setAlgebraicLoopSolver`</span>
+<span class="sd">	   * - state event locator</span>
+<span class="sd">	     - :class:`CBD.state_events.locators.RegulaFalsiStateEventLocator`</span>
+<span class="sd">	     - :func:`setStateEventLocator`</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">__deltaT</span> <span class="o">=</span> <span class="mf">1.0</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__realtime</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__finished</span> <span class="o">=</span> <span class="kc">True</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__stop_requested</span> <span class="o">=</span> <span class="kc">False</span>
+
+		<span class="c1"># scale of time in the simulation.</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__realtime_scale</span> <span class="o">=</span> <span class="mf">1.0</span>
+		<span class="c1"># maximal amount of events with delay 0</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__realtime_counter_max</span> <span class="o">=</span> <span class="mi">100</span>
+		<span class="c1"># current amount of events</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__realtime_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__realtime_counter_max</span>
+		<span class="c1"># Starting time of the simulation</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__realtime_start_time</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">__termination_time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__termination_condition</span> <span class="o">=</span> <span class="kc">None</span>
+
+		<span class="c1"># simulation data [dep graph, strong components, curIt]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+		<span class="c1"># self.__stepsize_backend = Fixed(self.__deltaT)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__scheduler</span> <span class="o">=</span> <span class="n">TopologicalScheduler</span><span class="p">()</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend_subsystem</span> <span class="o">=</span> <span class="n">Platform</span><span class="o">.</span><span class="n">PYTHON</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend_args</span> <span class="o">=</span> <span class="p">[]</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">__progress</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__progress_event</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__progress_finished</span> <span class="o">=</span> <span class="kc">True</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;CBD&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__tracer</span> <span class="o">=</span> <span class="n">Tracers</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">__lasttime</span> <span class="o">=</span> <span class="kc">None</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">__event_bus</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__events</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;started&quot;</span><span class="p">:</span> <span class="p">[],</span>
+			<span class="s2">&quot;finished&quot;</span><span class="p">:</span> <span class="p">[],</span>
+			<span class="s2">&quot;prestep&quot;</span><span class="p">:</span> <span class="p">[],</span>
+			<span class="s2">&quot;poststep&quot;</span><span class="p">:</span> <span class="p">[],</span>
+			<span class="s2">&quot;clock_update&quot;</span><span class="p">:</span> <span class="p">[]</span>
+		<span class="p">}</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">__state_events</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__stel</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">setStateEventLocator</span><span class="p">(</span><span class="n">RegulaFalsiStateEventLocator</span><span class="p">())</span>
+		
+		<span class="c1"># TODO: make this variable, given more solver implementations</span>
+		<span class="c1"># self.__solver = SympySolver(self.__logger)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__solver</span> <span class="o">=</span> <span class="n">LinearSolver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__logger</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Simulator.run"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.run">[docs]</a>	<span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">term_time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Simulates the model.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			term_time (float):  When not :code:`None`, overwrites the termination time</span>
+<span class="sd">								with the new value. This value will be accurate upto 8</span>
+<span class="sd">								decimal points.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__finished</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__stop_requested</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="k">if</span> <span class="n">term_time</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__termination_time</span> <span class="o">=</span> <span class="n">term_time</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">getClock</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">addFixedRateClock</span><span class="p">(</span><span class="s2">&quot;clock&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__deltaT</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__progress_finished</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="c1"># If there is still a backend, it is the same, so keep it!</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend</span> <span class="o">=</span> <span class="n">ThreadingBackend</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend_subsystem</span><span class="p">,</span>
+		                                                <span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend_args</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="n">_TQDM_FOUND</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__progress</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__termination_time</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">):</span>
+			<span class="c1"># Setup progress bar if possible</span>
+			<span class="n">thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">__progress_update</span><span class="p">)</span>
+			<span class="n">thread</span><span class="o">.</span><span class="n">daemon</span> <span class="o">=</span> <span class="kc">True</span>
+			<span class="n">thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__realtime</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__realtime_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__lasttime</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend</span><span class="o">.</span><span class="n">run_on_new_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__tracer</span><span class="o">.</span><span class="n">thread_loop</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend</span><span class="o">.</span><span class="n">run_on_new_thread</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__event_thread_loop</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;started&quot;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__realtime</span><span class="p">:</span>
+			<span class="c1"># Force execute the first iteration now. This way iteration n (n &gt; 0) is</span>
+			<span class="c1"># computed before the real-time is at time n. This allows the computation</span>
+			<span class="c1"># of exact LCC (and possible rewinds) before the real-time clock is at that</span>
+			<span class="c1"># point.</span>
+			<span class="c1"># TODO: Maybe only do this if there are LCC to be checked?</span>
+			<span class="c1">#       There is no other reason to &quot;run&quot; earlier than required.</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">_do_single_step</span><span class="p">()</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__runsim</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__runsim</span><span class="p">()</span></div>
+
+	<span class="k">def</span> <span class="nf">__finish</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Terminate the simulation.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__progress</span><span class="p">:</span>
+			<span class="c1"># Whenever the progress bar is initialized, wait until it ends</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__progress_finished</span> <span class="o">=</span> <span class="kc">True</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__tracer</span><span class="o">.</span><span class="n">stopTracers</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;finished&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__finished</span> <span class="o">=</span> <span class="kc">True</span>
+
+		<span class="c1"># Make sure all events are executed</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="k">lambda</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">__event_thread_loop</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+
+	<span class="k">def</span> <span class="nf">__check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks if the simulation still needs to continue.</span>
+<span class="sd">		This is done based on the termination time and condition.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			:code:`True` if the simulation needs to be terminated and</span>
+<span class="sd">			:code:`False` otherwise.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">ret</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stop_requested</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__termination_condition</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="n">ret</span> <span class="o">=</span> <span class="n">ret</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__termination_condition</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+		<span class="k">return</span> <span class="n">ret</span> <span class="ow">or</span> <span class="nb">round</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__termination_time</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTime</span><span class="p">()),</span> <span class="mi">8</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">getDeltaT</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Simulator.stop"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.stop">[docs]</a>	<span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Requests a termination of the current running simulation.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__stop_requested</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="Simulator.is_running"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.is_running">[docs]</a>	<span class="k">def</span> <span class="nf">is_running</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Returns :code:`True` as long as the simulation is running.</span>
+<span class="sd">		This is a convenience function to keep real-time simulations</span>
+<span class="sd">		alive, or to interact from external sources.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__progress_finished</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__finished</span></div>
+
+<div class="viewcode-block" id="Simulator.getClock"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.getClock">[docs]</a>	<span class="k">def</span> <span class="nf">getClock</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Gets the simulation clock.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`getTime`</span>
+<span class="sd">			- :func:`getRelativeTime`</span>
+<span class="sd">			- :func:`getDeltaT`</span>
+<span class="sd">			- :func:`setDeltaT`</span>
+<span class="sd">			- :class:`CBD.lib.std.Clock`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getClock</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Simulator.getTime"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.getTime">[docs]</a>	<span class="k">def</span> <span class="nf">getTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Gets the current simulation time.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`getClock`</span>
+<span class="sd">			- :func:`getRelativeTime`</span>
+<span class="sd">			- :func:`getDeltaT`</span>
+<span class="sd">			- :func:`setDeltaT`</span>
+<span class="sd">			- :class:`CBD.lib.std.Clock`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getClock</span><span class="p">()</span><span class="o">.</span><span class="n">getTime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Simulator.getRelativeTime"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.getRelativeTime">[docs]</a>	<span class="k">def</span> <span class="nf">getRelativeTime</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Gets the current simulation time, ignoring a starting offset.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`getClock`</span>
+<span class="sd">			- :func:`getTime`</span>
+<span class="sd">			- :func:`getDeltaT`</span>
+<span class="sd">			- :func:`setDeltaT`</span>
+<span class="sd">			- :class:`CBD.lib.std.Clock`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getClock</span><span class="p">()</span><span class="o">.</span><span class="n">getRelativeTime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="Simulator.getDeltaT"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.getDeltaT">[docs]</a>	<span class="k">def</span> <span class="nf">getDeltaT</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Gets the delta in-between iteration steps.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`getClock`</span>
+<span class="sd">			- :func:`getTime`</span>
+<span class="sd">			- :func:`getRelativeTime`</span>
+<span class="sd">			- :func:`setDeltaT`</span>
+<span class="sd">			- :class:`CBD.lib.std.Clock`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">getClock</span><span class="p">()</span><span class="o">.</span><span class="n">getDeltaT</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Simulator.setDeltaT"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setDeltaT">[docs]</a>	<span class="k">def</span> <span class="nf">setDeltaT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">delta_t</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the delta in-between iteration steps.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			delta_t (float):    The delta.</span>
+
+<span class="sd">		Note:</span>
+<span class="sd">			If the model has a :class:`CBD.lib.std.Clock` block instance, calling</span>
+<span class="sd">			this function will have no effect. It is merely meant to be used for</span>
+<span class="sd">			fixed step simulations.</span>
+
+<span class="sd">		Note:</span>
+<span class="sd">			While unnecessary, this function is kept for backwards compatibility.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`getClock`</span>
+<span class="sd">			- :func:`getTime`</span>
+<span class="sd">			- :func:`getRelativeTime`</span>
+<span class="sd">			- :func:`getDeltaT`</span>
+<span class="sd">			- :class:`CBD.lib.std.Clock`</span>
+<span class="sd">			- :func:`setStepSize`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__deltaT</span> <span class="o">=</span> <span class="n">delta_t</span></div>
+
+<div class="viewcode-block" id="Simulator.setScheduler"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setScheduler">[docs]</a>	<span class="k">def</span> <span class="nf">setScheduler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scheduler</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the scheduler for the simulation. It will identify the</span>
+<span class="sd">		order of the components in a computation.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			scheduler (CBD.scheduling.Scheduler):   The scheduler to use.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__scheduler</span> <span class="o">=</span> <span class="n">scheduler</span></div>
+
+<div class="viewcode-block" id="Simulator.setAlgebraicLoopSolver"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setAlgebraicLoopSolver">[docs]</a>	<span class="k">def</span> <span class="nf">setAlgebraicLoopSolver</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solver</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the algebraic loop solver for the simulation. It will identify the</span>
+<span class="sd">		order of the components in a computation.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			solver (CBD.loopsolvers.solver.Solver):   The loop solver to use.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__solver</span> <span class="o">=</span> <span class="n">solver</span></div>
+
+<div class="viewcode-block" id="Simulator.setStateEventLocator"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setStateEventLocator">[docs]</a>	<span class="k">def</span> <span class="nf">setStateEventLocator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stel</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the state event locator to use when level crossings occur.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			stel (CBD.state_events.locators.StateEventLocator): The new state event to use.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__stel</span> <span class="o">=</span> <span class="n">stel</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__stel</span><span class="o">.</span><span class="n">setSimulator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Simulator.registerStateEvent"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.registerStateEvent">[docs]</a>	<span class="k">def</span> <span class="nf">registerStateEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Registers a state event to the current simulator.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			event (CBD.state_events.StateEvent):    The event to register.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__state_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Simulator.setBlockRate"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setBlockRate">[docs]</a>	<span class="k">def</span> <span class="nf">setBlockRate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_path</span><span class="p">,</span> <span class="n">rate</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the rate for a specific block. Independent of the stepsize, the</span>
+<span class="sd">		rate will identify that a certain block must only execute every</span>
+<span class="sd">		:code:`r` time.</span>
+
+<span class="sd">		Note:</span>
+<span class="sd">			Blocks for which no rate has been set will always be computed.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			block_path (str):   The path of the block to set a rate of.</span>
+<span class="sd">			rate (float):       The rate of the block.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__scheduler</span><span class="o">.</span><span class="n">setRate</span><span class="p">(</span><span class="n">block_path</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Simulator.setRealTime"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setRealTime">[docs]</a>	<span class="k">def</span> <span class="nf">setRealTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Makes the simulation run in (scaled) real time.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			enabled (bool): When :code:`True`, realtime simulation will be enabled.</span>
+<span class="sd">							Otherwise, it will be disabled. Defaults to :code:`True`.</span>
+<span class="sd">			scale (float):  Optional scaling for the simulation time. When greater</span>
+<span class="sd">							than 1, the simulation will run slower than the actual</span>
+<span class="sd">							time. When &lt; 1, it will run faster.</span>
+<span class="sd">							E.g. :code:`scale = 2.0` will run twice as long.</span>
+<span class="sd">							Defaults to :code:`1.0`.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__realtime</span> <span class="o">=</span> <span class="n">enabled</span>
+		<span class="c1"># Scale of 2 =&gt; twice as long</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__realtime_scale</span> <span class="o">=</span> <span class="n">scale</span></div>
+
+<div class="viewcode-block" id="Simulator.setProgressBar"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setProgressBar">[docs]</a>	<span class="k">def</span> <span class="nf">setProgressBar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Uses the `tqdm &lt;https://tqdm.github.io/&gt;`_ package to display a progress bar</span>
+<span class="sd">		of the simulation.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			enabled (bool): Whether or not to enable/disable the progress bar.</span>
+<span class="sd">							Defaults to :code:`True` (= show progress bar).</span>
+
+<span class="sd">		Note:</span>
+<span class="sd">			A progressbar hijacks printing to the console, hence no output shall be</span>
+<span class="sd">			shown.</span>
+
+<span class="sd">		Raises:</span>
+<span class="sd">			AssertionError: if the :code:`tqdm` module cannot be located.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">assert</span> <span class="n">_TQDM_FOUND</span><span class="p">,</span> <span class="s2">&quot;Module tqdm not found. Progressbar is not possible.&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__progress</span> <span class="o">=</span> <span class="n">enabled</span></div>
+
+<div class="viewcode-block" id="Simulator.setTerminationCondition"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setTerminationCondition">[docs]</a>	<span class="k">def</span> <span class="nf">setTerminationCondition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the system&#39;s termination condition.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			func:   A function that takes the model and the current iteration as input</span>
+<span class="sd">					and produces :code:`True` if the simulation needs to terminate.</span>
+
+<span class="sd">		Note:</span>
+<span class="sd">			When set, the progress bars (see :func:`setProgressBar`) may not work as intended.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			:func:`setTerminationTime`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># TODO: allow termination condition to set progressbar update value?</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__termination_condition</span> <span class="o">=</span> <span class="n">func</span></div>
+
+<div class="viewcode-block" id="Simulator.setTerminationTime"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setTerminationTime">[docs]</a>	<span class="k">def</span> <span class="nf">setTerminationTime</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">term_time</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the termination time of the system.</span>
+
+<span class="sd">		Note:</span>
+<span class="sd">			This is accurate upto 8 decimal points.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			term_time (float):  Termination time for the simulation.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__termination_time</span> <span class="o">=</span> <span class="n">term_time</span></div>
+
+<div class="viewcode-block" id="Simulator.setRealTimePlatform"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setRealTimePlatform">[docs]</a>	<span class="k">def</span> <span class="nf">setRealTimePlatform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">subsystem</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the realtime platform to a platform of choice.</span>
+<span class="sd">		This allows more complex/efficient simulations.</span>
+
+<span class="sd">		Calling this function automatically sets the simulation to realtime.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			subsystem (Platform):   The platform to use.</span>
+<span class="sd">			args:                   Optional arguments for this platform.</span>
+<span class="sd">									Currently, only the TkInter platform</span>
+<span class="sd">									makes use of these arguments.</span>
+
+<span class="sd">		Note:</span>
+<span class="sd">			To prevent misuse of the function, please use one of the wrapper</span>
+<span class="sd">			functions when you have no idea what you&#39;re doing.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`setRealTimePlatformThreading`</span>
+<span class="sd">			- :func:`setRealTimePlatformTk`</span>
+<span class="sd">			- :func:`setRealTimePlatformGameLoop`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">setRealTime</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend_subsystem</span> <span class="o">=</span> <span class="n">subsystem</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend_args</span> <span class="o">=</span> <span class="n">args</span></div>
+
+<div class="viewcode-block" id="Simulator.setRealTimePlatformThreading"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setRealTimePlatformThreading">[docs]</a>	<span class="k">def</span> <span class="nf">setRealTimePlatformThreading</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Wrapper around the :func:`setRealTimePlatform` call to automatically</span>
+<span class="sd">		set the Python Threading backend.</span>
+
+<span class="sd">		Calling this function automatically sets the simulation to realtime.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`setRealTimePlatform`</span>
+<span class="sd">			- :func:`setRealTimePlatformTk`</span>
+<span class="sd">			- :func:`setRealTimePlatformGameLoop`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">setRealTimePlatform</span><span class="p">(</span><span class="n">Platform</span><span class="o">.</span><span class="n">THREADING</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Simulator.setRealTimePlatformGameLoop"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setRealTimePlatformGameLoop">[docs]</a>	<span class="k">def</span> <span class="nf">setRealTimePlatformGameLoop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Wrapper around the :func:`setRealTimePlatform` call to automatically</span>
+<span class="sd">		set the Game Loop backend. Using this backend, it is expected the user</span>
+<span class="sd">		will periodically call the :func:`realtime_gameloop_call` method to</span>
+<span class="sd">		update the simulation step. Timing is still maintained internally.</span>
+
+<span class="sd">		Calling this function automatically sets the simulation to realtime.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`setRealTimePlatform`</span>
+<span class="sd">			- :func:`setRealTimePlatformThreading`</span>
+<span class="sd">			- :func:`setRealTimePlatformTk`</span>
+<span class="sd">			- :func:`realtime_gameloop_call`</span>
+<span class="sd">			- :doc:`examples/RealTime`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">setRealTimePlatform</span><span class="p">(</span><span class="n">Platform</span><span class="o">.</span><span class="n">GAMELOOP</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Simulator.setRealTimePlatformTk"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setRealTimePlatformTk">[docs]</a>	<span class="k">def</span> <span class="nf">setRealTimePlatformTk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">root</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Wrapper around the :func:`setRealTimePlatform` call to automatically</span>
+<span class="sd">		set the TkInter backend.</span>
+
+<span class="sd">		Calling this function automatically sets the simulation to realtime.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			root:   TkInter root window object (tkinter.Tk)</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`setRealTimePlatform`</span>
+<span class="sd">			- :func:`setRealTimePlatformThreading`</span>
+<span class="sd">			- :func:`setRealTimePlatformGameLoop`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">setRealTimePlatform</span><span class="p">(</span><span class="n">Platform</span><span class="o">.</span><span class="n">TKINTER</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Simulator.realtime_gameloop_call"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.realtime_gameloop_call">[docs]</a>	<span class="k">def</span> <span class="nf">realtime_gameloop_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Do a step in the realtime-gameloop platform.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			time (float):   Simulation time to be passed on. Only to be used</span>
+<span class="sd">							for the alternative gameloop backend.</span>
+
+<span class="sd">		Note:</span>
+<span class="sd">			This function will only work for a :attr:`Platform.GAMELOOP` or a</span>
+<span class="sd">			:attr:`Platform.GLA` simulation, after the :func:`run` method has</span>
+<span class="sd">			been called.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			- :func:`setRealTimePlatform`</span>
+<span class="sd">			- :func:`setRealTimePlatformGameLoop`</span>
+<span class="sd">			- :func:`run`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">time</span><span class="p">)</span></div>
+
+	<span class="k">def</span> <span class="nf">_do_single_step</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Does a single simulation step.</span>
+
+<span class="sd">		Warning:</span>
+<span class="sd">			Do **not** use this function to forcefully progress the simulation!</span>
+<span class="sd">			All functionalities for validly simulating and executing a system</span>
+<span class="sd">			that are provided through other parts of the interface should be</span>
+<span class="sd">			sufficient to do a viable simulation. This function should only be</span>
+<span class="sd">			used by the inner workings of the simulator and its functional parts.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">pre</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+		<span class="n">simT</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTime</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;prestep&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">simT</span><span class="p">)</span>
+		<span class="n">curIt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__tracer</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__tracer</span><span class="o">.</span><span class="n">traceNewIteration</span><span class="p">,</span> <span class="p">(</span><span class="n">curIt</span><span class="p">,</span> <span class="n">simT</span><span class="p">))</span>
+
+		<span class="c1"># Efficiency reasons: dep graph only changes at these times</span>
+		<span class="c1">#   in the given set of library blocks.</span>
+		<span class="c1"># TODO: Must be set to &quot;every time&quot; instead.</span>
+		<span class="k">if</span> <span class="n">curIt</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">createDepGraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">curIt</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scheduler</span><span class="o">.</span><span class="n">obtain</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">curIt</span><span class="p">,</span> <span class="n">simT</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_lcc_compute</span><span class="p">()</span>
+
+		<span class="c1"># State Event Location</span>
+		<span class="n">lcc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+		<span class="n">lcc_evt</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__state_events</span><span class="p">:</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">event</span><span class="o">.</span><span class="n">fired</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stel</span><span class="o">.</span><span class="n">detect_signal</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">output_name</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">level</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">direction</span><span class="p">):</span>
+				<span class="n">event</span><span class="o">.</span><span class="n">fired</span> <span class="o">=</span> <span class="kc">True</span>
+				<span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stel</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">output_name</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">level</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span>
+
+				<span class="n">lcc_evt</span> <span class="o">=</span> <span class="n">event</span>
+				<span class="n">lcc</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">lcc</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+			<span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">fired</span><span class="p">:</span>
+				<span class="n">event</span><span class="o">.</span><span class="n">fired</span> <span class="o">=</span> <span class="kc">False</span>
+
+		<span class="k">if</span> <span class="n">lcc</span> <span class="o">!=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">):</span>
+			<span class="c1"># TODO: Ideally, the model was cached here and should not be recomputed</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__stel</span><span class="o">.</span><span class="n">_function</span><span class="p">(</span><span class="n">lcc_evt</span><span class="o">.</span><span class="n">output_name</span><span class="p">,</span> <span class="n">lcc</span><span class="p">,</span> <span class="n">lcc_evt</span><span class="o">.</span><span class="n">level</span><span class="p">,</span> <span class="n">noop</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+			<span class="n">lcc_evt</span><span class="o">.</span><span class="n">event</span><span class="p">(</span><span class="n">lcc_evt</span><span class="p">,</span> <span class="n">lcc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_rewind</span><span class="p">()</span>
+
+			<span class="c1"># reset to allow for new IC computation</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">clearSignals</span><span class="p">()</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getClock</span><span class="p">()</span><span class="o">.</span><span class="n">setStartTime</span><span class="p">(</span><span class="n">lcc</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="n">post</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;poststep&quot;</span><span class="p">,</span> <span class="n">pre</span><span class="p">,</span> <span class="n">post</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTime</span><span class="p">())</span>
+
+	<span class="k">def</span> <span class="nf">_lcc_compute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Computes the blocks at the current time and increases the iteration counter.</span>
+<span class="sd">		Mainly used inside of Level Crossing Detection, hence the name.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__computeBlocks</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+	<span class="k">def</span> <span class="nf">_rewind</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Rewinds the simulator to the previous iteration.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__sim_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-=</span> <span class="mi">1</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">_rewind</span><span class="p">()</span>
+
+	<span class="k">def</span> <span class="nf">__realtimeWait</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Wait until next realtime event.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			:code:`True` if a simulation stop is required and</span>
+<span class="sd">			:code:`False` otherwise.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">current_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">__realtime_start_time</span>
+		<span class="n">next_sim_time</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__termination_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__lasttime</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">getDeltaT</span><span class="p">())</span>
+
+		<span class="c1"># Scaled Time</span>
+		<span class="n">next_sim_time</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__realtime_scale</span>
+
+		<span class="c1"># Subtract the time that we already did our computation</span>
+		<span class="n">wait_time</span> <span class="o">=</span> <span class="n">next_sim_time</span> <span class="o">-</span> <span class="n">current_time</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__lasttime</span> <span class="o">=</span> <span class="n">next_sim_time</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">__realtime_scale</span>
+
+		<span class="k">if</span> <span class="n">wait_time</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+			<span class="c1"># event is overdue =&gt; force execute</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__realtime_counter</span> <span class="o">-=</span> <span class="mi">1</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__realtime_counter</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="c1"># Too many overdue events at a time</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__realtime_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__realtime_counter_max</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__runsim</span><span class="p">)</span>
+				<span class="k">return</span> <span class="kc">True</span>
+			<span class="k">return</span> <span class="kc">False</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">__realtime_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__realtime_counter_max</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">wait_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__runsim</span><span class="p">)</span>
+		<span class="k">return</span> <span class="kc">True</span>
+
+	<span class="k">def</span> <span class="nf">__runsim</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Do the actual simulation.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__realtime_counter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__realtime_counter_max</span>
+		<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="c1"># Force terminate when the main thread is not active anymore</span>
+			<span class="c1">#   There is no need to keep the simulation alive in this case</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend</span><span class="o">.</span><span class="n">is_alive</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check</span><span class="p">():</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__finish</span><span class="p">()</span>
+				<span class="k">break</span>
+
+			<span class="bp">self</span><span class="o">.</span><span class="n">_do_single_step</span><span class="p">()</span>
+
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend_subsystem</span> <span class="o">==</span> <span class="n">Platform</span><span class="o">.</span><span class="n">GLA</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__threading_backend</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">getDeltaT</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">__runsim</span><span class="p">)</span>
+				<span class="k">break</span>
+
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__realtime</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">__realtimeWait</span><span class="p">():</span>
+				<span class="c1"># Next event has been scheduled, kill this process</span>
+				<span class="k">break</span>
+
+	<span class="k">def</span> <span class="nf">__computeBlocks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sortedGraph</span><span class="p">,</span> <span class="n">depGraph</span><span class="p">,</span> <span class="n">curIteration</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Compute the new state of the model.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			sortedGraph:        The set of strong components.</span>
+<span class="sd">			depGraph:           A dependency graph.</span>
+<span class="sd">			curIteration (int): Current simulation iteration.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">sortedGraph</span><span class="p">:</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__hasCycle</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="n">depGraph</span><span class="p">):</span>
+				<span class="n">block</span> <span class="o">=</span> <span class="n">component</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># the strongly connected component has a single element</span>
+				<span class="k">if</span> <span class="n">curIteration</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scheduler</span><span class="o">.</span><span class="n">mustCompute</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTime</span><span class="p">()):</span>
+					<span class="n">block</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">curIteration</span><span class="p">)</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">__tracer</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__tracer</span><span class="o">.</span><span class="n">traceCompute</span><span class="p">,</span> <span class="p">(</span><span class="n">curIteration</span><span class="p">,</span> <span class="n">block</span><span class="p">))</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="c1"># Detected a strongly connected component</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__solver</span><span class="o">.</span><span class="n">checkValidity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">getPath</span><span class="p">(),</span> <span class="n">component</span><span class="p">)</span>
+				<span class="n">solverInput</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__solver</span><span class="o">.</span><span class="n">constructInput</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="n">curIteration</span><span class="p">)</span>
+				<span class="n">solutionVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__solver</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">solverInput</span><span class="p">)</span>
+				<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">component</span><span class="p">:</span>
+					<span class="k">if</span> <span class="n">curIteration</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">__scheduler</span><span class="o">.</span><span class="n">mustCompute</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTime</span><span class="p">()):</span>
+						<span class="n">blockIndex</span> <span class="o">=</span> <span class="n">component</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+						<span class="n">block</span><span class="o">.</span><span class="n">appendToSignal</span><span class="p">(</span><span class="n">solutionVector</span><span class="p">[</span><span class="n">blockIndex</span><span class="p">])</span>
+						<span class="bp">self</span><span class="o">.</span><span class="n">__tracer</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__tracer</span><span class="o">.</span><span class="n">traceCompute</span><span class="p">,</span> <span class="p">(</span><span class="n">curIteration</span><span class="p">,</span> <span class="n">block</span><span class="p">))</span>
+
+	<span class="k">def</span> <span class="nf">__hasCycle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">depGraph</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Determine whether a component is cyclic or not.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			component (list):   The set of strong components.</span>
+<span class="sd">			depGraph:           The dependency graph.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">component</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;A component should have at least one element&quot;</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">component</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="k">return</span> <span class="kc">True</span>
+		<span class="c1"># a strong component of size one may still have a cycle: a self-loop</span>
+		<span class="k">return</span> <span class="n">depGraph</span><span class="o">.</span><span class="n">hasDependency</span><span class="p">(</span><span class="n">component</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">component</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+	<span class="k">def</span> <span class="nf">__progress_update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Updates the progress bar.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">assert</span> <span class="n">_TQDM_FOUND</span><span class="p">,</span> <span class="s2">&quot;Module tqdm not found. Progressbar is not possible.&quot;</span>
+		<span class="n">end</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__termination_time</span>
+		<span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">total</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">bar_format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">{desc}</span><span class="s1">: </span><span class="si">{percentage:3.0f}</span><span class="s1">%|</span><span class="si">{bar}</span><span class="s1">| </span><span class="si">{n:.2f}</span><span class="s1">/</span><span class="si">{total_fmt}</span><span class="s1"> &#39;</span>
+		                                  <span class="s1">&#39;[</span><span class="si">{elapsed}</span><span class="s1">/</span><span class="si">{remaining}</span><span class="s1">, </span><span class="si">{rate_fmt}{postfix}</span><span class="s1">]&#39;</span><span class="p">)</span>
+		<span class="n">last</span> <span class="o">=</span> <span class="mf">0.0</span>
+		<span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__finished</span><span class="p">:</span>
+			<span class="n">now</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getTime</span><span class="p">()</span>
+			<span class="c1"># print(end, now, last)</span>
+			<span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">now</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="o">-</span> <span class="n">last</span><span class="p">)</span>
+			<span class="n">last</span> <span class="o">=</span> <span class="n">now</span>
+			<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>     <span class="c1"># Only update every half a second</span>
+		<span class="k">if</span> <span class="n">last</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">:</span>
+			<span class="n">pbar</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">last</span><span class="p">)</span>
+		<span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+		<span class="c1"># TODO: prints immediately after break pbar...</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__progress_finished</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="Simulator.connect"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.connect">[docs]</a>	<span class="k">def</span> <span class="nf">connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">function</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Connect an event with an additional, user-defined function. These functions</span>
+<span class="sd">		will be executed on a separate thread and polled every 50 milliseconds.</span>
+
+<span class="sd">		Warning:</span>
+<span class="sd">			It is expected that the passed function terminates at a certain point</span>
+<span class="sd">			in time, to prevent an infinitely running process.</span>
+
+<span class="sd">		Warning:</span>
+<span class="sd">			There is no guarantee that these functions will be executed in-order of</span>
+<span class="sd">			connection. For safety, it is best to see these events as not thread-safe.</span>
+
+<span class="sd">		The functions will be called in the order they were connected to the</span>
+<span class="sd">		events, with the associated arguments. The accepted signals are:</span>
+
+<span class="sd">		- :code:`started`:              Raised whenever the simulation setup has completed,</span>
+<span class="sd">										but before the actual simulation begins.</span>
+<span class="sd">		- :code:`finished`:             Raised whenever the simulation finishes.</span>
+<span class="sd">		- :code:`prestep(t, st)`:       Raised before a step is done. :code:`t` is the real</span>
+<span class="sd">										time before the step and :code:`st` is the simulation</span>
+<span class="sd">										time.</span>
+<span class="sd">		- :code:`poststep(o, t, st)`:   Raised after a step is done. :code:`o` is the real</span>
+<span class="sd">										time before the step, :code:`t` is the real time after</span>
+<span class="sd">										the step and :code:`st` is the simulation time of the</span>
+<span class="sd">										step.</span>
+<span class="sd">		- :code:`clock_update(delta)`:  Raised whenever the clock updates. It takes the (new)</span>
+<span class="sd">										delta for the simulation.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			name (str):     The name of the signal to raise.</span>
+<span class="sd">			function:       A function that will be called with the optional arguments</span>
+<span class="sd">							whenever the event is raised.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__events</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid signal &#39;</span><span class="si">%s</span><span class="s2">&#39; in Simulator.&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__events</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">function</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Simulator.signal"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.signal">[docs]</a>	<span class="k">def</span> <span class="nf">signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Raise a signal with a specific name and arguments.</span>
+
+<span class="sd">		The accepted signals are:</span>
+
+<span class="sd">		- :code:`started`:              Raised whenever the simulation setup has</span>
+<span class="sd">										completed, but before the actual simulation</span>
+<span class="sd">										begins.</span>
+<span class="sd">		- :code:`finished`:             Raised whenever the simulation finishes.</span>
+<span class="sd">		- :code:`prestep`:              Raised before a step is done.</span>
+<span class="sd">		- :code:`poststep`:             Raised after a step is done.</span>
+<span class="sd">		- :code:`clock_update(delta)`:  Raised whenever the clock updates. It takes</span>
+<span class="sd">										the (new) delta for the simulation.</span>
+
+<span class="sd">		Note:</span>
+<span class="sd">			Normally, users do not need to call this function.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			name (str):     The name of the signal to raise.</span>
+<span class="sd">			*args:          Additional arguments to pass to the connected events.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			:func:`connect`</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__events</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid signal &#39;</span><span class="si">%s</span><span class="s2">&#39; in Simulator.&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__event_bus</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">name</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span></div>
+
+	<span class="k">def</span> <span class="nf">__event_thread_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cnt</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+		<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="k">while</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__finished</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__event_bus</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">cnt</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">or</span> <span class="n">cnt</span> <span class="o">&lt;=</span> <span class="n">i</span><span class="p">):</span>
+			<span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__event_bus</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="n">name</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__event_bus</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+				<span class="k">for</span> <span class="n">evt</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__events</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
+					<span class="n">evt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+			<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Simulator.setCustomTracer"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setCustomTracer">[docs]</a>	<span class="k">def</span> <span class="nf">setCustomTracer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">tracer</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets a custom tracer.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			*tracer:    Either a single instance of a subclass of</span>
+<span class="sd">						:class:`CBD.tracers.baseTracer.BaseTracer` or three elements</span>
+<span class="sd">						:code:`filename` (str), :code:`classname` (str) and</span>
+<span class="sd">						:code:`args` (tuple) to allow instantiation similar to</span>
+<span class="sd">						`PythonPDEVS &lt;http://msdl.cs.mcgill.ca/projects/DEVS/PythonPDEVS&gt;`_.</span>
+
+<span class="sd">		Note:</span>
+<span class="sd">			Calling this function multiple times with the same arguments will continuously add</span>
+<span class="sd">			new tracers. Thus output to multiple files is possible, though more inefficient than</span>
+<span class="sd">			simply (manually) copying the file at the end.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">tracer</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__tracer</span><span class="o">.</span><span class="n">registerTracer</span><span class="p">(</span><span class="n">tracer</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+		<span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">tracer</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">__tracer</span><span class="o">.</span><span class="n">registerTracer</span><span class="p">(</span><span class="n">tracer</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid amount of arguments for custom tracer.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Simulator.setVerbose"><a class="viewcode-back" href="../../CBD.simulator.html#CBD.simulator.Simulator.setVerbose">[docs]</a>	<span class="k">def</span> <span class="nf">setVerbose</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the verbose tracer.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			filename (Union[str, None]):    The file to which the trace must be written.</span>
+<span class="sd">											When :code:`None`, the trace will be written to</span>
+<span class="sd">											the console.</span>
+
+<span class="sd">		Note:</span>
+<span class="sd">			Calling this function multiple times will continuously add new tracers. Thus output</span>
+<span class="sd">			to multiple files is possible, though more inefficient than simply (manually) copying</span>
+<span class="sd">			the file at the end.</span>
+
+<span class="sd">		Warning:</span>
+<span class="sd">			Using multiple verbose tracers with the same filename will yield errors and undefined</span>
+<span class="sd">			behaviour.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">setCustomTracer</span><span class="p">(</span><span class="s2">&quot;tracerVerbose&quot;</span><span class="p">,</span> <span class="s2">&quot;VerboseTracer&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">filename</span><span class="p">,))</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../CBD.html">CBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.simulator</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

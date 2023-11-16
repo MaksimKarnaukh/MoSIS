@@ -1,0 +1,29 @@
+// CBD model of the block_under_test block
+// Created with CBD.converters.CBDDraw
+digraph model {
+ splines=ortho;
+ label=<<B>block_under_test (CBD)</B>>;
+ labelloc="t";
+ fontsize=20;
+ node_140043535377360 [label="CBD\n(constantCBD1)", shape=Msquare];
+ inter_140043535377360_outConstant1 [shape=point, width=0.01, height=0.01];
+ node_140043535377360 -> inter_140043535377360_outConstant1 [taillabel="outConstant1", arrowtail="invempty", arrowhead="none", dir=both];
+ node_140043535377600 [label="CBD\n(constantCBD2)", shape=Msquare];
+ inter_140043535377600_outConstant2 [shape=point, width=0.01, height=0.01];
+ node_140043535377600 -> inter_140043535377600_outConstant2 [taillabel="outConstant2", arrowtail="invempty", arrowhead="none", dir=both];
+ node_140043535377792 [label="CBD\n(adder1CBD)", shape=Msquare];
+ inter_140043535377360_outConstant1 -> node_140043535377792 [headlabel="in1Add1", arrowhead="normal", arrowtail="none", dir=both];
+ inter_140043535378224_outAdd2 -> node_140043535377792 [headlabel="in2Add1", arrowhead="normal", arrowtail="none", dir=both];
+ inter_140043535377792_outAdd1 [shape=point, width=0.01, height=0.01];
+ node_140043535377792 -> inter_140043535377792_outAdd1 [taillabel="outAdd1", arrowtail="invempty", arrowhead="none", dir=both];
+ node_140043535378224 [label="CBD\n(adder2CBD)", shape=Msquare];
+ inter_140043535377600_outConstant2 -> node_140043535378224 [headlabel="in1Add2", arrowhead="normal", arrowtail="none", dir=both];
+ inter_140043535378608_outNeg -> node_140043535378224 [headlabel="in2Add2", arrowhead="normal", arrowtail="none", dir=both];
+ inter_140043535378224_outAdd2 [shape=point, width=0.01, height=0.01];
+ node_140043535378224 -> inter_140043535378224_outAdd2 [taillabel="outAdd2", arrowtail="invempty", arrowhead="none", dir=both];
+ node_140043535378608 [label="CBD\n(negatorCBD)", shape=Msquare];
+ inter_140043535377792_outAdd1 -> node_140043535378608 [headlabel="inNeg", arrowhead="normal", arrowtail="none", dir=both];
+ inter_140043535378608_outNeg [shape=point, width=0.01, height=0.01];
+ node_140043535378608 -> inter_140043535378608_outNeg [taillabel="outNeg", arrowtail="invempty", arrowhead="none", dir=both];
+
+}

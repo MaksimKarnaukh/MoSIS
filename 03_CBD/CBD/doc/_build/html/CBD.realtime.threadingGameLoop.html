@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>CBD.realtime.threadingGameLoop module &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CBD.realtime.threadingGameLoopAlt module" href="CBD.realtime.threadingGameLoopAlt.html" />
+    <link rel="prev" title="CBD.realtime.threadingBackend module" href="CBD.realtime.threadingBackend.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.realtime.threadingGameLoopAlt.html" title="CBD.realtime.threadingGameLoopAlt module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="CBD.realtime.threadingBackend.html" title="CBD.realtime.threadingBackend module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="install.html" >How to install the CBD framework?</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="CBD.realtime.html" accesskey="U">CBD.realtime package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.realtime.threadingGameLoop module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-CBD.realtime.threadingGameLoop">
+<span id="cbd-realtime-threadinggameloop-module"></span><h1>CBD.realtime.threadingGameLoop module<a class="headerlink" href="#module-CBD.realtime.threadingGameLoop" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.realtime.threadingGameLoop.ThreadingGameLoop">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.realtime.threadingGameLoop.</span></span><span class="sig-name descname"><span class="pre">ThreadingGameLoop</span></span><a class="reference internal" href="_modules/CBD/realtime/threadingGameLoop.html#ThreadingGameLoop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.realtime.threadingGameLoop.ThreadingGameLoop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Game loop subsystem for realtime simulation.
+Time will only progress when a <a class="reference internal" href="#CBD.realtime.threadingGameLoop.ThreadingGameLoop.step" title="CBD.realtime.threadingGameLoop.ThreadingGameLoop.step"><code class="xref py py-func docutils literal notranslate"><span class="pre">step()</span></code></a> call is made.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.realtime.threadingGameLoop.ThreadingGameLoop.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/realtime/threadingGameLoop.html#ThreadingGameLoop.step"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.realtime.threadingGameLoop.ThreadingGameLoop.step" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform a step in the simulation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.realtime.threadingGameLoop.ThreadingGameLoop.wait">
+<span class="sig-name descname"><span class="pre">wait</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delay</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/realtime/threadingGameLoop.html#ThreadingGameLoop.wait"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.realtime.threadingGameLoop.ThreadingGameLoop.wait" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait for the specified time, or faster if interrupted</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>delay</strong> (<em>float</em>) – Time to wait.</p></li>
+<li><p><strong>func</strong> (<em>callable</em>) – The function to call.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="install.html">How to install the CBD framework?</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="install.html#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="install.html#installation">Installation</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="install.html#standalone">Standalone</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CBD.html">CBD package</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="CBD.realtime.threadingBackend.html"
+                          title="previous chapter">CBD.realtime.threadingBackend module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="CBD.realtime.threadingGameLoopAlt.html"
+                          title="next chapter">CBD.realtime.threadingGameLoopAlt module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.realtime.threadingGameLoopAlt.html" title="CBD.realtime.threadingGameLoopAlt module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="CBD.realtime.threadingBackend.html" title="CBD.realtime.threadingBackend module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="install.html" >How to install the CBD framework?</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="CBD.realtime.html" >CBD.realtime package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.realtime.threadingGameLoop module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

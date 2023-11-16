@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyCBD.tracers.color &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../tracers.html" accesskey="U">pyCBD.tracers</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.tracers.color</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pyCBD.tracers.color</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Helper file for color information when printing to the terminal.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<div class="viewcode-block" id="COLOR"><a class="viewcode-back" href="../../../pyCBD.tracers.color.html#pyCBD.tracers.color.COLOR">[docs]</a><span class="k">class</span> <span class="nc">COLOR</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Color interface to write colored text to the console. This can be used</span>
+<span class="sd">	to mark certain components of a trace, when writing to the console.</span>
+
+<span class="sd">	Colors may be combined using string concatenation (+).</span>
+
+<span class="sd">	Note:</span>
+<span class="sd">		To make this work on Windows 10, `VT100 emulation</span>
+<span class="sd">		&lt;https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences?redirectedfrom=MSDN&gt;`_</span>
+<span class="sd">		needs to be enabled. For other versions, `ANSICON &lt;https://github.com/adoxa/ansicon&gt;`_</span>
+<span class="sd">		needs to be used. On other OS, it should work out-of-the-bag.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="COLOR.colorize"><a class="viewcode-back" href="../../../pyCBD.tracers.color.html#pyCBD.tracers.color.COLOR.colorize">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">colorize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="o">*</span><span class="n">colors</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Colors the text in a given set of colors and terminates the coloring at the end.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			text (str): The text to color.</span>
+<span class="sd">			*colors:    The colors for the text. May be given as a set of arguments, or</span>
+<span class="sd">						as a concatenated string.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">col</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">col</span> <span class="o">+</span> <span class="n">text</span> <span class="o">+</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">ENDC</span></div>
+
+<div class="viewcode-block" id="COLOR.uncolorize"><a class="viewcode-back" href="../../../pyCBD.tracers.color.html#pyCBD.tracers.color.COLOR.uncolorize">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">uncolorize</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Removes all colorization indicators from the string.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			text (str): The string to remove color from.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\033\[\d+m&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="COLOR.rainbow"><a class="viewcode-back" href="../../../pyCBD.tracers.color.html#pyCBD.tracers.color.COLOR.rainbow">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">rainbow</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Colors each letter of the text in another color, based on the color list.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			text (str):     Text to color.</span>
+<span class="sd">			colors (iter):  An ordered sequence of colors.</span>
+<span class="sd">							Defaults to the colors of the rainbow.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="n">colors</span> <span class="o">=</span> <span class="p">(</span><span class="n">COLOR</span><span class="o">.</span><span class="n">RED</span><span class="p">,</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">DARK</span> <span class="o">+</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">LYELLOW</span><span class="p">,</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">YELLOW</span><span class="p">,</span>
+			          <span class="n">COLOR</span><span class="o">.</span><span class="n">GREEN</span><span class="p">,</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">CYAN</span><span class="p">,</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">DARK</span> <span class="o">+</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">BLUE</span><span class="p">,</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">PURPLE</span><span class="p">)</span>
+		<span class="n">ntext</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+		<span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="p">)):</span>
+			<span class="n">ntext</span> <span class="o">+=</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">colorize</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">colors</span><span class="p">[</span><span class="n">i</span> <span class="o">%</span> <span class="n">L</span><span class="p">])</span>
+		<span class="k">return</span> <span class="n">ntext</span></div>
+
+	<span class="n">ENDC</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[0m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Ends any coloring. Must be used at the end to prevent color &quot;creep&quot;.&quot;&quot;&quot;</span>
+
+	<span class="n">BOLD</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[1m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text bold.&quot;&quot;&quot;</span>
+
+	<span class="n">DARK</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[2m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text slightly darker.&quot;&quot;&quot;</span>
+
+	<span class="n">ITALIC</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[3m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text slanted/cursive/italic.&quot;&quot;&quot;</span>
+
+	<span class="n">ULINE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[4m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text underlined.&quot;&quot;&quot;</span>
+
+	<span class="n">BLINK</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[5m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text blink at the cursor blink rate.&quot;&quot;&quot;</span>
+
+	<span class="n">HIGHLIGHT</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[7m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Highlights the text by swapping foreground and background colors.&quot;&quot;&quot;</span>
+
+	<span class="n">STRIKE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[9m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Draws a line through the text, commonly known as &#39;strikethrough&#39;.&quot;&quot;&quot;</span>
+
+	<span class="n">UULINE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[21m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text doubly underlined.&quot;&quot;&quot;</span>
+
+	<span class="n">OLINE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[53m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text overlined.&quot;&quot;&quot;</span>
+
+	<span class="n">DARKGRAY</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[30m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text dark gray (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">RED</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[31m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text red (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">GREEN</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[32m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text green (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">YELLOW</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[33m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text yellow (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BLUE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[34m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text blue (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">PURPLE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[35m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text purple (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">CYAN</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[36m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text cyan (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">LIGHTGRAY</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[37m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text light gray (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BDARKGRAY</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[40m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background dark gray (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BRED</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[41m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background red (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BGREEN</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[42m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background green (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BYELLOW</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[43m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background yellow (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BBLUE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[44m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background blue (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BPURPLE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[45m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background purple (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BCYAN</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[46m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background cyan (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BLIGHTGRAY</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[47m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background light gray (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">LDARKGRAY</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[90m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text a lighter dark gray (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">LRED</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[91m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text a lighter red (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">LGREEN</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[92m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text a lighter green (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">LYELLOW</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[93m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text a lighter yellow (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">LBLUE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[94m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text a lighter blue (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">LPURPLE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[95m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text a lighter purple (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">LCYAN</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[96m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text a lighter cyan (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">LLIGHTGRAY</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[97m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the text a lighter light gray (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BLDARKGRAY</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[100m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background a lighter dark gray (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BLRED</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[101m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background a lighter red (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BLGREEN</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[102m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background a lighter green (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BLYELLOW</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[103m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background a lighter yellow (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BLBLUE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[104m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background a lighter blue (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BLPURPLE</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[105m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background a lighter purple (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BLCYAN</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[106m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background a lighter cyan (depends on the terminal palette).&quot;&quot;&quot;</span>
+
+	<span class="n">BLLIGHTGRAY</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\033</span><span class="s1">[107m&#39;</span>
+	<span class="sd">&quot;&quot;&quot;Makes the background a lighter light gray (depends on the terminal palette).&quot;&quot;&quot;</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pyCBD.html">pyCBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../tracers.html" >pyCBD.tracers</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.tracers.color</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

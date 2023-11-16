@@ -1,0 +1,59 @@
+// CBD model of the fricODE block
+// Created with CBD.converters.CBDDraw
+digraph model {
+ splines=ortho;
+ label=<<B>fricODE (CBD)</B>>;
+ labelloc="t";
+ fontsize=20;
+ node_219186512 [label="v", shape=none];
+ inter_219342608_OUT1 -> node_219186512 [headlabel="", arrowhead="normal", arrowtail="none", dir=both];
+ node_220161328 [label="x", shape=none];
+ inter_219342608_OUT2 -> node_220161328 [headlabel="", arrowhead="normal", arrowtail="none", dir=both];
+ node_219342608 [label="CBD\n(RK)", shape=Msquare];
+ inter_222926448_OUT1 -> node_219342608 [headlabel="k", arrowhead="normal", arrowtail="none", dir=both];
+ inter_220133104_time -> node_219342608 [headlabel="time", arrowhead="normal", arrowtail="none", dir=both];
+ inter_220133104_rel_time -> node_219342608 [headlabel="rel_time", arrowhead="normal", arrowtail="none", dir=both];
+ inter_220133104_delta -> node_219342608 [headlabel="h", arrowhead="normal", arrowtail="none", dir=both];
+ inter_219556304_OUT1 -> node_219342608 [headlabel="IC1", arrowhead="normal", arrowtail="none", dir=both];
+ inter_222606864_OUT1 -> node_219342608 [headlabel="IC2", arrowhead="normal", arrowtail="none", dir=both];
+ inter_219342608_OUT1 [shape=point, width=0.01, height=0.01];
+ node_219342608 -> inter_219342608_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+ inter_219342608_OUT2 [shape=point, width=0.01, height=0.01];
+ node_219342608 -> inter_219342608_OUT2 [taillabel="OUT2", arrowtail="invempty", arrowhead="none", dir=both];
+ inter_219342608_h_new [shape=point, width=0.01, height=0.01];
+ node_219342608 -> inter_219342608_h_new [taillabel="h_new", arrowtail="invempty", arrowhead="none", dir=both];
+ node_220133104 [label="Clock\n(clock)", shape=Msquare];
+ inter_219341456_OUT1 -> node_220133104 [headlabel="h", arrowhead="normal", arrowtail="none", dir=both];
+ inter_220133104_time [shape=point, width=0.01, height=0.01];
+ node_220133104 -> inter_220133104_time [taillabel="time", arrowtail="invempty", arrowhead="none", dir=both];
+ inter_220133104_rel_time [shape=point, width=0.01, height=0.01];
+ node_220133104 -> inter_220133104_rel_time [taillabel="rel_time", arrowtail="invempty", arrowhead="none", dir=both];
+ inter_220133104_delta [shape=point, width=0.01, height=0.01];
+ node_220133104 -> inter_220133104_delta [taillabel="delta", arrowtail="invempty", arrowhead="none", dir=both];
+ node_221342480 [label=" ConstantBlock\n(HIC)\n0.1", shape=ellipse];
+ inter_221342480_OUT1 [shape=point, width=0.01, height=0.01];
+ node_221342480 -> inter_221342480_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+ node_222123920 [label="DelayBlock\n(HDelay)", shape=box];
+ inter_219342608_h_new -> node_222123920 [headlabel="IN1", arrowhead="normal", arrowtail="none", dir=both];
+ inter_221342480_OUT1 -> node_222123920 [headlabel="IC", arrowhead="normal", arrowtail="none", dir=both];
+ inter_222123920_OUT1 [shape=point, width=0.01, height=0.01];
+ node_222123920 -> inter_222123920_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+ node_222606864 [label=" ConstantBlock\n(x0)\n0.0", shape=ellipse];
+ inter_222606864_OUT1 [shape=point, width=0.01, height=0.01];
+ node_222606864 -> inter_222606864_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+ node_219556304 [label=" ConstantBlock\n(v0)\n0.0", shape=ellipse];
+ inter_219556304_OUT1 [shape=point, width=0.01, height=0.01];
+ node_219556304 -> inter_219556304_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+ node_222926448 [label=" ConstantBlock\n(k)\n0.03", shape=ellipse];
+ inter_222926448_OUT1 [shape=point, width=0.01, height=0.01];
+ node_222926448 -> inter_222926448_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+ node_219344304 [label=" ConstantBlock\n(H)\ninf", shape=ellipse];
+ inter_219344304_OUT1 [shape=point, width=0.01, height=0.01];
+ node_219344304 -> inter_219344304_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+ node_219341456 [label="MinBlock\n(Min)", shape=box];
+ inter_219344304_OUT1 -> node_219341456 [headlabel="IN1", arrowhead="normal", arrowtail="none", dir=both];
+ inter_222123920_OUT1 -> node_219341456 [headlabel="IN2", arrowhead="normal", arrowtail="none", dir=both];
+ inter_219341456_OUT1 [shape=point, width=0.01, height=0.01];
+ node_219341456 -> inter_219341456_OUT1 [taillabel="OUT1", arrowtail="invempty", arrowhead="none", dir=both];
+
+}

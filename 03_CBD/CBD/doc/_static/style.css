@@ -1,0 +1,111 @@
+/*
+ * Additional Styling
+ */
+
+/*
+@media screen and (min-width: 1101px) {
+	.section:before {
+		display: block;
+		content: "";
+		height: 45px;
+		margin: -45px 0 0;
+	}
+}
+
+span.menuselection {
+	font-weight: bold;
+	color: #555;
+}
+
+article.catalyst-article .seealso {
+	background: #f3f4f7;
+	margin-top: 1.875rem;
+	margin-bottom: 1.125rem;
+}
+
+article.catalyst-article .seealso .admonition-title {
+	background: #f7923a;
+	color: #ffffff;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	margin-bottom: 1.125rem;
+	padding: 3px 0 3px 1.375rem;
+	position: relative;
+	font-size: 0.875rem;
+}
+
+article.catalyst-article .seealso .admonition-title:before {
+	content: "•";
+	position: absolute;
+	left: 9px;
+	color: #ffffff;
+	top: 2px;
+}
+
+article.catalyst-article .admonition > p.first:last-of-type {
+	margin-bottom: unset !important;
+	padding-bottom: 3px !important;
+}
+
+article.catalyst-article .seealso p.last {
+	padding-left: 1.375rem !important;
+}
+
+article.catalyst-article .admonition ul.last {
+	padding-top: 1.25rem !important;
+}
+
+article.catalyst-article .class dd p.admonition-title {
+	color: white;
+}
+
+.tutorials-header, .footer-container {
+	display: none;
+}
+
+.main-content {
+	min-height: 80vh;
+}
+
+article.catalyst-article .class table tbody tr td.field-body p {
+	padding-left: 1rem !important;
+}
+
+article.catalyst-article .class table tbody tr td.field-body p.admonition-title {
+	padding-left: 1.375rem !important;
+}
+
+.MathJax {
+	font-size: 200% !important;
+} */
+
+.section img:not(.next-page):not(.previous-page) {	/* Centers Images */
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/*
+div.math > p > img {
+	display: inline-block;
+	margin-left: unset;
+	margin-right: unset;
+}
+
+.figure {
+	display: unset !important;
+}
+
+article.catalyst-article .class dl dt em.property {
+	padding-right: 12px !important;
+}
+
+:not(.MathJax_Display) > .MathJax {
+	font-size: 110% !important;
+}
+
+.versionmodified, .versionadded {
+	font-style: italic;
+	margin-right: 1em;
+}
+ */

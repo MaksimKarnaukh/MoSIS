@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CBD.tracers &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/style.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.tracers</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for CBD.tracers</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The tracers module provides an interface for tracing simulation data.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">from</span> <span class="nn">CBD.tracers.baseTracer</span> <span class="kn">import</span> <span class="n">BaseTracer</span>
+
+<div class="viewcode-block" id="Tracers"><a class="viewcode-back" href="../../CBD.tracers.html#CBD.tracers.Tracers">[docs]</a><span class="k">class</span> <span class="nc">Tracers</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Collection object for multiple tracers.</span>
+
+<span class="sd">	Arguments:</span>
+<span class="sd">		sim (Simulator):    The CBD simulator of the trace object.</span>
+
+<span class="sd">	Note:</span>
+<span class="sd">		This class will maintain and keep track of the UID of a tracer.</span>
+<span class="sd">		Don&#39;t set this yourself!</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sim</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">uid</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">tracers</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">bus</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">sim</span> <span class="o">=</span> <span class="n">sim</span>
+
+<div class="viewcode-block" id="Tracers.hasTracers"><a class="viewcode-back" href="../../CBD.tracers.html#CBD.tracers.Tracers.hasTracers">[docs]</a>	<span class="k">def</span> <span class="nf">hasTracers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks that there are registered tracers.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+<div class="viewcode-block" id="Tracers.thread_loop"><a class="viewcode-back" href="../../CBD.tracers.html#CBD.tracers.Tracers.thread_loop">[docs]</a>	<span class="k">def</span> <span class="nf">thread_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Mainloop for tracing information. reduces the amount of threads created.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">sim</span><span class="o">.</span><span class="n">is_running</span><span class="p">():</span>
+			<span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="n">evt</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+				<span class="n">evt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+			<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Tracers.trace"><a class="viewcode-back" href="../../CBD.tracers.html#CBD.tracers.Tracers.trace">[docs]</a>	<span class="k">def</span> <span class="nf">trace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Traces an event.</span>
+<span class="sd">		Args:</span>
+<span class="sd">			event (callable):   The event to trace.</span>
+<span class="sd">			args (iter):        The list of arguments for the event.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">event</span><span class="p">,</span> <span class="n">args</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Tracers.registerTracer"><a class="viewcode-back" href="../../CBD.tracers.html#CBD.tracers.Tracers.registerTracer">[docs]</a>	<span class="k">def</span> <span class="nf">registerTracer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tracer</span><span class="p">,</span> <span class="n">recover</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Registers a specific tracer to use.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			tracer:         Either a tuple of :code:`(file, classname, [args])`,</span>
+<span class="sd">							similar to `PythonPDEVS &lt;http://msdl.cs.mcgill.ca/projects/DEVS/PythonPDEVS&gt;`_;</span>
+<span class="sd">							or an instance of a subclass of :class:`CBD.tracers.baseTracer.BaseTracer`.</span>
+<span class="sd">			recover (bool): Whether or not this is a recovered registration; i.e. whether or not the trace</span>
+<span class="sd">			                file should be appended. Defaults to :code:`False`.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tracer</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">tracer</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+			<span class="k">try</span><span class="p">:</span>
+				<span class="n">exec</span><span class="p">(</span><span class="s2">&quot;from CBD.tracers.</span><span class="si">%s</span><span class="s2"> import </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">tracer</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+			<span class="k">except</span><span class="p">:</span>
+				<span class="n">exec</span><span class="p">(</span><span class="s2">&quot;from </span><span class="si">%s</span><span class="s2"> import </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">tracer</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="p">]</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">(</span><span class="si">%i</span><span class="s2">, *</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">tracer</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="p">,</span> <span class="n">tracer</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+		<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">tracer</span><span class="p">,</span> <span class="n">BaseTracer</span><span class="p">):</span>
+			<span class="n">tracer</span><span class="o">.</span><span class="n">uid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uid</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="p">]</span> <span class="o">=</span> <span class="n">tracer</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">uid</span><span class="p">]</span><span class="o">.</span><span class="n">startTracer</span><span class="p">(</span><span class="n">recover</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">uid</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="Tracers.deregisterTracer"><a class="viewcode-back" href="../../CBD.tracers.html#CBD.tracers.Tracers.deregisterTracer">[docs]</a>	<span class="k">def</span> <span class="nf">deregisterTracer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uid</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Stops and removes a specific tracer.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			uid (int):  The tracer id to stop.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">uid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span><span class="o">.</span><span class="n">stopTracer</span><span class="p">()</span>
+			<span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Tracers.stopTracers"><a class="viewcode-back" href="../../CBD.tracers.html#CBD.tracers.Tracers.stopTracers">[docs]</a>	<span class="k">def</span> <span class="nf">stopTracers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Stops all tracers.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="n">evt</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bus</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+			<span class="n">evt</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">tracer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+			<span class="n">tracer</span><span class="o">.</span><span class="n">stopTracer</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Tracers.getById"><a class="viewcode-back" href="../../CBD.tracers.html#CBD.tracers.Tracers.getById">[docs]</a>	<span class="k">def</span> <span class="nf">getById</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">uid</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Obtains a specific tracer.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			uid (int):  The tracer id to obtain.</span>
+
+<span class="sd">		Raises:</span>
+<span class="sd">			ValueError: If the tracer does not exist.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">uid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="p">[</span><span class="n">uid</span><span class="p">]</span>
+		<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No such tracer </span><span class="si">%d</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="n">uid</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Tracers.traceNewIteration"><a class="viewcode-back" href="../../CBD.tracers.html#CBD.tracers.Tracers.traceNewIteration">[docs]</a>	<span class="k">def</span> <span class="nf">traceNewIteration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curIt</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Traces a new iteration start.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			curIt (int):    The current iteration.</span>
+<span class="sd">			time (numeric): The current simulation time.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">tracer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+			<span class="n">tracer</span><span class="o">.</span><span class="n">traceNewIteration</span><span class="p">(</span><span class="n">curIt</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Tracers.traceCompute"><a class="viewcode-back" href="../../CBD.tracers.html#CBD.tracers.Tracers.traceCompute">[docs]</a>	<span class="k">def</span> <span class="nf">traceCompute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curIteration</span><span class="p">,</span> <span class="n">block</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Traces the computation of a specific block.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			curIteration (int):         The current iteration.</span>
+<span class="sd">			block (CBD.Core.BaseBlock): The block for which a compute just happened.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">tracer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tracers</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+			<span class="n">tracer</span><span class="o">.</span><span class="n">traceCompute</span><span class="p">(</span><span class="n">curIteration</span><span class="p">,</span> <span class="n">block</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../CBD.html">CBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.tracers</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

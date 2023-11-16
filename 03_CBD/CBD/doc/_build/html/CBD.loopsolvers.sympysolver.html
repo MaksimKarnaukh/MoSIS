@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>CBD.loopsolvers.sympysolver module &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="CBD.state_events module" href="CBD.state_events.html" />
+    <link rel="prev" title="CBD.loopsolvers.linearsolver module" href="CBD.loopsolvers.linearsolver.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.state_events.html" title="CBD.state_events module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="CBD.loopsolvers.linearsolver.html" title="CBD.loopsolvers.linearsolver module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.html" >CBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="CBD.loopsolvers.html" accesskey="U">CBD.loopsolvers module</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.loopsolvers.sympysolver module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-CBD.loopsolvers.sympysolver">
+<span id="cbd-loopsolvers-sympysolver-module"></span><h1>CBD.loopsolvers.sympysolver module<a class="headerlink" href="#module-CBD.loopsolvers.sympysolver" title="Permalink to this headline">¶</a></h1>
+<p>This module provides a Sympy solver to solve the algebraic loops efficiently.
+It should be able to handle non-linear equations as well.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This module requires <code class="code docutils literal notranslate"><span class="pre">sympy</span></code> to be installed.</p>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="CBD.loopsolvers.sympysolver.reduce">
+<span class="sig-prename descclassname"><span class="pre">CBD.loopsolvers.sympysolver.</span></span><span class="sig-name descname"><span class="pre">reduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fnc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lst</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/loopsolvers/sympysolver.html#reduce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.loopsolvers.sympysolver.reduce" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.loopsolvers.sympysolver.SympySolver">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.loopsolvers.sympysolver.</span></span><span class="sig-name descname"><span class="pre">SympySolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/loopsolvers/sympysolver.html#SympySolver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.loopsolvers.sympysolver.SympySolver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="CBD.loopsolvers.solver.html#CBD.loopsolvers.solver.Solver" title="CBD.loopsolvers.solver.Solver"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.loopsolvers.solver.Solver</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.loopsolvers.sympysolver.SympySolver.checkValidity">
+<span class="sig-name descname"><span class="pre">checkValidity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/loopsolvers/sympysolver.html#SympySolver.checkValidity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.loopsolvers.sympysolver.SympySolver.checkValidity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks the validity of an algebraic loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – The path of the top-level block.</p></li>
+<li><p><strong>component</strong> (<em>list</em>) – The blocks in the algebraic loop.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.loopsolvers.sympysolver.SympySolver.getComponentCache">
+<span class="sig-name descname"><span class="pre">getComponentCache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/loopsolvers/sympysolver.html#SympySolver.getComponentCache"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.loopsolvers.sympysolver.SympySolver.getComponentCache" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.loopsolvers.sympysolver.SympySolver.constructInput">
+<span class="sig-name descname"><span class="pre">constructInput</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curIt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/loopsolvers/sympysolver.html#SympySolver.constructInput"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.loopsolvers.sympysolver.SympySolver.constructInput" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs input for the solver.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>component</strong> (<em>list</em>) – The blocks in the algebraic loop.</p></li>
+<li><p><strong>curIt</strong> (<em>int</em>) – The current iteration of the simulation.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#CBD.loopsolvers.sympysolver.SympySolver.solve" title="CBD.loopsolvers.sympysolver.SympySolver.solve"><code class="xref py py-func docutils literal notranslate"><span class="pre">solve()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.loopsolvers.sympysolver.SympySolver.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solverInput</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/loopsolvers/sympysolver.html#SympySolver.solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.loopsolvers.sympysolver.SympySolver.solve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Solves the algebraic loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>solverInput</strong> – The constructed input.</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#CBD.loopsolvers.sympysolver.SympySolver.constructInput" title="CBD.loopsolvers.sympysolver.SympySolver.constructInput"><code class="xref py py-func docutils literal notranslate"><span class="pre">constructInput()</span></code></a></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="CBD.html">CBD package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="CBD.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="CBD.lib.html">Standard CBD Library (BBL)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.realtime.html">CBD.realtime package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.tracers.html">CBD.tracers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.converters.html">CBD.converters</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="CBD.loopsolvers.html">CBD.loopsolvers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.state_events.html">CBD.state_events module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.preprocessing.html">CBD.preprocessing package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="CBD.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="CBD.loopsolvers.linearsolver.html"
+                          title="previous chapter">CBD.loopsolvers.linearsolver module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="CBD.state_events.html"
+                          title="next chapter">CBD.state_events module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.state_events.html" title="CBD.state_events module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="CBD.loopsolvers.linearsolver.html" title="CBD.loopsolvers.linearsolver module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.html" >CBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="CBD.loopsolvers.html" >CBD.loopsolvers module</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.loopsolvers.sympysolver module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

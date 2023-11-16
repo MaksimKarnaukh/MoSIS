@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>pyCBD.tracers.color module &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyCBD.tracers.baseTracer module" href="pyCBD.tracers.baseTracer.html" />
+    <link rel="prev" title="pyCBD.tracers package" href="pyCBD.tracers.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.tracers.baseTracer.html" title="pyCBD.tracers.baseTracer module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.tracers.html" title="pyCBD.tracers package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" >pyCBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="pyCBD.tracers.html" accesskey="U">pyCBD.tracers package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.tracers.color module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-pyCBD.tracers.color">
+<span id="pycbd-tracers-color-module"></span><h1>pyCBD.tracers.color module<a class="headerlink" href="#module-pyCBD.tracers.color" title="Permalink to this headline">¶</a></h1>
+<p>Helper file for color information when printing to the terminal.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.tracers.color.</span></span><span class="sig-name descname"><span class="pre">COLOR</span></span><a class="reference internal" href="_modules/pyCBD/tracers/color.html#COLOR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.color.COLOR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Color interface to write colored text to the console. This can be used
+to mark certain components of a trace, when writing to the console.</p>
+<p>Colors may be combined using string concatenation (+).</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To make this work on Windows 10, <a class="reference external" href="https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences?redirectedfrom=MSDN">VT100 emulation</a>
+needs to be enabled. For other versions, <a class="reference external" href="https://github.com/adoxa/ansicon">ANSICON</a>
+needs to be used. On other OS, it should work out-of-the-bag.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.colorize">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">colorize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">colors</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers/color.html#COLOR.colorize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.color.COLOR.colorize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colors the text in a given set of colors and terminates the coloring at the end.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The text to color.</p></li>
+<li><p><strong>*colors</strong> – The colors for the text. May be given as a set of arguments, or
+as a concatenated string.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.uncolorize">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uncolorize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers/color.html#COLOR.uncolorize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.color.COLOR.uncolorize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Removes all colorization indicators from the string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The string to remove color from.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.rainbow">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rainbow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers/color.html#COLOR.rainbow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.color.COLOR.rainbow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Colors each letter of the text in another color, based on the color list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – Text to color.</p></li>
+<li><p><strong>colors</strong> (<em>iter</em>) – An ordered sequence of colors.
+Defaults to the colors of the rainbow.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.ENDC">
+<span class="sig-name descname"><span class="pre">ENDC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[0m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.ENDC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ends any coloring. Must be used at the end to prevent color “creep”.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BOLD">
+<span class="sig-name descname"><span class="pre">BOLD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[1m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BOLD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text bold.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.DARK">
+<span class="sig-name descname"><span class="pre">DARK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[2m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.DARK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text slightly darker.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.ITALIC">
+<span class="sig-name descname"><span class="pre">ITALIC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[3m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.ITALIC" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text slanted/cursive/italic.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.ULINE">
+<span class="sig-name descname"><span class="pre">ULINE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[4m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.ULINE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text underlined.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BLINK">
+<span class="sig-name descname"><span class="pre">BLINK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[5m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BLINK" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text blink at the cursor blink rate.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.HIGHLIGHT">
+<span class="sig-name descname"><span class="pre">HIGHLIGHT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[7m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.HIGHLIGHT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Highlights the text by swapping foreground and background colors.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.STRIKE">
+<span class="sig-name descname"><span class="pre">STRIKE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[9m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.STRIKE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draws a line through the text, commonly known as ‘strikethrough’.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.UULINE">
+<span class="sig-name descname"><span class="pre">UULINE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[21m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.UULINE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text doubly underlined.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.OLINE">
+<span class="sig-name descname"><span class="pre">OLINE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[53m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.OLINE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text overlined.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.DARKGRAY">
+<span class="sig-name descname"><span class="pre">DARKGRAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[30m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.DARKGRAY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text dark gray (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.RED">
+<span class="sig-name descname"><span class="pre">RED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[31m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.RED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text red (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.GREEN">
+<span class="sig-name descname"><span class="pre">GREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[32m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.GREEN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text green (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.YELLOW">
+<span class="sig-name descname"><span class="pre">YELLOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[33m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.YELLOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text yellow (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BLUE">
+<span class="sig-name descname"><span class="pre">BLUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[34m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BLUE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text blue (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.PURPLE">
+<span class="sig-name descname"><span class="pre">PURPLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[35m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.PURPLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text purple (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.CYAN">
+<span class="sig-name descname"><span class="pre">CYAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[36m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.CYAN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text cyan (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.LIGHTGRAY">
+<span class="sig-name descname"><span class="pre">LIGHTGRAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[37m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.LIGHTGRAY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text light gray (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BDARKGRAY">
+<span class="sig-name descname"><span class="pre">BDARKGRAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[40m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BDARKGRAY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background dark gray (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BRED">
+<span class="sig-name descname"><span class="pre">BRED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[41m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BRED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background red (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BGREEN">
+<span class="sig-name descname"><span class="pre">BGREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[42m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BGREEN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background green (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BYELLOW">
+<span class="sig-name descname"><span class="pre">BYELLOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[43m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BYELLOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background yellow (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BBLUE">
+<span class="sig-name descname"><span class="pre">BBLUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[44m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BBLUE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background blue (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BPURPLE">
+<span class="sig-name descname"><span class="pre">BPURPLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[45m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BPURPLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background purple (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BCYAN">
+<span class="sig-name descname"><span class="pre">BCYAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[46m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BCYAN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background cyan (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BLIGHTGRAY">
+<span class="sig-name descname"><span class="pre">BLIGHTGRAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[47m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BLIGHTGRAY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background light gray (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.LDARKGRAY">
+<span class="sig-name descname"><span class="pre">LDARKGRAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[90m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.LDARKGRAY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text a lighter dark gray (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.LRED">
+<span class="sig-name descname"><span class="pre">LRED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[91m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.LRED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text a lighter red (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.LGREEN">
+<span class="sig-name descname"><span class="pre">LGREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[92m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.LGREEN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text a lighter green (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.LYELLOW">
+<span class="sig-name descname"><span class="pre">LYELLOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[93m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.LYELLOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text a lighter yellow (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.LBLUE">
+<span class="sig-name descname"><span class="pre">LBLUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[94m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.LBLUE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text a lighter blue (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.LPURPLE">
+<span class="sig-name descname"><span class="pre">LPURPLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[95m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.LPURPLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text a lighter purple (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.LCYAN">
+<span class="sig-name descname"><span class="pre">LCYAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[96m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.LCYAN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text a lighter cyan (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.LLIGHTGRAY">
+<span class="sig-name descname"><span class="pre">LLIGHTGRAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[97m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.LLIGHTGRAY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the text a lighter light gray (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BLDARKGRAY">
+<span class="sig-name descname"><span class="pre">BLDARKGRAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[100m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BLDARKGRAY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background a lighter dark gray (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BLRED">
+<span class="sig-name descname"><span class="pre">BLRED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[101m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BLRED" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background a lighter red (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BLGREEN">
+<span class="sig-name descname"><span class="pre">BLGREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[102m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BLGREEN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background a lighter green (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BLYELLOW">
+<span class="sig-name descname"><span class="pre">BLYELLOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[103m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BLYELLOW" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background a lighter yellow (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BLBLUE">
+<span class="sig-name descname"><span class="pre">BLBLUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[104m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BLBLUE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background a lighter blue (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BLPURPLE">
+<span class="sig-name descname"><span class="pre">BLPURPLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[105m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BLPURPLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background a lighter purple (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BLCYAN">
+<span class="sig-name descname"><span class="pre">BLCYAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[106m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BLCYAN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background a lighter cyan (depends on the terminal palette).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.tracers.color.COLOR.BLLIGHTGRAY">
+<span class="sig-name descname"><span class="pre">BLLIGHTGRAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\x1b[107m'</span></em><a class="headerlink" href="#pyCBD.tracers.color.COLOR.BLLIGHTGRAY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the background a lighter light gray (depends on the terminal palette).</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pyCBD.html">pyCBD package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pyCBD.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.lib.html">Standard CBD Library (BBL)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.html">pyCBD.realtime package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="pyCBD.tracers.html">pyCBD.tracers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.converters.html">pyCBD.converters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.loopsolvers.html">pyCBD.loopsolvers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.state_events.html">pyCBD.state_events module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.preprocessing.html">pyCBD.preprocessing package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="pyCBD.tracers.html"
+                          title="previous chapter">pyCBD.tracers package</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="pyCBD.tracers.baseTracer.html"
+                          title="next chapter">pyCBD.tracers.baseTracer module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.tracers.baseTracer.html" title="pyCBD.tracers.baseTracer module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.tracers.html" title="pyCBD.tracers package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" >pyCBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="pyCBD.tracers.html" >pyCBD.tracers package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.tracers.color module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

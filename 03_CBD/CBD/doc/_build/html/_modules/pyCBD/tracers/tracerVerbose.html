@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyCBD.tracers.tracerVerbose &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../tracers.html" accesskey="U">pyCBD.tracers</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.tracers.tracerVerbose</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pyCBD.tracers.tracerVerbose</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Verbose tracer for the CBD Simulator.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.baseTracer</span> <span class="kn">import</span> <span class="n">BaseTracer</span>
+<span class="kn">from</span> <span class="nn">.color</span> <span class="kn">import</span> <span class="n">COLOR</span>
+
+<div class="viewcode-block" id="VerboseTracer"><a class="viewcode-back" href="../../../pyCBD.tracers.tracerVerbose.html#pyCBD.tracers.tracerVerbose.VerboseTracer">[docs]</a><span class="k">class</span> <span class="nc">VerboseTracer</span><span class="p">(</span><span class="n">BaseTracer</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Verbose tracer for the CBD Simulator.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="VerboseTracer.traceStartNewIteration"><a class="viewcode-back" href="../../../pyCBD.tracers.tracerVerbose.html#pyCBD.tracers.tracerVerbose.VerboseTracer.traceStartNewIteration">[docs]</a>	<span class="k">def</span> <span class="nf">traceStartNewIteration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curIt</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+		<span class="n">txt1</span> <span class="o">=</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">colorize</span><span class="p">(</span><span class="s2">&quot;Iteration: &quot;</span><span class="p">,</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">BOLD</span><span class="p">)</span>
+		<span class="n">txt2</span> <span class="o">=</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">colorize</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&gt;5}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">curIt</span><span class="p">),</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">GREEN</span><span class="p">)</span>
+		<span class="n">txt3</span> <span class="o">=</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">colorize</span><span class="p">(</span><span class="s2">&quot;; Time: &quot;</span><span class="p">,</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">BOLD</span><span class="p">)</span>
+		<span class="n">txt4</span> <span class="o">=</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">colorize</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&gt;10.3}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="p">),</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">RED</span><span class="p">)</span>
+		<span class="n">rem</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="mi">11</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">-</span> <span class="mi">8</span> <span class="o">-</span> <span class="mi">10</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">curIt</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">traceln</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">,</span> <span class="n">txt1</span><span class="p">,</span> <span class="n">txt2</span><span class="p">,</span> <span class="n">txt3</span><span class="p">,</span> <span class="n">txt4</span><span class="p">,</span> <span class="n">rem</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="VerboseTracer.traceCompute"><a class="viewcode-back" href="../../../pyCBD.tracers.tracerVerbose.html#pyCBD.tracers.tracerVerbose.VerboseTracer.traceCompute">[docs]</a>	<span class="k">def</span> <span class="nf">traceCompute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">curIt</span><span class="p">,</span> <span class="n">block</span><span class="p">):</span>
+		<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">colorize</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">getPath</span><span class="p">(),</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">ITALIC</span><span class="p">,</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">CYAN</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span>
+		<span class="n">inps</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">getInputPorts</span><span class="p">()</span>
+		<span class="n">deps</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">getDependencies</span><span class="p">(</span><span class="n">curIt</span><span class="p">)]</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">INPUT VALUES:&quot;</span>
+			<span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">inps</span><span class="p">:</span>
+				<span class="n">out</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">getIncoming</span><span class="p">()</span><span class="o">.</span><span class="n">source</span>
+				<span class="n">other</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">block</span>
+				<span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span> <span class="ow">in</span> <span class="n">deps</span><span class="p">:</span>
+					<span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\t\t</span><span class="si">{:&gt;10}</span><span class="s2"> -&gt; </span><span class="si">{:&lt;10}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2">&quot;</span>\
+						<span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">getPath</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="n">out</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">inp</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+					            <span class="n">COLOR</span><span class="o">.</span><span class="n">colorize</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">getHistory</span><span class="p">()[</span><span class="n">curIt</span><span class="p">]),</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">YELLOW</span><span class="p">))</span>
+		<span class="n">outs</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">getOutputPorts</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">outs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inps</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+			<span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\t</span><span class="s2">OUTPUT VALUES:&quot;</span>
+			<span class="k">for</span> <span class="n">out</span> <span class="ow">in</span> <span class="n">outs</span><span class="p">:</span>
+				<span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n\t\t</span><span class="si">{:&lt;24}</span><span class="s2"> : </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">colorize</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">getHistory</span><span class="p">()[</span><span class="n">curIt</span><span class="p">]),</span> <span class="n">COLOR</span><span class="o">.</span><span class="n">YELLOW</span><span class="p">))</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">traceln</span><span class="p">(</span><span class="n">text</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pyCBD.html">pyCBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../tracers.html" >pyCBD.tracers</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.tracers.tracerVerbose</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

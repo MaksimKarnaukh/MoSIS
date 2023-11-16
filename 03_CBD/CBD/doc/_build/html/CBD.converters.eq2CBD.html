@@ -1,0 +1,280 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Generate CBD Models from Equations &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Generate C code from CBDs" href="CBD.converters.CBD2C.html" />
+    <link rel="prev" title="CBD.converters" href="CBD.converters.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.converters.CBD2C.html" title="Generate C code from CBDs"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="CBD.converters.html" title="CBD.converters"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.html" >CBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="CBD.converters.html" accesskey="U">CBD.converters</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Generate CBD Models from Equations</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-CBD.converters.eq2CBD">
+<span id="generate-cbd-models-from-equations"></span><h1>Generate CBD Models from Equations<a class="headerlink" href="#module-CBD.converters.eq2CBD" title="Permalink to this headline">¶</a></h1>
+<p>Transforms equations/textual denotations to CBD models.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.eq2CBD.eq2CBD">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.eq2CBD.</span></span><span class="sig-name descname"><span class="pre">eq2CBD</span></span><a class="reference internal" href="_modules/CBD/converters/eq2CBD.html#eq2CBD"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.eq2CBD.eq2CBD" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Converts equations (textual denotation) into corresponding CBD models.</p>
+<p>After instantiating this class, the <a class="reference internal" href="#CBD.converters.eq2CBD.eq2CBD.parse" title="CBD.converters.eq2CBD.eq2CBD.parse"><code class="xref py py-func docutils literal notranslate"><span class="pre">parse()</span></code></a> method may be called to
+obtain the CBD model(s).</p>
+<p>All equations must be in the form of <code class="code docutils literal notranslate"><span class="pre">&lt;output&gt;</span> <span class="pre">=</span> <span class="pre">&lt;expression&gt;</span></code>, where
+<code class="code docutils literal notranslate"><span class="pre">&lt;output&gt;</span></code> identifies the name of an output of the resulting CBD and
+<code class="code docutils literal notranslate"><span class="pre">&lt;expression&gt;</span></code> defines the corresponding logic. To prevent the creation
+of an output, <code class="code docutils literal notranslate"><span class="pre">:=</span></code> may be used instead of <code class="code docutils literal notranslate"><span class="pre">=</span></code>. Multiple equations
+can be listed, separated by newlines. Variables used in the expressions will
+be linked to one another if needs be. When a variable is used without any
+descriptive reference, it will be used as an input. For instance, the text
+<code class="code docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">6</span> <span class="pre">*</span> <span class="pre">x</span></code> will be transformed into a CBD with a single output <code class="code docutils literal notranslate"><span class="pre">y</span></code>
+and a single input <code class="code docutils literal notranslate"><span class="pre">x</span></code>.</p>
+<p>Variable names must match the regex <code class="code docutils literal notranslate"><span class="pre">[a-zA-Z_][a-zA-Z0-9_]*</span></code> and must not
+be any allowed function name (see below). The variable <code class="code docutils literal notranslate"><span class="pre">time</span></code> is reserved
+and will be replaced by a <code class="code docutils literal notranslate"><span class="pre">TimeBlock</span></code>.</p>
+<p>The following operations are allowed and transformed w.r.t. the standard library’s
+building blocks (<a class="reference internal" href="CBD.lib.std.html#module-CBD.lib.std" title="CBD.lib.std"><code class="xref py py-mod docutils literal notranslate"><span class="pre">CBD.lib.std</span></code></a>). The order of operations applied is: parentheses,
+function calls, exponents, multiplication/division and addition/subtraction.</p>
+<ul class="simple">
+<li><p><code class="code docutils literal notranslate"><span class="pre">(A)</span></code>: Places sub-equation <code class="code docutils literal notranslate"><span class="pre">A</span></code> in parentheses, giving precedence on
+the computation of that equation.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">-A</span></code>: Negation of a variable or value. In the case of a constant value, no
+additional negator will be added to the CBD, <strong>unless</strong> explicitly requested by
+placing the value within parentheses: i.e. <code class="code docutils literal notranslate"><span class="pre">-(4)</span></code>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">1/A</span></code>: Inversion of a variable or value. In the case of a constant value, no
+additional inverter will be added to the CBD, <strong>unless</strong> explicitly requested by
+placing the value within parentheses: i.e. <code class="code docutils literal notranslate"><span class="pre">1/(4)</span></code>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">~A</span></code> or <code class="code docutils literal notranslate"><span class="pre">!A</span></code> or <code class="code docutils literal notranslate"><span class="pre">not</span> <span class="pre">A</span></code>: Adds a <code class="code docutils literal notranslate"><span class="pre">NotBlock</span></code> before sub-equation
+<code class="code docutils literal notranslate"><span class="pre">A</span></code>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">A</span> <span class="pre">+</span> <span class="pre">B</span> <span class="pre">+</span> <span class="pre">C</span> <span class="pre">-</span> <span class="pre">D</span></code>: Sum of two (or more) sub-equations. Whenever a subtraction
+is encountered, it will be replaced by an addition of the negator and the other
+terms. In the case of a constant value, the same logic as mentioned above is applied.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">A</span> <span class="pre">*</span> <span class="pre">B</span> <span class="pre">*</span> <span class="pre">C</span> <span class="pre">/</span> <span class="pre">D</span></code>: Multiplication of two (or more) sub-equations. Whenever a
+division is encountered, it will be replaced by the multiplication of the inverted
+value and other factors. In the case of a constant value, the same logic as mentioned
+above is applied.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">A^B</span></code>: Raises sub-equation <code class="code docutils literal notranslate"><span class="pre">A</span></code> to the power of sub-equation <code class="code docutils literal notranslate"><span class="pre">B</span></code>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">A</span> <span class="pre">%</span> <span class="pre">B</span></code> or <code class="code docutils literal notranslate"><span class="pre">A</span> <span class="pre">mod</span> <span class="pre">B</span></code>: Modulo-divides sub-equation <code class="code docutils literal notranslate"><span class="pre">A</span></code> by sub-equation
+<code class="code docutils literal notranslate"><span class="pre">B</span></code>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">A</span> <span class="pre">==</span> <span class="pre">B</span></code>: Tests equality between sub-equations <code class="code docutils literal notranslate"><span class="pre">A</span></code> and <code class="code docutils literal notranslate"><span class="pre">B</span></code>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">A</span> <span class="pre">&lt;=</span> <span class="pre">B</span></code>: Tests inequality between sub-equations <code class="code docutils literal notranslate"><span class="pre">A</span></code> and <code class="code docutils literal notranslate"><span class="pre">B</span></code>. The
+<code class="code docutils literal notranslate"><span class="pre">LessThanOrEqualsBlock</span></code> will be used here.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">A</span> <span class="pre">&lt;</span> <span class="pre">B</span></code>: Tests inequality between sub-equations <code class="code docutils literal notranslate"><span class="pre">A</span></code> and <code class="code docutils literal notranslate"><span class="pre">B</span></code>. The
+<code class="code docutils literal notranslate"><span class="pre">LessThanBlock</span></code> will be used here.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">A</span> <span class="pre">&gt;=</span> <span class="pre">B</span></code>: Tests inequality between sub-equations <code class="code docutils literal notranslate"><span class="pre">A</span></code> and <code class="code docutils literal notranslate"><span class="pre">B</span></code>. Behind
+the scenes, this code will be handled as if it were <code class="code docutils literal notranslate"><span class="pre">B</span> <span class="pre">&lt;=</span> <span class="pre">A</span></code>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">A</span> <span class="pre">&gt;</span> <span class="pre">B</span></code>: Tests inequality between sub-equations <code class="code docutils literal notranslate"><span class="pre">A</span></code> and <code class="code docutils literal notranslate"><span class="pre">B</span></code>. Behind
+the scenes, this code will be handled as if it were <code class="code docutils literal notranslate"><span class="pre">B</span> <span class="pre">&lt;</span> <span class="pre">A</span></code>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">A</span> <span class="pre">or</span> <span class="pre">B</span></code> or <code class="code docutils literal notranslate"><span class="pre">A</span> <span class="pre">||</span> <span class="pre">B</span></code>: Merges both <code class="code docutils literal notranslate"><span class="pre">A</span></code> and <code class="code docutils literal notranslate"><span class="pre">B</span></code> in an
+<code class="code docutils literal notranslate"><span class="pre">OrBlock</span></code>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">A</span> <span class="pre">and</span> <span class="pre">B</span></code> or <code class="code docutils literal notranslate"><span class="pre">A</span> <span class="pre">&amp;&amp;</span> <span class="pre">B</span></code>: Merges both <code class="code docutils literal notranslate"><span class="pre">A</span></code> and <code class="code docutils literal notranslate"><span class="pre">B</span></code> in an
+<code class="code docutils literal notranslate"><span class="pre">AndBlock</span></code>.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">f(A)</span></code>: executes function <code class="code docutils literal notranslate"><span class="pre">f</span></code> on sub-equation <code class="code docutils literal notranslate"><span class="pre">A</span></code>. Besides all
+single-argument functions from the <code class="xref py py-mod docutils literal notranslate"><span class="pre">math</span></code> module (see the <a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.GenericBlock" title="CBD.lib.std.GenericBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.GenericBlock</span></code></a>),
+the allowed functions (case-insensitive) are:</p></li>
+</ul>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 30%" />
+<col style="width: 40%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>function</p></th>
+<th class="head"><p>argument/input port count</p></th>
+<th class="head"><p>CBD block</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="code docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>1</p></td>
+<td><p><a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.IntBlock" title="CBD.lib.std.IntBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.IntBlock</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="code docutils literal notranslate"><span class="pre">abs</span></code></p></td>
+<td><p>1</p></td>
+<td><p><a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.AbsBlock" title="CBD.lib.std.AbsBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.AbsBlock</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="code docutils literal notranslate"><span class="pre">root</span></code></p></td>
+<td><p>2</p></td>
+<td><p><a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.RootBlock" title="CBD.lib.std.RootBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.RootBlock</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="code docutils literal notranslate"><span class="pre">sqrt</span></code></p></td>
+<td><p>1</p></td>
+<td><p><a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.RootBlock" title="CBD.lib.std.RootBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.RootBlock</span></code></a> with second input fixed to 2</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="code docutils literal notranslate"><span class="pre">clamp</span></code> or <code class="code docutils literal notranslate"><span class="pre">sat</span></code></p></td>
+<td><p>3</p></td>
+<td><p><a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.ClampBlock" title="CBD.lib.std.ClampBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.ClampBlock</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="code docutils literal notranslate"><span class="pre">mux</span></code></p></td>
+<td><p>3 (last argument is the <code class="code docutils literal notranslate"><span class="pre">select</span></code> input)</p></td>
+<td><p><a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.MultiplexerBlock" title="CBD.lib.std.MultiplexerBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.MultiplexerBlock</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="code docutils literal notranslate"><span class="pre">d</span></code></p></td>
+<td><p>2 (second argument is the <code class="code docutils literal notranslate"><span class="pre">IC</span></code>)</p></td>
+<td><p><a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.DelayBlock" title="CBD.lib.std.DelayBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.DelayBlock</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="code docutils literal notranslate"><span class="pre">der</span></code></p></td>
+<td><p>3 (second argument is the <code class="code docutils literal notranslate"><span class="pre">IC</span></code>, third is the <code class="code docutils literal notranslate"><span class="pre">delta_t</span></code>)</p></td>
+<td><p><a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.DerivatorBlock" title="CBD.lib.std.DerivatorBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.DerivatorBlock</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="code docutils literal notranslate"><span class="pre">i</span></code></p></td>
+<td><p>3 (second argument is the <code class="code docutils literal notranslate"><span class="pre">IC</span></code>, third is the <code class="code docutils literal notranslate"><span class="pre">delta_t</span></code>)</p></td>
+<td><p><a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.IntegratorBlock" title="CBD.lib.std.IntegratorBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.IntegratorBlock</span></code></a></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.eq2CBD.eq2CBD.parse">
+<span class="sig-name descname"><span class="pre">parse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/eq2CBD.html#eq2CBD.parse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.eq2CBD.eq2CBD.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the text and constructs a CBD model thereof.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The text to parse.</p></li>
+<li><p><strong>model</strong> – An optional CBD model to use for the construction.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="CBD.html">CBD package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="CBD.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="CBD.lib.html">Standard CBD Library (BBL)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.realtime.html">CBD.realtime package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.tracers.html">CBD.tracers package</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="CBD.converters.html">CBD.converters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.loopsolvers.html">CBD.loopsolvers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.state_events.html">CBD.state_events module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.preprocessing.html">CBD.preprocessing package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="CBD.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="CBD.converters.html"
+                          title="previous chapter">CBD.converters</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="CBD.converters.CBD2C.html"
+                          title="next chapter">Generate C code from CBDs</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.converters.CBD2C.html" title="Generate C code from CBDs"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="CBD.converters.html" title="CBD.converters"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.html" >CBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="CBD.converters.html" >CBD.converters</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Generate CBD Models from Equations</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

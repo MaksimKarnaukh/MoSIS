@@ -1,0 +1,414 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Live Plotting of Data During the Simulation &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/math.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="TkInter Dashboard with Editable Values" href="Dashboard.html" />
+    <link rel="prev" title="Realtime Simulation" href="RealTime.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Dashboard.html" title="TkInter Dashboard with Editable Values"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="RealTime.html" title="Realtime Simulation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Live Plotting of Data During the Simulation</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="live-plotting-of-data-during-the-simulation">
+<h1>Live Plotting of Data During the Simulation<a class="headerlink" href="#live-plotting-of-data-during-the-simulation" title="Permalink to this headline">¶</a></h1>
+<p>During a (realtime) simulation, often you would like to show some data that’s being sent over a
+certain connection. This can be intermediary data (i.e. the individual components of a computation),
+system data (battery life, sensor information…) or output information (results, actuator inputs…).</p>
+<p>Luckily, the CBD framework provides this functionality in a clean and efficient manner.</p>
+<p>To allow for “live” plotting of data, make use of the <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.plotting.PlotManager</span></code> class,
+which is a wrapper for tracking multiple realtime plots. Internally, it will keep track of multiple
+<code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.plotting.PlotHandler</span></code> instances to reduce code-overhead.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.realtime.plotting</span> <span class="kn">import</span> <span class="n">PlotManager</span><span class="p">,</span> <span class="n">ScatterPlot</span>
+
+<span class="n">manager</span> <span class="o">=</span> <span class="n">PlotManager</span><span class="p">()</span>
+
+<span class="c1"># Register a scatter plot handler with name &quot;myHandler&quot;, which listens to</span>
+<span class="c1">#   the data of the block &quot;myBlock&quot;.</span>
+<span class="n">manager</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;myHandler&quot;</span><span class="p">,</span> <span class="n">MyBlock</span><span class="p">(</span><span class="s1">&#39;myBlock&#39;</span><span class="p">),</span> <span class="n">figure</span><span class="p">,</span> <span class="n">ScatterPlot</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>Notice you also need a block that stores the data. For plotting a single signal, it’s best to use the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.endpoints.SignalCollectorBlock</span></code>. Alternatively, to plot XY-pairs, the
+<code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.endpoints.PositionCollectorBlock</span></code> can be used.</p>
+<section id="example-model">
+<h2>Example Model<a class="headerlink" href="#example-model" title="Permalink to this headline">¶</a></h2>
+<p>The examples below show how you can display a live plot for the <a class="reference internal" href="SinGen.html"><span class="doc">Sine Generator</span></a>, plotted in realtime.
+The output of this block is removed and changed to a <code class="code docutils literal notranslate"><span class="pre">SignalCollectorBlock</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.Core</span> <span class="kn">import</span> <span class="n">CBD</span>
+<span class="kn">from</span> <span class="nn">CBD.lib.std</span> <span class="kn">import</span> <span class="n">TimeBlock</span><span class="p">,</span> <span class="n">GenericBlock</span>
+<span class="kn">from</span> <span class="nn">CBD.lib.endpoints</span> <span class="kn">import</span> <span class="n">SignalCollectorBlock</span>
+
+<span class="k">class</span> <span class="nc">SinGen</span><span class="p">(</span><span class="n">CBD</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;SinGen&quot;</span><span class="p">):</span>
+        <span class="n">CBD</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">input_ports</span><span class="o">=</span><span class="p">[],</span> <span class="n">output_ports</span><span class="o">=</span><span class="p">[])</span>
+
+        <span class="c1"># Create the blocks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">TimeBlock</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">GenericBlock</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="n">block_operator</span><span class="o">=</span><span class="s2">&quot;sin&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">SignalCollectorBlock</span><span class="p">(</span><span class="s2">&quot;collector&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Connect the blocks</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;sin&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="s2">&quot;collector&quot;</span><span class="p">)</span>
+
+<span class="n">sinGen</span> <span class="o">=</span> <span class="n">SinGen</span><span class="p">(</span><span class="s2">&quot;SinGen&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="using-matplotlib">
+<h2>Using MatPlotLib<a class="headerlink" href="#using-matplotlib" title="Permalink to this headline">¶</a></h2>
+<p>The most common plotting framework for Python is <a class="reference external" href="https://matplotlib.org/">MatPlotLib</a>. It provides
+a lot of additional features and functionalities, but we will keep it simple. For more complexity, please
+refer to their documentation.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>While there are other plotting frameworks, <cite>MatPlotLib</cite> is by far the easiest to get live plotting
+to work.</p>
+</div>
+<section id="default">
+<h3>Default<a class="headerlink" href="#default" title="Permalink to this headline">¶</a></h3>
+<p>If we’re not concerned about a window manager in our system, we can easily make use of  <cite>MatPlotLib</cite>’s
+builtin plotting window.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.realtime.plotting</span> <span class="kn">import</span> <span class="n">PlotManager</span><span class="p">,</span> <span class="n">LinePlot</span><span class="p">,</span> <span class="n">follow</span><span class="p">,</span> <span class="n">set_xlim</span>
+<span class="kn">from</span> <span class="nn">CBD.simulator</span> <span class="kn">import</span> <span class="n">Simulator</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>    <span class="c1"># The sine wave never exceeds this range</span>
+<span class="n">plot</span> <span class="o">=</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+
+<span class="n">manager</span> <span class="o">=</span> <span class="n">PlotManager</span><span class="p">()</span>
+<span class="n">manager</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="n">sinGen</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;collector&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">plot</span><span class="p">,</span> <span class="n">LinePlot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">))</span>
+<span class="n">manager</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;sin&#39;</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">ax</span><span class="p">:</span> <span class="n">axis</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">follow</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)))</span>
+<span class="c1"># NOTE: alternatively, manager.set_xlim method can be used:</span>
+<span class="c1">#   manager.connect(&#39;sin&#39;, &#39;update&#39;, lambda d, p=plot: manager.set_xlim(p, follow(d[0], 10.0, lower_bound=0.0)))</span>
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span><span class="n">sinGen</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setRealTime</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setDeltaT</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../_images/sine-wave-mpl.gif"><img alt="../_images/sine-wave-mpl.gif" src="../_images/sine-wave-mpl.gif" style="width: 400px;" /></a>
+</figure>
+</section>
+<section id="seaborn">
+<h3>Seaborn<a class="headerlink" href="#seaborn" title="Permalink to this headline">¶</a></h3>
+<p><a class="reference external" href="https://seaborn.pydata.org/">Seaborn</a> is a data visualization library, built on top of <cite>MatPlotLib</cite>.
+Hence, it can be easily integrated and used for plotting live data. It can simply be used by providing
+the <code class="code docutils literal notranslate"><span class="pre">PlotManager</span></code>’s constructor with a backend argument (the default argument is <code class="code docutils literal notranslate"><span class="pre">Backend.MPL</span></code>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.realtime.plotting</span> <span class="kn">import</span> <span class="n">Backend</span>
+<span class="n">manager</span> <span class="o">=</span> <span class="n">PlotManager</span><span class="p">(</span><span class="n">Backend</span><span class="o">.</span><span class="n">SNS</span><span class="p">)</span>  <span class="c1"># OR: Backend.SEABORN</span>
+</pre></div>
+</div>
+<p>That’s it. All other code remains the same. To change the theme to a <cite>Seaborn</cite> theme, you can either
+<a class="reference external" href="https://matplotlib.org/stable/gallery/style_sheets/style_sheets_reference.html">use a MatPlotLib theme</a> theme,
+or place the following code before the creation of the figure (see also
+<a class="reference external" href="https://seaborn.pydata.org/generated/seaborn.set_theme.html#seaborn.set_theme">Seaborn’s documentation</a> on
+this topic):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;darkgrid&quot;</span><span class="p">)</span>  <span class="c1"># or any of darkgrid, whitegrid, dark, white, ticks</span>
+</pre></div>
+</div>
+</section>
+<section id="jupyter-notebook">
+<span id="jupyter"></span><h3>Jupyter Notebook<a class="headerlink" href="#jupyter-notebook" title="Permalink to this headline">¶</a></h3>
+<p>These days, <a class="reference external" href="https://jupyter.org/">Jupyter Notebooks</a> are the most common way to collect experiments.
+Luckily, the <code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.plotting.PlotManager</span></code> can work with them without too much overhead. In fact,
+all that’s required is setting the magic function <code class="code docutils literal notranslate"><span class="pre">%matplotlib</span></code> <strong>before</strong> creating the plot. That’s it!</p>
+<p>A small caveat is the fact that a <code class="code docutils literal notranslate"><span class="pre">notebook</span></code> stays alive after the simulation finishes. This
+means the <code class="code docutils literal notranslate"><span class="pre">PlotManager</span></code> keeps polling for data. To stop this, connect a signal that terminates this
+polling to the simulator <strong>before</strong> starting the simulation:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Kills all polling requests and closes the plots</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;finished&quot;</span><span class="p">,</span> <span class="n">manager</span><span class="o">.</span><span class="n">terminate</span><span class="p">)</span>
+
+<span class="c1"># Kills all polling requests, but keeps plots alive</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;finished&quot;</span><span class="p">,</span> <span class="n">manager</span><span class="o">.</span><span class="n">stop</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Also take a look at the <code class="code docutils literal notranslate"><span class="pre">examples/notebook</span></code> folder for more info.</p>
+</section>
+<section id="tkinter">
+<h3>TkInter<a class="headerlink" href="#tkinter" title="Permalink to this headline">¶</a></h3>
+<p>Now, as mentioned in <a class="reference internal" href="RealTime.html"><span class="doc">Realtime Simulation</span></a>, there is also a <code class="code docutils literal notranslate"><span class="pre">TkInter</span></code> platform to run the realtime
+simulation on. This can be useful for creating graphical user interfaces (GUIs). Sometimes, such a
+GUI might be in need of a plot of the data. See also the <a class="reference internal" href="Dashboard.html"><span class="doc">TkInter Dashboard with Editable Values</span></a> example for a more complex
+variation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.realtime.plotting</span> <span class="kn">import</span> <span class="n">PlotManager</span><span class="p">,</span> <span class="n">LinePlot</span><span class="p">,</span> <span class="n">follow</span>
+<span class="kn">from</span> <span class="nn">CBD.simulator</span> <span class="kn">import</span> <span class="n">Simulator</span>
+
+<span class="kn">import</span> <span class="nn">tkinter</span> <span class="k">as</span> <span class="nn">tk</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_tkagg</span> <span class="kn">import</span> <span class="n">FigureCanvasTkAgg</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>    <span class="c1"># The sine wave never exceeds this range</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Tk</span><span class="p">()</span>
+
+<span class="c1"># Create a canvas to draw the plot on</span>
+<span class="n">canvas</span> <span class="o">=</span> <span class="n">FigureCanvasTkAgg</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="n">root</span><span class="p">)</span>  <span class="c1"># A Tk DrawingArea</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">get_tk_widget</span><span class="p">()</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">manager</span> <span class="o">=</span> <span class="n">PlotManager</span><span class="p">()</span>
+<span class="n">manager</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="n">sinGen</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;collector&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span><span class="p">),</span> <span class="n">LinePlot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">))</span>
+<span class="n">manager</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;sin&#39;</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">ax</span><span class="p">:</span> <span class="n">axis</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">follow</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)))</span>
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span><span class="n">sinGen</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setRealTime</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setRealTimePlatformTk</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setDeltaT</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span>
+
+<span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The plot will look exactly like the one for the default platform, except that it is inside a <code class="code docutils literal notranslate"><span class="pre">TkInter</span></code> window
+now. Notice that we used the <code class="code docutils literal notranslate"><span class="pre">MatPlotLib</span></code> backend for visualization in <code class="code docutils literal notranslate"><span class="pre">TkInter</span></code>.</p>
+</section>
+</section>
+<section id="using-bokeh">
+<h2>Using Bokeh<a class="headerlink" href="#using-bokeh" title="Permalink to this headline">¶</a></h2>
+<p>As an alternative for <cite>MatPlotLib</cite>, <a class="reference external" href="https://docs.bokeh.org/en/latest/index.html">Bokeh</a> kan be used. Bokeh creates
+a server on which you can view your plots in the browser. To launch the server use the command below. When not using
+this command, plots may start to “flicker” as the updates take too long.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bokeh serve &lt;experiment file&gt;
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In order to ensure that the <code class="xref py py-meth docutils literal notranslate"><span class="pre">follow()</span></code> function works for the x-axis, it is pertinent to set the
+<code class="code docutils literal notranslate"><span class="pre">x_range</span></code> attribute of the figure to the starting range. The same must be done for the y-axis.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://discourse.bokeh.org/t/how-to-update-x-range-y-range-in-callback/1586">https://discourse.bokeh.org/t/how-to-update-x-range-y-range-in-callback/1586</a></p>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For a clean termination of the plot, the <code class="code docutils literal notranslate"><span class="pre">PlotManager.stop</span></code> method needs to be called upon termination.
+Otherwise, Bokeh continues to actively poll for range updates, similar to <a class="reference internal" href="#jupyter"><span class="std std-ref">Jupyter Notebook</span></a>.</p>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">CBD.realtime.plotting</span> <span class="kn">import</span> <span class="n">PlotManager</span><span class="p">,</span> <span class="n">Backend</span><span class="p">,</span> <span class="n">LinePlot</span><span class="p">,</span> <span class="n">follow</span>
+<span class="kn">from</span> <span class="nn">CBD.simulator</span> <span class="kn">import</span> <span class="n">Simulator</span>
+
+<span class="kn">from</span> <span class="nn">bokeh.plotting</span> <span class="kn">import</span> <span class="n">figure</span><span class="p">,</span> <span class="n">curdoc</span>
+
+<span class="n">sinGen</span> <span class="o">=</span> <span class="n">SinGen</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">)</span>
+
+<span class="c1"># IMPORTANT: x_range set, because this will be updated later!</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">figure</span><span class="p">(</span><span class="n">plot_width</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">plot_height</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">x_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">y_range</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">document</span> <span class="o">=</span> <span class="n">curdoc</span><span class="p">()</span>
+<span class="n">document</span><span class="o">.</span><span class="n">add_root</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+
+<span class="c1"># Use the Bokeh Backend</span>
+<span class="n">manager</span> <span class="o">=</span> <span class="n">PlotManager</span><span class="p">(</span><span class="n">Backend</span><span class="o">.</span><span class="n">BOKEH</span><span class="p">)</span>
+<span class="n">manager</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="s2">&quot;sin&quot;</span><span class="p">,</span> <span class="n">sinGen</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;collector&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">fig</span><span class="p">,</span> <span class="n">LinePlot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">))</span>
+<span class="n">manager</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;sin&#39;</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">:</span>
+                    <span class="n">manager</span><span class="o">.</span><span class="n">bokeh_set_xlim</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">document</span><span class="p">,</span> <span class="n">follow</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)))</span>
+
+<span class="n">sim</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span><span class="n">sinGen</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;finished&quot;</span><span class="p">,</span> <span class="n">manager</span><span class="o">.</span><span class="n">stop</span><span class="p">)</span>  <span class="c1">#&lt;&lt; Stop polling the plots for updates</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setRealTime</span><span class="p">()</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">setDeltaT</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../_images/sine-wave-bokeh.gif"><img alt="../_images/sine-wave-bokeh.gif" src="../_images/sine-wave-bokeh.gif" style="width: 400px;" /></a>
+</figure>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The simulation keeps running in the backend until the server is (requested to be) terminated. This is
+because <cite>Bokeh</cite> does not have accurate client closure hooks. Please contact the repo authors if you find
+a way to do this. Normally, users should not experience any issues because of this.</p>
+</div>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="xref py py-mod docutils literal notranslate"><span class="pre">CBD.realtime.plotting</span></code> module has a lot of configuration possibilities and options that allow
+a wide range of visualisations. The examples above only differ in the plotting backend, but there exist
+many more possibilities.</p>
+<section id="following-the-signal">
+<h3>Following the Signal<a class="headerlink" href="#following-the-signal" title="Permalink to this headline">¶</a></h3>
+<p>Notice how the above examples all have a line similar to:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">manager</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;sin&#39;</span><span class="p">,</span> <span class="s1">&#39;update&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="n">ax</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">follow</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">lower_bound</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>This line connects a callback function that must be executed each time the <code class="code docutils literal notranslate"><span class="pre">sin</span></code> handler updates. In the
+case above, the callback function will update the x-axis limits by using the powerful
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">CBD.realtime.plotting.follow()</span></code> method. It will follow the most recent value by using a sliding window of
+size 10. The signal will be kept in the center (default) and the window will not show values lower than 0.</p>
+<p>It’s this function that allows the nice looking plot following. Take a look at the documentation for
+a detailed explanation on how this function can be used for more complex scenarios.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want to change both axes, either group the axis update in a helper function, or connect multiple
+callback functions.</p>
+</div>
+</section>
+<section id="different-kinds-of-plots">
+<h3>Different Kinds of Plots<a class="headerlink" href="#different-kinds-of-plots" title="Permalink to this headline">¶</a></h3>
+<p>Besides the default line plot, there are some additional kinds provided. Each of these plot kinds allow
+configuration using the backend (keyword) arguments. These are passed to the manager during registration
+(notice the <code class="code docutils literal notranslate"><span class="pre">LinePlot</span></code> class in the code above). Simply changing this class can produce different
+results.</p>
+<dl class="glossary">
+<dt id="term-Line-Plot-CBD.realtime.plotting.LinePlot">Line Plot (<code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.plotting.LinePlot</span></code>)<a class="headerlink" href="#term-Line-Plot-CBD.realtime.plotting.LinePlot" title="Permalink to this term">¶</a></dt><dd><p>The most common line plot was used in the above examples. It draws a straight line between all
+sequential points in the given dataset.</p>
+</dd>
+<dt id="term-Step-Plot-CBD.realtime.plotting.StepPlot">Step Plot (<code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.plotting.StepPlot</span></code>)<a class="headerlink" href="#term-Step-Plot-CBD.realtime.plotting.StepPlot" title="Permalink to this term">¶</a></dt><dd><p>A line plot that applies zero-order hold mechanics. Instead of drawing a straight line to the next
+data point, it will stay horizontal and will “jump” up stepwise.</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../_images/sine-wave-step.gif"><img alt="../_images/sine-wave-step.gif" src="../_images/sine-wave-step.gif" style="width: 400px;" /></a>
+</figure>
+</dd>
+<dt id="term-Scatter-Plot-CBD.realtime.plotting.ScatterPlot">Scatter Plot (<code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.plotting.ScatterPlot</span></code>)<a class="headerlink" href="#term-Scatter-Plot-CBD.realtime.plotting.ScatterPlot" title="Permalink to this term">¶</a></dt><dd><p>Only draws the data points, does not create a line between them.</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../_images/sine-wave-scatter.gif"><img alt="../_images/sine-wave-scatter.gif" src="../_images/sine-wave-scatter.gif" style="width: 400px;" /></a>
+</figure>
+</dd>
+<dt id="term-Arrow-CBD.realtime.plotting.Arrow">Arrow (<code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.plotting.Arrow</span></code>)<a class="headerlink" href="#term-Arrow-CBD.realtime.plotting.Arrow" title="Permalink to this term">¶</a></dt><dd><p>Draws an arrow vector from a given <code class="code docutils literal notranslate"><span class="pre">position</span></code>, with a certain <code class="code docutils literal notranslate"><span class="pre">size</span></code>. This uses the
+latest y value from the data as the (radian) angle amongst the unit circle (i.e., counter-clockwise
+= positive angle). The <code class="code docutils literal notranslate"><span class="pre">update</span></code> signal may also update the <code class="code docutils literal notranslate"><span class="pre">position</span></code> and the <code class="code docutils literal notranslate"><span class="pre">size</span></code>.</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../_images/arrow-wave.gif"><img alt="../_images/arrow-wave.gif" src="../_images/arrow-wave.gif" style="width: 400px;" /></a>
+</figure>
+</dd>
+</dl>
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Live Plotting of Data During the Simulation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example-model">Example Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-matplotlib">Using MatPlotLib</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-bokeh">Using Bokeh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../pyCBD.html">pyCBD package</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="RealTime.html"
+                          title="previous chapter">Realtime Simulation</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="Dashboard.html"
+                          title="next chapter">TkInter Dashboard with Editable Values</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="Dashboard.html" title="TkInter Dashboard with Editable Values"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="RealTime.html" title="Realtime Simulation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Live Plotting of Data During the Simulation</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>pyCBD.lib.io module &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyCBD.lib.endpoints module" href="pyCBD.lib.endpoints.html" />
+    <link rel="prev" title="pyCBD.lib.std module" href="pyCBD.lib.std.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.lib.endpoints.html" title="pyCBD.lib.endpoints module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.lib.std.html" title="pyCBD.lib.std module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" >pyCBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="pyCBD.lib.html" accesskey="U">Standard CBD Library (BBL)</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.lib.io module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-pyCBD.lib.io">
+<span id="pycbd-lib-io-module"></span><h1>pyCBD.lib.io module<a class="headerlink" href="#module-pyCBD.lib.io" title="Permalink to this headline">¶</a></h1>
+<p>This module contains the library building blocks to handle
+input/output in the form of file interaction.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.io.Interpolation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.io.</span></span><span class="sig-name descname"><span class="pre">Interpolation</span></span><a class="reference internal" href="_modules/pyCBD/lib/io.html#Interpolation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.io.Interpolation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Helper class to handle CSV interpolations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.lib.io.Interpolation.FIRST">
+<span class="sig-name descname"><span class="pre">FIRST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pyCBD.lib.io.Interpolation.FIRST" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the first value to interpolate.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.lib.io.Interpolation.LAST">
+<span class="sig-name descname"><span class="pre">LAST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pyCBD.lib.io.Interpolation.LAST" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use the last value to interpolate.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyCBD.lib.io.Interpolation.LINEAR">
+<span class="sig-name descname"><span class="pre">LINEAR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pyCBD.lib.io.Interpolation.LINEAR" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do a linear interpolation between the two values.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.io.Interpolation.interpolate">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">interpolate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/io.html#Interpolation.interpolate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.io.Interpolation.interpolate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interpolates between two elements. When <code class="code docutils literal notranslate"><span class="pre">t</span></code> corresponds to <code class="code docutils literal notranslate"><span class="pre">a[0]</span></code>,
+<code class="code docutils literal notranslate"><span class="pre">a[1]</span></code> will always be returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>tuple</em>) – A pair <code class="code docutils literal notranslate"><span class="pre">(time,</span> <span class="pre">value)</span></code>; representing the first element.</p></li>
+<li><p><strong>b</strong> (<em>tuple</em>) – A pair <code class="code docutils literal notranslate"><span class="pre">(time,</span> <span class="pre">value)</span></code>; representing the second element.</p></li>
+<li><p><strong>t</strong> (<em>float</em>) – The time at which the interpolation happens.</p></li>
+<li><p><strong>method</strong> (<em>int</em>) – The interpolation method to use.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>AssertionError</strong> – When <code class="code docutils literal notranslate"><span class="pre">a[0]</span> <span class="pre">&lt;=</span> <span class="pre">t</span> <span class="pre">&lt;</span> <span class="pre">b[0]</span></code> is not satisfied.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.io.ReadCSV">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.io.</span></span><span class="sig-name descname"><span class="pre">ReadCSV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'time'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repeat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/io.html#ReadCSV"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.io.ReadCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>Reads data from a CSV file and outputs it on the corresponding timestamps.
+The output ports are defined by the read CSV columns.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is required to have a column that represents the time. Furthermore,
+the dataset must be sorted w.r.t. this column.</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>When repeating, the last value of the CSV is used for time 0.0, hence it
+is prohibited to use time 0 in your CSV.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>file_name</strong> (<em>str</em>) – The name of the CSV to read.</p></li>
+<li><p><strong>hold</strong> (<a class="reference internal" href="#pyCBD.lib.io.Interpolation" title="pyCBD.lib.io.Interpolation"><em>Interpolation</em></a>) – How the data should be interpreted if the time falls
+in-between the records of the (sampled) CSV.</p></li>
+<li><p><strong>time_col</strong> (<em>str</em>) – The name of the column identifying the time.
+Defaults to <code class="code docutils literal notranslate"><span class="pre">&quot;time&quot;</span></code>.</p></li>
+<li><p><strong>repeat</strong> (<em>bool</em>) – When <code class="code docutils literal notranslate"><span class="pre">True</span></code>, the CSV will repeat when at end.
+Additionally, when the time is before the first time
+in the file, an interpolation is done between the last
+read and first read value. When <code class="code docutils literal notranslate"><span class="pre">False</span></code>, the
+first and last values will be outputted when lower/higher
+than the predefined range of times.
+Defaults to <code class="code docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>columns</strong> (<em>iter</em>) – A <code class="xref py py-class docutils literal notranslate"><span class="pre">set</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code> or a <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>,
+identifying all columns that need to be read. Must
+correspond to the columns that can be found in the
+file itself. When <code class="code docutils literal notranslate"><span class="pre">None</span></code> (default), all
+columns from the first line of the file will be used.
+In the case of a <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>, it is expected the
+keys are the column names and the values refer to
+the data types of these columns.
+I.e. <code class="code docutils literal notranslate"><span class="pre">{</span> <span class="pre">&quot;time&quot;:</span> <span class="pre">float</span> <span class="pre">}</span></code> reads the <code class="code docutils literal notranslate"><span class="pre">time</span></code>
+column as floats.
+For <code class="xref py py-class docutils literal notranslate"><span class="pre">set</span></code> and <code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code>, the data is read
+as strings.</p></li>
+<li><p><strong>dtype</strong> – The default data type of the CSV. This does not override
+optional values set by the <code class="code docutils literal notranslate"><span class="pre">columns</span></code> argument when it’s
+a <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>. Defaults to <code class="code docutils literal notranslate"><span class="pre">float</span></code>.</p></li>
+<li><p><strong>dialect</strong> (<em>str</em>) – The dialect for parsing the data. Defaults to <code class="code docutils literal notranslate"><span class="pre">excel</span></code>.</p></li>
+<li><p><strong>nan</strong> (<em>Any</em>) – The value to insert when some fields are missing data.
+Defaults to <code class="code docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>**</strong> – For other values, take a look at the
+<a class="reference external" href="https://docs.python.org/3/library/csv.html#csv-fmt-params">CSV Dialect and Formatting Parameters</a>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.io.ReadCSV.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/io.html#ReadCSV.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.io.ReadCSV.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.lib.io.WriteCSV">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.lib.io.</span></span><span class="sig-name descname"><span class="pre">WriteCSV</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_col</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'time'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/io.html#WriteCSV"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.io.WriteCSV" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyCBD.Core.html#pyCBD.Core.BaseBlock" title="pyCBD.Core.BaseBlock"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.Core.BaseBlock</span></code></a></p>
+<p>Outputs data to a CSV file.
+Every time a message is received, a new record is added to the file. At the
+end of the execution, when this block is destroyed, the file pointer will be
+closed (and removed).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – The name of the file to write to. All contents of this
+file will be cleared.</p></li>
+<li><p><strong>columns</strong> (<em>list</em>) – The (ordered) names of the columns in the file. These
+generally represent the input ports for this block.</p></li>
+<li><p><strong>time_col</strong> (<em>str</em>) – The name for the column to store the times. If this
+corresponds to a value listed in the <code class="code docutils literal notranslate"><span class="pre">columns</span></code>
+argument, that column will be used to keep track of the
+time. There will <strong>never</strong> be an input port called
+<code class="code docutils literal notranslate"><span class="pre">time_col</span></code>. If this value is not located in the
+<code class="code docutils literal notranslate"><span class="pre">columns</span></code> list, a new column is added to the
+front of the provided columns.
+Defaults to <code class="code docutils literal notranslate"><span class="pre">&quot;time&quot;</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><p>Take a look at the <a class="reference external" href="https://docs.python.org/3/library/csv.html#csv.DictWriter">csv.DictWriter</a>
+class for more info.</p>
+</dd>
+</dl>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>When the time-value is not needed in the CSV, just ignore it when reading it out again.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.lib.io.WriteCSV.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/lib/io.html#WriteCSV.compute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.lib.io.WriteCSV.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes this block’s operation, based on its inputs and store it as an output
+signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>curIteration</strong> (<em>int</em>) – The iteration at which we must compute this value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pyCBD.html">pyCBD package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pyCBD.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="pyCBD.lib.html">Standard CBD Library (BBL)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.html">pyCBD.realtime package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.tracers.html">pyCBD.tracers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.converters.html">pyCBD.converters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.loopsolvers.html">pyCBD.loopsolvers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.state_events.html">pyCBD.state_events module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.preprocessing.html">pyCBD.preprocessing package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="pyCBD.lib.std.html"
+                          title="previous chapter">pyCBD.lib.std module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="pyCBD.lib.endpoints.html"
+                          title="next chapter">pyCBD.lib.endpoints module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.lib.endpoints.html" title="pyCBD.lib.endpoints module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.lib.std.html" title="pyCBD.lib.std module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" >pyCBD package</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="pyCBD.lib.html" >Standard CBD Library (BBL)</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.lib.io module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

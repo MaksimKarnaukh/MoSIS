@@ -1,0 +1,611 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CBD.converters.hybrid &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.converters.hybrid</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for CBD.converters.hybrid</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module allows CBD models to be executed inside of a DEVS simulation.</span>
+
+<span class="sd">See Also:</span>
+<span class="sd">	`PythonPDEVS &lt;http://msdl.cs.mcgill.ca/projects/DEVS/PythonPDEVS&gt;`_</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pypdevs.DEVS</span> <span class="kn">import</span> <span class="n">AtomicDEVS</span>
+<span class="kn">from</span> <span class="nn">pypdevs.infinity</span> <span class="kn">import</span> <span class="n">INFINITY</span>
+<span class="kn">from</span> <span class="nn">CBD.Core</span> <span class="kn">import</span> <span class="n">CBD</span>
+<span class="kn">from</span> <span class="nn">CBD.lib.std</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">CBD.lib.endpoints</span> <span class="kn">import</span> <span class="n">SignalCollectorBlock</span>
+<span class="kn">from</span> <span class="nn">CBD.simulator</span> <span class="kn">import</span> <span class="n">Simulator</span>
+<span class="kn">from</span> <span class="nn">CBD.realtime.threadingBackend</span> <span class="kn">import</span> <span class="n">Platform</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;CBDRunner&#39;</span><span class="p">,</span> <span class="s1">&#39;prepare_cbd&#39;</span><span class="p">,</span> <span class="s1">&#39;CrossingDetection&#39;</span><span class="p">]</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<div class="viewcode-block" id="CrossingDetection"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CrossingDetection">[docs]</a><span class="k">class</span> <span class="nc">CrossingDetection</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Helper class that implements the crossing detection algorithms.</span>
+
+<span class="sd">	The following description concerns the default arguments for all functions.</span>
+<span class="sd">	On top of that, there may be some additional arguments defined, as listed in</span>
+<span class="sd">	the specific documentations below.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		t1 (float):     The x-value of the lower bound of the interval.</span>
+<span class="sd">		t2 (float):     The x-value of the higher bound of the interval.</span>
+<span class="sd">		y (float):      The value for which a crossing must be checked.</span>
+<span class="sd">		f:              A function that should return the y-value for a given x (or t).</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="CrossingDetection.linear"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CrossingDetection.linear">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">linear</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Finds the root of the crossing using linear interpolation.</span>
+<span class="sd">		No additional function calls or arguments are used.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">y1</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span>
+		<span class="n">y2</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">t2</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">y1</span> <span class="o">==</span> <span class="n">y2</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">y1</span>
+		<span class="k">return</span> <span class="p">(</span><span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">y2</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">y1</span><span class="p">)</span> <span class="o">+</span> <span class="n">t1</span></div>
+
+<div class="viewcode-block" id="CrossingDetection.regula_falsi"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CrossingDetection.regula_falsi">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">regula_falsi</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Implements the Illinois algorithm for finding the root for a crossing problem.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			eps (float):    Half of the upper bound for the relative error.</span>
+<span class="sd">							Defaults to 1e-5.</span>
+<span class="sd">			n (int):        The maximal amount of iterations to compute. Defaults to</span>
+<span class="sd">							5 million iterations.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			https://en.wikipedia.org/wiki/Regula_falsi</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">eps</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)</span>
+		<span class="n">n</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="mi">5</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+		<span class="n">y1</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">t1</span><span class="p">)</span> <span class="o">-</span> <span class="n">y</span>
+		<span class="n">y2</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">t2</span><span class="p">)</span> <span class="o">-</span> <span class="n">y</span>
+		<span class="k">assert</span> <span class="n">y1</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;No crossing possible in given range&quot;</span>
+		<span class="n">tn</span><span class="p">,</span> <span class="n">yn</span> <span class="o">=</span> <span class="n">t1</span><span class="p">,</span> <span class="n">y1</span>
+		<span class="n">side</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+			<span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">t1</span> <span class="o">-</span> <span class="n">t2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">eps</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">t1</span> <span class="o">+</span> <span class="n">t2</span><span class="p">):</span> <span class="k">break</span>
+			<span class="n">tn</span> <span class="o">=</span> <span class="p">(</span><span class="n">y1</span> <span class="o">*</span> <span class="n">t2</span> <span class="o">-</span> <span class="n">y2</span> <span class="o">*</span> <span class="n">t1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span>
+			<span class="n">yn</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">tn</span><span class="p">)</span> <span class="o">-</span> <span class="n">y</span>
+			<span class="k">if</span> <span class="n">yn</span> <span class="o">*</span> <span class="n">y2</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="n">t2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">tn</span><span class="p">,</span> <span class="n">yn</span>
+				<span class="k">if</span> <span class="n">side</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+					<span class="n">y1</span> <span class="o">/=</span> <span class="mi">2</span>
+				<span class="n">side</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+			<span class="k">elif</span> <span class="n">yn</span> <span class="o">*</span> <span class="n">y1</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="n">t1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">tn</span><span class="p">,</span> <span class="n">yn</span>
+				<span class="k">if</span> <span class="n">side</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+					<span class="n">y2</span> <span class="o">/=</span> <span class="mi">2</span>
+				<span class="n">side</span> <span class="o">=</span> <span class="mi">1</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="k">break</span>
+		<span class="k">return</span> <span class="n">tn</span></div>
+
+<div class="viewcode-block" id="CrossingDetection.ITP"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CrossingDetection.ITP">[docs]</a>	<span class="nd">@staticmethod</span>
+	<span class="k">def</span> <span class="nf">ITP</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="sa">r</span><span class="sd">&quot;&quot;&quot;Implements the Interpolation-Truncation-Projection algorithm for finding</span>
+<span class="sd">		the root of a function.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			eps (float):    Minimal interval size. Defaults to 1e-5.</span>
+<span class="sd">			k1 (float):     First truncation size hyperparameter. Must be in the</span>
+<span class="sd">							range of :math:`(0, \infty)`. Defaults to 0.1.</span>
+<span class="sd">			k2 (float):     Second truncation size hyperparameter. Must be in the</span>
+<span class="sd">							range of :math:`[1, 1 + \frac{1}{2}(1 + \sqrt{5})]`.</span>
+<span class="sd">							Defaults to 1.5.</span>
+<span class="sd">			n0 (float):     Slack variable to control the size of the interval for</span>
+<span class="sd">							the projection step. Must be in :math:`[0, \infty)`.</span>
+<span class="sd">							When 0, the average number of iterations will be less</span>
+<span class="sd">							than that of the bisection method. Defaults to 0.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			https://en.wikipedia.org/wiki/ITP_method</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">k1</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;k1&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+		<span class="n">k2</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;k2&quot;</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+		<span class="n">eps</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;eps&quot;</span><span class="p">,</span> <span class="mf">1e-5</span><span class="p">)</span>
+		<span class="n">n0</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;n0&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+		<span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">k1</span><span class="p">,</span> <span class="s2">&quot;For ITP, k1 must be strictly positive.&quot;</span>
+		<span class="k">assert</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">k2</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.</span><span class="p">),</span> <span class="s2">&quot;For ITP, k2 must be in [1, 1 + phi].&quot;</span>
+		<span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">n0</span><span class="p">,</span> <span class="s2">&quot;For ITP, n0 must be positive or zero.&quot;</span>
+
+		<span class="n">sign</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+
+		<span class="n">a</span> <span class="o">=</span> <span class="n">t1</span>
+		<span class="n">b</span> <span class="o">=</span> <span class="n">t2</span>
+		<span class="n">ya</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="n">y</span>
+		<span class="n">yb</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="o">-</span> <span class="n">y</span>
+
+		<span class="k">if</span> <span class="n">ya</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">a</span>
+		<span class="k">if</span> <span class="n">yb</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">b</span>
+		<span class="k">assert</span> <span class="n">ya</span> <span class="o">*</span> <span class="n">yb</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;No crossing possible in given range&quot;</span>
+
+		<span class="c1"># Preprocessing</span>
+		<span class="n">nh</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">eps</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span>
+		<span class="n">nm</span> <span class="o">=</span> <span class="n">nh</span> <span class="o">+</span> <span class="n">n0</span>
+		<span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+
+		<span class="k">while</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">eps</span><span class="p">):</span>
+			<span class="n">xh</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+			<span class="n">r</span> <span class="o">=</span> <span class="n">eps</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">**</span> <span class="p">(</span><span class="n">nm</span> <span class="o">-</span> <span class="n">j</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+			<span class="n">d</span> <span class="o">=</span> <span class="n">k1</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">**</span> <span class="n">k2</span>
+
+			<span class="c1"># Interpolation</span>
+			<span class="n">xf</span> <span class="o">=</span> <span class="p">(</span><span class="n">yb</span> <span class="o">*</span> <span class="n">a</span> <span class="o">-</span> <span class="n">ya</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">yb</span> <span class="o">-</span> <span class="n">ya</span><span class="p">)</span>
+
+			<span class="c1"># Truncation</span>
+			<span class="n">s</span> <span class="o">=</span> <span class="n">sign</span><span class="p">(</span><span class="n">xh</span> <span class="o">-</span> <span class="n">xf</span><span class="p">)</span>
+			<span class="k">if</span> <span class="n">d</span> <span class="o">&lt;=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xh</span> <span class="o">-</span> <span class="n">xf</span><span class="p">):</span>
+				<span class="n">xt</span> <span class="o">=</span> <span class="n">xf</span> <span class="o">+</span> <span class="n">s</span> <span class="o">*</span> <span class="n">d</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">xt</span> <span class="o">=</span> <span class="n">xh</span>
+
+			<span class="c1"># Projection</span>
+			<span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">xt</span> <span class="o">-</span> <span class="n">xh</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">r</span><span class="p">:</span>
+				<span class="n">xI</span> <span class="o">=</span> <span class="n">xt</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">xI</span> <span class="o">=</span> <span class="n">xh</span> <span class="o">-</span> <span class="n">s</span> <span class="o">*</span> <span class="n">r</span>
+
+			<span class="c1"># Update Interval</span>
+			<span class="n">yI</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">xI</span><span class="p">)</span> <span class="o">-</span> <span class="n">y</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">ya</span> <span class="o">-</span> <span class="n">yb</span><span class="p">)</span> <span class="o">*</span> <span class="n">yI</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="n">b</span> <span class="o">=</span> <span class="n">xI</span>
+				<span class="n">yb</span> <span class="o">=</span> <span class="n">yI</span>
+			<span class="k">elif</span> <span class="p">(</span><span class="n">ya</span> <span class="o">-</span> <span class="n">yb</span><span class="p">)</span> <span class="o">*</span> <span class="n">yI</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="n">a</span> <span class="o">=</span> <span class="n">xI</span>
+				<span class="n">ya</span> <span class="o">=</span> <span class="n">yI</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">a</span> <span class="o">=</span> <span class="n">xI</span>
+				<span class="n">b</span> <span class="o">=</span> <span class="n">xI</span>
+			<span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+
+		<span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span></div></div>
+
+<span class="kn">from</span> <span class="nn">CBD.converters.CBDDraw</span> <span class="kn">import</span> <span class="n">gvDraw</span>
+<div class="viewcode-block" id="CBDRunner"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CBDRunner">[docs]</a><span class="k">class</span> <span class="nc">CBDRunner</span><span class="p">(</span><span class="n">AtomicDEVS</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Atomic DEVS model that can be used to execute a CBD model.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		name (str):         The name of the CBD model.</span>
+<span class="sd">		cbd (CBD.Core.CBD): The CBD model to run.</span>
+<span class="sd">		initials (dict):    The initial conditions for all the inputs.</span>
+<span class="sd">		stopped (bool):     Whether to start from paused mode or not. In this paused mode, the</span>
+<span class="sd">							model will not progress. Useful when in combination with multiple</span>
+<span class="sd">							ODEs. Defaults to :code:`False`.</span>
+<span class="sd">		crossings (dict):   Dictionary of :code:`{ name -&gt; value }` that defines which</span>
+<span class="sd">							variable needs to be detected for a crossing through a certain value.</span>
+<span class="sd">							The value can be a string, starting with either :code:`&lt;`, :code:`&gt;`</span>
+<span class="sd">							or :code:`=`, which respectively means a crossing from low to high,</span>
+<span class="sd">							high to low or either side. Notice that :code:`=` is the default</span>
+<span class="sd">							starting character assumed when the value is a float. When</span>
+<span class="sd">							:code:`None`, no detection will happen. Defaults to :code:`None`.</span>
+<span class="sd">		algo:               The root finding algorithm function. See :class:`CrossingDetection`</span>
+<span class="sd">							for more info.</span>
+<span class="sd">		**kwargs:           Optional parameters for the zero-crossing detection algorithm.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">cbd</span><span class="p">,</span> <span class="n">initials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stopped</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">crossings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">algo</span><span class="o">=</span><span class="n">CrossingDetection</span><span class="o">.</span><span class="n">ITP</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+		<span class="n">AtomicDEVS</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">initials</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">initials</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">initials</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">original_model</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Hname</span> <span class="o">=</span> <span class="n">prepare_cbd</span><span class="p">(</span><span class="n">cbd</span><span class="o">.</span><span class="n">clone</span><span class="p">(),</span> <span class="n">initials</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">crossings</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">crossings</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">crossings</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">algo</span> <span class="o">=</span> <span class="n">algo</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="p">{</span>
+			<span class="s2">&quot;CBD&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+			<span class="s2">&quot;curIt&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+			<span class="s2">&quot;delta_t&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+			<span class="s2">&quot;initials&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">initials</span><span class="p">,</span>
+			<span class="s2">&quot;request_output&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+			<span class="s2">&quot;request_compute&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+			<span class="s2">&quot;zero_crossing&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+			<span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+			<span class="s2">&quot;stopped&quot;</span><span class="p">:</span> <span class="n">stopped</span>
+		<span class="p">}</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">reinit</span><span class="p">()</span>
+		<span class="n">gvDraw</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;CBD&quot;</span><span class="p">],</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.dot&quot;</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">b</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;InputPortBlock&quot;</span><span class="p">,</span> <span class="n">cbd</span><span class="o">.</span><span class="n">getBlocks</span><span class="p">()):</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="n">inp</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">addInPort</span><span class="p">(</span><span class="n">inp</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">())</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">stop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">addInPort</span><span class="p">(</span><span class="s2">&quot;stop&quot;</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">outputs</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="k">for</span> <span class="n">out</span> <span class="ow">in</span> <span class="n">cbd</span><span class="o">.</span><span class="n">getSignals</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="n">out</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">addOutPort</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">out</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">crossings</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s2">&quot;crossing-&quot;</span> <span class="o">+</span> <span class="n">out</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">addOutPort</span><span class="p">(</span><span class="s2">&quot;crossing-&quot;</span> <span class="o">+</span> <span class="n">out</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CBDRunner.reinit"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CBDRunner.reinit">[docs]</a>	<span class="k">def</span> <span class="nf">reinit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Re-initializes the CBD model.</span>
+
+<span class="sd">		Warning:</span>
+<span class="sd">			Use this function with care. It is expected a simulation will commence</span>
+<span class="sd">			after this function was called.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;CBD&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">original_model</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">apply_initials</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;CBD&quot;</span><span class="p">])</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">getClock</span><span class="p">()</span><span class="o">.</span><span class="n">setStartTime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">])</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">set_delta</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="CBDRunner.apply_initials"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CBDRunner.apply_initials">[docs]</a>	<span class="k">def</span> <span class="nf">apply_initials</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Applies the initial values.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;initials&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;CBD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">getBlockByName</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CBDRunner.get_signal"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CBDRunner.get_signal">[docs]</a>	<span class="k">def</span> <span class="nf">get_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pname</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Gets the output for a given name.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			pname (str):    The name of the port.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;CBD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">getBlockByName</span><span class="p">(</span><span class="n">pname</span><span class="p">)</span><span class="o">.</span><span class="n">getSignalHistory</span><span class="p">(</span><span class="s2">&quot;OUT1&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span></div>
+
+<div class="viewcode-block" id="CBDRunner.crossing_detection"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CBDRunner.crossing_detection">[docs]</a>	<span class="k">def</span> <span class="nf">crossing_detection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y0</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Crossing root finder for a signal.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			signal (str):   The port to detect.</span>
+<span class="sd">			y (float):      The value to cross.</span>
+<span class="sd">			y0 (float):     Y-value of the lower end of the interval.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">def</span> <span class="nf">F</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+			<span class="n">h</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span>
+			<span class="k">if</span> <span class="n">h</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="k">return</span> <span class="n">y0</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">crossing_function</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">signal</span><span class="p">)</span>
+		<span class="n">t1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span>
+		<span class="n">t2</span> <span class="o">=</span> <span class="n">t1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;delta_t&quot;</span><span class="p">]</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">algo</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CBDRunner.crossing_function"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CBDRunner.crossing_function">[docs]</a>	<span class="k">def</span> <span class="nf">crossing_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">signal</span><span class="p">,</span> <span class="n">restore</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Computes the function value of the simulation after a specified delay.</span>
+<span class="sd">		This will be used in combination with :class:`CrossingDetection` to</span>
+<span class="sd">		find the roots of a function.</span>
+
+<span class="sd">		This function will first rewind the simulator such that :code:`h` can be</span>
+<span class="sd">		applied, before stepping until :code:`h` was found. Afterwards, the</span>
+<span class="sd">		simulation is possibly restored to the original state.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			h (float):      The delay.</span>
+<span class="sd">			signal (str):   The signal that must be read. When :code:`None`,</span>
+<span class="sd">							no signal will be read.</span>
+<span class="sd">			restore (bool): When :code:`True`, the simulation will be restored after</span>
+<span class="sd">							the value was found. Defaults to :code:`True`.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">oh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_delta</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">_rewind</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">_rewind</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">set_delta</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+		<span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">getClock</span><span class="p">()</span><span class="o">.</span><span class="n">getBlockByName</span><span class="p">(</span><span class="s2">&quot;Past&quot;</span><span class="p">)</span>
+		<span class="n">p</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span> <span class="o">+</span> <span class="n">oh</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">_do_single_step</span><span class="p">()</span>
+		<span class="n">p</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span> <span class="o">+</span> <span class="n">oh</span><span class="p">)</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">_do_single_step</span><span class="p">()</span>
+
+		<span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+		<span class="k">if</span> <span class="n">signal</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;CBD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">getSignal</span><span class="p">(</span><span class="n">signal</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+
+		<span class="k">if</span> <span class="n">restore</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">_rewind</span><span class="p">()</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">_rewind</span><span class="p">()</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">set_delta</span><span class="p">(</span><span class="n">oh</span><span class="p">)</span>
+			<span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">getClock</span><span class="p">()</span><span class="o">.</span><span class="n">getBlockByName</span><span class="p">(</span><span class="s2">&quot;Past&quot;</span><span class="p">)</span>
+			<span class="n">p</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span> <span class="o">+</span> <span class="n">oh</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">_do_single_step</span><span class="p">()</span>
+			<span class="n">p</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">getValue</span><span class="p">()</span> <span class="o">+</span> <span class="n">oh</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">_do_single_step</span><span class="p">()</span>
+
+		<span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="CBDRunner.set_delta"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CBDRunner.set_delta">[docs]</a>	<span class="k">def</span> <span class="nf">set_delta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets the maximal allowed delta of the clock.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			val (float):    The maximal allowed delta.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;CBD&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">getBlockByName</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Hname</span><span class="p">)</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="CBDRunner.get_delta"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CBDRunner.get_delta">[docs]</a>	<span class="k">def</span> <span class="nf">get_delta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Obtains the last used delta.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">getClock</span><span class="p">()</span><span class="o">.</span><span class="n">getInputSignal</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;h&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">value</span></div>
+
+<div class="viewcode-block" id="CBDRunner.timeAdvance"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CBDRunner.timeAdvance">[docs]</a>	<span class="k">def</span> <span class="nf">timeAdvance</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		See Also:</span>
+<span class="sd">			`PythonPDEVS documentation &lt;https://msdl.uantwerpen.be/documentation/PythonPDEVS/ADEVS_int.html&gt;`_</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;stopped&quot;</span><span class="p">]:</span>
+			<span class="k">return</span> <span class="n">INFINITY</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;request_compute&quot;</span><span class="p">]:</span>
+			<span class="k">return</span> <span class="mf">0.0</span>
+		<span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;delta_t&quot;</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="CBDRunner.outputFnc"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CBDRunner.outputFnc">[docs]</a>	<span class="k">def</span> <span class="nf">outputFnc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		See Also:</span>
+<span class="sd">			`PythonPDEVS documentation &lt;https://msdl.uantwerpen.be/documentation/PythonPDEVS/ADEVS_int.html&gt;`_</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">res</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="n">cross</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;zero_crossing&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;zero_crossing&quot;</span><span class="p">]:</span>
+				<span class="n">cross</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;crossing-&quot;</span> <span class="o">+</span> <span class="n">c</span><span class="p">)</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;request_output&quot;</span><span class="p">]:</span>
+			<span class="k">for</span> <span class="n">out</span><span class="p">,</span> <span class="n">port</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+				<span class="k">if</span> <span class="n">out</span> <span class="ow">in</span> <span class="n">cross</span><span class="p">:</span>
+					<span class="n">res</span><span class="p">[</span><span class="n">port</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+				<span class="k">elif</span> <span class="ow">not</span> <span class="n">out</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;crossing-&quot;</span><span class="p">):</span>
+					<span class="n">res</span><span class="p">[</span><span class="n">port</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_signal</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="CBDRunner.intTransition"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CBDRunner.intTransition">[docs]</a>	<span class="k">def</span> <span class="nf">intTransition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		See Also:</span>
+<span class="sd">			`PythonPDEVS documentation &lt;https://msdl.uantwerpen.be/documentation/PythonPDEVS/ADEVS_int.html&gt;`_</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">ta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">timeAdvance</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="n">ta</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;request_output&quot;</span><span class="p">]:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;request_output&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;request_compute&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;request_output&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;request_compute&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;zero_crossing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;curIt&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;curIt&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">_do_single_step</span><span class="p">()</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;request_output&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
+
+		<span class="n">old</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">crossings</span><span class="p">:</span>
+			<span class="c1"># print(&quot;PRE&quot;, c, self.state[&quot;CBD&quot;].getBlockByName(c).getSignalHistory(&quot;OUT1&quot;)[-1])</span>
+			<span class="n">old</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_signal</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;delta_t&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_delta</span><span class="p">()</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">_do_single_step</span><span class="p">()</span>
+
+		<span class="n">cds</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="c1"># TODO: can this be computed for all signals at once, instead of signal per signal?</span>
+		<span class="k">for</span> <span class="n">z</span><span class="p">,</span> <span class="n">yq</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">crossings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_signal</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+			<span class="n">y</span> <span class="o">=</span> <span class="n">yq</span>
+			<span class="n">q</span> <span class="o">=</span> <span class="s1">&#39;=&#39;</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">yq</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+				<span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">yq</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+				<span class="n">q</span> <span class="o">=</span> <span class="n">yq</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="c1"># print(&quot;POST&quot;, z, self.state[&quot;CBD&quot;].getBlockByName(z).getSignalHistory(&quot;OUT1&quot;)[-1])</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">old</span><span class="p">[</span><span class="n">z</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">value</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+				<span class="c1"># A crossing will happen!</span>
+				<span class="k">if</span> <span class="n">q</span> <span class="o">==</span> <span class="s1">&#39;=&#39;</span> <span class="ow">or</span> <span class="p">(</span><span class="n">q</span> <span class="o">==</span> <span class="s1">&#39;&lt;&#39;</span> <span class="ow">and</span> <span class="n">old</span><span class="p">[</span><span class="n">z</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">value</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">q</span> <span class="o">==</span> <span class="s1">&#39;&gt;&#39;</span> <span class="ow">and</span> <span class="n">old</span><span class="p">[</span><span class="n">z</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">value</span><span class="p">):</span>
+					<span class="n">cds</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">crossing_detection</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">old</span><span class="p">[</span><span class="n">z</span><span class="p">]),</span> <span class="p">[])</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cds</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="n">fzc</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">cds</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;zero_crossing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cds</span><span class="p">[</span><span class="n">fzc</span><span class="p">]</span>
+			<span class="n">h</span> <span class="o">=</span> <span class="n">fzc</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;delta_t&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">h</span>
+
+			<span class="c1"># print(&quot;CROSSING HAPPENED&quot;)</span>
+
+			<span class="bp">self</span><span class="o">.</span><span class="n">crossing_function</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">set_delta</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">))</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span></div>
+
+<div class="viewcode-block" id="CBDRunner.extTransition"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.CBDRunner.extTransition">[docs]</a>	<span class="k">def</span> <span class="nf">extTransition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		See Also:</span>
+<span class="sd">			`PythonPDEVS documentation &lt;https://msdl.uantwerpen.be/documentation/PythonPDEVS/ADEVS_int.html&gt;`_</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">elapsed</span>
+
+		<span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;stopped&quot;</span><span class="p">]:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;delta_t&quot;</span><span class="p">]</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">elapsed</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;delta_t&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stop</span> <span class="ow">in</span> <span class="n">inputs</span> <span class="ow">and</span> <span class="n">inputs</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">]:</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;request_output&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;stopped&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
+
+		<span class="k">for</span> <span class="n">inport</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="k">if</span> <span class="n">inport</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">initials</span><span class="p">:</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;initials&quot;</span><span class="p">][</span><span class="n">inport</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">reinit</span><span class="p">()</span>
+
+		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;request_compute&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;request_output&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;stopped&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">[</span><span class="s2">&quot;curIt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span></div>
+
+	<span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">simulator</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span></div>
+
+
+<span class="c1"># TODO: fix</span>
+<div class="viewcode-block" id="prepare_cbd"><a class="viewcode-back" href="../../../CBD.converters.hybrid.html#CBD.converters.hybrid.prepare_cbd">[docs]</a><span class="k">def</span> <span class="nf">prepare_cbd</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">initials</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Obtains a CBD model that can be executed with the :class:`CBDRunner`.</span>
+<span class="sd">	The model will be cloned and all input ports will be altered to become constant</span>
+<span class="sd">	blocks. Additionally, a :class:`CBD.lib.std.ConstantBlock` and a</span>
+<span class="sd">	:class:`CBD.lib.std.MinBlock` will be added in-between the Clock and the block</span>
+<span class="sd">	that connects to the Clock over the :code:`h` input.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		model (CBD.Core.CBD):    The CBD model to prepare.</span>
+<span class="sd">		initials (dict):        A dictionary in the form of</span>
+<span class="sd">								:code:`input port name -&gt; initial value`.</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		A tuple of :code:`(prepared CBD, name)` where :code:`name` identifies the</span>
+<span class="sd">		name for the</span>
+
+<span class="sd">	Note:</span>
+<span class="sd">		Usually, this function shouldn&#39;t be called by a user.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">cbd</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+	<span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="p">(</span><span class="n">b</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">getBlocks</span><span class="p">()</span> <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;InputPortBlock&quot;</span><span class="p">):</span>
+		<span class="n">name</span> <span class="o">=</span> <span class="n">inp</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span>
+		<span class="n">cbd</span><span class="o">.</span><span class="n">removeBlock</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+		<span class="n">cbd</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">initials</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+		<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">getBlocks</span><span class="p">():</span>
+			<span class="k">if</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;InputPortBlock&quot;</span><span class="p">:</span> <span class="k">continue</span>
+			<span class="k">for</span> <span class="n">P</span> <span class="ow">in</span> <span class="n">block</span><span class="o">.</span><span class="n">getInputPorts</span><span class="p">():</span>
+				<span class="k">if</span> <span class="n">P</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span> <span class="o">==</span> <span class="n">name</span><span class="p">:</span>
+					<span class="n">cbd</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">input_port_name</span><span class="o">=</span><span class="n">k</span><span class="p">)</span>
+
+	<span class="c1"># Set clock minimal H</span>
+	<span class="n">Hname</span> <span class="o">=</span> <span class="n">cbd</span><span class="o">.</span><span class="n">getUniqueBlockName</span><span class="p">(</span><span class="s2">&quot;H&quot;</span><span class="p">)</span>
+	<span class="n">cbd</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="n">Hname</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)))</span>
+	<span class="n">Mname</span> <span class="o">=</span> <span class="n">cbd</span><span class="o">.</span><span class="n">getUniqueBlockName</span><span class="p">(</span><span class="s2">&quot;Min&quot;</span><span class="p">)</span>
+	<span class="n">cbd</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">MinBlock</span><span class="p">(</span><span class="n">Mname</span><span class="p">))</span>
+	<span class="n">clock</span> <span class="o">=</span> <span class="n">cbd</span><span class="o">.</span><span class="n">getClock</span><span class="p">()</span>
+	<span class="n">cbd</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">Hname</span><span class="p">,</span> <span class="n">Mname</span><span class="p">)</span>
+	<span class="n">cbd</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">clock</span><span class="o">.</span><span class="n">getPortConnectedToInput</span><span class="p">(</span><span class="s1">&#39;h&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">block</span><span class="p">,</span> <span class="n">Mname</span><span class="p">)</span>
+	<span class="n">cbd</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">Mname</span><span class="p">,</span> <span class="n">clock</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">cbd</span><span class="p">,</span> <span class="n">Hname</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+	<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+	<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+		<span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">x</span> <span class="o">**</span> <span class="mi">3</span>
+	<span class="nb">print</span><span class="p">(</span><span class="n">CrossingDetection</span><span class="o">.</span><span class="n">regula_falsi</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+	<span class="c1"># def f(x):</span>
+	<span class="c1"># 	return x ** 3 - 2*x</span>
+	<span class="nb">print</span><span class="p">(</span><span class="n">CrossingDetection</span><span class="o">.</span><span class="n">ITP</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">k1</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">k2</span><span class="o">=</span><span class="mf">1.5</span><span class="p">))</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../CBD.html">CBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.converters.hybrid</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

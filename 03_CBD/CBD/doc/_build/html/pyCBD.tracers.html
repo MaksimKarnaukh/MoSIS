@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>pyCBD.tracers package &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyCBD.tracers.color module" href="pyCBD.tracers.color.html" />
+    <link rel="prev" title="Using CBDs with LEGO MINDSTORMS EV3" href="pyCBD.lib.ev3.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.tracers.color.html" title="pyCBD.tracers.color module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.lib.ev3.html" title="Using CBDs with LEGO MINDSTORMS EV3"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" accesskey="U">pyCBD package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.tracers package</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-pyCBD.tracers">
+<span id="pycbd-tracers-package"></span><h1>pyCBD.tracers package<a class="headerlink" href="#module-pyCBD.tracers" title="Permalink to this headline">¶</a></h1>
+<p>The tracers module provides an interface for tracing simulation data.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.tracers.Tracers">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.tracers.</span></span><span class="sig-name descname"><span class="pre">Tracers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers.html#Tracers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.Tracers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Collection object for multiple tracers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sim</strong> (<a class="reference internal" href="pyCBD.simulator.html#pyCBD.simulator.Simulator" title="pyCBD.simulator.Simulator"><em>Simulator</em></a>) – The CBD simulator of the trace object.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This class will maintain and keep track of the UID of a tracer.
+Don’t set this yourself!</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.Tracers.hasTracers">
+<span class="sig-name descname"><span class="pre">hasTracers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers.html#Tracers.hasTracers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.Tracers.hasTracers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks that there are registered tracers.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.Tracers.thread_loop">
+<span class="sig-name descname"><span class="pre">thread_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers.html#Tracers.thread_loop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.Tracers.thread_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mainloop for tracing information. reduces the amount of threads created.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.Tracers.trace">
+<span class="sig-name descname"><span class="pre">trace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers.html#Tracers.trace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.Tracers.trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traces an event.
+:param event: The event to trace.
+:type event: callable
+:param args: The list of arguments for the event.
+:type args: iter</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.Tracers.registerTracer">
+<span class="sig-name descname"><span class="pre">registerTracer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tracer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recover</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers.html#Tracers.registerTracer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.Tracers.registerTracer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a specific tracer to use.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tracer</strong> – Either a tuple of <code class="code docutils literal notranslate"><span class="pre">(file,</span> <span class="pre">classname,</span> <span class="pre">[args])</span></code>,
+similar to <a class="reference external" href="http://msdl.uantwerpen.be/projects/DEVS/PythonPDEVS">PythonPDEVS</a>;
+or an instance of a subclass of <a class="reference internal" href="pyCBD.tracers.baseTracer.html#pyCBD.tracers.baseTracer.BaseTracer" title="pyCBD.tracers.baseTracer.BaseTracer"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.tracers.baseTracer.BaseTracer</span></code></a>.</p></li>
+<li><p><strong>recover</strong> (<em>bool</em>) – Whether or not this is a recovered registration; i.e. whether or not the trace
+file should be appended. Defaults to <code class="code docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.Tracers.deregisterTracer">
+<span class="sig-name descname"><span class="pre">deregisterTracer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers.html#Tracers.deregisterTracer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.Tracers.deregisterTracer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops and removes a specific tracer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>uid</strong> (<em>int</em>) – The tracer id to stop.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.Tracers.startTracers">
+<span class="sig-name descname"><span class="pre">startTracers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'model'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers.html#Tracers.startTracers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.Tracers.startTracers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the tracers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>interp</strong> (<em>pyCBD.tracers.interpolator.Interpolator</em>) – The interpolator to use for the tracers.</p></li>
+<li><p><strong>model_name</strong> (<em>str</em>) – The name of the model.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Returns:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.Tracers.stopTracers">
+<span class="sig-name descname"><span class="pre">stopTracers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">term_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers.html#Tracers.stopTracers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.Tracers.stopTracers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops all tracers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>term_time</strong> (<em>numeric</em>) – The termination time.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.Tracers.getById">
+<span class="sig-name descname"><span class="pre">getById</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">uid</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers.html#Tracers.getById"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.Tracers.getById" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains a specific tracer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>uid</strong> (<em>int</em>) – The tracer id to obtain.</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the tracer does not exist.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.Tracers.traceStartNewIteration">
+<span class="sig-name descname"><span class="pre">traceStartNewIteration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers.html#Tracers.traceStartNewIteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.Tracers.traceStartNewIteration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traces a new iteration start.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>curIt</strong> (<em>int</em>) – The current iteration.</p></li>
+<li><p><strong>time</strong> (<em>numeric</em>) – The current simulation time.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.Tracers.traceEndNewIteration">
+<span class="sig-name descname"><span class="pre">traceEndNewIteration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers.html#Tracers.traceEndNewIteration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.Tracers.traceEndNewIteration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traces a new iteration end.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>curIt</strong> (<em>int</em>) – The current iteration.</p></li>
+<li><p><strong>time</strong> (<em>numeric</em>) – The current simulation time.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.Tracers.traceCompute">
+<span class="sig-name descname"><span class="pre">traceCompute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">curIteration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers.html#Tracers.traceCompute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.Tracers.traceCompute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traces the computation of a specific block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>curIteration</strong> (<em>int</em>) – The current iteration.</p></li>
+<li><p><strong>block</strong> (<em>CBD.Core.BaseBlock</em>) – The block for which a compute just happened.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.tracers.Tracers.traceEndSimulation">
+<span class="sig-name descname"><span class="pre">traceEndSimulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/tracers.html#Tracers.traceEndSimulation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.tracers.Tracers.traceEndSimulation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Traces the end of the simulation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>stime</strong> (<em>numeric</em>) – The final simulation time.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.tracers.color.html">pyCBD.tracers.color module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.tracers.baseTracer.html">pyCBD.tracers.baseTracer module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.tracers.tracerVerbose.html">pyCBD.tracers.tracerVerbose module</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pyCBD.html">pyCBD package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pyCBD.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.lib.html">Standard CBD Library (BBL)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.realtime.html">pyCBD.realtime package</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pyCBD.tracers package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.converters.html">pyCBD.converters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.loopsolvers.html">pyCBD.loopsolvers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.state_events.html">pyCBD.state_events module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.preprocessing.html">pyCBD.preprocessing package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.html#submodules">Submodules</a></li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="pyCBD.lib.ev3.html"
+                          title="previous chapter">Using CBDs with LEGO MINDSTORMS EV3</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="pyCBD.tracers.color.html"
+                          title="next chapter">pyCBD.tracers.color module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.tracers.color.html" title="pyCBD.tracers.color module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.lib.ev3.html" title="Using CBDs with LEGO MINDSTORMS EV3"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" >pyCBD package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.tracers package</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

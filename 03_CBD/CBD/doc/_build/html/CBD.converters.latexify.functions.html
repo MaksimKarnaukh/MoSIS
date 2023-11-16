@@ -1,0 +1,581 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>CBD.converters.latexify.functions module &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Continuous Time Simulation" href="examples/ContinuousTime.html" />
+    <link rel="prev" title="CBD.converters.latexify.CBD2Latex module" href="CBD.converters.latexify.CBD2Latex.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples/ContinuousTime.html" title="Continuous Time Simulation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="CBD.converters.latexify.CBD2Latex.html" title="CBD.converters.latexify.CBD2Latex module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.converters.latexify.html" accesskey="U">Generate LaTeX from CBD Models</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.converters.latexify.functions module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-CBD.converters.latexify.functions">
+<span id="cbd-converters-latexify-functions-module"></span><h1>CBD.converters.latexify.functions module<a class="headerlink" href="#module-CBD.converters.latexify.functions" title="Permalink to this headline">¶</a></h1>
+<p>New and improved LaTeX-generation module.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Time">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.latexify.functions.</span></span><span class="sig-name descname"><span class="pre">Time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents the time variable to be used in the equations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>numeric</em>) – The value of the time.</p></li>
+<li><p><strong>relative</strong> (<em>bool</em>) – When <code class="code docutils literal notranslate"><span class="pre">True</span></code>, the time is relative to some time variable.
+When <code class="code docutils literal notranslate"><span class="pre">False</span></code>, the time is meant to be an absolute time.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Time.is_absolute">
+<span class="sig-name descname"><span class="pre">is_absolute</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Time.is_absolute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Time.is_absolute" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Time.is_relative">
+<span class="sig-name descname"><span class="pre">is_relative</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Time.is_relative"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Time.is_relative" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Time.now">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">now</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Time.now"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Time.now" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Eq">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.latexify.functions.</span></span><span class="sig-name descname"><span class="pre">Eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rhs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents an equation in the form of <span class="math notranslate nohighlight">\(y = f(x)\)</span> .</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lhs</strong> (<em>str</em>) – The lefthandside of the equation, i.e.,
+a variable name.</p></li>
+<li><p><strong>rhs</strong> (<a class="reference internal" href="#CBD.converters.latexify.functions.Fnc" title="CBD.converters.latexify.functions.Fnc"><em>Fnc</em></a>) – The righthandside of the equation, i.e.,
+a function call.</p></li>
+<li><p><strong>time</strong> (<a class="reference internal" href="#CBD.converters.latexify.functions.Time" title="CBD.converters.latexify.functions.Time"><em>Time</em></a>) – A time constraint for the full equation.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Eq.at">
+<span class="sig-name descname"><span class="pre">at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Eq.at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Eq.at" title="Permalink to this definition">¶</a></dt>
+<dd><p>Some equations have multiple solutions for a specific time.
+This function will obtain all corresponding equations for
+solving the current one at time <code class="xref py py-attr docutils literal notranslate"><span class="pre">time</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference internal" href="#CBD.converters.latexify.functions.Time" title="CBD.converters.latexify.functions.Time"><em>Time</em></a>) – The current time to solve the equation at.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of new equations, solved at a specific time.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Eq.get_dependencies">
+<span class="sig-name descname"><span class="pre">get_dependencies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Eq.get_dependencies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Eq.get_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Eq.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Eq.eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Eq.eq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Eq.latex">
+<span class="sig-name descname"><span class="pre">latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Eq.latex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Eq.latex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Eq.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Eq.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Eq.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Eq.simplify">
+<span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Eq.simplify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Eq.simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simplifies the rhs.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Fnc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.latexify.functions.</span></span><span class="sig-name descname"><span class="pre">Fnc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Fnc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Fnc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Representation of a righthandside of an equation.
+This is an superclass for all specific function types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – The name for the function.</p>
+</dd>
+<dt class="field-even">Keyword Arguments</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>time</strong> (<a class="reference internal" href="#CBD.converters.latexify.functions.Time" title="CBD.converters.latexify.functions.Time"><em>Time</em></a>) – The current time for this function.</p></li>
+<li><p><strong>eq_time</strong> (<a class="reference internal" href="#CBD.converters.latexify.functions.Time" title="CBD.converters.latexify.functions.Time"><em>Time</em></a>) – The current equation time for this function.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Fnc.simplify">
+<span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Fnc.simplify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Fnc.simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simplifies the function in-line, based on its arguments.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Fnc.latex">
+<span class="sig-name descname"><span class="pre">latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Fnc.latex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Fnc.latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the LaTeX-representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Fnc.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Fnc.eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Fnc.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the textual equation-based representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Fnc.get_dependencies">
+<span class="sig-name descname"><span class="pre">get_dependencies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Fnc.get_dependencies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Fnc.get_dependencies" title="Permalink to this definition">¶</a></dt>
+<dd><p>Recursively obtains the dependencies of the current function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Fnc.at">
+<span class="sig-name descname"><span class="pre">at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Fnc.at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Fnc.at" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the function at a specific point in time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference internal" href="#CBD.converters.latexify.functions.Time" title="CBD.converters.latexify.functions.Time"><em>Time</em></a>) – The time when to evaluate the function.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of new functions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Fnc.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Fnc.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Fnc.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Fnc.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Fnc.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Fnc.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.Fnc.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#Fnc.contains"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.Fnc.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the function relies on another value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>str</em>) – The name that must be checked.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.MultiFnc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.latexify.functions.</span></span><span class="sig-name descname"><span class="pre">MultiFnc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#MultiFnc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.MultiFnc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#CBD.converters.latexify.functions.Fnc" title="CBD.converters.latexify.functions.Fnc"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.converters.latexify.functions.Fnc</span></code></a></p>
+<p>Collection function for both the adder and the product blocks</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.MultiFnc.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#MultiFnc.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.MultiFnc.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.MultiFnc.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#MultiFnc.eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.MultiFnc.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the textual equation-based representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.MultiFnc.latex">
+<span class="sig-name descname"><span class="pre">latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#MultiFnc.latex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.MultiFnc.latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the LaTeX-representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.MultiFnc.simplify">
+<span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#MultiFnc.simplify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.MultiFnc.simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simplifies the function in-line, based on its arguments.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.UnaryFnc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.latexify.functions.</span></span><span class="sig-name descname"><span class="pre">UnaryFnc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#UnaryFnc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.UnaryFnc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#CBD.converters.latexify.functions.Fnc" title="CBD.converters.latexify.functions.Fnc"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.converters.latexify.functions.Fnc</span></code></a></p>
+<p>Collection function for unary input functions</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.UnaryFnc.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#UnaryFnc.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.UnaryFnc.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.UnaryFnc.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#UnaryFnc.eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.UnaryFnc.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the textual equation-based representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.UnaryFnc.latex">
+<span class="sig-name descname"><span class="pre">latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#UnaryFnc.latex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.UnaryFnc.latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the LaTeX-representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.UnaryFnc.simplify">
+<span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#UnaryFnc.simplify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.UnaryFnc.simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simplifies the function in-line, based on its arguments.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.BinaryFnc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.latexify.functions.</span></span><span class="sig-name descname"><span class="pre">BinaryFnc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">symbol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#BinaryFnc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.BinaryFnc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#CBD.converters.latexify.functions.Fnc" title="CBD.converters.latexify.functions.Fnc"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.converters.latexify.functions.Fnc</span></code></a></p>
+<p>Collection function for binary input functions</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.BinaryFnc.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#BinaryFnc.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.BinaryFnc.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.BinaryFnc.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#BinaryFnc.eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.BinaryFnc.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the textual equation-based representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.BinaryFnc.latex">
+<span class="sig-name descname"><span class="pre">latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#BinaryFnc.latex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.BinaryFnc.latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the LaTeX-representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.BinaryFnc.simplify">
+<span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#BinaryFnc.simplify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.BinaryFnc.simplify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simplifies the function in-line, based on its arguments.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.ConstantFnc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.latexify.functions.</span></span><span class="sig-name descname"><span class="pre">ConstantFnc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#ConstantFnc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.ConstantFnc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#CBD.converters.latexify.functions.Fnc" title="CBD.converters.latexify.functions.Fnc"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.converters.latexify.functions.Fnc</span></code></a></p>
+<p>Function that represents a constant value</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.ConstantFnc.create">
+<span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#ConstantFnc.create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.ConstantFnc.create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.ConstantFnc.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#ConstantFnc.eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.ConstantFnc.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the textual equation-based representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.ConstantFnc.latex">
+<span class="sig-name descname"><span class="pre">latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#ConstantFnc.latex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.ConstantFnc.latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the LaTeX-representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.ConstantFnc.at">
+<span class="sig-name descname"><span class="pre">at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#ConstantFnc.at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.ConstantFnc.at" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the function at a specific point in time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference internal" href="#CBD.converters.latexify.functions.Time" title="CBD.converters.latexify.functions.Time"><em>Time</em></a>) – The time when to evaluate the function.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of new functions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.VarFnc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.latexify.functions.</span></span><span class="sig-name descname"><span class="pre">VarFnc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#VarFnc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.VarFnc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#CBD.converters.latexify.functions.Fnc" title="CBD.converters.latexify.functions.Fnc"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.converters.latexify.functions.Fnc</span></code></a></p>
+<p>Function that represents a variable name</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.VarFnc.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#VarFnc.eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.VarFnc.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the textual equation-based representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.VarFnc.latex">
+<span class="sig-name descname"><span class="pre">latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#VarFnc.latex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.VarFnc.latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the LaTeX-representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.VarFnc.at">
+<span class="sig-name descname"><span class="pre">at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#VarFnc.at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.VarFnc.at" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the function at a specific point in time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference internal" href="#CBD.converters.latexify.functions.Time" title="CBD.converters.latexify.functions.Time"><em>Time</em></a>) – The time when to evaluate the function.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of new functions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.VarFnc.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eq</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#VarFnc.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.VarFnc.apply" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.VarFnc.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#VarFnc.contains"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.VarFnc.contains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the function relies on another value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>other</strong> (<em>str</em>) – The name that must be checked.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.DelayFnc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.latexify.functions.</span></span><span class="sig-name descname"><span class="pre">DelayFnc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#DelayFnc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.DelayFnc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#CBD.converters.latexify.functions.Fnc" title="CBD.converters.latexify.functions.Fnc"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.converters.latexify.functions.Fnc</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.DelayFnc.at">
+<span class="sig-name descname"><span class="pre">at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#DelayFnc.at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.DelayFnc.at" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the function at a specific point in time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference internal" href="#CBD.converters.latexify.functions.Time" title="CBD.converters.latexify.functions.Time"><em>Time</em></a>) – The time when to evaluate the function.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of new functions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.DerivatorFnc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.latexify.functions.</span></span><span class="sig-name descname"><span class="pre">DerivatorFnc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#DerivatorFnc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.DerivatorFnc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#CBD.converters.latexify.functions.Fnc" title="CBD.converters.latexify.functions.Fnc"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.converters.latexify.functions.Fnc</span></code></a></p>
+<p>Function that represents a derivative</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.DerivatorFnc.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#DerivatorFnc.eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.DerivatorFnc.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the textual equation-based representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.DerivatorFnc.latex">
+<span class="sig-name descname"><span class="pre">latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#DerivatorFnc.latex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.DerivatorFnc.latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the LaTeX-representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.DerivatorFnc.at">
+<span class="sig-name descname"><span class="pre">at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#DerivatorFnc.at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.DerivatorFnc.at" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the function at a specific point in time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference internal" href="#CBD.converters.latexify.functions.Time" title="CBD.converters.latexify.functions.Time"><em>Time</em></a>) – The time when to evaluate the function.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of new functions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.IntegratorFnc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.converters.latexify.functions.</span></span><span class="sig-name descname"><span class="pre">IntegratorFnc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_time=&lt;CBD.converters.latexify.functions.Time</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#IntegratorFnc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.IntegratorFnc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#CBD.converters.latexify.functions.Fnc" title="CBD.converters.latexify.functions.Fnc"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.converters.latexify.functions.Fnc</span></code></a></p>
+<p>Function that represents an integral</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.IntegratorFnc.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#IntegratorFnc.eq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.IntegratorFnc.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the textual equation-based representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.IntegratorFnc.latex">
+<span class="sig-name descname"><span class="pre">latex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#IntegratorFnc.latex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.IntegratorFnc.latex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the LaTeX-representation of the function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.IntegratorFnc.at">
+<span class="sig-name descname"><span class="pre">at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/converters/latexify/functions.html#IntegratorFnc.at"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.converters.latexify.functions.IntegratorFnc.at" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the function at a specific point in time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference internal" href="#CBD.converters.latexify.functions.Time" title="CBD.converters.latexify.functions.Time"><em>Time</em></a>) – The time when to evaluate the function.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of new functions.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="CBD.converters.latexify.functions.BLOCK_MAP">
+<span class="sig-prename descclassname"><span class="pre">CBD.converters.latexify.functions.</span></span><span class="sig-name descname"><span class="pre">BLOCK_MAP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'AdderBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'AndBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'ConstantBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'DelayBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'DeltaTBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'DerivatorBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'EqualsBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'GenericBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'IntegratorBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'InverterBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'LessThanBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'LessThanOrEqualsBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'ModuloBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'NegatorBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'NotBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'OrBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'PowerBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'ProductBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'RootBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;,</span> <span class="pre">'TimeBlock':</span> <span class="pre">&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;}</span></em><a class="headerlink" href="#CBD.converters.latexify.functions.BLOCK_MAP" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mapping for all known blocks in CBDs. If you created your own block with its own representation,
+you need to set it in the <code class="code docutils literal notranslate"><span class="pre">type_formats</span></code> of the <a class="reference internal" href="CBD.converters.latexify.CBD2Latex.html#module-CBD.converters.latexify.CBD2Latex" title="CBD.converters.latexify.CBD2Latex"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.converters.latexify.CBD2Latex</span></code></a> class.</p>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="CBD.converters.latexify.html">Generate LaTeX from CBD Models</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="CBD.converters.latexify.html#submodules">Submodules</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="CBD.html">CBD package</a></li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="CBD.converters.latexify.CBD2Latex.html"
+                          title="previous chapter">CBD.converters.latexify.CBD2Latex module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="examples/ContinuousTime.html"
+                          title="next chapter">Continuous Time Simulation</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples/ContinuousTime.html" title="Continuous Time Simulation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="CBD.converters.latexify.CBD2Latex.html" title="CBD.converters.latexify.CBD2Latex module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.converters.latexify.html" >Generate LaTeX from CBD Models</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.converters.latexify.functions module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

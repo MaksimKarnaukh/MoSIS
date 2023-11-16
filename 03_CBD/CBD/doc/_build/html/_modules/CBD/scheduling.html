@@ -1,0 +1,302 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CBD.scheduling &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/style.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.scheduling</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for CBD.scheduling</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This file contains all classes to help schedule the CBD simulator</span>
+<span class="sd">at every iteration/time.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="o">*</span>
+
+<div class="viewcode-block" id="Scheduler"><a class="viewcode-back" href="../../CBD.scheduling.html#CBD.scheduling.Scheduler">[docs]</a><span class="k">class</span> <span class="nc">Scheduler</span><span class="p">:</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Identifies an order in which the dependency graph must be traversed/computed.</span>
+
+<span class="sd">	Warning:</span>
+<span class="sd">		This class is a semi-virtual parent class of all schedulers. Therefore, only</span>
+<span class="sd">		subclasses should be used.</span>
+
+<span class="sd">	Note:</span>
+<span class="sd">		When creating a custom scheduler (i.e. by subclassing), care must be taken to</span>
+<span class="sd">		ensure all strongly connected components are grouped together!</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		recompute_at (iter):    An iterable of numeric values, identifying the iterations at</span>
+<span class="sd">								which the schedule must be recomputed. When :code:`True`,</span>
+<span class="sd">								the schedule will be recomputed every time. Defaults to</span>
+<span class="sd">								:code:`(0, 1)` (i.e. only at simulation start and iteration 1).</span>
+<span class="sd">		rates (dict):           A dictionary of :code:`block path -&gt; rate`; indentifying how often</span>
+<span class="sd">								they should fire. The rate is a float, which will be compared</span>
+<span class="sd">								against the time. :code:`None` identifies the empty dictionary.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recompute_at</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">rates</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">recompte_at</span> <span class="o">=</span> <span class="n">recompute_at</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">rates</span> <span class="o">=</span> <span class="p">{}</span> <span class="k">if</span> <span class="n">rates</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">rates</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">__last_schedule</span> <span class="o">=</span> <span class="kc">None</span>
+
+	<span class="c1"># def getNextActionDelta(self, time, dt):</span>
+	<span class="c1"># 	&quot;&quot;&quot;</span>
+	<span class="c1"># 	Helps in identifying if a new action is scheduled in the near future.</span>
+	<span class="c1">#</span>
+	<span class="c1"># 	Args:</span>
+	<span class="c1"># 		time (float):   The current simulation time.</span>
+	<span class="c1"># 		dt (float):     The next delta t as defined/computed by the simulator.</span>
+	<span class="c1">#</span>
+	<span class="c1"># 	Returns:</span>
+	<span class="c1"># 		The next time when something must happen.</span>
+	<span class="c1"># 	&quot;&quot;&quot;</span>
+	<span class="c1"># 	next = time + dt</span>
+	<span class="c1"># 	for rate in self.rates.values():</span>
+	<span class="c1"># 		d = ceil(time / rate) * rate</span>
+	<span class="c1"># 		if abs(d - time) &lt; 1e-6:</span>
+	<span class="c1"># 			continue</span>
+	<span class="c1"># 		next = min(next, d)</span>
+	<span class="c1"># 	return next - time</span>
+
+<div class="viewcode-block" id="Scheduler.mustCompute"><a class="viewcode-back" href="../../CBD.scheduling.html#CBD.scheduling.Scheduler.mustCompute">[docs]</a>	<span class="k">def</span> <span class="nf">mustCompute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Checks if the block must be computed.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			block (CBD.Core.BaseBlock): The block that must be checked.</span>
+<span class="sd">			time (float):               The time at which the computation must occur.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">name</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">getPath</span><span class="p">()</span>
+		<span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rates</span><span class="p">:</span>
+			<span class="k">return</span> <span class="kc">True</span>
+		<span class="n">rate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rates</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+		<span class="n">d</span> <span class="o">=</span> <span class="n">ceil</span><span class="p">(</span><span class="n">time</span> <span class="o">/</span> <span class="n">rate</span><span class="p">)</span> <span class="o">*</span> <span class="n">rate</span>
+		<span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="n">d</span> <span class="o">-</span> <span class="n">time</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-6</span></div>
+
+<div class="viewcode-block" id="Scheduler.setRate"><a class="viewcode-back" href="../../CBD.scheduling.html#CBD.scheduling.Scheduler.setRate">[docs]</a>	<span class="k">def</span> <span class="nf">setRate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">block_name</span><span class="p">,</span> <span class="n">rate</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Sets a specific rate for a block. If no rate has been set, it will be assumed the</span>
+<span class="sd">		block will be executed every iteration. If a rate was already set for the block,</span>
+<span class="sd">		calling this function will overwrite its previous value.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			block_name (str):   The name of the block to set the rate of.</span>
+<span class="sd">			rate (float):       The interval of **time** at which the block must be executed.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">rates</span><span class="p">[</span><span class="n">block_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">rate</span></div>
+
+<div class="viewcode-block" id="Scheduler.obtain"><a class="viewcode-back" href="../../CBD.scheduling.html#CBD.scheduling.Scheduler.obtain">[docs]</a>	<span class="k">def</span> <span class="nf">obtain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depGraph</span><span class="p">,</span> <span class="n">curIt</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Obtains the schedule at a specific iteration/time, optionally recomputing</span>
+<span class="sd">		the value if required.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			depGraph (CBD.depGraph.DepGraph):   The dependency graph of the model.</span>
+<span class="sd">			curIt (int):                        The current iteration value.</span>
+<span class="sd">			time (float):                       The current simulation time.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">recompte_at</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">depGraph</span><span class="p">,</span> <span class="n">curIt</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">recompte_at</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">it</span> <span class="o">==</span> <span class="n">curIt</span><span class="p">:</span>
+					<span class="bp">self</span><span class="o">.</span><span class="n">__last_schedule</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">depGraph</span><span class="p">,</span> <span class="n">curIt</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+					<span class="k">break</span>
+			<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__last_schedule</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Force computation of schedule</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">__last_schedule</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">schedule</span><span class="p">(</span><span class="n">depGraph</span><span class="p">,</span> <span class="n">curIt</span><span class="p">,</span> <span class="n">time</span><span class="p">)</span>
+			<span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__last_schedule</span></div>
+
+<div class="viewcode-block" id="Scheduler.schedule"><a class="viewcode-back" href="../../CBD.scheduling.html#CBD.scheduling.Scheduler.schedule">[docs]</a>	<span class="k">def</span> <span class="nf">schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depGraph</span><span class="p">,</span> <span class="n">curIt</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Obtains the actual schedule.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			depGraph (CBD.depGraph.DepGraph):   The dependency graph of the model.</span>
+<span class="sd">			curIt (int):                        The current iteration value.</span>
+<span class="sd">			time (float):                       The current simulation time.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>  <span class="c1"># pragma: no cover</span></div></div>
+
+
+<div class="viewcode-block" id="TopologicalScheduler"><a class="viewcode-back" href="../../CBD.scheduling.html#CBD.scheduling.TopologicalScheduler">[docs]</a><span class="k">class</span> <span class="nc">TopologicalScheduler</span><span class="p">(</span><span class="n">Scheduler</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Does a topological sort of the dependency graph, using Tarjan&#39;s algorithm.</span>
+
+<span class="sd">	Note:</span>
+<span class="sd">		This code was previously located in the :class:`CBD.depGraph.DepGraph` and</span>
+<span class="sd">		hence, it was written by Marc Provost.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="TopologicalScheduler.schedule"><a class="viewcode-back" href="../../CBD.scheduling.html#CBD.scheduling.TopologicalScheduler.schedule">[docs]</a>	<span class="k">def</span> <span class="nf">schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depGraph</span><span class="p">,</span> <span class="n">curIt</span><span class="p">,</span> <span class="n">time</span><span class="p">):</span>
+		<span class="n">mapping</span> <span class="o">=</span> <span class="n">depGraph</span><span class="o">.</span><span class="n">getSemanticMapping</span><span class="p">()</span>
+		<span class="n">components</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="n">sortedList</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">topoSort</span><span class="p">(</span><span class="n">mapping</span><span class="p">,</span> <span class="n">depGraph</span><span class="p">)</span>
+
+		<span class="k">for</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+			<span class="n">depGraph</span><span class="o">.</span><span class="n">unMark</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+
+		<span class="n">sortedList</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+
+		<span class="k">for</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">sortedList</span><span class="p">:</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">depGraph</span><span class="o">.</span><span class="n">isMarked</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+				<span class="n">component</span> <span class="o">=</span> <span class="p">[]</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">dfsCollect</span><span class="p">(</span><span class="n">depGraph</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">curIt</span><span class="p">)</span>
+				<span class="n">components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+
+		<span class="n">components</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+		<span class="k">return</span> <span class="n">components</span></div>
+
+<div class="viewcode-block" id="TopologicalScheduler.topoSort"><a class="viewcode-back" href="../../CBD.scheduling.html#CBD.scheduling.TopologicalScheduler.topoSort">[docs]</a>	<span class="k">def</span> <span class="nf">topoSort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mapping</span><span class="p">,</span> <span class="n">depGraph</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Performs a topological sort on the graph.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			mapping (dict):                     Semantic mapping of the dependency graph</span>
+<span class="sd">			depGraph (CBD.depGraph.DepGraph):   The dependency graph</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">for</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+			<span class="n">depGraph</span><span class="o">.</span><span class="n">unMark</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+
+		<span class="n">sortedList</span> <span class="o">=</span> <span class="p">[]</span>
+
+		<span class="k">for</span> <span class="nb">object</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">depGraph</span><span class="o">.</span><span class="n">isMarked</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">dfsSort</span><span class="p">(</span><span class="n">depGraph</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">sortedList</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="n">sortedList</span></div>
+
+<div class="viewcode-block" id="TopologicalScheduler.dfsSort"><a class="viewcode-back" href="../../CBD.scheduling.html#CBD.scheduling.TopologicalScheduler.dfsSort">[docs]</a>	<span class="k">def</span> <span class="nf">dfsSort</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depGraph</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">sortedList</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Performs a depth first search, collecting the objects in</span>
+<span class="sd">		topological order.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			depGraph (CBD.depGraph.DepGraph):   The dependency graph</span>
+<span class="sd">			object:                             The currently visited object</span>
+<span class="sd">			sortedList (list):                  Partially sorted list of objects</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">depGraph</span><span class="o">.</span><span class="n">isMarked</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+			<span class="n">depGraph</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+
+			<span class="k">for</span> <span class="n">influencer</span> <span class="ow">in</span> <span class="n">depGraph</span><span class="o">.</span><span class="n">getInfluencers</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">dfsSort</span><span class="p">(</span><span class="n">depGraph</span><span class="p">,</span> <span class="n">influencer</span><span class="p">,</span> <span class="n">sortedList</span><span class="p">)</span>
+
+			<span class="n">sortedList</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TopologicalScheduler.dfsCollect"><a class="viewcode-back" href="../../CBD.scheduling.html#CBD.scheduling.TopologicalScheduler.dfsCollect">[docs]</a>	<span class="k">def</span> <span class="nf">dfsCollect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depGraph</span><span class="p">,</span> <span class="nb">object</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">curIt</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Collects members of a strong component.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			depGraph (CBD.depGraph.DepGraph):   The dependency graph</span>
+<span class="sd">			object:                             Node currently visited</span>
+<span class="sd">			component (list):                   Current component</span>
+<span class="sd">			curIt (int):                        The current iteration</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">depGraph</span><span class="o">.</span><span class="n">isMarked</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+			<span class="n">depGraph</span><span class="o">.</span><span class="n">mark</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+
+			<span class="k">for</span> <span class="n">dependent</span> <span class="ow">in</span> <span class="n">depGraph</span><span class="o">.</span><span class="n">getDependents</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+				<span class="bp">self</span><span class="o">.</span><span class="n">dfsCollect</span><span class="p">(</span><span class="n">depGraph</span><span class="p">,</span> <span class="n">dependent</span><span class="p">,</span> <span class="n">component</span><span class="p">,</span> <span class="n">curIt</span><span class="p">)</span>
+
+			<span class="n">component</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../CBD.html">CBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.scheduling</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

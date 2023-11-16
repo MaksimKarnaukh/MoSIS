@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>pyCBD.scheduling module &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="pyCBD.simulator module" href="pyCBD.simulator.html" />
+    <link rel="prev" title="pyCBD.depGraph module" href="pyCBD.depGraph.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.simulator.html" title="pyCBD.simulator module"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.depGraph.html" title="pyCBD.depGraph module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" accesskey="U">pyCBD package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.scheduling module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-pyCBD.scheduling">
+<span id="pycbd-scheduling-module"></span><h1>pyCBD.scheduling module<a class="headerlink" href="#module-pyCBD.scheduling" title="Permalink to this headline">¶</a></h1>
+<p>This file contains all classes to help schedule the CBD simulator
+at every iteration/time.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.scheduling.Scheduler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.scheduling.</span></span><span class="sig-name descname"><span class="pre">Scheduler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recompute_at</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/scheduling.html#Scheduler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.scheduling.Scheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Identifies an order in which the dependency graph must be traversed/computed.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This class is a semi-virtual parent class of all schedulers. Therefore, only
+subclasses should be used.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When creating a custom scheduler (i.e. by subclassing), care must be taken to
+ensure all strongly connected components are grouped together!</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>recompute_at</strong> (<em>iter</em>) – An iterable of numeric values, identifying the iterations at
+which the schedule must be recomputed. When <code class="code docutils literal notranslate"><span class="pre">True</span></code>,
+the schedule will be recomputed every time. Defaults to
+<code class="code docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">1)</span></code> (i.e. only at simulation start and iteration 1).</p></li>
+<li><p><strong>rates</strong> (<em>dict</em>) – A dictionary of <code class="code docutils literal notranslate"><span class="pre">block</span> <span class="pre">path</span> <span class="pre">-&gt;</span> <span class="pre">rate</span></code>; indentifying how often
+they should fire. The rate is a float, which will be compared
+against the time. <code class="code docutils literal notranslate"><span class="pre">None</span></code> identifies the empty dictionary.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.scheduling.Scheduler.mustCompute">
+<span class="sig-name descname"><span class="pre">mustCompute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/scheduling.html#Scheduler.mustCompute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.scheduling.Scheduler.mustCompute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the block must be computed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block</strong> (<em>CBD.Core.BaseBlock</em>) – The block that must be checked.</p></li>
+<li><p><strong>time</strong> (<em>float</em>) – The time at which the computation must occur.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.scheduling.Scheduler.setRate">
+<span class="sig-name descname"><span class="pre">setRate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/scheduling.html#Scheduler.setRate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.scheduling.Scheduler.setRate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a specific rate for a block. If no rate has been set, it will be assumed the
+block will be executed every iteration. If a rate was already set for the block,
+calling this function will overwrite its previous value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_name</strong> (<em>str</em>) – The name of the block to set the rate of.</p></li>
+<li><p><strong>rate</strong> (<em>float</em>) – The interval of <strong>time</strong> at which the block must be executed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.scheduling.Scheduler.obtain">
+<span class="sig-name descname"><span class="pre">obtain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depGraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curIt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/scheduling.html#Scheduler.obtain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.scheduling.Scheduler.obtain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the schedule at a specific iteration/time, optionally recomputing
+the value if required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>depGraph</strong> (<em>CBD.depGraph.DepGraph</em>) – The dependency graph of the model.</p></li>
+<li><p><strong>curIt</strong> (<em>int</em>) – The current iteration value.</p></li>
+<li><p><strong>time</strong> (<em>float</em>) – The current simulation time.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.scheduling.Scheduler.schedule">
+<span class="sig-name descname"><span class="pre">schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depGraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curIt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/scheduling.html#Scheduler.schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.scheduling.Scheduler.schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the actual schedule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>depGraph</strong> (<em>CBD.depGraph.DepGraph</em>) – The dependency graph of the model.</p></li>
+<li><p><strong>curIt</strong> (<em>int</em>) – The current iteration value.</p></li>
+<li><p><strong>time</strong> (<em>float</em>) – The current simulation time.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyCBD.scheduling.TopologicalScheduler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pyCBD.scheduling.</span></span><span class="sig-name descname"><span class="pre">TopologicalScheduler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recompute_at</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">1)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/scheduling.html#TopologicalScheduler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.scheduling.TopologicalScheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyCBD.scheduling.Scheduler" title="pyCBD.scheduling.Scheduler"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.scheduling.Scheduler</span></code></a></p>
+<p>Does a topological sort of the dependency graph, using Tarjan’s algorithm.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This code was previously located in the <a class="reference internal" href="pyCBD.depGraph.html#pyCBD.depGraph.DepGraph" title="pyCBD.depGraph.DepGraph"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyCBD.depGraph.DepGraph</span></code></a> and
+hence, it was written by Marc Provost.</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.scheduling.TopologicalScheduler.schedule">
+<span class="sig-name descname"><span class="pre">schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depGraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curIt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/scheduling.html#TopologicalScheduler.schedule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.scheduling.TopologicalScheduler.schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Obtains the actual schedule.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>depGraph</strong> (<em>CBD.depGraph.DepGraph</em>) – The dependency graph of the model.</p></li>
+<li><p><strong>curIt</strong> (<em>int</em>) – The current iteration value.</p></li>
+<li><p><strong>time</strong> (<em>float</em>) – The current simulation time.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.scheduling.TopologicalScheduler.topoSort">
+<span class="sig-name descname"><span class="pre">topoSort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mapping</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depGraph</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/scheduling.html#TopologicalScheduler.topoSort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.scheduling.TopologicalScheduler.topoSort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a topological sort on the graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mapping</strong> (<em>dict</em>) – Semantic mapping of the dependency graph</p></li>
+<li><p><strong>depGraph</strong> (<em>CBD.depGraph.DepGraph</em>) – The dependency graph</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.scheduling.TopologicalScheduler.dfsSort">
+<span class="sig-name descname"><span class="pre">dfsSort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depGraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sortedList</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/scheduling.html#TopologicalScheduler.dfsSort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.scheduling.TopologicalScheduler.dfsSort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs a depth first search, collecting the objects in
+topological order.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>depGraph</strong> (<em>CBD.depGraph.DepGraph</em>) – The dependency graph</p></li>
+<li><p><strong>object</strong> – The currently visited object</p></li>
+<li><p><strong>sortedList</strong> (<em>list</em>) – Partially sorted list of objects</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyCBD.scheduling.TopologicalScheduler.dfsCollect">
+<span class="sig-name descname"><span class="pre">dfsCollect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depGraph</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">component</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curIt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyCBD/scheduling.html#TopologicalScheduler.dfsCollect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyCBD.scheduling.TopologicalScheduler.dfsCollect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Collects members of a strong component.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>depGraph</strong> (<em>CBD.depGraph.DepGraph</em>) – The dependency graph</p></li>
+<li><p><strong>object</strong> – Node currently visited</p></li>
+<li><p><strong>component</strong> (<em>list</em>) – Current component</p></li>
+<li><p><strong>curIt</strong> (<em>int</em>) – The current iteration</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pyCBD.html">pyCBD package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pyCBD.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pyCBD.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.Core.html">pyCBD.Core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.depGraph.html">pyCBD.depGraph module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.naivelog.html">pyCBD.naivelog module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">pyCBD.scheduling module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.simulator.html">pyCBD.simulator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyCBD.util.html">pyCBD.util module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="pyCBD.depGraph.html"
+                          title="previous chapter">pyCBD.depGraph module</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="pyCBD.simulator.html"
+                          title="next chapter">pyCBD.simulator module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.simulator.html" title="pyCBD.simulator module"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="pyCBD.depGraph.html" title="pyCBD.depGraph module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="pyCBD.html" >pyCBD package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.scheduling module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

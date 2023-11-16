@@ -1,0 +1,726 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>CBD.simulator module &#8212; CBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/math.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="CBD.scheduling module" href="CBD.scheduling.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.scheduling.html" title="CBD.scheduling module"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.html" accesskey="U">CBD package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.simulator module</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-CBD.simulator">
+<span id="cbd-simulator-module"></span><h1>CBD.simulator module<a class="headerlink" href="#module-CBD.simulator" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">CBD.simulator.</span></span><span class="sig-name descname"><span class="pre">Simulator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Simulator for a CBD model. Allows for execution of the simulation.
+This class implements the semantics of CBDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="CBD.Core.html#CBD.Core.CBD" title="CBD.Core.CBD"><em>CBD.Core.CBD</em></a>) – A <a class="reference internal" href="CBD.html#module-CBD" title="CBD"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD</span></code></a> model to simulate.</p>
+</dd>
+<dt class="field-even">Defaults</dt>
+<dd class="field-even"><p>The following properties further define the internal mechanisms of
+the simulator. As a handy look-up table, all defaults are listed
+in the table below. Take a look at the <code class="code docutils literal notranslate"><span class="pre">See</span> <span class="pre">Also</span></code> column for
+more info on the property.</p>
+</dd>
+</dl>
+<table class="colwidths-given docutils align-default">
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 40%" />
+<col style="width: 40%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Property</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>See Also</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>real-time?</p></td>
+<td><p><code class="code docutils literal notranslate"><span class="pre">False</span></code></p></td>
+<td><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTime" title="CBD.simulator.Simulator.setRealTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTime()</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>real-time scale</p></td>
+<td><p>1.0</p></td>
+<td><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTime" title="CBD.simulator.Simulator.setRealTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTime()</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p>termination time</p></td>
+<td><p><code class="code docutils literal notranslate"><span class="pre">float('inf')</span></code></p></td>
+<td><p><a class="reference internal" href="#CBD.simulator.Simulator.setTerminationTime" title="CBD.simulator.Simulator.setTerminationTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">setTerminationTime()</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>termination condition</p></td>
+<td><p><code class="code docutils literal notranslate"><span class="pre">None</span></code></p></td>
+<td><p><a class="reference internal" href="#CBD.simulator.Simulator.setTerminationCondition" title="CBD.simulator.Simulator.setTerminationCondition"><code class="xref py py-func docutils literal notranslate"><span class="pre">setTerminationCondition()</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p>scheduler</p></td>
+<td><p><a class="reference internal" href="CBD.scheduling.html#CBD.scheduling.TopologicalScheduler" title="CBD.scheduling.TopologicalScheduler"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.scheduling.TopologicalScheduler</span></code></a></p></td>
+<td><p><a class="reference internal" href="#CBD.simulator.Simulator.setScheduler" title="CBD.simulator.Simulator.setScheduler"><code class="xref py py-func docutils literal notranslate"><span class="pre">setScheduler()</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>threading platform (subsystem)</p></td>
+<td><p><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.realtime.threadingPython.threadingPython</span></code></p></td>
+<td><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatform" title="CBD.simulator.Simulator.setRealTimePlatform"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatform()</span></code></a>, <a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatformThreading" title="CBD.simulator.Simulator.setRealTimePlatformThreading"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatformThreading()</span></code></a>,
+<a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatformTk" title="CBD.simulator.Simulator.setRealTimePlatformTk"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatformTk()</span></code></a>, <a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatformGameLoop" title="CBD.simulator.Simulator.setRealTimePlatformGameLoop"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatformGameLoop()</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p>progress bar?</p></td>
+<td><p><code class="code docutils literal notranslate"><span class="pre">False</span></code></p></td>
+<td><p><a class="reference internal" href="#CBD.simulator.Simulator.setProgressBar" title="CBD.simulator.Simulator.setProgressBar"><code class="xref py py-func docutils literal notranslate"><span class="pre">setProgressBar()</span></code></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>strong component system solver</p></td>
+<td><p><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.linearsolver.LinearSolver</span></code></p></td>
+<td><p><a class="reference internal" href="#CBD.simulator.Simulator.setAlgebraicLoopSolver" title="CBD.simulator.Simulator.setAlgebraicLoopSolver"><code class="xref py py-func docutils literal notranslate"><span class="pre">setAlgebraicLoopSolver()</span></code></a></p></td>
+</tr>
+<tr class="row-even"><td><p>state event locator</p></td>
+<td><p><a class="reference internal" href="CBD.state_events.locators.html#CBD.state_events.locators.RegulaFalsiStateEventLocator" title="CBD.state_events.locators.RegulaFalsiStateEventLocator"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.state_events.locators.RegulaFalsiStateEventLocator</span></code></a></p></td>
+<td><p><a class="reference internal" href="#CBD.simulator.Simulator.setStateEventLocator" title="CBD.simulator.Simulator.setStateEventLocator"><code class="xref py py-func docutils literal notranslate"><span class="pre">setStateEventLocator()</span></code></a></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">term_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simulates the model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>term_time</strong> (<em>float</em>) – When not <code class="code docutils literal notranslate"><span class="pre">None</span></code>, overwrites the termination time
+with the new value. This value will be accurate upto 8
+decimal points.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.stop">
+<span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.stop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Requests a termination of the current running simulation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.is_running">
+<span class="sig-name descname"><span class="pre">is_running</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.is_running"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.is_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <code class="code docutils literal notranslate"><span class="pre">True</span></code> as long as the simulation is running.
+This is a convenience function to keep real-time simulations
+alive, or to interact from external sources.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.getClock">
+<span class="sig-name descname"><span class="pre">getClock</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.getClock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.getClock" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the simulation clock.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getTime" title="CBD.simulator.Simulator.getTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">getTime()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getRelativeTime" title="CBD.simulator.Simulator.getRelativeTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">getRelativeTime()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getDeltaT" title="CBD.simulator.Simulator.getDeltaT"><code class="xref py py-func docutils literal notranslate"><span class="pre">getDeltaT()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setDeltaT" title="CBD.simulator.Simulator.setDeltaT"><code class="xref py py-func docutils literal notranslate"><span class="pre">setDeltaT()</span></code></a></p></li>
+<li><p><a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.Clock" title="CBD.lib.std.Clock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.Clock</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.getTime">
+<span class="sig-name descname"><span class="pre">getTime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.getTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.getTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the current simulation time.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getClock" title="CBD.simulator.Simulator.getClock"><code class="xref py py-func docutils literal notranslate"><span class="pre">getClock()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getRelativeTime" title="CBD.simulator.Simulator.getRelativeTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">getRelativeTime()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getDeltaT" title="CBD.simulator.Simulator.getDeltaT"><code class="xref py py-func docutils literal notranslate"><span class="pre">getDeltaT()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setDeltaT" title="CBD.simulator.Simulator.setDeltaT"><code class="xref py py-func docutils literal notranslate"><span class="pre">setDeltaT()</span></code></a></p></li>
+<li><p><a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.Clock" title="CBD.lib.std.Clock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.Clock</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.getRelativeTime">
+<span class="sig-name descname"><span class="pre">getRelativeTime</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.getRelativeTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.getRelativeTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the current simulation time, ignoring a starting offset.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getClock" title="CBD.simulator.Simulator.getClock"><code class="xref py py-func docutils literal notranslate"><span class="pre">getClock()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getTime" title="CBD.simulator.Simulator.getTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">getTime()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getDeltaT" title="CBD.simulator.Simulator.getDeltaT"><code class="xref py py-func docutils literal notranslate"><span class="pre">getDeltaT()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setDeltaT" title="CBD.simulator.Simulator.setDeltaT"><code class="xref py py-func docutils literal notranslate"><span class="pre">setDeltaT()</span></code></a></p></li>
+<li><p><a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.Clock" title="CBD.lib.std.Clock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.Clock</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.getDeltaT">
+<span class="sig-name descname"><span class="pre">getDeltaT</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.getDeltaT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.getDeltaT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the delta in-between iteration steps.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getClock" title="CBD.simulator.Simulator.getClock"><code class="xref py py-func docutils literal notranslate"><span class="pre">getClock()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getTime" title="CBD.simulator.Simulator.getTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">getTime()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getRelativeTime" title="CBD.simulator.Simulator.getRelativeTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">getRelativeTime()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setDeltaT" title="CBD.simulator.Simulator.setDeltaT"><code class="xref py py-func docutils literal notranslate"><span class="pre">setDeltaT()</span></code></a></p></li>
+<li><p><a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.Clock" title="CBD.lib.std.Clock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.Clock</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setDeltaT">
+<span class="sig-name descname"><span class="pre">setDeltaT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delta_t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setDeltaT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setDeltaT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the delta in-between iteration steps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>delta_t</strong> (<em>float</em>) – The delta.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the model has a <a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.Clock" title="CBD.lib.std.Clock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.Clock</span></code></a> block instance, calling
+this function will have no effect. It is merely meant to be used for
+fixed step simulations.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>While unnecessary, this function is kept for backwards compatibility.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getClock" title="CBD.simulator.Simulator.getClock"><code class="xref py py-func docutils literal notranslate"><span class="pre">getClock()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getTime" title="CBD.simulator.Simulator.getTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">getTime()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getRelativeTime" title="CBD.simulator.Simulator.getRelativeTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">getRelativeTime()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.getDeltaT" title="CBD.simulator.Simulator.getDeltaT"><code class="xref py py-func docutils literal notranslate"><span class="pre">getDeltaT()</span></code></a></p></li>
+<li><p><a class="reference internal" href="CBD.lib.std.html#CBD.lib.std.Clock" title="CBD.lib.std.Clock"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.lib.std.Clock</span></code></a></p></li>
+<li><p><code class="xref py py-func docutils literal notranslate"><span class="pre">setStepSize()</span></code></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setScheduler">
+<span class="sig-name descname"><span class="pre">setScheduler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scheduler</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setScheduler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setScheduler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the scheduler for the simulation. It will identify the
+order of the components in a computation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>scheduler</strong> (<a class="reference internal" href="CBD.scheduling.html#CBD.scheduling.Scheduler" title="CBD.scheduling.Scheduler"><em>CBD.scheduling.Scheduler</em></a>) – The scheduler to use.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setAlgebraicLoopSolver">
+<span class="sig-name descname"><span class="pre">setAlgebraicLoopSolver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setAlgebraicLoopSolver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setAlgebraicLoopSolver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the algebraic loop solver for the simulation. It will identify the
+order of the components in a computation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>solver</strong> (<a class="reference internal" href="CBD.loopsolvers.solver.html#CBD.loopsolvers.solver.Solver" title="CBD.loopsolvers.solver.Solver"><em>CBD.loopsolvers.solver.Solver</em></a>) – The loop solver to use.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setStateEventLocator">
+<span class="sig-name descname"><span class="pre">setStateEventLocator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stel</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setStateEventLocator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setStateEventLocator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the state event locator to use when level crossings occur.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>stel</strong> (<em>CBD.state_events.locators.StateEventLocator</em>) – The new state event to use.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.registerStateEvent">
+<span class="sig-name descname"><span class="pre">registerStateEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.registerStateEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.registerStateEvent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Registers a state event to the current simulator.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>event</strong> (<a class="reference internal" href="CBD.state_events.html#CBD.state_events.StateEvent" title="CBD.state_events.StateEvent"><em>CBD.state_events.StateEvent</em></a>) – The event to register.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setBlockRate">
+<span class="sig-name descname"><span class="pre">setBlockRate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setBlockRate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setBlockRate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the rate for a specific block. Independent of the stepsize, the
+rate will identify that a certain block must only execute every
+<code class="code docutils literal notranslate"><span class="pre">r</span></code> time.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Blocks for which no rate has been set will always be computed.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block_path</strong> (<em>str</em>) – The path of the block to set a rate of.</p></li>
+<li><p><strong>rate</strong> (<em>float</em>) – The rate of the block.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setRealTime">
+<span class="sig-name descname"><span class="pre">setRealTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setRealTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setRealTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Makes the simulation run in (scaled) real time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>enabled</strong> (<em>bool</em>) – When <code class="code docutils literal notranslate"><span class="pre">True</span></code>, realtime simulation will be enabled.
+Otherwise, it will be disabled. Defaults to <code class="code docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>scale</strong> (<em>float</em>) – Optional scaling for the simulation time. When greater
+than 1, the simulation will run slower than the actual
+time. When &lt; 1, it will run faster.
+E.g. <code class="code docutils literal notranslate"><span class="pre">scale</span> <span class="pre">=</span> <span class="pre">2.0</span></code> will run twice as long.
+Defaults to <code class="code docutils literal notranslate"><span class="pre">1.0</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setProgressBar">
+<span class="sig-name descname"><span class="pre">setProgressBar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setProgressBar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setProgressBar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses the <a class="reference external" href="https://tqdm.github.io/">tqdm</a> package to display a progress bar
+of the simulation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>enabled</strong> (<em>bool</em>) – Whether or not to enable/disable the progress bar.
+Defaults to <code class="code docutils literal notranslate"><span class="pre">True</span></code> (= show progress bar).</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A progressbar hijacks printing to the console, hence no output shall be
+shown.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> – if the <code class="code docutils literal notranslate"><span class="pre">tqdm</span></code> module cannot be located.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setTerminationCondition">
+<span class="sig-name descname"><span class="pre">setTerminationCondition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setTerminationCondition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setTerminationCondition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the system’s termination condition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>func</strong> – A function that takes the model and the current iteration as input
+and produces <code class="code docutils literal notranslate"><span class="pre">True</span></code> if the simulation needs to terminate.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When set, the progress bars (see <a class="reference internal" href="#CBD.simulator.Simulator.setProgressBar" title="CBD.simulator.Simulator.setProgressBar"><code class="xref py py-func docutils literal notranslate"><span class="pre">setProgressBar()</span></code></a>) may not work as intended.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#CBD.simulator.Simulator.setTerminationTime" title="CBD.simulator.Simulator.setTerminationTime"><code class="xref py py-func docutils literal notranslate"><span class="pre">setTerminationTime()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setTerminationTime">
+<span class="sig-name descname"><span class="pre">setTerminationTime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">term_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setTerminationTime"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setTerminationTime" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the termination time of the system.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This is accurate upto 8 decimal points.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>term_time</strong> (<em>float</em>) – Termination time for the simulation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setRealTimePlatform">
+<span class="sig-name descname"><span class="pre">setRealTimePlatform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">subsystem</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setRealTimePlatform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setRealTimePlatform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the realtime platform to a platform of choice.
+This allows more complex/efficient simulations.</p>
+<p>Calling this function automatically sets the simulation to realtime.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>subsystem</strong> (<a class="reference internal" href="CBD.realtime.threadingBackend.html#CBD.realtime.threadingBackend.Platform" title="CBD.realtime.threadingBackend.Platform"><em>Platform</em></a>) – The platform to use.</p></li>
+<li><p><strong>args</strong> – Optional arguments for this platform.
+Currently, only the TkInter platform
+makes use of these arguments.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To prevent misuse of the function, please use one of the wrapper
+functions when you have no idea what you’re doing.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatformThreading" title="CBD.simulator.Simulator.setRealTimePlatformThreading"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatformThreading()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatformTk" title="CBD.simulator.Simulator.setRealTimePlatformTk"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatformTk()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatformGameLoop" title="CBD.simulator.Simulator.setRealTimePlatformGameLoop"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatformGameLoop()</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setRealTimePlatformThreading">
+<span class="sig-name descname"><span class="pre">setRealTimePlatformThreading</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setRealTimePlatformThreading"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setRealTimePlatformThreading" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper around the <a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatform" title="CBD.simulator.Simulator.setRealTimePlatform"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatform()</span></code></a> call to automatically
+set the Python Threading backend.</p>
+<p>Calling this function automatically sets the simulation to realtime.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatform" title="CBD.simulator.Simulator.setRealTimePlatform"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatform()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatformTk" title="CBD.simulator.Simulator.setRealTimePlatformTk"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatformTk()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatformGameLoop" title="CBD.simulator.Simulator.setRealTimePlatformGameLoop"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatformGameLoop()</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setRealTimePlatformGameLoop">
+<span class="sig-name descname"><span class="pre">setRealTimePlatformGameLoop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setRealTimePlatformGameLoop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setRealTimePlatformGameLoop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper around the <a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatform" title="CBD.simulator.Simulator.setRealTimePlatform"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatform()</span></code></a> call to automatically
+set the Game Loop backend. Using this backend, it is expected the user
+will periodically call the <a class="reference internal" href="#CBD.simulator.Simulator.realtime_gameloop_call" title="CBD.simulator.Simulator.realtime_gameloop_call"><code class="xref py py-func docutils literal notranslate"><span class="pre">realtime_gameloop_call()</span></code></a> method to
+update the simulation step. Timing is still maintained internally.</p>
+<p>Calling this function automatically sets the simulation to realtime.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatform" title="CBD.simulator.Simulator.setRealTimePlatform"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatform()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatformThreading" title="CBD.simulator.Simulator.setRealTimePlatformThreading"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatformThreading()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatformTk" title="CBD.simulator.Simulator.setRealTimePlatformTk"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatformTk()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.realtime_gameloop_call" title="CBD.simulator.Simulator.realtime_gameloop_call"><code class="xref py py-func docutils literal notranslate"><span class="pre">realtime_gameloop_call()</span></code></a></p></li>
+<li><p><a class="reference internal" href="examples/RealTime.html"><span class="doc">Realtime Simulation</span></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setRealTimePlatformTk">
+<span class="sig-name descname"><span class="pre">setRealTimePlatformTk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">root</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setRealTimePlatformTk"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setRealTimePlatformTk" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrapper around the <a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatform" title="CBD.simulator.Simulator.setRealTimePlatform"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatform()</span></code></a> call to automatically
+set the TkInter backend.</p>
+<p>Calling this function automatically sets the simulation to realtime.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>root</strong> – TkInter root window object (tkinter.Tk)</p>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatform" title="CBD.simulator.Simulator.setRealTimePlatform"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatform()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatformThreading" title="CBD.simulator.Simulator.setRealTimePlatformThreading"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatformThreading()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatformGameLoop" title="CBD.simulator.Simulator.setRealTimePlatformGameLoop"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatformGameLoop()</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.realtime_gameloop_call">
+<span class="sig-name descname"><span class="pre">realtime_gameloop_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.realtime_gameloop_call"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.realtime_gameloop_call" title="Permalink to this definition">¶</a></dt>
+<dd><p>Do a step in the realtime-gameloop platform.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<em>float</em>) – Simulation time to be passed on. Only to be used
+for the alternative gameloop backend.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function will only work for a <code class="xref py py-attr docutils literal notranslate"><span class="pre">Platform.GAMELOOP</span></code> or a
+<code class="xref py py-attr docutils literal notranslate"><span class="pre">Platform.GLA</span></code> simulation, after the <a class="reference internal" href="#CBD.simulator.Simulator.run" title="CBD.simulator.Simulator.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a> method has
+been called.</p>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatform" title="CBD.simulator.Simulator.setRealTimePlatform"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatform()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.setRealTimePlatformGameLoop" title="CBD.simulator.Simulator.setRealTimePlatformGameLoop"><code class="xref py py-func docutils literal notranslate"><span class="pre">setRealTimePlatformGameLoop()</span></code></a></p></li>
+<li><p><a class="reference internal" href="#CBD.simulator.Simulator.run" title="CBD.simulator.Simulator.run"><code class="xref py py-func docutils literal notranslate"><span class="pre">run()</span></code></a></p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.connect">
+<span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect an event with an additional, user-defined function. These functions
+will be executed on a separate thread and polled every 50 milliseconds.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>It is expected that the passed function terminates at a certain point
+in time, to prevent an infinitely running process.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>There is no guarantee that these functions will be executed in-order of
+connection. For safety, it is best to see these events as not thread-safe.</p>
+</div>
+<p>The functions will be called in the order they were connected to the
+events, with the associated arguments. The accepted signals are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="code docutils literal notranslate"><span class="pre">started</span></code>:              Raised whenever the simulation setup has completed,</dt><dd><p>but before the actual simulation begins.</p>
+</dd>
+</dl>
+</li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">finished</span></code>:             Raised whenever the simulation finishes.</p></li>
+<li><dl class="simple">
+<dt><code class="code docutils literal notranslate"><span class="pre">prestep(t,</span> <span class="pre">st)</span></code>:       Raised before a step is done. <code class="code docutils literal notranslate"><span class="pre">t</span></code> is the real</dt><dd><p>time before the step and <code class="code docutils literal notranslate"><span class="pre">st</span></code> is the simulation
+time.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="code docutils literal notranslate"><span class="pre">poststep(o,</span> <span class="pre">t,</span> <span class="pre">st)</span></code>:   Raised after a step is done. <code class="code docutils literal notranslate"><span class="pre">o</span></code> is the real</dt><dd><p>time before the step, <code class="code docutils literal notranslate"><span class="pre">t</span></code> is the real time after
+the step and <code class="code docutils literal notranslate"><span class="pre">st</span></code> is the simulation time of the
+step.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="code docutils literal notranslate"><span class="pre">clock_update(delta)</span></code>:  Raised whenever the clock updates. It takes the (new)</dt><dd><p>delta for the simulation.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the signal to raise.</p></li>
+<li><p><strong>function</strong> – A function that will be called with the optional arguments
+whenever the event is raised.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.signal">
+<span class="sig-name descname"><span class="pre">signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.signal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Raise a signal with a specific name and arguments.</p>
+<p>The accepted signals are:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="code docutils literal notranslate"><span class="pre">started</span></code>:              Raised whenever the simulation setup has</dt><dd><p>completed, but before the actual simulation
+begins.</p>
+</dd>
+</dl>
+</li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">finished</span></code>:             Raised whenever the simulation finishes.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">prestep</span></code>:              Raised before a step is done.</p></li>
+<li><p><code class="code docutils literal notranslate"><span class="pre">poststep</span></code>:             Raised after a step is done.</p></li>
+<li><dl class="simple">
+<dt><code class="code docutils literal notranslate"><span class="pre">clock_update(delta)</span></code>:  Raised whenever the clock updates. It takes</dt><dd><p>the (new) delta for the simulation.</p>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Normally, users do not need to call this function.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the signal to raise.</p></li>
+<li><p><strong>*args</strong> – Additional arguments to pass to the connected events.</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#CBD.simulator.Simulator.connect" title="CBD.simulator.Simulator.connect"><code class="xref py py-func docutils literal notranslate"><span class="pre">connect()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setCustomTracer">
+<span class="sig-name descname"><span class="pre">setCustomTracer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">tracer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setCustomTracer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setCustomTracer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a custom tracer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>*tracer</strong> – Either a single instance of a subclass of
+<a class="reference internal" href="CBD.tracers.baseTracer.html#CBD.tracers.baseTracer.BaseTracer" title="CBD.tracers.baseTracer.BaseTracer"><code class="xref py py-class docutils literal notranslate"><span class="pre">CBD.tracers.baseTracer.BaseTracer</span></code></a> or three elements
+<code class="code docutils literal notranslate"><span class="pre">filename</span></code> (str), <code class="code docutils literal notranslate"><span class="pre">classname</span></code> (str) and
+<code class="code docutils literal notranslate"><span class="pre">args</span></code> (tuple) to allow instantiation similar to
+<a class="reference external" href="http://msdl.cs.mcgill.ca/projects/DEVS/PythonPDEVS">PythonPDEVS</a>.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Calling this function multiple times with the same arguments will continuously add
+new tracers. Thus output to multiple files is possible, though more inefficient than
+simply (manually) copying the file at the end.</p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="CBD.simulator.Simulator.setVerbose">
+<span class="sig-name descname"><span class="pre">setVerbose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/CBD/simulator.html#Simulator.setVerbose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#CBD.simulator.Simulator.setVerbose" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the verbose tracer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>None</em><em>]</em>) – The file to which the trace must be written.
+When <code class="code docutils literal notranslate"><span class="pre">None</span></code>, the trace will be written to
+the console.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Calling this function multiple times will continuously add new tracers. Thus output
+to multiple files is possible, though more inefficient than simply (manually) copying
+the file at the end.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Using multiple verbose tracers with the same filename will yield errors and undefined
+behaviour.</p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">How to install the CBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="CBD.html">CBD package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="CBD.html#subpackages">Subpackages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="CBD.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="CBD.Core.html">CBD.Core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.depGraph.html">CBD.depGraph module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.naivelog.html">CBD.naivelog module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.scheduling.html">CBD.scheduling module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CBD.simulator module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="CBD.util.html">CBD.util module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="CBD.scheduling.html"
+                          title="previous chapter">CBD.scheduling module</a></p>
+  </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="CBD.scheduling.html" title="CBD.scheduling module"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">CBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="CBD.html" >CBD package</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">CBD.simulator module</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,651 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyCBD.preprocessing.rungekutta &#8212; pyCBD Simulator  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/nature.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/style.css" />
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/math.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.preprocessing.rungekutta</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for pyCBD.preprocessing.rungekutta</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains all the logic for Runge-Kutta preprocessing.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">pyCBD.Core</span> <span class="kn">import</span> <span class="n">CBD</span>
+<span class="kn">from</span> <span class="nn">pyCBD.lib.std</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pyCBD.converters.CBDDraw</span> <span class="kn">import</span> <span class="n">gvDraw</span>
+
+<div class="viewcode-block" id="RKPreprocessor"><a class="viewcode-back" href="../../../pyCBD.preprocessing.rungekutta.html#pyCBD.preprocessing.rungekutta.RKPreprocessor">[docs]</a><span class="k">class</span> <span class="nc">RKPreprocessor</span><span class="p">:</span>
+	<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	Preprocesses a model to allow for Runge-Kutta approximation. This may be used to solve</span>
+<span class="sd">	systems/initial-value problems in the form of</span>
+
+<span class="sd">	.. math::</span>
+<span class="sd">		\dfrac{dy}{dt} = f(t, y)</span>
+
+<span class="sd">	Both normal approximation as well as adaptive stepsize can be done with this preprocessor.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		tableau (pyCBD.preprocessing.butcher.ButcherTableau): The tableau for which RK approximation</span>
+<span class="sd">							may be done. When this is a normal tableau, mere approximation will</span>
+<span class="sd">							happen. When it is an extended tableau, the scale factor for the delta</span>
+<span class="sd">							will also be computed.</span>
+<span class="sd">		atol (float):       The absolute tolerance for precision in approximating, given that the</span>
+<span class="sd">							tableau is an extended tableau. Defaults to 1e-8.</span>
+<span class="sd">		hmin (float):       Minimal value for the delta, given that the tableau is an extended</span>
+<span class="sd">							tableau. When non-extended, this will identify the clock delta.</span>
+<span class="sd">							Defaults to 1e-40.</span>
+<span class="sd">		hmax (float):       Maximal value for the delta, given that the tableau is an extended</span>
+<span class="sd">							tableau. This value will also be used as the initial delta.</span>
+<span class="sd">							Defaults to 1e-1.</span>
+<span class="sd">		safety (float):     Safety factor for the error computation. Must be in (0, 1], preferrably</span>
+<span class="sd">							on the high end of the range. For RKF45, commonly :math:`2^{-1/4} \approx 0.84`</span>
+<span class="sd">							is used. Defaults to 0.9.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tableau</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">,</span> <span class="n">hmin</span><span class="o">=</span><span class="mf">1e-40</span><span class="p">,</span> <span class="n">hmax</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">,</span> <span class="n">safety</span><span class="o">=</span><span class="mf">0.9</span><span class="p">):</span>
+		<span class="k">assert</span> <span class="n">atol</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Tolerance must be a positive value&quot;</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_tableau</span> <span class="o">=</span> <span class="n">tableau</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_tolerance</span> <span class="o">=</span> <span class="n">atol</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_h_range</span> <span class="o">=</span> <span class="n">hmin</span><span class="p">,</span> <span class="n">hmax</span>
+		<span class="bp">self</span><span class="o">.</span><span class="n">_safety</span> <span class="o">=</span> <span class="n">safety</span>
+
+<div class="viewcode-block" id="RKPreprocessor.preprocess"><a class="viewcode-back" href="../../../pyCBD.preprocessing.rungekutta.html#pyCBD.preprocessing.rungekutta.RKPreprocessor.preprocess">[docs]</a>	<span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Do the actual preprocessing on a model.</span>
+
+<span class="sd">		The model will be cloned and than flattened, such that the groups limited by</span>
+<span class="sd">		:class:`pyCBD.lib.std.IntegratorBlock` and other memory blocks are collected</span>
+<span class="sd">		as the initial-value problem they represent. From there, a new CBD model will</span>
+<span class="sd">		be constructed, representative of the Runge-Kutta approximation with a given</span>
+<span class="sd">		Butcher Tableau.</span>
+
+<span class="sd">		When there are no :class:`pyCBD.lib.std.IntegratorBlock` available in the model,</span>
+<span class="sd">		the original model will be returned.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			original (pyCBD.Core.CBD): A CBD model to get the RK approximating model for.</span>
+
+<span class="sd">		Warning:</span>
+<span class="sd">			Currently, this fuction will yield undefined behaviour if the original model</span>
+<span class="sd">			has input ports with a name that matches :code:`(IN\\d+|((rel_)?time))`,</span>
+<span class="sd">			output ports that match :code:`OUT\\d+` and non-clock steering blocks with</span>
+<span class="sd">			prefix :code:`&quot;clock&quot;`.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># TODO: rename colliding blocks (e.g. change the capitalization or add a prefix for RK-system)</span>
+		<span class="c1"># 1. Detect IVP based on integrators</span>
+		<span class="n">IVP</span><span class="p">,</span> <span class="n">plinks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_IVP</span><span class="p">(</span><span class="n">original</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">plinks</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: No IntegratorBlocks found, returning original.&quot;</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">original</span>
+
+		<span class="c1"># 2. Create an RK-model, based on the given tableau</span>
+		<span class="n">RK</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_RK</span><span class="p">(</span><span class="n">IVP</span><span class="p">)</span>
+
+		<span class="c1"># 3. Substitute the RK-model collection in the original CBD</span>
+		<span class="n">outputs</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">getSignals</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+		<span class="n">inputs</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">getInputPortNames</span><span class="p">()</span>
+		<span class="n">new_model</span> <span class="o">=</span> <span class="n">CBD</span><span class="p">(</span><span class="n">original</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+		<span class="n">new_model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">RK</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
+			<span class="k">if</span> <span class="n">RK</span><span class="o">.</span><span class="n">hasBlock</span><span class="p">(</span><span class="n">inp</span><span class="p">):</span>
+				<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="n">RK</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="n">inp</span><span class="p">)</span>
+		<span class="n">old_clock</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">getClock</span><span class="p">()</span>
+		<span class="n">new_model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">Clock</span><span class="p">(</span><span class="s2">&quot;clock&quot;</span><span class="p">,</span> <span class="n">old_clock</span><span class="o">.</span><span class="n">getDeltaT</span><span class="p">()))</span>
+		<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;clock&quot;</span><span class="p">,</span> <span class="n">RK</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="s1">&#39;time&#39;</span><span class="p">)</span>
+		<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;clock&quot;</span><span class="p">,</span> <span class="n">RK</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s1">&#39;rel_time&#39;</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="s1">&#39;rel_time&#39;</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">RK</span><span class="o">.</span><span class="n">hasBlock</span><span class="p">(</span><span class="s2">&quot;h_new&quot;</span><span class="p">):</span>
+			<span class="c1"># TODO: take delta from original</span>
+			<span class="n">new_model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;HIC&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+			<span class="n">new_model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">DelayBlock</span><span class="p">(</span><span class="s2">&quot;HDelay&quot;</span><span class="p">))</span>
+			<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">RK</span><span class="p">,</span> <span class="s2">&quot;HDelay&quot;</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="s2">&quot;h_new&quot;</span><span class="p">)</span>
+			<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;HIC&quot;</span><span class="p">,</span> <span class="s2">&quot;HDelay&quot;</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;IC&quot;</span><span class="p">)</span>
+			<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;HDelay&quot;</span><span class="p">,</span> <span class="s2">&quot;clock&quot;</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;h&quot;</span><span class="p">)</span>
+			<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;clock&quot;</span><span class="p">,</span> <span class="n">RK</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="s1">&#39;delta&#39;</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="c1"># TODO: take delta from original</span>
+			<span class="n">new_model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;clock-delta&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h_range</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+			<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;clock-delta&quot;</span><span class="p">,</span> <span class="s2">&quot;clock&quot;</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;h&quot;</span><span class="p">)</span>
+			<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;clock-delta&quot;</span><span class="p">,</span> <span class="n">RK</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;h&quot;</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">itg_name</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">plinks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+			<span class="n">itg</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">itg_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="k">if</span> <span class="s2">&quot;IC&quot;</span> <span class="ow">in</span> <span class="n">itg</span><span class="o">.</span><span class="n">getInputPortNames</span><span class="p">():</span>
+				<span class="n">icop</span> <span class="o">=</span> <span class="n">itg</span><span class="o">.</span><span class="n">getPortConnectedToInput</span><span class="p">(</span><span class="s2">&quot;IC&quot;</span><span class="p">)</span>
+				<span class="n">ic</span> <span class="o">=</span> <span class="n">icop</span><span class="o">.</span><span class="n">block</span>
+				<span class="n">collection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">ic</span><span class="p">,</span> <span class="n">finish</span><span class="o">=</span><span class="p">[</span><span class="n">IntegratorBlock</span><span class="p">,</span> <span class="n">Clock</span><span class="p">,</span> <span class="n">TimeBlock</span><span class="p">])</span>
+				<span class="k">if</span> <span class="ow">not</span> <span class="n">new_model</span><span class="o">.</span><span class="n">hasBlock</span><span class="p">(</span><span class="n">ic</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()):</span>
+					<span class="n">new_model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ic</span><span class="o">.</span><span class="n">clone</span><span class="p">())</span>
+				<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">:</span>
+					<span class="k">if</span> <span class="ow">not</span> <span class="n">new_model</span><span class="o">.</span><span class="n">hasBlock</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()):</span>
+						<span class="n">new_model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">block</span><span class="o">.</span><span class="n">clone</span><span class="p">())</span>
+				<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">:</span>
+					<span class="n">cs</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">getInputPortNames</span><span class="p">()</span>
+					<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cs</span><span class="p">:</span>
+						<span class="n">cb</span><span class="p">,</span> <span class="n">op</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">getPortConnectedToInput</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+						<span class="k">if</span> <span class="n">cb</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span> <span class="ow">in</span> <span class="n">plinks</span><span class="p">:</span>
+							<span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Too complex Initial Condition for integrator </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">cb</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">())</span>
+						<span class="k">elif</span> <span class="n">cb</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TimeBlock&quot;</span><span class="p">:</span>
+							<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;clock&quot;</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">input_port_name</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
+							                        <span class="n">output_port_name</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+						<span class="k">elif</span> <span class="n">cb</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Clock&quot;</span><span class="p">:</span>
+							<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;clock&quot;</span><span class="p">,</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">input_port_name</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
+							                        <span class="n">output_port_name</span><span class="o">=</span><span class="n">op</span><span class="p">)</span>
+						<span class="k">else</span><span class="p">:</span>
+							<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">cb</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">input_port_name</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
+							                        <span class="n">output_port_name</span><span class="o">=</span><span class="n">op</span><span class="p">)</span>
+						<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">cb</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">input_port_name</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
+						                        <span class="n">output_port_name</span><span class="o">=</span><span class="n">op</span><span class="p">)</span>
+				<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">ic</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">RK</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;IC</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">p</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="n">icop</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="n">new_model</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;RK-IC</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">p</span><span class="p">))</span>
+				<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;RK-IC</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">p</span><span class="p">,</span> <span class="n">RK</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;IC</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">p</span><span class="p">)</span>
+
+		<span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">outputs</span><span class="p">:</span>
+			<span class="n">mop</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">getOutputPortByName</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">getIncoming</span><span class="p">()</span><span class="o">.</span><span class="n">source</span>
+			<span class="n">itg</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">block</span>
+			<span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+			<span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">itg</span><span class="p">,</span> <span class="n">CBD</span><span class="p">)</span> <span class="ow">and</span> <span class="n">itg</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">!=</span> <span class="s2">&quot;IntegratorBlock&quot;</span><span class="p">:</span>
+				<span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="n">itg</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span>
+				<span class="n">mop</span> <span class="o">=</span> <span class="n">itg</span><span class="o">.</span><span class="n">getOutputPortByName</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">getIncoming</span><span class="p">()</span><span class="o">.</span><span class="n">source</span>
+				<span class="n">itg</span> <span class="o">=</span> <span class="n">mop</span><span class="o">.</span><span class="n">block</span>
+			<span class="k">assert</span> <span class="n">itg</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;IntegratorBlock&quot;</span>
+			<span class="n">p</span> <span class="o">=</span> <span class="n">plinks</span><span class="p">[</span><span class="n">prefix</span> <span class="o">+</span> <span class="n">itg</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()]</span>
+			<span class="n">new_model</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">RK</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="s2">&quot;OUT</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">p</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="n">new_model</span></div>
+
+<div class="viewcode-block" id="RKPreprocessor.collect"><a class="viewcode-back" href="../../../pyCBD.preprocessing.rungekutta.html#pyCBD.preprocessing.rungekutta.RKPreprocessor.collect">[docs]</a>	<span class="k">def</span> <span class="nf">collect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">sport</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">finish</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">visited</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Depth-first search collection of all blocks, starting from the start block and</span>
+<span class="sd">		ending when it can&#39;t anymore or when it must finish.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			start (pyCBD.Core.BaseBlock): The block to start from. This block will be excluded</span>
+<span class="sd">										from the collection.</span>
+<span class="sd">			sport (iter):               The set of ports on the start block to use. When</span>
+<span class="sd">										:code:`None` or omitted, all ports will be used.</span>
+<span class="sd">										Note that only the start block can have a specification</span>
+<span class="sd">										for the allowed ports.</span>
+<span class="sd">			finish (iter):              A set of block types (not strings, the actual types!) to</span>
+<span class="sd">										exclude from the collection, halting a branch whenever</span>
+<span class="sd">										one of these has been reached.</span>
+<span class="sd">			visited (iter):             The list of blocks that already have been visited. This</span>
+<span class="sd">										is only to be used by the recursive call. Use :code:`None`</span>
+<span class="sd">										at a top-level.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="k">if</span> <span class="n">finish</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="n">finish</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">if</span> <span class="n">visited</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+			<span class="n">visited</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="n">collection</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="n">sport</span> <span class="k">if</span> <span class="n">sport</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">start</span><span class="o">.</span><span class="n">getInputPortNames</span><span class="p">()):</span>
+			<span class="n">block</span> <span class="o">=</span> <span class="n">start</span><span class="o">.</span><span class="n">getPortConnectedToInput</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">block</span>
+			<span class="k">if</span> <span class="ow">not</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">visited</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">finish</span><span class="p">)):</span>
+				<span class="n">collection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="n">n_collection</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">]</span>
+		<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">:</span>
+			<span class="n">ccoll</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">finish</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">visited</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">block</span><span class="p">])</span>
+			<span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">ccoll</span><span class="p">:</span>
+				<span class="n">cname</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span>
+				<span class="k">if</span> <span class="n">cname</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">n_collection</span><span class="p">:</span>
+					<span class="n">n_collection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cname</span><span class="p">)</span>
+					<span class="n">collection</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">collection</span></div>
+
+<div class="viewcode-block" id="RKPreprocessor.create_IVP"><a class="viewcode-back" href="../../../pyCBD.preprocessing.rungekutta.html#pyCBD.preprocessing.rungekutta.RKPreprocessor.create_IVP">[docs]</a>	<span class="k">def</span> <span class="nf">create_IVP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Detects the set of equations that make up the initial-value problem and</span>
+<span class="sd">		constructs a CBD submodel that contains them. Multiple equations, branches</span>
+<span class="sd">		and extra inputs are all taken into account.</span>
+
+<span class="sd">		For every integrator, the IVP will contain an input and an output port,</span>
+<span class="sd">		who will be linked as such.</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			original:   The model to create the IVP for. This model will **not** be</span>
+<span class="sd">						altered by this fuction.</span>
+
+<span class="sd">		Returns:</span>
+<span class="sd">			Tuple of :code:`IVP, plinks` where :code:`IVP` identifies the CBD for the</span>
+<span class="sd">			IVP equations and :code:`plinks` a dictionary of</span>
+<span class="sd">			:code:`IntegratorBlock name -&gt; index`.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">model</span> <span class="o">=</span> <span class="n">original</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+		<span class="n">model</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">ignore</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;IntegratorBlock&quot;</span><span class="p">,</span> <span class="s2">&quot;Clock&quot;</span><span class="p">])</span>
+		<span class="n">blocks</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">getBlocks</span><span class="p">()</span>
+		<span class="n">IVP</span> <span class="o">=</span> <span class="n">CBD</span><span class="p">(</span><span class="s2">&quot;IVP&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;rel_time&quot;</span><span class="p">],</span> <span class="p">[])</span>
+		<span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+		<span class="n">plinks</span> <span class="o">=</span> <span class="p">{}</span>
+		<span class="n">iblocks</span> <span class="o">=</span> <span class="p">[]</span>
+		<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">blocks</span><span class="p">:</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">DelayBlock</span><span class="p">):</span>
+				<span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Impossible to construct Runge-Kutta model for Delay Differential Equations!&quot;</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="n">IntegratorBlock</span><span class="p">):</span>
+				<span class="c1"># Identify all integrators and give them their in- and outputs</span>
+				<span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+				<span class="n">IVP</span><span class="o">.</span><span class="n">addInputPort</span><span class="p">(</span><span class="s2">&quot;IN</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+				<span class="n">IVP</span><span class="o">.</span><span class="n">addOutputPort</span><span class="p">(</span><span class="s2">&quot;OUT</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+
+				<span class="c1"># Links for future reference</span>
+				<span class="n">plinks</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()]</span> <span class="o">=</span> <span class="n">i</span>
+				<span class="n">iblocks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">block</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">block</span> <span class="ow">in</span> <span class="n">iblocks</span><span class="p">:</span>
+			<span class="n">collection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect</span><span class="p">(</span><span class="n">block</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;IN1&quot;</span><span class="p">],</span> <span class="p">[</span><span class="n">IntegratorBlock</span><span class="p">,</span> <span class="n">TimeBlock</span><span class="p">,</span> <span class="n">Clock</span><span class="p">])</span>
+
+			<span class="c1"># First add the blocks</span>
+			<span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">IVP</span><span class="o">.</span><span class="n">getBlocks</span><span class="p">()]:</span> <span class="k">continue</span>
+				<span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;InputPortBlock&quot;</span><span class="p">:</span>
+					<span class="n">IVP</span><span class="o">.</span><span class="n">addInputPort</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">())</span>
+				<span class="k">elif</span> <span class="n">child</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;OutputPortBlock&quot;</span><span class="p">:</span>
+					<span class="n">IVP</span><span class="o">.</span><span class="n">addOutputPort</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">())</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">IVP</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">clone</span><span class="p">())</span>
+
+			<span class="c1"># Next, link the blocks</span>
+			<span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">collection</span><span class="p">:</span>
+				<span class="k">for</span> <span class="n">name_input</span> <span class="ow">in</span> <span class="n">child</span><span class="o">.</span><span class="n">getInputPortNames</span><span class="p">():</span>
+					<span class="n">link</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">getPortConnectedToInput</span><span class="p">(</span><span class="n">name_input</span><span class="p">)</span>
+					<span class="n">lbn</span> <span class="o">=</span> <span class="n">link</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span>
+					<span class="n">lop</span> <span class="o">=</span> <span class="n">link</span><span class="o">.</span><span class="n">name</span>
+					<span class="k">if</span> <span class="ow">not</span> <span class="n">IVP</span><span class="o">.</span><span class="n">hasBlock</span><span class="p">(</span><span class="n">lbn</span><span class="p">):</span>
+						<span class="c1"># Both the TimeBlock and the Clock&#39;s time output will be explicitly inputted,</span>
+						<span class="c1"># hence, it is the predefined port</span>
+						<span class="k">if</span> <span class="n">link</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;TimeBlock&quot;</span><span class="p">:</span>
+							<span class="n">lbn</span> <span class="o">=</span> <span class="s1">&#39;time&#39;</span>
+						<span class="k">elif</span> <span class="n">link</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockType</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;Clock&quot;</span><span class="p">:</span>
+							<span class="n">lbn</span> <span class="o">=</span> <span class="n">lop</span>
+						<span class="k">elif</span> <span class="n">lbn</span> <span class="ow">in</span> <span class="n">plinks</span><span class="p">:</span>
+							<span class="c1"># Other integrator input</span>
+							<span class="n">p</span> <span class="o">=</span> <span class="n">plinks</span><span class="p">[</span><span class="n">lbn</span><span class="p">]</span>
+							<span class="n">lbn</span> <span class="o">=</span> <span class="s2">&quot;IN</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">p</span>
+						<span class="k">else</span><span class="p">:</span>
+							<span class="c1"># DelayBlock or Clock outputs that have not been linked yet</span>
+							<span class="n">lbn</span> <span class="o">=</span> <span class="n">name_input</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">child</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span>
+							<span class="n">IVP</span><span class="o">.</span><span class="n">addInputPort</span><span class="p">(</span><span class="n">lbn</span><span class="p">)</span>
+						<span class="n">lop</span> <span class="o">=</span> <span class="kc">None</span>
+					<span class="n">IVP</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">lbn</span><span class="p">,</span> <span class="n">child</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">input_port_name</span><span class="o">=</span><span class="n">name_input</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="n">lop</span><span class="p">)</span>
+			<span class="c1"># Link the output</span>
+			<span class="n">p</span> <span class="o">=</span> <span class="n">plinks</span><span class="p">[</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()]</span>
+			<span class="n">fin</span> <span class="o">=</span> <span class="n">block</span><span class="o">.</span><span class="n">getPortConnectedToInput</span><span class="p">(</span><span class="s2">&quot;IN1&quot;</span><span class="p">)</span>
+			<span class="n">fname</span> <span class="o">=</span> <span class="n">fin</span><span class="o">.</span><span class="n">block</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">()</span>
+			<span class="k">if</span> <span class="n">fname</span> <span class="ow">in</span> <span class="n">plinks</span><span class="p">:</span>
+				<span class="n">fname</span> <span class="o">=</span> <span class="s2">&quot;IN</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">plinks</span><span class="p">[</span><span class="n">fname</span><span class="p">]</span>
+			<span class="n">IVP</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s2">&quot;OUT</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">p</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="n">fin</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">IVP</span><span class="p">,</span> <span class="n">plinks</span></div>
+
+<div class="viewcode-block" id="RKPreprocessor.create_RK"><a class="viewcode-back" href="../../../pyCBD.preprocessing.rungekutta.html#pyCBD.preprocessing.rungekutta.RKPreprocessor.create_RK">[docs]</a>	<span class="k">def</span> <span class="nf">create_RK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+		<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Creates the CBD for determining a Runge-Kutta weighed sum in the form of</span>
+
+<span class="sd">		.. math::</span>
+<span class="sd">			y_{n+1} = y_n + \sum_{i=1}^s b_i k_i</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			f (pyCBD.Core.CBD):   The CBD representing the actual IVP for which the</span>
+<span class="sd">								RK approximation must be done.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="c1"># TODO: optimizations:</span>
+		<span class="c1">#  - adder &quot;YSum_2_?&quot; is not required for higher order, since it is</span>
+		<span class="c1">#    always followed by a subtraction of the same y_n-value</span>
+		<span class="n">RK</span> <span class="o">=</span> <span class="n">CBD</span><span class="p">(</span><span class="s2">&quot;RK&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;rel_time&quot;</span><span class="p">])</span>
+		<span class="n">fy</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">getSignals</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+		<span class="n">weights</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tableau</span><span class="o">.</span><span class="n">getWeights</span><span class="p">()))</span>
+		<span class="n">s</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+		<span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">fy</span><span class="p">:</span>
+			<span class="n">RK</span><span class="o">.</span><span class="n">addInputPort</span><span class="p">(</span><span class="s2">&quot;IC</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">)</span>
+			<span class="n">RK</span><span class="o">.</span><span class="n">addOutputPort</span><span class="p">(</span><span class="s2">&quot;OUT</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">)</span>
+			<span class="n">RK</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">DelayBlock</span><span class="p">(</span><span class="s2">&quot;delay_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">))</span>
+			<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;IC</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;delay_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s1">&#39;IC&#39;</span><span class="p">)</span>
+			<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;delay_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;OUT</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">)</span>
+		<span class="n">inpnames</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">getInputPortNames</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;rel_time&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;IN</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fy</span><span class="p">]]</span>
+		<span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">inpnames</span><span class="p">:</span>
+			<span class="n">RK</span><span class="o">.</span><span class="n">addInputPort</span><span class="p">(</span><span class="n">inp</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)):</span>
+			<span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">fy</span><span class="p">:</span>
+				<span class="n">RK</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">AdderBlock</span><span class="p">(</span><span class="s2">&quot;RKSum_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">s</span><span class="p">))</span>
+				<span class="n">RK</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">AdderBlock</span><span class="p">(</span><span class="s2">&quot;YSum_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">)))</span>
+				<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;RKSum_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="s2">&quot;YSum_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+				<span class="k">if</span> <span class="n">q</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">q</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+					<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;YSum_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="s2">&quot;delay_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s1">&#39;IN1&#39;</span><span class="p">)</span>
+				<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;delay_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;YSum_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+			<span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+			<span class="n">RK</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">create_K</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">clone</span><span class="p">()))</span>
+			<span class="k">for</span> <span class="n">inp</span> <span class="ow">in</span> <span class="n">inpnames</span><span class="p">:</span>
+				<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">inp</span><span class="p">,</span> <span class="s2">&quot;RK-K_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="n">inp</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">fy</span><span class="p">:</span>
+				<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;delay_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;RK-K_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s1">&#39;IN</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">y</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)):</span>
+				<span class="n">q</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="mi">1</span>
+				<span class="n">RK</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;B</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="n">weights</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="n">i</span><span class="p">]))</span>
+				<span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">fy</span><span class="p">:</span>
+					<span class="n">RK</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ProductBlock</span><span class="p">(</span><span class="s2">&quot;Mult</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">j</span><span class="p">)))</span>
+					<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;B</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="s2">&quot;Mult</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+					<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;RK-K_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="s2">&quot;Mult</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="n">output_port_name</span><span class="o">=</span><span class="s2">&quot;OUT</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">)</span>
+					<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Mult</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="s2">&quot;RKSum_</span><span class="si">%d</span><span class="s2">_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+			<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;RK-K_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;h&quot;</span><span class="p">)</span>
+			<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;RK-K_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+			<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;rel_time&quot;</span><span class="p">,</span> <span class="s2">&quot;RK-K_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;rel_time&quot;</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+				<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;RK-K_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;RK-K_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;k_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">s</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+		<span class="c1"># Error Computation</span>
+		<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+			<span class="n">RK</span><span class="o">.</span><span class="n">addOutputPort</span><span class="p">(</span><span class="s2">&quot;h_new&quot;</span><span class="p">)</span>
+			<span class="n">RK</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">create_Error</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">fy</span><span class="p">)))</span>
+			<span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">fy</span><span class="p">:</span>
+				<span class="c1"># for q in range(len(weights)):</span>
+				<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;YSum_1_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;y_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">y</span><span class="p">))</span>
+				<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;YSum_2_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;z_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">y</span><span class="p">))</span>
+			<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;h&quot;</span><span class="p">)</span>
+			<span class="n">RK</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="s2">&quot;h_new&quot;</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="s1">&#39;h_new&#39;</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="n">RK</span></div>
+
+<div class="viewcode-block" id="RKPreprocessor.create_K"><a class="viewcode-back" href="../../../pyCBD.preprocessing.rungekutta.html#pyCBD.preprocessing.rungekutta.RKPreprocessor.create_K">[docs]</a>	<span class="k">def</span> <span class="nf">create_K</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+		<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Creates the CBD for determining the :math:`k_s`-value in the Runge-Kutta</span>
+<span class="sd">		approximation computation. The generic formula is:</span>
+
+<span class="sd">		.. math::</span>
+<span class="sd">			k_s = h\cdot f\left(t_n + c_s\cdot h, y_n + \sum_{i=1}^{s-1}a_{s, i} k_i\right)</span>
+
+<span class="sd">		Args:</span>
+<span class="sd">			s (int):            The :math:`s`-value of the :math:`k_s` to compute.</span>
+<span class="sd">			f (pyCBD.Core.CBD): The CBD representing the actual IVP for which the</span>
+<span class="sd">								RK approximation must be done.</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">input_ports</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;rel_time&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;k_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+		<span class="n">fy</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">f</span><span class="o">.</span><span class="n">getInputPortNames</span><span class="p">()</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;rel_time&quot;</span><span class="p">]]</span>
+		<span class="n">input_ports</span> <span class="o">+=</span> <span class="n">fy</span>
+		<span class="n">K</span> <span class="o">=</span> <span class="n">CBD</span><span class="p">(</span><span class="s2">&quot;RK-K_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">s</span><span class="p">,</span> <span class="n">input_ports</span><span class="p">,</span> <span class="p">[])</span>
+		<span class="n">K</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+		<span class="c1"># Time parameter</span>
+		<span class="n">K</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tableau</span><span class="o">.</span><span class="n">getNodes</span><span class="p">()[</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+		<span class="n">K</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ProductBlock</span><span class="p">(</span><span class="s2">&quot;CMult&quot;</span><span class="p">))</span>
+		<span class="n">K</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">AdderBlock</span><span class="p">(</span><span class="s2">&quot;CSum&quot;</span><span class="p">))</span>
+		<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;CMult&quot;</span><span class="p">)</span>
+		<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;CMult&quot;</span><span class="p">)</span>
+		<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;CSum&quot;</span><span class="p">)</span>
+		<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;CMult&quot;</span><span class="p">,</span> <span class="s2">&quot;CSum&quot;</span><span class="p">)</span>
+		<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;CSum&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+		<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;rel_time&quot;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s2">&quot;rel_time&quot;</span><span class="p">)</span>
+
+		<span class="c1"># Y parameters</span>
+		<span class="k">if</span> <span class="n">s</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+			<span class="n">K</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">AdderBlock</span><span class="p">(</span><span class="s2">&quot;KSum&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+			<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+				<span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+				<span class="n">K</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;A_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tableau</span><span class="o">.</span><span class="n">getA</span><span class="p">(</span><span class="n">s</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">j</span><span class="p">)))</span>
+				<span class="n">K</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ProductBlock</span><span class="p">(</span><span class="s2">&quot;Mult_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">))</span>
+				<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;A_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="s2">&quot;Mult_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span>
+				<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;k_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="s2">&quot;Mult_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span>
+				<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Mult_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="s2">&quot;KSum&quot;</span><span class="p">)</span>
+			<span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">fy</span><span class="p">:</span>
+				<span class="k">if</span> <span class="n">y</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;IN&quot;</span><span class="p">):</span>
+					<span class="n">K</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">AdderBlock</span><span class="p">(</span><span class="s2">&quot;YSum-</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">))</span>
+					<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="s2">&quot;YSum-</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">)</span>
+					<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;KSum&quot;</span><span class="p">,</span> <span class="s2">&quot;YSum-</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">)</span>
+					<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;YSum-</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">y</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">input_port_name</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+				<span class="k">else</span><span class="p">:</span>
+					<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">input_port_name</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">fy</span><span class="p">:</span>
+				<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="n">input_port_name</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+
+		<span class="c1"># Finishing Up</span>
+		<span class="n">outputs</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">getSignals</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+		<span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">outputs</span><span class="p">):</span>
+			<span class="n">i</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+			<span class="n">K</span><span class="o">.</span><span class="n">addOutputPort</span><span class="p">(</span><span class="s2">&quot;OUT</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+			<span class="n">K</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ProductBlock</span><span class="p">(</span><span class="s2">&quot;FMult_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">))</span>
+			<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;FMult_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+			<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">getBlockName</span><span class="p">(),</span> <span class="s2">&quot;FMult_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="n">output_port_name</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+			<span class="n">K</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;FMult_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;OUT</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="n">K</span></div>
+
+<div class="viewcode-block" id="RKPreprocessor.create_Error"><a class="viewcode-back" href="../../../pyCBD.preprocessing.rungekutta.html#pyCBD.preprocessing.rungekutta.RKPreprocessor.create_Error">[docs]</a>	<span class="k">def</span> <span class="nf">create_Error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vlen</span><span class="p">):</span>
+		<span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">		Creates the error computation block, which computes:</span>
+
+<span class="sd">		.. math::</span>
+<span class="sd">			h_{new} = h_{old}\cdot clamp\left(S\cdot\left(\dfrac{\epsilon\cdot h_{old}}</span>
+<span class="sd">			{\vert z_{n+1} - y_{n+1}\vert}\right)^{\dfrac{1}{q}}, 0.1, 4.0\right)</span>
+
+<span class="sd">		Where :math:`\epsilon` is the provided error tolerance, :math:`q` the lowest order of the computation,</span>
+<span class="sd">		:math:`z_{n+1}` the higher-order (more precise) value and :math:`y_{n+1}` the lower-order computation</span>
+<span class="sd">		that will also be outputted. When :math:`y` and :math:`z` consist of multiple elements, a pessimistic</span>
+<span class="sd">		approach is used, obtaining the maximal error.</span>
+
+<span class="sd">		See Also:</span>
+<span class="sd">			`Press, William H., H. William, Saul A. Teukolsky, A. Saul, William T. Vetterling, and Brian P. Flannery.</span>
+<span class="sd">			2007. &quot;Numerical recipes 3rd edition: The art of scientific computing&quot;, Chapter 16, pp. 714-722.</span>
+<span class="sd">			Cambridge University Press. &lt;https://people.cs.clemson.edu/~dhouse/courses/817/papers/adaptive-h-c16-2.pdf&gt;`_</span>
+<span class="sd">		&quot;&quot;&quot;</span>
+		<span class="n">Err</span> <span class="o">=</span> <span class="n">CBD</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;y_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vlen</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;z_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vlen</span><span class="p">)],</span>
+		          <span class="p">[</span><span class="s2">&quot;h_new&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">])</span>
+
+		<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;Tol&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tolerance</span><span class="p">))</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;Eps&quot;</span><span class="p">,</span> <span class="mf">1e-20</span><span class="p">))</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">MaxBlock</span><span class="p">(</span><span class="s2">&quot;Max&quot;</span><span class="p">,</span> <span class="n">vlen</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Eps&quot;</span><span class="p">,</span> <span class="s2">&quot;Max&quot;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Max&quot;</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
+		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vlen</span><span class="p">):</span>
+			<span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+			<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">NegatorBlock</span><span class="p">(</span><span class="s2">&quot;Neg_</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">))</span>
+			<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">AdderBlock</span><span class="p">(</span><span class="s2">&quot;Sum_</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">))</span>
+			<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">AbsBlock</span><span class="p">(</span><span class="s2">&quot;Abs_</span><span class="si">%i</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">))</span>
+			<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;y_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="s2">&quot;Neg_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span>
+			<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Neg_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="s2">&quot;Sum_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span>
+			<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;z_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="s2">&quot;Sum_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span>
+			<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Sum_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="s2">&quot;Abs_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">)</span>
+			<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Abs_</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">j</span><span class="p">,</span> <span class="s2">&quot;Max&quot;</span><span class="p">)</span>
+
+		<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">InverterBlock</span><span class="p">(</span><span class="s2">&quot;hinv&quot;</span><span class="p">))</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;hinv&quot;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ProductBlock</span><span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">))</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Max&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;hinv&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">InverterBlock</span><span class="p">(</span><span class="s2">&quot;Rinv&quot;</span><span class="p">))</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;Rinv&quot;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ProductBlock</span><span class="p">(</span><span class="s2">&quot;RinvMult&quot;</span><span class="p">))</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Rinv&quot;</span><span class="p">,</span> <span class="s2">&quot;RinvMult&quot;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Tol&quot;</span><span class="p">,</span> <span class="s2">&quot;RinvMult&quot;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">RootBlock</span><span class="p">(</span><span class="s2">&quot;Root&quot;</span><span class="p">))</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tableau</span><span class="o">.</span><span class="n">getOrder</span><span class="p">()))</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;RinvMult&quot;</span><span class="p">,</span> <span class="s2">&quot;Root&quot;</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s1">&#39;IN1&#39;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;q&quot;</span><span class="p">,</span> <span class="s2">&quot;Root&quot;</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s1">&#39;IN2&#39;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_safety</span><span class="p">))</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ProductBlock</span><span class="p">(</span><span class="s2">&quot;SMult&quot;</span><span class="p">))</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;S&quot;</span><span class="p">,</span> <span class="s2">&quot;SMult&quot;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Root&quot;</span><span class="p">,</span> <span class="s2">&quot;SMult&quot;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ClampBlock</span><span class="p">(</span><span class="s2">&quot;Clamp&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">))</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;SMult&quot;</span><span class="p">,</span> <span class="s2">&quot;Clamp&quot;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ProductBlock</span><span class="p">(</span><span class="s2">&quot;HMult&quot;</span><span class="p">))</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;HMult&quot;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Clamp&quot;</span><span class="p">,</span> <span class="s2">&quot;HMult&quot;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ClampBlock</span><span class="p">(</span><span class="s2">&quot;HClamp&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h_range</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_h_range</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;HMult&quot;</span><span class="p">,</span> <span class="s2">&quot;HClamp&quot;</span><span class="p">)</span>
+		<span class="n">Err</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;HClamp&quot;</span><span class="p">,</span> <span class="s2">&quot;h_new&quot;</span><span class="p">)</span>
+
+		<span class="k">return</span> <span class="n">Err</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+	<span class="kn">from</span> <span class="nn">pyCBD.preprocessing.butcher</span> <span class="kn">import</span> <span class="n">ButcherTableau</span> <span class="k">as</span> <span class="n">BT</span>
+	<span class="kn">from</span> <span class="nn">pyCBD.converters.CBDDraw</span> <span class="kn">import</span> <span class="n">gvDraw</span>
+	<span class="n">DELTA_T</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+	<span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="n">CBD</span><span class="p">):</span>
+		<span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+			<span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">])</span>
+
+			<span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s1">&#39;x0&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s1">&#39;v0&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">))</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ConstantBlock</span><span class="p">(</span><span class="s2">&quot;five&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">NegatorBlock</span><span class="p">(</span><span class="s2">&quot;neg&quot;</span><span class="p">))</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">AdderBlock</span><span class="p">(</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">ProductBlock</span><span class="p">(</span><span class="s2">&quot;mult&quot;</span><span class="p">))</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">IntegratorBlock</span><span class="p">(</span><span class="s2">&quot;Iv&quot;</span><span class="p">))</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addBlock</span><span class="p">(</span><span class="n">IntegratorBlock</span><span class="p">(</span><span class="s2">&quot;Ix&quot;</span><span class="p">))</span>
+
+			<span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;five&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;v0&quot;</span><span class="p">,</span> <span class="s2">&quot;neg&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;neg&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="s2">&quot;mult&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;k&quot;</span><span class="p">,</span> <span class="s2">&quot;mult&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;mult&quot;</span><span class="p">,</span> <span class="s2">&quot;Iv&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Iv&quot;</span><span class="p">,</span> <span class="s2">&quot;sum&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Iv&quot;</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Iv&quot;</span><span class="p">,</span> <span class="s2">&quot;Ix&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;Ix&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;v0&quot;</span><span class="p">,</span> <span class="s2">&quot;Iv&quot;</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s1">&#39;IC&#39;</span><span class="p">)</span>
+			<span class="bp">self</span><span class="o">.</span><span class="n">addConnection</span><span class="p">(</span><span class="s2">&quot;x0&quot;</span><span class="p">,</span> <span class="s2">&quot;Ix&quot;</span><span class="p">,</span> <span class="n">input_port_name</span><span class="o">=</span><span class="s1">&#39;IC&#39;</span><span class="p">)</span>
+
+			<span class="bp">self</span><span class="o">.</span><span class="n">addFixedRateClock</span><span class="p">(</span><span class="s2">&quot;clock&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+			<span class="c1"># self.addConnection(&quot;clock-clock&quot;, &quot;Iv&quot;, output_port_name=&quot;delta&quot;, input_port_name=&#39;delta_t&#39;)</span>
+			<span class="c1"># self.addConnection(&quot;clock-clock&quot;, &quot;Ix&quot;, output_port_name=&quot;delta&quot;, input_port_name=&#39;delta_t&#39;)</span>
+
+	<span class="n">test</span> <span class="o">=</span> <span class="n">Test</span><span class="p">(</span><span class="s2">&quot;Test&quot;</span><span class="p">)</span>
+	<span class="c1"># test.addFixedRateClock(&quot;clock&quot;, 0.1)</span>
+	<span class="n">prep</span> <span class="o">=</span> <span class="n">RKPreprocessor</span><span class="p">(</span><span class="n">BT</span><span class="o">.</span><span class="n">RKF45</span><span class="p">(),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">2e-5</span><span class="p">,</span> <span class="n">hmin</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">,</span> <span class="n">safety</span><span class="o">=</span><span class="mf">.84</span><span class="p">)</span>
+	<span class="n">model</span> <span class="o">=</span> <span class="n">prep</span><span class="o">.</span><span class="n">preprocess</span><span class="p">(</span><span class="n">test</span><span class="p">)</span>
+	<span class="n">gvDraw</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;test.dot&quot;</span><span class="p">)</span>
+	<span class="c1"># model = Test(&quot;Test&quot;)</span>
+
+	<span class="kn">from</span> <span class="nn">pyCBD.simulator</span> <span class="kn">import</span> <span class="n">Simulator</span>
+	<span class="n">sim</span> <span class="o">=</span> <span class="n">Simulator</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+	<span class="n">sim</span><span class="o">.</span><span class="n">setDeltaT</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+	<span class="n">sim</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="mf">1.4</span><span class="p">)</span>
+
+	<span class="n">s</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">getSignalHistory</span><span class="p">(</span><span class="s2">&quot;v&quot;</span><span class="p">)</span>
+	<span class="n">L</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+	<span class="n">errs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;RK.error&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getSignalHistory</span><span class="p">(</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
+	<span class="n">hs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;RK.error&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">getSignalHistory</span><span class="p">(</span><span class="s2">&quot;h_new&quot;</span><span class="p">)</span>
+	<span class="c1"># errs = hs = s</span>
+
+	<span class="c1"># print([x for _, x in model.find(&quot;RK.myDelay&quot;)[0].getSignalHistory(&quot;OUT1&quot;)])</span>
+
+	<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;+------------+------------+------------+------------+------------+------------+&quot;</span><span class="p">)</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;|    TIME    |    VALUE   |     TAN    |    ERROR   |   OFFSET   |    DELTA   |&quot;</span><span class="p">)</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;+------------+------------+------------+------------+------------+------------+&quot;</span><span class="p">)</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">L</span><span class="p">):</span>
+		<span class="n">t</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+		<span class="n">actual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+		<span class="n">error</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">actual</span> <span class="o">-</span> <span class="n">v</span><span class="p">)</span>
+		<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;| </span><span class="si">{t:10.7f}</span><span class="s2"> | </span><span class="si">{v:10.7f}</span><span class="s2"> | </span><span class="si">{h:10.7f}</span><span class="s2"> | </span><span class="si">{e:10.7f}</span><span class="s2"> | </span><span class="si">{o:10.7f}</span><span class="s2"> | </span><span class="si">{d:10.7f}</span><span class="s2"> |&quot;</span>
+		      <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="n">t</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="n">v</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="n">actual</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="n">error</span><span class="p">,</span> <span class="n">o</span><span class="o">=</span><span class="n">errs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="n">hs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">value</span><span class="p">))</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;+------------+------------+------------+------------+------------+------------+&quot;</span><span class="p">)</span>
+
+	<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+	<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+	<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">),</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;tan(t)&quot;</span><span class="p">)</span>
+	<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">s</span><span class="p">],</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">s</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;estimate&quot;</span><span class="p">)</span>
+	<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+	<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<p class="caption" role="heading"><span class="caption-text">Setup</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../install.html">How to install the pyCBD framework?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../running.html">How to run a CBD simulation?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../issues.html">Common Issues and Solutions</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Simple Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/SinGen.html">Sine Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/EvenNumberGen.html">Hierarchical Even Number Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Fibonacci.html">Fibonacci Sequence Generator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LCG.html">Linear Congruential Generator</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Advanced Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/RealTime.html">Realtime Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/LivePlot.html">Live Plotting of Data During the Simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/Dashboard.html">TkInter Dashboard with Editable Values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../pyCBD.converters.latexify.html">Generate LaTeX from CBD Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/ContinuousTime.html">Continuous Time Simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Internal Documentation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pyCBD.html">pyCBD package</a></li>
+</ul>
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">pyCBD Simulator  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">pyCBD.preprocessing.rungekutta</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2020, Randy Paredis.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+    </div>
+  </body>
+</html>
