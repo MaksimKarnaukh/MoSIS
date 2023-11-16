@@ -1,2 +1,2 @@
 Jinja2
-./CBD/src/setup.py
+./CBD/src/
