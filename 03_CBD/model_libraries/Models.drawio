@@ -1,0 +1,14 @@
+<mxlibrary>[
+  {
+    "xml": "&lt;mxGraphModel&gt;&lt;root&gt;&lt;mxCell id=\"0\"/&gt;&lt;mxCell id=\"1\" parent=\"0\"/&gt;&lt;object label=\"%symbol%\" placeholders=\"1\" symbol=\"cbda\" class_name=\"CBDA\" block_name=\"cbda\" id=\"2\"&gt;&lt;mxCell style=\"whiteSpace=wrap;html=1;aspect=fixed;comic=0;fillColor=#FFFFFF;fontSize=36;align=center;resizable=0;container=1;collapsible=0;points=[];allowArrows=0;metaEdit=1;connectable=0;\" vertex=\"1\" parent=\"1\"&gt;&lt;mxGeometry width=\"80\" height=\"80\" as=\"geometry\"/&gt;&lt;/mxCell&gt;&lt;/object&gt;&lt;object label=\"%name%\" placeholders=\"1\" name=\"x_a\" class_name=\"OutputPort\" id=\"3\"&gt;&lt;mxCell style=\"triangle;fillColor=#ffffff;fontSize=14;points=[[1,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=left;spacingLeft=4;spacingRight=0;html=1;comic=0;treeFolding=0;treeMoving=0;movable=1;resizable=0;rotatable=1;deletable=1;editable=1;connectable=1;movableLabel=1;spacing=2;aspect=fixed;metaEdit=1;\" vertex=\"1\" parent=\"2\"&gt;&lt;mxGeometry x=\"70\" y=\"32.5\" width=\"10\" height=\"15\" as=\"geometry\"&gt;&lt;mxPoint x=\"13\" y=\"-14\" as=\"offset\"/&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;/object&gt;&lt;/root&gt;&lt;/mxGraphModel&gt;",
+    "w": 80,
+    "h": 80,
+    "aspect": "fixed"
+  },
+  {
+    "xml": "&lt;mxGraphModel&gt;&lt;root&gt;&lt;mxCell id=\"0\"/&gt;&lt;mxCell id=\"1\" parent=\"0\"/&gt;&lt;object label=\"%symbol%\" placeholders=\"1\" symbol=\"cbdb\" class_name=\"CBDB\" block_name=\"cbdb\" id=\"2\"&gt;&lt;mxCell style=\"whiteSpace=wrap;html=1;aspect=fixed;comic=0;fillColor=#FFFFFF;fontSize=36;align=center;resizable=0;container=1;collapsible=0;points=[];allowArrows=0;metaEdit=1;connectable=0;\" vertex=\"1\" parent=\"1\"&gt;&lt;mxGeometry width=\"80\" height=\"80\" as=\"geometry\"/&gt;&lt;/mxCell&gt;&lt;/object&gt;&lt;object label=\"%name%\" placeholders=\"1\" name=\"x_b\" class_name=\"OutputPort\" id=\"3\"&gt;&lt;mxCell style=\"triangle;fillColor=#ffffff;fontSize=14;points=[[1,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=left;spacingLeft=4;spacingRight=0;html=1;comic=0;treeFolding=0;treeMoving=0;movable=1;resizable=0;rotatable=1;deletable=1;editable=1;connectable=1;movableLabel=1;spacing=2;aspect=fixed;metaEdit=1;\" vertex=\"1\" parent=\"2\"&gt;&lt;mxGeometry x=\"70\" y=\"32.5\" width=\"10\" height=\"15\" as=\"geometry\"&gt;&lt;mxPoint x=\"13\" y=\"-14\" as=\"offset\"/&gt;&lt;/mxGeometry&gt;&lt;/mxCell&gt;&lt;/object&gt;&lt;/root&gt;&lt;/mxGraphModel&gt;",
+    "w": 80,
+    "h": 80,
+    "aspect": "fixed"
+  }
+]</mxlibrary>
