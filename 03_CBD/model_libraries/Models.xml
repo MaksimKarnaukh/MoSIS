@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mxfile host="app.diagrams.net" modified="2023-11-16T22:08:05.203Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0" etag="PAvQwrnl4nz5twsPwpY5" version="22.1.2" type="google">
+<mxfile host="app.diagrams.net" modified="2023-11-16T22:51:00.160Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/119.0" etag="tVajd0iU13j8doRooDvi" version="22.1.2" type="google">
   <diagram name="Page-1" id="rfABn5NRDPLakKykuiox">
-    <mxGraphModel dx="1434" dy="1920" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="1" shadow="0">
+    <mxGraphModel dx="4097" dy="3443" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="1" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -319,24 +319,24 @@
         </object>
         <object label="" placeholders="1" class_name="sin_block" id="3rp2hQuK0Cp0DJsYB2RA-58">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;container=0;connectable=0;allowArrows=0;treeFolding=0;moveCells=0;treeMoving=0;comic=0;rotatable=0;expand=1;autosize=1;resizeWidth=1;resizeHeight=1;metaEdit=1;" vertex="1" parent="1">
-            <mxGeometry y="920" width="50" height="40" as="geometry">
+            <mxGeometry y="910" width="50" height="40" as="geometry">
               <mxRectangle x="40" y="400" width="50" height="40" as="alternateBounds" />
             </mxGeometry>
           </mxCell>
         </object>
         <object label="%class_name%" placeholders="1" id="3rp2hQuK0Cp0DJsYB2RA-59">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;fontSize=18;connectable=0;allowArrows=0;rotatable=0;cloneable=0;deletable=0;" vertex="1" parent="3rp2hQuK0Cp0DJsYB2RA-58">
-            <mxGeometry x="10" y="20" width="740" height="40" as="geometry" />
+            <mxGeometry x="10" y="20" width="350" height="40" as="geometry" />
           </mxCell>
         </object>
         <mxCell id="3rp2hQuK0Cp0DJsYB2RA-60" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;connectable=0;allowArrows=0;container=1;collapsible=0;portConstraintRotation=0;rotatable=0;cloneable=0;deletable=0;recursiveResize=0;" vertex="1" parent="3rp2hQuK0Cp0DJsYB2RA-58">
-          <mxGeometry x="10" y="70" width="740" height="460" as="geometry">
+          <mxGeometry x="10" y="70" width="350" height="175" as="geometry">
             <mxRectangle x="10" y="70" width="50" height="40" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
         <object label="math:&lt;br style=&quot;font-size: 14px&quot;&gt;&lt;b&gt;%block_operator%&lt;/b&gt;" placeholders="1" class_name="GenericBlock" block_name="sinblock" block_operator="&quot;sin&quot;" id="lZDvAZIBtNZQrT6GSzD8-56">
           <mxCell style="whiteSpace=wrap;html=1;aspect=fixed;comic=0;fillColor=#FFFFFF;fontSize=14;align=center;resizable=0;container=1;collapsible=0;points=[];allowArrows=0;metaEdit=1;connectable=0;" vertex="1" parent="3rp2hQuK0Cp0DJsYB2RA-60">
-            <mxGeometry x="340" y="170" width="80" height="80" as="geometry" />
+            <mxGeometry x="190" y="40" width="80" height="80" as="geometry" />
           </mxCell>
         </object>
         <object label="%name%" placeholders="1" name="OUT1" class_name="OutputPort" id="lZDvAZIBtNZQrT6GSzD8-57">
@@ -355,7 +355,7 @@
         </object>
         <object label="&#x9;%symbol%" class_name="TimeBlock" block_name="t1" placeholders="1" symbol="&amp;#128336;" id="lZDvAZIBtNZQrT6GSzD8-59">
           <mxCell style="whiteSpace=wrap;html=1;aspect=fixed;connectable=0;allowArrows=0;container=1;collapsible=0;resizable=0;fontSize=45;metaEdit=1;" vertex="1" parent="3rp2hQuK0Cp0DJsYB2RA-60">
-            <mxGeometry x="117" y="170" width="80" height="80" as="geometry" />
+            <mxGeometry x="30" y="40" width="80" height="80" as="geometry" />
           </mxCell>
         </object>
         <object label="%name%" placeholders="1" name="OUT1" class_name="OutputPort" id="lZDvAZIBtNZQrT6GSzD8-60">
@@ -365,22 +365,22 @@
             </mxGeometry>
           </mxCell>
         </object>
-        <mxCell id="3rp2hQuK0Cp0DJsYB2RA-61" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="3rp2hQuK0Cp0DJsYB2RA-60" source="lZDvAZIBtNZQrT6GSzD8-60" target="lZDvAZIBtNZQrT6GSzD8-58">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
         <object label="%name%" placeholders="1" name="sin" class_name="OutputPort" id="lZDvAZIBtNZQrT6GSzD8-61">
           <mxCell style="triangle;fillColor=#ffffff;fontSize=14;points=[[0,0.5],[1,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=left;spacingLeft=4;spacingRight=0;html=1;comic=0;treeFolding=0;treeMoving=0;movable=1;resizable=0;rotatable=1;deletable=1;editable=1;connectable=1;movableLabel=1;spacing=2;aspect=fixed;metaEdit=1;" vertex="1" parent="3rp2hQuK0Cp0DJsYB2RA-60">
-            <mxGeometry x="730" y="202.5" width="10" height="15" as="geometry">
+            <mxGeometry x="340" y="72.5" width="10" height="15" as="geometry">
               <mxPoint x="1" y="-23" as="offset" />
             </mxGeometry>
           </mxCell>
         </object>
-        <mxCell id="3rp2hQuK0Cp0DJsYB2RA-62" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="3rp2hQuK0Cp0DJsYB2RA-60" source="lZDvAZIBtNZQrT6GSzD8-57" target="lZDvAZIBtNZQrT6GSzD8-61">
+        <mxCell id="lZDvAZIBtNZQrT6GSzD8-111" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="3rp2hQuK0Cp0DJsYB2RA-60" source="lZDvAZIBtNZQrT6GSzD8-60" target="lZDvAZIBtNZQrT6GSzD8-58">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="lZDvAZIBtNZQrT6GSzD8-112" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="3rp2hQuK0Cp0DJsYB2RA-60" source="lZDvAZIBtNZQrT6GSzD8-57" target="lZDvAZIBtNZQrT6GSzD8-61">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <object label="" placeholders="1" class_name="Error" id="lZDvAZIBtNZQrT6GSzD8-66">
           <mxCell style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;container=0;connectable=0;allowArrows=0;treeFolding=0;moveCells=0;treeMoving=0;comic=0;rotatable=0;expand=1;autosize=1;resizeWidth=1;resizeHeight=1;metaEdit=1;" vertex="1" parent="1">
-            <mxGeometry x="850" width="60" height="40" as="geometry">
+            <mxGeometry x="850" y="-10" width="60" height="40" as="geometry">
               <mxRectangle x="40" y="400" width="50" height="40" as="alternateBounds" />
             </mxGeometry>
           </mxCell>
@@ -656,7 +656,7 @@
         </object>
         <object label="%symbol%" placeholders="1" symbol="error" class_name="Error" block_name="error" id="3rp2hQuK0Cp0DJsYB2RA-153">
           <mxCell style="whiteSpace=wrap;html=1;aspect=fixed;comic=0;fontSize=24;align=center;resizable=0;container=1;collapsible=0;points=[];allowArrows=0;metaEdit=1;connectable=0;strokeColor=default;verticalAlign=middle;fontFamily=Helvetica;fontColor=default;fillColor=#FFFFFF;" vertex="1" parent="1">
-            <mxGeometry x="1420" y="-60" width="80" height="80" as="geometry" />
+            <mxGeometry x="1530" y="-80" width="80" height="80" as="geometry" />
           </mxCell>
         </object>
         <object label="%name%" placeholders="1" name="OUT1" class_name="OutputPort" id="3rp2hQuK0Cp0DJsYB2RA-154">
@@ -738,7 +738,7 @@
         </mxCell>
         <object label="%symbol%" placeholders="1" symbol="sin" class_name="sin_block" block_name="sin_block" id="3rp2hQuK0Cp0DJsYB2RA-171">
           <mxCell style="whiteSpace=wrap;html=1;aspect=fixed;comic=0;fontSize=24;align=center;resizable=0;container=1;collapsible=0;points=[];allowArrows=0;metaEdit=1;connectable=0;strokeColor=default;verticalAlign=middle;fontFamily=Helvetica;fontColor=default;fillColor=#FFFFFF;" vertex="1" parent="1">
-            <mxGeometry x="560" y="840" width="80" height="80" as="geometry" />
+            <mxGeometry x="280" y="840" width="80" height="80" as="geometry" />
           </mxCell>
         </object>
         <object label="%name%" placeholders="1" name="sin" class_name="OutputPort" id="3rp2hQuK0Cp0DJsYB2RA-172">
