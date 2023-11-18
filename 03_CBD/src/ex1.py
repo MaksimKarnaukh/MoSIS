@@ -35,6 +35,8 @@ def sim_and_plot_model(model, plot_var_name, time=10.0, time_step=0.10):
     sim_model(model, time, time_step)
     plt = make_plot(model, plot_var_name)
     plt.show()
+    # save plot
+    plt.savefig(f"../output/{plot_var_name}.png")
 def sim_and_plot_var_stepsize(model_class, plot_var_name, time, time_steps):
     # random unique colors for each stepsize as string
     scolors = [f"#{''.join([random.choice('0123456789ABCDEF') for j in range(6)])}" for i in range(len(time_steps))]
@@ -44,6 +46,8 @@ def sim_and_plot_var_stepsize(model_class, plot_var_name, time, time_steps):
         sim_model(model, time, step)
         plt = make_plot(model, plot_var_name, title= f"{plot_var_name} variable stepsize", label=f"stepsize: {step}s", plot_linecolor=scolors[idx], lw=1, plot_linetype='-')
     plt.show()
+#     save plot
+    plt.savefig(f"../output/{plot_var_name}_variable_stepsize.png")
 
 
 def ex_1():
@@ -71,7 +75,7 @@ def ex_2():
     sim_and_plot_model(gt, "gt")
 
     gt_euler = g_tFw("g(t)_ForewardEuler")
-    sim_and_plot_model(gt_euler, "gt_FE")
+    sim_and_plot_var_stepsize(gt_euler, "gt_FE",  )
 
 if __name__ == '__main__':
     # ex_1()
