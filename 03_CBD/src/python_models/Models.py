@@ -107,3 +107,100 @@ class ERROR_A(CBD):
         self.addConnection("error", "e_a", output_port_name='OUT1')
 
 
+class TrapezoidIntegrator(CBD):
+    def __init__(self, block_name):
+        super().__init__(block_name, input_ports=['IC', 'IN1'], output_ports=['trap_int'])
+
+        # Create the Blocks
+        self.addBlock(ConstantBlock("O5fMZ6u50ew7LmOudeCE-64"))
+        self.addBlock(DelayBlock("O5fMZ6u50ew7LmOudeCE-66"))
+        self.addBlock(ConstantBlock("O5fMZ6u50ew7LmOudeCE-70", value=(0)))
+        self.addBlock(AdderBlock("O5fMZ6u50ew7LmOudeCE-73", numberOfInputs=(2)))
+        self.addBlock(ProductBlock("O5fMZ6u50ew7LmOudeCE-78", numberOfInputs=(2)))
+        self.addBlock(AdderBlock("O5fMZ6u50ew7LmOudeCE-98", numberOfInputs=(2)))
+        self.addBlock(DelayBlock("O5fMZ6u50ew7LmOudeCE-107"))
+
+        # Create the Connections
+        self.addConnection("IC", "O5fMZ6u50ew7LmOudeCE-107", input_port_name='IC')
+        self.addConnection("IN1", "O5fMZ6u50ew7LmOudeCE-66", input_port_name='IN1')
+        self.addConnection("IN1", "O5fMZ6u50ew7LmOudeCE-98", input_port_name='IN2')
+        self.addConnection("O5fMZ6u50ew7LmOudeCE-70", "O5fMZ6u50ew7LmOudeCE-66", output_port_name='OUT1', input_port_name='IC')
+        self.addConnection("O5fMZ6u50ew7LmOudeCE-64", "O5fMZ6u50ew7LmOudeCE-78", output_port_name='OUT1', input_port_name='IN2')
+        self.addConnection("O5fMZ6u50ew7LmOudeCE-78", "O5fMZ6u50ew7LmOudeCE-73", output_port_name='OUT1', input_port_name='IN2')
+        self.addConnection("O5fMZ6u50ew7LmOudeCE-66", "O5fMZ6u50ew7LmOudeCE-98", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("O5fMZ6u50ew7LmOudeCE-98", "O5fMZ6u50ew7LmOudeCE-78", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("O5fMZ6u50ew7LmOudeCE-73", "O5fMZ6u50ew7LmOudeCE-107", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("O5fMZ6u50ew7LmOudeCE-107", "trap_int", output_port_name='OUT1')
+
+
+class ForwardEulerIntegrator(CBD):
+    def __init__(self, block_name):
+        super().__init__(block_name, input_ports=['IC', 'IN1'], output_ports=['forward_int'])
+
+        # Create the Blocks
+        self.addBlock(AdderBlock("add2", numberOfInputs=(2)))
+        self.addBlock(DelayBlock("delay1"))
+        self.addBlock(AdderBlock("add1", numberOfInputs=(2)))
+        self.addBlock(ProductBlock("XYqq4OHtO8QmNKRPjIp4-5", numberOfInputs=(2)))
+        self.addBlock(ProductBlock("XYqq4OHtO8QmNKRPjIp4-1", numberOfInputs=(2)))
+        self.addBlock(ConstantBlock("XYqq4OHtO8QmNKRPjIp4-9"))
+        self.addBlock(NegatorBlock("XYqq4OHtO8QmNKRPjIp4-11"))
+
+        # Create the Connections
+        self.addConnection("IN1", "XYqq4OHtO8QmNKRPjIp4-1", input_port_name='IN1')
+        self.addConnection("IN1", "XYqq4OHtO8QmNKRPjIp4-5", input_port_name='IN1')
+        self.addConnection("add2", "delay1", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("add2", "forward_int", output_port_name='OUT1')
+        self.addConnection("delay1", "add2", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("add1", "delay1", output_port_name='OUT1', input_port_name='IC')
+        self.addConnection("IC", "add1", input_port_name='IN1')
+        self.addConnection("XYqq4OHtO8QmNKRPjIp4-9", "XYqq4OHtO8QmNKRPjIp4-11", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("XYqq4OHtO8QmNKRPjIp4-9", "XYqq4OHtO8QmNKRPjIp4-1", output_port_name='OUT1', input_port_name='IN2')
+        self.addConnection("XYqq4OHtO8QmNKRPjIp4-5", "add1", output_port_name='OUT1', input_port_name='IN2')
+        self.addConnection("XYqq4OHtO8QmNKRPjIp4-1", "add2", output_port_name='OUT1', input_port_name='IN2')
+        self.addConnection("XYqq4OHtO8QmNKRPjIp4-11", "XYqq4OHtO8QmNKRPjIp4-5", output_port_name='OUT1', input_port_name='IN2')
+
+
+class g_t(CBD):
+    def __init__(self, block_name):
+        super().__init__(block_name, input_ports=[], output_ports=['gt'])
+
+        # Create the Blocks
+        self.addBlock(TimeBlock("time1"))
+        self.addBlock(ConstantBlock("constminus1", value=(-1)))
+        self.addBlock(AdderBlock("add1", numberOfInputs=(2)))
+        self.addBlock(InverterBlock("div1"))
+        self.addBlock(ConstantBlock("const1", value=(1)))
+        self.addBlock(AdderBlock("add2", numberOfInputs=(2)))
+        self.addBlock(PowerBlock("pow1"))
+        self.addBlock(ConstantBlock("const2", value=(2)))
+        self.addBlock(ProductBlock("prod1", numberOfInputs=(2)))
+
+        # Create the Connections
+        self.addConnection("constminus1", "add1", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("time1", "add1", output_port_name='OUT1', input_port_name='IN2')
+        self.addConnection("time1", "add2", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("const1", "add2", output_port_name='OUT1', input_port_name='IN2')
+        self.addConnection("add2", "pow1", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("const2", "pow1", output_port_name='OUT1', input_port_name='IN2')
+        self.addConnection("pow1", "div1", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("div1", "prod1", output_port_name='OUT1', input_port_name='IN2')
+        self.addConnection("add1", "prod1", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("prod1", "gt", output_port_name='OUT1')
+
+
+class g_tFw(CBD):
+    def __init__(self, block_name):
+        super().__init__(block_name, input_ports=[], output_ports=['gt_FE'])
+
+        # Create the Blocks
+        self.addBlock(ConstantBlock("const2", value=(0)))
+        self.addBlock(g_t("gt"))
+        self.addBlock(ForwardEulerIntegrator("forward_euler_integrator"))
+
+        # Create the Connections
+        self.addConnection("gt", "forward_euler_integrator", output_port_name='gt', input_port_name='IN1')
+        self.addConnection("const2", "forward_euler_integrator", output_port_name='OUT1', input_port_name='IC')
+        self.addConnection("forward_euler_integrator", "gt_FE", output_port_name='forward_int')
+
+

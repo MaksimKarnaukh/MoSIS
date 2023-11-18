@@ -9,6 +9,7 @@ from pyCBD.simulator import Simulator
 
 def sim_model(model, time=10.0, time_step=0.1):
     sim = Simulator(model)
+
     sim.setDeltaT(time_step)
     # The termination time can be set as argument to the run call
     sim.run(time)
@@ -41,11 +42,11 @@ def sim_and_plot_var_stepsize(model_class, plot_var_name, time, time_steps):
     for idx,step in enumerate(time_steps):
         model = model_class(f"{model_class.__name__}_{step}")
         sim_model(model, time, step)
-        plt = make_plot(model, plot_var_name, title= f"Error_B variable stepsize", label=f"stepsize: {step}s", plot_linecolor=scolors[idx], lw=1, plot_linetype='-')
+        plt = make_plot(model, plot_var_name, title= f"{plot_var_name} variable stepsize", label=f"stepsize: {step}s", plot_linecolor=scolors[idx], lw=1, plot_linetype='-')
     plt.show()
 
 
-if __name__ == '__main__':
+def ex_1():
     cbda = CBDA("cbda")
     sim_and_plot_model(cbda, "x_a")
 
@@ -62,3 +63,16 @@ if __name__ == '__main__':
     sim_and_plot_var_stepsize(ERROR_B, "e_b", time, stepsizes)
 
 
+
+
+
+def ex_2():
+    gt = g_t("g(t)")
+    sim_and_plot_model(gt, "gt")
+
+    gt_euler = g_tFw("g(t)_ForewardEuler")
+    sim_and_plot_model(gt_euler, "gt_FE")
+
+if __name__ == '__main__':
+    # ex_1()
+    ex_2()
