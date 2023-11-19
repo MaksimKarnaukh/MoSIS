@@ -112,25 +112,39 @@ class TrapezoidIntegrator(CBD):
         super().__init__(block_name, input_ports=['IC', 'IN1'], output_ports=['trap_int'])
 
         # Create the Blocks
-        self.addBlock(ConstantBlock("O5fMZ6u50ew7LmOudeCE-64"))
         self.addBlock(DelayBlock("O5fMZ6u50ew7LmOudeCE-66"))
         self.addBlock(ConstantBlock("O5fMZ6u50ew7LmOudeCE-70", value=(0)))
         self.addBlock(AdderBlock("O5fMZ6u50ew7LmOudeCE-73", numberOfInputs=(2)))
-        self.addBlock(ProductBlock("O5fMZ6u50ew7LmOudeCE-78", numberOfInputs=(2)))
+        self.addBlock(ProductBlock("O5fMZ6u50ew7LmOudeCE-78", numberOfInputs=(3)))
         self.addBlock(AdderBlock("O5fMZ6u50ew7LmOudeCE-98", numberOfInputs=(2)))
         self.addBlock(DelayBlock("O5fMZ6u50ew7LmOudeCE-107"))
+        self.addBlock(DeltaTBlock("kiNdS1_nELwOXWvILFVc-3"))
+        self.addBlock(ConstantBlock("kiNdS1_nELwOXWvILFVc-7", value=(2)))
+        self.addBlock(InverterBlock("uFovl10BGIAzvapy5D29-43"))
+        self.addBlock(ProductBlock("uFovl10BGIAzvapy5D29-109", numberOfInputs=(3)))
+        self.addBlock(NegatorBlock("uFovl10BGIAzvapy5D29-115"))
+        self.addBlock(AdderBlock("uFovl10BGIAzvapy5D29-121", numberOfInputs=(2)))
 
         # Create the Connections
-        self.addConnection("IC", "O5fMZ6u50ew7LmOudeCE-107", input_port_name='IC')
+        self.addConnection("IC", "uFovl10BGIAzvapy5D29-121", input_port_name='IN2')
         self.addConnection("IN1", "O5fMZ6u50ew7LmOudeCE-66", input_port_name='IN1')
+        self.addConnection("IN1", "uFovl10BGIAzvapy5D29-109", input_port_name='IN1')
         self.addConnection("IN1", "O5fMZ6u50ew7LmOudeCE-98", input_port_name='IN2')
         self.addConnection("O5fMZ6u50ew7LmOudeCE-70", "O5fMZ6u50ew7LmOudeCE-66", output_port_name='OUT1', input_port_name='IC')
-        self.addConnection("O5fMZ6u50ew7LmOudeCE-64", "O5fMZ6u50ew7LmOudeCE-78", output_port_name='OUT1', input_port_name='IN2')
         self.addConnection("O5fMZ6u50ew7LmOudeCE-78", "O5fMZ6u50ew7LmOudeCE-73", output_port_name='OUT1', input_port_name='IN2')
         self.addConnection("O5fMZ6u50ew7LmOudeCE-66", "O5fMZ6u50ew7LmOudeCE-98", output_port_name='OUT1', input_port_name='IN1')
         self.addConnection("O5fMZ6u50ew7LmOudeCE-98", "O5fMZ6u50ew7LmOudeCE-78", output_port_name='OUT1', input_port_name='IN1')
         self.addConnection("O5fMZ6u50ew7LmOudeCE-73", "O5fMZ6u50ew7LmOudeCE-107", output_port_name='OUT1', input_port_name='IN1')
-        self.addConnection("O5fMZ6u50ew7LmOudeCE-107", "trap_int", output_port_name='OUT1')
+        self.addConnection("O5fMZ6u50ew7LmOudeCE-73", "trap_int", output_port_name='OUT1')
+        self.addConnection("kiNdS1_nELwOXWvILFVc-3", "O5fMZ6u50ew7LmOudeCE-78", output_port_name='OUT1', input_port_name='IN2')
+        self.addConnection("kiNdS1_nELwOXWvILFVc-3", "uFovl10BGIAzvapy5D29-115", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("kiNdS1_nELwOXWvILFVc-7", "uFovl10BGIAzvapy5D29-43", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("uFovl10BGIAzvapy5D29-43", "O5fMZ6u50ew7LmOudeCE-78", output_port_name='OUT1', input_port_name='IN3')
+        self.addConnection("uFovl10BGIAzvapy5D29-43", "uFovl10BGIAzvapy5D29-109", output_port_name='OUT1', input_port_name='IN3')
+        self.addConnection("O5fMZ6u50ew7LmOudeCE-107", "O5fMZ6u50ew7LmOudeCE-73", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("uFovl10BGIAzvapy5D29-115", "uFovl10BGIAzvapy5D29-109", output_port_name='OUT1', input_port_name='IN2')
+        self.addConnection("uFovl10BGIAzvapy5D29-121", "O5fMZ6u50ew7LmOudeCE-107", output_port_name='OUT1', input_port_name='IC')
+        self.addConnection("uFovl10BGIAzvapy5D29-109", "uFovl10BGIAzvapy5D29-121", output_port_name='OUT1', input_port_name='IN1')
 
 
 class ForwardEulerIntegrator(CBD):
@@ -143,7 +157,7 @@ class ForwardEulerIntegrator(CBD):
         self.addBlock(AdderBlock("add1", numberOfInputs=(2)))
         self.addBlock(ProductBlock("XYqq4OHtO8QmNKRPjIp4-5", numberOfInputs=(2)))
         self.addBlock(ProductBlock("XYqq4OHtO8QmNKRPjIp4-1", numberOfInputs=(2)))
-        self.addBlock(ConstantBlock("XYqq4OHtO8QmNKRPjIp4-9"))
+        self.addBlock(DeltaTBlock("XYqq4OHtO8QmNKRPjIp4-9"))
         self.addBlock(NegatorBlock("XYqq4OHtO8QmNKRPjIp4-11"))
 
         # Create the Connections
@@ -189,18 +203,50 @@ class g_t(CBD):
         self.addConnection("prod1", "gt", output_port_name='OUT1')
 
 
-class g_tFw(CBD):
+class g_tComp(CBD):
     def __init__(self, block_name):
-        super().__init__(block_name, input_ports=[], output_ports=['gt_FE'])
+        super().__init__(block_name, input_ports=[], output_ports=['gt_TR', 'gt_FE', 'gt_BE'])
 
         # Create the Blocks
         self.addBlock(ConstantBlock("const2", value=(0)))
         self.addBlock(g_t("gt"))
         self.addBlock(ForwardEulerIntegrator("forward_euler_integrator"))
+        self.addBlock(BackwardEulerIntegrator("backward_euler_integrator"))
+        self.addBlock(TrapezoidIntegrator("Trap"))
 
         # Create the Connections
         self.addConnection("gt", "forward_euler_integrator", output_port_name='gt', input_port_name='IN1')
+        self.addConnection("gt", "backward_euler_integrator", output_port_name='gt', input_port_name='IN1')
+        self.addConnection("gt", "Trap", output_port_name='gt', input_port_name='IN1')
         self.addConnection("const2", "forward_euler_integrator", output_port_name='OUT1', input_port_name='IC')
+        self.addConnection("const2", "backward_euler_integrator", output_port_name='OUT1', input_port_name='IC')
+        self.addConnection("const2", "Trap", output_port_name='OUT1', input_port_name='IC')
         self.addConnection("forward_euler_integrator", "gt_FE", output_port_name='forward_int')
+        self.addConnection("backward_euler_integrator", "gt_BE", output_port_name='backward_int')
+        self.addConnection("Trap", "gt_TR", output_port_name='trap_int')
+
+
+class BackwardEulerIntegrator(CBD):
+    def __init__(self, block_name):
+        super().__init__(block_name, input_ports=['IC', 'IN1'], output_ports=['backward_int'])
+
+        # Create the Blocks
+        self.addBlock(ConstantBlock("uFovl10BGIAzvapy5D29-12", value=(0)))
+        self.addBlock(DelayBlock("uFovl10BGIAzvapy5D29-14"))
+        self.addBlock(ProductBlock("uFovl10BGIAzvapy5D29-20", numberOfInputs=(2)))
+        self.addBlock(DeltaTBlock("uFovl10BGIAzvapy5D29-24"))
+        self.addBlock(AdderBlock("uFovl10BGIAzvapy5D29-28", numberOfInputs=(2)))
+        self.addBlock(DelayBlock("uFovl10BGIAzvapy5D29-33"))
+
+        # Create the Connections
+        self.addConnection("IN1", "uFovl10BGIAzvapy5D29-14", input_port_name='IN1')
+        self.addConnection("IC", "uFovl10BGIAzvapy5D29-33", input_port_name='IC')
+        self.addConnection("uFovl10BGIAzvapy5D29-14", "uFovl10BGIAzvapy5D29-20", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("uFovl10BGIAzvapy5D29-24", "uFovl10BGIAzvapy5D29-20", output_port_name='OUT1', input_port_name='IN2')
+        self.addConnection("uFovl10BGIAzvapy5D29-28", "uFovl10BGIAzvapy5D29-33", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("uFovl10BGIAzvapy5D29-28", "backward_int", output_port_name='OUT1')
+        self.addConnection("uFovl10BGIAzvapy5D29-20", "uFovl10BGIAzvapy5D29-28", output_port_name='OUT1', input_port_name='IN1')
+        self.addConnection("uFovl10BGIAzvapy5D29-33", "uFovl10BGIAzvapy5D29-28", output_port_name='OUT1', input_port_name='IN2')
+        self.addConnection("uFovl10BGIAzvapy5D29-12", "uFovl10BGIAzvapy5D29-14", output_port_name='OUT1', input_port_name='IC')
 
 

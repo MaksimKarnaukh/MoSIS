@@ -73,10 +73,22 @@ def ex_1():
 def ex_2():
     gt = g_t("g(t)")
     sim_and_plot_model(gt, "gt")
+    stepsizes = (0.1, 0.01, 0.001)
+    time = 100.0
+    results = {"analytical": [2.634922497], "FE":[], "BE":[], "TR":[]}
+    gt_compared = g_tComp("gt_compared")
+    for idx,step in enumerate(stepsizes):
+        model = g_tComp(f"{gt_compared.getBlockName()}_{step}")
+        sim_model(model, time, step)
+        # get the values for gt_FE, gt_BE, gt_TR at the end of the simulation
+        results["FE"].append(model.getSignalHistory("gt_FE")[-1][1])
+        results["BE"].append(model.getSignalHistory("gt_BE")[-1][1])
+        results["TR"].append(model.getSignalHistory("gt_TR")[-1][1])
+    print( results)
 
-    gt_euler = g_tFw("g(t)_ForewardEuler")
-    sim_and_plot_var_stepsize(gt_euler, "gt_FE",  )
-
+    print(f"analitical: {results['analytical'][0]}\n")
+    for idx in range(len(stepsizes)):
+        print(f"stepsize: {stepsizes[idx]}:\n\tFE: {results['FE'][idx]}\n\tBE: {results['BE'][idx]}\n\tTR: {results['TR'][idx]}\n")
 if __name__ == '__main__':
-    # ex_1()
+    ex_1()
     ex_2()
