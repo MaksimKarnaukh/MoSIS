@@ -144,20 +144,48 @@ def operationToCString(portname_out, portnames_in, operation) -> str:
 
     return f"{portname_out} = {portname_in1}{''.join([' ' + operation + ' ' + portname_in for portname_in in portnames_in])};\n"
 
+def getPortNameFromPort(port:Port, model, sep="_"):
+    block = port.block
+    portname = f"{port.name}"
+    while block is not model:
+        portname = block.getBlockName() + sep + portname
+        block = block._parent
+
+    return sep + portname
+
 
 def blockToCString(model, block: BaseBlock) -> str:
     """
     Returns the C code for the block
     """
+    # if block is a port block
+    if isinstance(block, Port):
+        s = ""
+        block: Port
+        portname = '_' + block.name
+        # if port is an input port
+        if block.direction == block.Direction.IN:
+            targets = [connection.target for connection in block.getOutgoing()]
+            for target in targets:
+                target_portname = getPortNameFromPort(target,model)
+                s += f"{target_portname} = {portname};\n"
+        elif block.direction == block.Direction.OUT:
+            source = block.getIncoming().source
+            source_portname = getPortNameFromPort(source,model)
+            s += f"{portname} = {source_portname};\n"
+        return s
+
+
+
     portnames = getPortNames(model, block, block.getOutputPortNames() + block.getInputPortNames())
 
     # if block is a constant block
     if isinstance(block, ConstantBlock):
-        return f"{portnames[0]} = {block.getValue()}\n;"
+        return f"{portnames[0]} = {block.getValue()};\n"
 
     # if block is a DeltaTBlock
     elif isinstance(block, DeltaTBlock):
-        return f"{portnames[0]} = delta\n;"
+        return f"{portnames[0]} = delta;\n"
 
     # if block is a DelayBlock
     elif isinstance(block, DelayBlock):
@@ -198,9 +226,7 @@ def construct_eq0(model, metadata):
         block: BaseBlock = block_in_list[0]
         if len(block_in_list) > 1:
             raise Exception(f"More than one block in list: {block_in_list}")
-        # if block is a port block
-        if isinstance(block, Port):
-            continue
+
         result += blockToCString(model, block=block)
 
     with open("../output/PID/sources/eq0.c", "w") as f:
@@ -257,9 +283,6 @@ def construct_eqs(model: CBD, delta_t=0.5):
         block: BaseBlock = block_in_list[0]
         if len(block_in_list) > 1:
             raise Exception(f"More than one block in list: {block_in_list}")
-        # if block is a port block
-        if isinstance(block, Port):
-            continue
         result += blockToCString(model, block=block)
 
     with open("../output/PID/sources/eqs.c", "w") as f:
