@@ -4,7 +4,7 @@ package pid_package
       Placement(visible = true, transformation(origin = {-54, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     Modelica.Blocks.Math.Add add1(k1 = -1)  annotation(
       Placement(visible = true, transformation(origin = {76, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    pid_package.mech_car mech_car annotation(
+    pid_package.mech_car ego_car annotation(
       Placement(visible = true, transformation(origin = {30, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     pid_package.lead_car forward_car annotation(
       Placement(visible = true, transformation(origin = {42, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -21,13 +21,13 @@ package pid_package
       Line(points = {{53, -30}, {65, -30}, {65, -6}, {64, -6}}, color = {0, 0, 127}));
     connect(r_t.y, add.u1) annotation(
       Line(points = {{-77, 0}, {-74, 0}, {-74, 6}, {-66, 6}}, color = {0, 0, 127}));
-    connect(mech_car.y, add1.u1) annotation(
+    connect(ego_car.y, add1.u1) annotation(
       Line(points = {{41, 0}, {59.5, 0}, {59.5, 6}, {64, 6}}, color = {0, 0, 127}));
   connect(add1.y, add.u2) annotation(
       Line(points = {{88, 0}, {90, 0}, {90, -80}, {-66, -80}, {-66, -6}}, color = {0, 0, 127}));
   connect(add.y, e) annotation(
       Line(points = {{-42, 0}, {-30, 0}}, color = {0, 0, 127}));
-  connect(u, mech_car.u) annotation(
+  connect(u, ego_car.u) annotation(
       Line(points = {{0, 0}, {18, 0}}, color = {0, 0, 127}));
     annotation(
       Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})),

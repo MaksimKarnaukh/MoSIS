@@ -1,3 +1,4 @@
+import os
 import random
 
 import matplotlib.pyplot as plt
@@ -6,6 +7,9 @@ from pyCBD.simulator import Simulator
 
 from python_models.Models import *
 from python_models.PID_Controller import *
+
+from compile_and_run import compile_and_run
+from zip_pid import zip_pid
 
 
 def sim_model(model, time=10.0, time_step=0.1):
@@ -136,7 +140,9 @@ def getPortNames(model, block: BaseBlock, var_names, sep="_"):
 
 
 def operationToCString(portname_out, portnames_in, operation) -> str:
-    return f"{portname_out} = {portnames_in[0]}{''.join([' ' + operation + ' ' + portname_in for portname_in in portnames_in])};\n"
+    portname_in1, *portnames_in = portnames_in
+
+    return f"{portname_out} = {portname_in1}{''.join([' ' + operation + ' ' + portname_in for portname_in in portnames_in])};\n"
 
 
 def blockToCString(model, block: BaseBlock) -> str:
@@ -147,11 +153,11 @@ def blockToCString(model, block: BaseBlock) -> str:
 
     # if block is a constant block
     if isinstance(block, ConstantBlock):
-        return f"{portnames[0]} = {block.getValue()};\n"
+        return f"{portnames[0]} = {block.getValue()}\n;"
 
     # if block is a DeltaTBlock
     elif isinstance(block, DeltaTBlock):
-        return f"{portnames[0]} = delta;\n"
+        return f"{portnames[0]} = delta\n;"
 
     # if block is a DelayBlock
     elif isinstance(block, DelayBlock):
@@ -197,7 +203,7 @@ def construct_eq0(model, metadata):
             continue
         result += blockToCString(model, block=block)
 
-    with open("../output/eq0Expansion.c", "w") as f:
+    with open("../output/PID/sources/eq0.c", "w") as f:
         f.write(result)
     return result
 
@@ -234,10 +240,10 @@ def construct_defs_h(model: CBD, metadata):
     """
     defs_h: str = ""
 
-    defs_h += f"#define M {len(metadata)}; /* Number of Internal Variables*/ \n"
+    defs_h += f"#define M {len(metadata)} /* Number of Internal Variables*/ \n"
     for idx, signal in enumerate(metadata):
-        defs_h += f"#define {signal} (cbd->modelData[{metadata[signal]['ValueReference']}]);\n"
-    with open("../output/defsExpansion.h", "w") as f:
+        defs_h += f"#define {signal} (cbd->modelData[{metadata[signal]['ValueReference']}])\n"
+    with open("../output/PID/sources/defs.h", "w") as f:
         f.write(defs_h)
 
 
@@ -256,7 +262,7 @@ def construct_eqs(model: CBD, delta_t=0.5):
             continue
         result += blockToCString(model, block=block)
 
-    with open("../output/eqsExpansion.c", "w") as f:
+    with open("../output/PID/sources/eqs.c", "w") as f:
         f.write(result)
     return result
 
@@ -268,64 +274,74 @@ def scalar_variable(f, entry):
     #     initial (how the variable is initialized; "exact" implies that it is known, "calculated" otherwise),
     #     causality (kind of parameter; "input" implies model input, "output" is model output, "local" otherwise),
     #     variability (how the value will change; "constant" for ConstantBlocks, "continuous" otherwise).
-    f.write(f"\t<!-- index: {entry['ValueReference']} -->\n")
-    f.write(
-        f"\t<ScalarVariable name=\"{entry['name']}\" valueReference=\"{entry['ValueReference']}\" initial=\"{entry['initial']}\" causality=\"{entry['causality']}\" variability=\"{entry['variability']}\">\n")
+
+    f += f"\t<!-- index: {entry['index']} -->\n"
+    f += f"\t<ScalarVariable name=\"{entry['name']}\" valueReference=\"{entry['ValueReference']}\" causality=\"{entry['causality']}\" variability=\"{entry['variability']}\""
+    if entry['initial'] is not None:
+        f += f" initial=\"{entry['initial']}\""
+    f += ">\n"
     """
         Additionally, there is a <Real> tag as a child, which has a start attribute 
         (indicating the starting value of the variable) if the <ScalarVariable>'s initial equals "exact".
     """
-    if entry['initial'] == 'exact':
-        f.write(f"\t\t<Real start=\"{entry['Real']}\"/>\n")
+    if entry['initial'] == 'exact' or entry['causality'] == 'input':
+        f += f"\t\t<Real start=\"{entry['Real']}\"/>\n"
+    # else if entry is input
     else:
-        f.write(f"\t\t<Real/>\n")
-    f.write(f"\t</ScalarVariable>\n")
+        f += f"\t\t<Real/>\n"
+    f += f"\t</ScalarVariable>\n"
+    return f
 
 
-def scalar_variables(f, meta_data):
+def scalar_variables(file_contents, meta_data):
+    # resulting_string
+    resulting_string = ""
+
     #     loop over key, entry in metadata
     for key, entry in meta_data.items():
-        scalar_variable(f, entry)
+        resulting_string = scalar_variable(resulting_string, entry)
+    file_contents = file_contents.replace("<!-- TODO: ScalarVariable tags -->", resulting_string)
+    return file_contents
 
 
-def model_variables(f, meta_data):
+def model_variables(file_contents, meta_data):
     # <ModelVariables>: Contains the M internal variables, denoted as unique <ScalarVariable>s.
-    f.write(f"<ModelVariables>\n")
-    scalar_variables(f, meta_data)
 
-    f.write(f"</ModelVariables>\n")
+    return scalar_variables(file_contents, meta_data)
 
 
-def outputs(f, meta_data):
+def outputs(file_contents, meta_data):
     # It contains an <Outputs> tag, which has a set of <Unknown> children.
     # Each <Unknown> has an attribute index, referring to the corresponding index w.r.t. the ordering of the ScalarVariables.
-    f.write(f"\t\t<Outputs>\n")
+    resulting_string = ""
     for key, entry in meta_data.items():
         if entry['causality'] == 'output':
-            f.write(f"\t\t\t<Unknown index=\"{entry['ValueReference']}\"/>\n")
-    f.write(f"\t\t</Outputs>\n")
+            resulting_string += f"\t<Unknown index=\"{entry['index']}\"/>"
+    file_contents = file_contents.replace("<!-- TODO: Unknown tags -->", resulting_string, 1)
+    return file_contents
 
 
-def initial_unknowns(f, meta_data):
+def initial_unknowns(file_contents, meta_data):
     # There is also an <InitialUnknowns> tag, which will be the exact same as the <Outputs> tag
     # (for the purposes of this exercise).
     # Each <Unknown> has an attribute index,
-    f.write(f"\t\t<InitialUnknowns>\n")
+    resulting_string = ""
+
     for key, entry in meta_data.items():
         if entry['causality'] == 'output':
-            f.write(f"\t\t\t<Unknown index=\"{entry['ValueReference']}\"/>\n")
-    f.write(f"\t\t</InitialUnknowns>\n")
+            resulting_string += f"\t<Unknown index=\"{entry['index']}\"/>"
+    file_contents = file_contents.replace("<!-- TODO: Unknown tags -->", resulting_string, 1)
+    return file_contents
 
 
-def model_structure(f, meta_data):
+def model_structure(file_contents, meta_data):
     """
      <ModelStructure>: Special cases of the variables.
     """
-    f.write(f"\t<ModelStructure>\n")
-    outputs(f, meta_data)
-    initial_unknowns(f, meta_data)
 
-    f.write(f"\t</ModelStructure>\n")
+    file_contents = outputs(file_contents, meta_data)
+    file_contents = initial_unknowns(file_contents, meta_data)
+    return file_contents
 
 
 def construct_modelDescription_xml(model: CBD, meta_data):
@@ -342,16 +358,23 @@ def construct_modelDescription_xml(model: CBD, meta_data):
     Additionally, there is a <Real> tag as a child, which has a start attribute (indicating the starting value of the variable) if the <ScalarVariable>'s initial equals "exact".
     <ModelStructure>: Special cases of the variables. It contains an <Outputs> tag, which has a set of <Unknown> children. There is also an <InitialUnknowns> tag, which will be the exact same as the <Outputs> tag (for the purposes of this exercise). Each <Unknown> has an attribute index, referring to the corresponding index w.r.t. the ordering of the ScalarVariables. Only the model outputs are <Unknown>s (for the purposes of this exercise).
     """
-    with open("../output/modelDescriptionExpansion.xml", "w") as f:
-        # sort meta_data by value reference
-        # </fmiModelDescription>
-        f.write(
-            f"<fmiModelDescription fmiVersion=\"2.0\" modelName=\"{model.getBlockName()}\" guid=\"{model.getBlockName()}\" generationTool=\"pyCBD\">\n")
 
-        meta_data = dict(sorted(meta_data.items(), key=lambda item: item[1]['ValueReference']))
-        model_variables(f, meta_data)
-        model_structure(f, meta_data)
-        f.write(f"</fmiModelDescription>\n")
+    with open("../input/template/modelDescription.xml", "r") as f_in:
+        file_contents = f_in.read()
+    # sort meta_data by value reference
+    meta_data = dict(sorted(meta_data.items(), key=lambda item: item[1]['ValueReference']))
+
+    # copy the modelDescription.xml from the original template (in the input folder) to the output folder
+
+    # inject the <ModelVariables> into the modelDescriptionExpansion.xml
+    # go to the line that contains <ModelVariables>
+
+    file_contents = model_variables(file_contents, meta_data)
+    file_contents = model_structure(file_contents, meta_data)
+    # see if the file exists
+    #     write the file
+    with open("../output/PID/modelDescription.xml", "w+") as f_out:
+        f_out.write(file_contents)
 
 
 def adapt_causality(model: CBD, metadata):
@@ -361,6 +384,8 @@ def adapt_causality(model: CBD, metadata):
     port: Port
     for port in getPortNames(model, model, model.getInputPortNames()):
         metadata[port]['causality'] = 'input'
+        metadata[port]['initial'] = None
+        metadata[port]['Real'] = 0
     for port in getPortNames(model, model, model.getOutputPortNames()):
         metadata[port]['causality'] = 'output'
 
@@ -369,6 +394,7 @@ def adapt_value_reference(metadata):
     # make ValueReference the index of the variable in the modelData dict
     for idx, var in enumerate(metadata.keys()):
         metadata[var]['ValueReference'] = idx
+        metadata[var]['index'] = idx + 1
 
 
 def adapt_initial_real_variability(model, metadata):
@@ -393,6 +419,7 @@ def adapt_initial_real_variability(model, metadata):
                 metadata[portname]['initial'] = 'exact'
                 metadata[portname]['Real'] = block.getValue()
                 metadata[portname]['variability'] = 'constant'
+
             # port:Port
             # for port in block.getOutputPorts():
             #     connections = port.getOutgoing()
@@ -406,6 +433,11 @@ def adapt_initial_real_variability(model, metadata):
 
 
 def add_blocks(model, metadata):
+    """
+Add the block to the metadata of the model.
+Useful for debugging and later use.
+    """
+
     for block in model.getBlocks():
         if isinstance(block, Port):
             continue
@@ -432,6 +464,7 @@ def create_metadata(model: CBD):
     return metadata
 
 
+
 def ex_3():
     pid: CBD = PID("pid")
     # get all signal names of the model with the separator "_" and _ as prefix
@@ -441,14 +474,9 @@ def ex_3():
     construct_eqs(pid)
     construct_modelDescription_xml(pid, metadata)
 
-    # eq0 = construct_eq0(pid)
-    # other = depGraph.createDepGraph(pid, 1)
-    # initial_topo = scheduling.TopologicalScheduler().schedule(initial, 0,0 )
+    zip_pid()
+    compile_and_run()
 
-
-#
-#
-#     pass
 
 if __name__ == '__main__':
     # ex_1()

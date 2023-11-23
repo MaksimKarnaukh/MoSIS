@@ -109,7 +109,7 @@ class ERROR_A(CBD):
 
 class TrapezoidIntegrator(CBD):
     def __init__(self, block_name):
-        super().__init__(block_name, input_ports=['IC', 'IN1'], output_ports=['trap_int'])
+        super().__init__(block_name, input_ports=['IN1', 'IC'], output_ports=['trap_int'])
 
         # Create the Blocks
         self.addBlock(DelayBlock("O5fMZ6u50ew7LmOudeCE-66"))
@@ -149,7 +149,7 @@ class TrapezoidIntegrator(CBD):
 
 class ForwardEulerIntegrator(CBD):
     def __init__(self, block_name):
-        super().__init__(block_name, input_ports=['IC', 'IN1'], output_ports=['forward_int'])
+        super().__init__(block_name, input_ports=['IN1', 'IC'], output_ports=['forward_int'])
 
         # Create the Blocks
         self.addBlock(AdderBlock("add2", numberOfInputs=(2)))
@@ -228,7 +228,7 @@ class g_tComp(CBD):
 
 class BackwardEulerIntegrator(CBD):
     def __init__(self, block_name):
-        super().__init__(block_name, input_ports=['IC', 'IN1'], output_ports=['backward_int'])
+        super().__init__(block_name, input_ports=['IN1', 'IC'], output_ports=['backward_int'])
 
         # Create the Blocks
         self.addBlock(ConstantBlock("uFovl10BGIAzvapy5D29-12", value=(0)))

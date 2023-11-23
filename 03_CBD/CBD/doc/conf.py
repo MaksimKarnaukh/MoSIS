@@ -110,7 +110,7 @@ html_css_files = ['style.css']
 html_js_files = ['math.js']
 
 # Custom sidebar templates, must be a dictionary that maps document names
-# to template names.
+# to PID names.
 #
 # The default sidebars (for documents that don't match any pattern) are
 # defined by theme itself.  Builtin themes are using these templates by

@@ -15,7 +15,7 @@ class Generator:
 		if os.path.isfile(loc) and not blueprint.get("overwrite", True) and not self.args.force:
 			self.logger.warning(f"File '{loc}' already exists. Use -f/--force to regenerate this file.")
 			return
-		path = os.path.join(self.here, "formalisms", self.args.formalism, blueprint["template"])
+		path = os.path.join(self.here, "formalisms", self.args.formalism, blueprint["PID"])
 		with open(path, 'r') as file:
 			template = Template(file.read(), trim_blocks=True, lstrip_blocks=True)
 		env = parse_environment(self.args.environment)

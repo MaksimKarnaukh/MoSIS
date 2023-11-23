@@ -25,7 +25,7 @@ setup = {
 		"environment": ["delta"],
 		"templates": [
 			{
-				"template": "model.py.jinja",
+				"PID": "model.py.jinja",
 				"pattern": "{prefix}{u}{page}.py",
 				"multipage": True,
 				"overwrite": True,
@@ -33,7 +33,7 @@ setup = {
 				"entry": False
 			},
 			{
-				"template": "experiment.py.jinja",
+				"PID": "experiment.py.jinja",
 				"pattern": "{prefix}_experiment.py",
 				"multipage": False,
 				"overwrite": False,

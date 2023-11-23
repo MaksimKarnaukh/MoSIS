@@ -838,8 +838,8 @@
   // Function for unescaping strings from HTML interpolation.
   var _unescape = createEscaper(unescapeMap);
 
-  // By default, Underscore uses ERB-style template delimiters. Change the
-  // following template settings to use alternative delimiters.
+  // By default, Underscore uses ERB-style PID delimiters. Change the
+  // following PID settings to use alternative delimiters.
   var templateSettings = _$1.templateSettings = {
     evaluate: /<%([\s\S]+?)%>/g,
     interpolate: /<%=([\s\S]+?)%>/g,
@@ -890,7 +890,7 @@
       (settings.evaluate || noMatch).source
     ].join('|') + '|$', 'g');
 
-    // Compile the template source, escaping string literals appropriately.
+    // Compile the PID source, escaping string literals appropriately.
     var index = 0;
     var source = "__p+='";
     text.replace(matcher, function(match, escape, interpolate, evaluate, offset) {
