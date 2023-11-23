@@ -12,9 +12,9 @@ class CBDA(CBD):
 
         # Create the Blocks
         self.addBlock(IntegratorBlock("i1"))
-        self.addBlock(ConstantBlock("c1", value=(0)))
+        self.addBlock(ConstantBlock("c1", value=(-1)))
         self.addBlock(IntegratorBlock("i2"))
-        self.addBlock(ConstantBlock("c2", value=(1)))
+        self.addBlock(ConstantBlock("c2", value=(0)))
         self.addBlock(NegatorBlock("n1"))
 
         # Create the Connections
@@ -32,10 +32,10 @@ class CBDB(CBD):
 
         # Create the Blocks
         self.addBlock(DerivatorBlock("d1"))
-        self.addBlock(ConstantBlock("c1", value=(0)))
+        self.addBlock(ConstantBlock("c1", value=(1)))
         self.addBlock(DerivatorBlock("d2"))
         self.addBlock(NegatorBlock("n1"))
-        self.addBlock(ConstantBlock("c2", value=(1)))
+        self.addBlock(ConstantBlock("c2", value=(0)))
 
         # Create the Connections
         self.addConnection("c1", "d1", output_port_name='OUT1', input_port_name='IC')
@@ -205,7 +205,7 @@ class g_t(CBD):
 
 class g_tComp(CBD):
     def __init__(self, block_name):
-        super().__init__(block_name, input_ports=[], output_ports=['gt_TR', 'gt_FE', 'gt_BE'])
+        super().__init__(block_name, input_ports=[], output_ports=['gt_FE', 'gt_BE', 'gt_TR'])
 
         # Create the Blocks
         self.addBlock(ConstantBlock("const2", value=(0)))

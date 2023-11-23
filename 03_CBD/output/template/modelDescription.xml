@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription fmiVersion="2.0" modelName="PID"
+	guid="{77c55451-5c8b-47d9-9c01-5a5c7d577195}"
+	description="" generationTool="CBD2FMU">
+
+	<ModelExchange modelIdentifier="PID">
+		<SourceFiles>
+			<File name="all.c"/>
+		</SourceFiles>
+	</ModelExchange>
+	<CoSimulation modelIdentifier="PID" canHandleVariableCommunicationStepSize="true">
+		<SourceFiles>
+			<File name="all.c"/>
+		</SourceFiles>
+	</CoSimulation>
+
+	<!-- Unit definitions: Not required/used in CBD -->
+	<!-- Log categories: Not required/used in CBD -->
+
+	<DefaultExperiment startTime="0.0"
+		stopTime="70"
+		stepSize="1"
+		tolerance="1e-06" />
+
+	<!-- Vendor Annotations: Not required/used in CBD -->
+
+	<ModelVariables>
+		<!-- TODO: ScalarVariable tags -->
+	</ModelVariables>
+
+	<ModelStructure>
+		<Outputs>
+			<!-- TODO: Unknown tags -->
+		</Outputs>
+		<InitialUnknowns>
+			<!-- TODO: Unknown tags -->
+		</InitialUnknowns>
+	</ModelStructure>
+</fmiModelDescription>
