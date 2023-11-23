@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription fmiVersion="2.0" modelName="Adder"
+	guid="{45aefb58-879d-4274-9089-d7504f933ea4}"
+	description="Simple Adder." generationTool="manually done">
+
+	<CoSimulation modelIdentifier="Adder" canHandleVariableCommunicationStepSize="true">
+		<SourceFiles>
+			<File name="all.c"/>
+			<File name="lsolve.c"/>
+		</SourceFiles>
+	</CoSimulation>
+
+	<!-- Unit definitions: Not required/used in CBD -->
+	<!-- Log categories: Not required/used in CBD -->
+
+	<DefaultExperiment startTime="0" stopTime="1" stepSize="0.1" />
+
+	<!-- Vendor Annotations: Not required/used in CBD -->
+
+	<ModelVariables>
+		<!-- index: 0 -->
+		<ScalarVariable name="Adder_IN1" valueReference="0" initial="calculated"
+			causality="input" variability="continuous">
+			<Real/>
+		</ScalarVariable>
+
+		<!-- index: 1 -->
+		<ScalarVariable name="Adder_OUT" valueReference="2" initial="calculated"
+			causality="output" variability="continuous">
+			<Real/>
+		</ScalarVariable>
+
+		<!-- index: 2 -->
+		<ScalarVariable name="Adder_IN2" valueReference="1" initial="calculated"
+			causality="input" variability="continuous">
+			<Real/>
+		</ScalarVariable>
+	</ModelVariables>
+
+	<ModelStructure>
+		<Outputs>
+			<Unknown index="1"/>
+		</Outputs>
+		<InitialUnknowns>
+			<Unknown index="1"/>
+		</InitialUnknowns>
+	</ModelStructure>
+</fmiModelDescription>

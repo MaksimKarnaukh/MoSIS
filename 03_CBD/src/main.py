@@ -136,7 +136,7 @@ def getPortNames(model, block: BaseBlock, var_names, sep="_"):
 
 
 def operationToCString(portname_out, portnames_in, operation) -> str:
-    return f"{portname_out} = {portnames_in[0]}{''.join([' + ' + portname_in for portname_in in portnames_in])};\n"
+    return f"{portname_out} = {portnames_in[0]}{''.join([' ' + operation + ' ' + portname_in for portname_in in portnames_in])};\n"
 
 
 def blockToCString(model, block: BaseBlock) -> str:
@@ -148,34 +148,34 @@ def blockToCString(model, block: BaseBlock) -> str:
     # if block is a constant block
     if isinstance(block, ConstantBlock):
         return f"{portnames[0]} = {block.getValue()};\n"
+
     # if block is a DeltaTBlock
     elif isinstance(block, DeltaTBlock):
         return f"{portnames[0]} = delta;\n"
+
     # if block is a DelayBlock
     elif isinstance(block, DelayBlock):
-
         return f""
+
     # if block is a ProductBlock
     elif isinstance(block, ProductBlock):
         portname_out, *portnames_in = portnames
-
         return operationToCString(portname_out, portnames_in, "*")
 
     # if block is an AdderBlock
     elif isinstance(block, AdderBlock):
         portname_out, *portnames_in = portnames
-
         return operationToCString(portname_out, portnames_in, "+")
+
     # if block is a NegatorBlock
     elif isinstance(block, NegatorBlock):
         portname_out, portname_in = portnames
-
         return f"{portname_out} = -{portname_in};\n"
+
     # if block is a InverterBlock
     elif isinstance(block, InverterBlock):
         portname_out, portname_in = portnames
         return f"{portname_out} = 1/{portname_in};\n"
-    # if block is a IntegratorBlock
 
     # else throw exception because we don't know how to handle this block
     else:
@@ -233,11 +233,10 @@ def construct_defs_h(model: CBD, metadata):
     Construct the defs.h file for a model. This file contains the definitions of the variables in the model.
     """
     defs_h: str = ""
-    all_vars = model.getAllSignalNames(sep='_') + getAllInputNames(model, sep='_')
-    all_inputs = [f"_{var}" for var in all_vars]
-    defs_h += f"#define M {len(all_inputs)}; /* Number of Internal Variables*/ \n"
-    for idx, signal in enumerate(all_inputs):
-        defs_h += f"#define {signal} (cbd->modelData[{metadata[signal]}]);\n"
+
+    defs_h += f"#define M {len(metadata)}; /* Number of Internal Variables*/ \n"
+    for idx, signal in enumerate(metadata):
+        defs_h += f"#define {signal} (cbd->modelData[{metadata[signal]['ValueReference']}]);\n"
     with open("../output/defsExpansion.h", "w") as f:
         f.write(defs_h)
 
@@ -284,10 +283,9 @@ def scalar_variable(f, entry):
 
 
 def scalar_variables(f, meta_data):
-
     #     loop over key, entry in metadata
     for key, entry in meta_data.items():
-        scalar_variable(f,entry)
+        scalar_variable(f, entry)
 
 
 def model_variables(f, meta_data):
@@ -347,7 +345,8 @@ def construct_modelDescription_xml(model: CBD, meta_data):
     with open("../output/modelDescriptionExpansion.xml", "w") as f:
         # sort meta_data by value reference
         # </fmiModelDescription>
-        f.write(f"<fmiModelDescription fmiVersion=\"2.0\" modelName=\"{model.getBlockName()}\" guid=\"{model.getBlockName()}\" generationTool=\"pyCBD\">\n")
+        f.write(
+            f"<fmiModelDescription fmiVersion=\"2.0\" modelName=\"{model.getBlockName()}\" guid=\"{model.getBlockName()}\" generationTool=\"pyCBD\">\n")
 
         meta_data = dict(sorted(meta_data.items(), key=lambda item: item[1]['ValueReference']))
         model_variables(f, meta_data)
@@ -355,15 +354,12 @@ def construct_modelDescription_xml(model: CBD, meta_data):
         f.write(f"</fmiModelDescription>\n")
 
 
-
-
-
 def adapt_causality(model: CBD, metadata):
     """
     Add the variability to the metadata of the model.
     """
     port: Port
-    for port in getPortNames(model, model, model.getOutputPortNames()):
+    for port in getPortNames(model, model, model.getInputPortNames()):
         metadata[port]['causality'] = 'input'
     for port in getPortNames(model, model, model.getOutputPortNames()):
         metadata[port]['causality'] = 'output'
