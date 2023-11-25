@@ -1,4 +1,4 @@
-#define M 61 /* Number of Internal Variables*/ 
+#define M 60 /* Number of Internal Variables*/ 
 #define _Constant390_OUT1 (cbd->modelData[0])
 #define _Const20_OUT1 (cbd->modelData[1])
 #define _Integrator_zero_OUT1 (cbd->modelData[2])
@@ -55,8 +55,7 @@
 #define _Product_Ki_IN2 (cbd->modelData[53])
 #define _Product_Kp_IN1 (cbd->modelData[54])
 #define _Product_Kp_IN2 (cbd->modelData[55])
-#define _Product_Kp_IN3 (cbd->modelData[56])
-#define _Summation_IN1 (cbd->modelData[57])
-#define _Summation_IN2 (cbd->modelData[58])
-#define _Summation_IN3 (cbd->modelData[59])
-#define _IN (cbd->modelData[60])
+#define _Summation_IN1 (cbd->modelData[56])
+#define _Summation_IN2 (cbd->modelData[57])
+#define _Summation_IN3 (cbd->modelData[58])
+#define _IN (cbd->modelData[59])

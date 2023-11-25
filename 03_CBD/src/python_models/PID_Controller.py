@@ -17,7 +17,7 @@ class PID(CBD):
         self.addBlock(DerivatorBlock("Derrivator"))
         self.addBlock(ProductBlock("Product_Kd", numberOfInputs=(2)))
         self.addBlock(ProductBlock("Product_Ki", numberOfInputs=(2)))
-        self.addBlock(ProductBlock("Product_Kp", numberOfInputs=(3)))
+        self.addBlock(ProductBlock("Product_Kp", numberOfInputs=(2)))
         self.addBlock(AdderBlock("Summation", numberOfInputs=(3)))
         self.addBlock(ConstantBlock("Const0", value=(0)))
 

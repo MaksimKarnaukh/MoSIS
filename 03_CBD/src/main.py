@@ -1,14 +1,13 @@
-import os
 import random
 
 import matplotlib.pyplot as plt
 from pyCBD import depGraph, scheduling
 from pyCBD.simulator import Simulator
-
-from python_models.Models import *
-from python_models.PID_Controller import *
+from tests import tests
 
 from compile_and_run import compile_and_run
+from python_models.Models import *
+from python_models.PID_Controller import *
 from zip_pid import zip_pid
 
 
@@ -107,7 +106,7 @@ def ex_2():
             f"stepsize: {stepsizes[idx]}:\n\tFE: {results['FE'][idx]}\n\tBE: {results['BE'][idx]}\n\tTR: {results['TR'][idx]}\n")
 
 
-def model_to_depgraph_topo(model, curIteration, delta_t=0.5) -> tuple[depGraph, list]:
+def model_to_depgraph_topo(model, curIteration, delta_t=0.01) -> tuple[depGraph, list]:
     initial = depGraph.createDepGraph(model=model, curIteration=curIteration)
     topo = scheduling.TopologicalScheduler().schedule(initial, curIt=curIteration, time=delta_t * curIteration)
     return initial, topo
@@ -117,7 +116,7 @@ def initial_depgraph_topo(model) -> tuple[depGraph, list]:
     return model_to_depgraph_topo(model, 0)
 
 
-def non_initial_depgraph_topo(model, delta_t=0.5) -> tuple[depGraph, list]:
+def non_initial_depgraph_topo(model, delta_t=0.01) -> tuple[depGraph, list]:
     return model_to_depgraph_topo(model, 1, delta_t=delta_t)
 
 
@@ -144,7 +143,8 @@ def operationToCString(portname_out, portnames_in, operation) -> str:
 
     return f"{portname_out} = {portname_in1}{''.join([' ' + operation + ' ' + portname_in for portname_in in portnames_in])};\n"
 
-def getPortNameFromPort(port:Port, model, sep="_"):
+
+def getPortNameFromPort(port: Port, model, sep="_"):
     block = port.block
     portname = f"{port.name}"
     while block is not model:
@@ -154,67 +154,122 @@ def getPortNameFromPort(port:Port, model, sep="_"):
     return sep + portname
 
 
-def blockToCString(model, block: BaseBlock) -> str:
+def portToCString(model, port: Port, cur_iteration) -> str:
+    """
+    Returns the C code for the port
+    """
+    s = ""
+    portname = getPortNameFromPort(port, model)
+
+    # if port is an input port
+    if port.direction == port.Direction.IN:
+        targets = [connection.target for connection in port.getOutgoing()]
+        if not len(targets):
+            if port.getIncoming() is None:
+                raise Exception(f"Port {portname} has no incoming connection")
+            targets = [port.getIncoming().source]
+
+        for target in targets:
+            target_portname = getPortNameFromPort(target, model)
+            s += f"{target_portname} = {portname};\n"
+
+    # elif port.direction == port.Direction.OUT:
+    #     source = port.getIncoming().source
+    #     source_portname = getPortNameFromPort(source,model)
+    #     s += f"{portname} = {source_portname};\n"
+    return s
+
+
+def blockToCString(model, block: BaseBlock, cur_iteration) -> str:
     """
     Returns the C code for the block
     """
+
     # if block is a port block
     if isinstance(block, Port):
-        s = ""
-        block: Port
-        portname = '_' + block.name
-        # if port is an input port
-        if block.direction == block.Direction.IN:
-            targets = [connection.target for connection in block.getOutgoing()]
-            for target in targets:
-                target_portname = getPortNameFromPort(target,model)
-                s += f"{target_portname} = {portname};\n"
-        elif block.direction == block.Direction.OUT:
-            source = block.getIncoming().source
-            source_portname = getPortNameFromPort(source,model)
-            s += f"{portname} = {source_portname};\n"
-        return s
+        return ""
+        return portToCString(model, block, cur_iteration)
 
-
+    output = ""
 
     portnames = getPortNames(model, block, block.getOutputPortNames() + block.getInputPortNames())
+    input_ports = block.getInputPorts()
+    # for port in input_ports:
+    #     output += portToCString(model, port, cur_iteration)
 
     # if block is a constant block
     if isinstance(block, ConstantBlock):
-        return f"{portnames[0]} = {block.getValue()};\n"
+
+        return f"{output}{portnames[0]} = {block.getValue()};\n"
 
     # if block is a DeltaTBlock
     elif isinstance(block, DeltaTBlock):
-        return f"{portnames[0]} = delta;\n"
+        return f"{output}{portnames[0]} = delta;\n"
 
     # if block is a DelayBlock
     elif isinstance(block, DelayBlock):
-        return f""
+        if cur_iteration == 0:
+            # IC
+            return f"{output}{portnames[0]} = {portnames[2]};\n"
+        # IN1
+        return f"{output}{portnames[0]} = {portnames[1]};\n"
+
 
     # if block is a ProductBlock
     elif isinstance(block, ProductBlock):
         portname_out, *portnames_in = portnames
-        return operationToCString(portname_out, portnames_in, "*")
+        return output + operationToCString(portname_out, portnames_in, "*")
 
     # if block is an AdderBlock
     elif isinstance(block, AdderBlock):
         portname_out, *portnames_in = portnames
-        return operationToCString(portname_out, portnames_in, "+")
+        return output + operationToCString(portname_out, portnames_in, "+")
 
     # if block is a NegatorBlock
     elif isinstance(block, NegatorBlock):
         portname_out, portname_in = portnames
-        return f"{portname_out} = -{portname_in};\n"
+        return f"{output}{portname_out} = -{portname_in};\n"
 
     # if block is a InverterBlock
     elif isinstance(block, InverterBlock):
         portname_out, portname_in = portnames
-        return f"{portname_out} = 1/{portname_in};\n"
+        return f"{output}{portname_out} = 1/{portname_in};\n"
 
     # else throw exception because we don't know how to handle this block
     else:
         raise Exception(f"Unknown block type: {type(block)}")
 
+
+def getAllConnections(model: CBD, sep="_"):
+    """
+        Returns all connections of the model recursivly.
+
+    """
+    res = []
+    for block in model.getBlocks():
+        if isinstance(block, CBD):
+            res.extend(getAllConnections(block, sep))
+        for out in block.getInputPorts():
+            path = getPortNameFromPort(out, model.getTopCBD(), sep)
+            connection = out.getIncoming()
+            # if connection is not None:
+            #     source = connection.source
+            #     source_path = getPortNameFromPort(source, model.getTopCBD(), sep)
+            #     if path == "_Integrator_delayIn_IN1":
+            #         print("a")
+            #     res.append((source_path, path))
+
+            source = out.getIncoming().source
+            source_path = getPortNameFromPort(source, model.getTopCBD(), sep)
+            res.append((source_path, path))
+    if model == model.getTopCBD():
+        for out in model.getOutputPorts():
+            path = getPortNameFromPort(out, model.getTopCBD(), sep)
+            connection = out.getIncoming()
+            target = connection.source
+            target_path = getPortNameFromPort(target, model.getTopCBD(), sep)
+            res.append((target_path, path))
+    return res
 
 def construct_eq0(model, metadata):
     """
@@ -227,8 +282,10 @@ def construct_eq0(model, metadata):
         if len(block_in_list) > 1:
             raise Exception(f"More than one block in list: {block_in_list}")
 
-        result += blockToCString(model, block=block)
-
+        result += blockToCString(model, block=block, cur_iteration=0)
+    connections = getAllConnections(model)
+    for connection in connections:
+        result += f"{connection[1]} = {connection[0]};\n"
     with open("../output/PID/sources/eq0.c", "w") as f:
         f.write(result)
     return result
@@ -273,7 +330,7 @@ def construct_defs_h(model: CBD, metadata):
         f.write(defs_h)
 
 
-def construct_eqs(model: CBD, delta_t=0.5):
+def construct_eqs(model: CBD, delta_t=0.01):
     """
     Construct the eqs.c file for a model. This file contains the equations in C for the model.
     """
@@ -283,8 +340,10 @@ def construct_eqs(model: CBD, delta_t=0.5):
         block: BaseBlock = block_in_list[0]
         if len(block_in_list) > 1:
             raise Exception(f"More than one block in list: {block_in_list}")
-        result += blockToCString(model, block=block)
-
+        result += blockToCString(model, block=block, cur_iteration=1)
+    connections = getAllConnections(model)
+    for connection in connections:
+        result += f"{connection[1]} = {connection[0]};\n"
     with open("../output/PID/sources/eqs.c", "w") as f:
         f.write(result)
     return result
@@ -428,7 +487,6 @@ def adapt_initial_real_variability(model, metadata):
          Additionally, there is a <Real> tag as a child, which has a start attribute (indicating the starting value of the variable) if the <ScalarVariable>'s initial equals "exact".
     cables connected to constants or deltaT blocks are exact
     """
-
     initial, topo = initial_depgraph_topo(model)
     it2, topo2 = non_initial_depgraph_topo(model)
 
@@ -487,7 +545,6 @@ def create_metadata(model: CBD):
     return metadata
 
 
-
 def ex_3():
     pid: CBD = PID("pid")
     # get all signal names of the model with the separator "_" and _ as prefix
@@ -496,7 +553,7 @@ def ex_3():
     construct_eq0(pid, metadata)
     construct_eqs(pid)
     construct_modelDescription_xml(pid, metadata)
-
+    tests()
     zip_pid()
     compile_and_run()
 

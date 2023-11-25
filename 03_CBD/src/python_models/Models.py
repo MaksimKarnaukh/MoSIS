@@ -205,7 +205,7 @@ class g_t(CBD):
 
 class g_tComp(CBD):
     def __init__(self, block_name):
-        super().__init__(block_name, input_ports=[], output_ports=['gt_FE', 'gt_BE', 'gt_TR'])
+        super().__init__(block_name, input_ports=[], output_ports=['gt_FE', 'gt_TR', 'gt_BE'])
 
         # Create the Blocks
         self.addBlock(ConstantBlock("const2", value=(0)))
