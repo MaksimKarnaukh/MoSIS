@@ -181,4 +181,6 @@ def vary_combinations():
 
 # "function" that calls the single simulation function from shell. In your code, this function call should be in a loop over the combinations of parameters.
 if __name__ == "__main__":
-    vary_combinations()
+    # vary_combinations()
+
+    singleSimulation(k_p=390.0, k_i=20.0, k_d=20.0)
