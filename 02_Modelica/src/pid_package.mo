@@ -75,8 +75,8 @@ package pid_package
   end lead_car;
 
   block PID_controller
-    parameter Real k_p = 100.0 "Gain value position";
-    parameter Real k_i = 1.0 "Gain value integrator";
+    parameter Real k_p = 390.0 "Gain value position";
+    parameter Real k_i = 20.0 "Gain value integrator";
     parameter Real k_d = 20.0 "Gain value derivative";
     
     output Modelica.Blocks.Interfaces.RealOutput u_t annotation(

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription fmiVersion="2.0" modelName="PID"
+	guid="{77c55451-5c8b-47d9-9c01-5a5c7d577195}"
+	description="" generationTool="CBD2FMU">
+
+	<ModelExchange modelIdentifier="PID">
+		<SourceFiles>
+			<File name="all.c"/>
+		</SourceFiles>
+	</ModelExchange>
+	<CoSimulation modelIdentifier="PID" canHandleVariableCommunicationStepSize="true">
+		<SourceFiles>
+			<File name="all.c"/>
+		</SourceFiles>
+	</CoSimulation>
+
+	<!-- Unit definitions: Not required/used in CBD -->
+	<!-- Log categories: Not required/used in CBD -->
+
+	<DefaultExperiment startTime="0.0"
+		stopTime="70"
+		stepSize="1"
+		tolerance="1e-06" />
+
+	<!-- Vendor Annotations: Not required/used in CBD -->
+
+	<ModelVariables>
+			<!-- index: 1 -->
+	<ScalarVariable name="_Constant390_OUT1" valueReference="0" causality="local" variability="constant" initial="exact">
+		<Real start="390"/>
+	</ScalarVariable>
+	<!-- index: 2 -->
+	<ScalarVariable name="_Const20_OUT1" valueReference="1" causality="local" variability="constant" initial="exact">
+		<Real start="20"/>
+	</ScalarVariable>
+	<!-- index: 3 -->
+	<ScalarVariable name="_Integrator_zero_OUT1" valueReference="2" causality="local" variability="constant" initial="exact">
+		<Real start="0"/>
+	</ScalarVariable>
+	<!-- index: 4 -->
+	<ScalarVariable name="_Integrator_delta_t_OUT1" valueReference="3" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 5 -->
+	<ScalarVariable name="_Integrator_delayIn_OUT1" valueReference="4" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 6 -->
+	<ScalarVariable name="_Integrator_multDelta_OUT1" valueReference="5" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 7 -->
+	<ScalarVariable name="_Integrator_delayState_OUT1" valueReference="6" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 8 -->
+	<ScalarVariable name="_Integrator_sumState_OUT1" valueReference="7" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 9 -->
+	<ScalarVariable name="_Integrator_OUT1" valueReference="8" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 10 -->
+	<ScalarVariable name="_Derrivator_delta_t_OUT1" valueReference="9" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 11 -->
+	<ScalarVariable name="_Derrivator_multIc_OUT1" valueReference="10" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 12 -->
+	<ScalarVariable name="_Derrivator_neg1_OUT1" valueReference="11" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 13 -->
+	<ScalarVariable name="_Derrivator_sum1_OUT1" valueReference="12" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 14 -->
+	<ScalarVariable name="_Derrivator_delay_OUT1" valueReference="13" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 15 -->
+	<ScalarVariable name="_Derrivator_neg2_OUT1" valueReference="14" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 16 -->
+	<ScalarVariable name="_Derrivator_sum2_OUT1" valueReference="15" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 17 -->
+	<ScalarVariable name="_Derrivator_mult_OUT1" valueReference="16" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 18 -->
+	<ScalarVariable name="_Derrivator_inv_OUT1" valueReference="17" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 19 -->
+	<ScalarVariable name="_Derrivator_OUT1" valueReference="18" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 20 -->
+	<ScalarVariable name="_Product_Kd_OUT1" valueReference="19" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 21 -->
+	<ScalarVariable name="_Product_Ki_OUT1" valueReference="20" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 22 -->
+	<ScalarVariable name="_Product_Kp_OUT1" valueReference="21" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 23 -->
+	<ScalarVariable name="_Summation_OUT1" valueReference="22" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 24 -->
+	<ScalarVariable name="_Const0_OUT1" valueReference="23" causality="local" variability="constant" initial="exact">
+		<Real start="0"/>
+	</ScalarVariable>
+	<!-- index: 25 -->
+	<ScalarVariable name="_OUT" valueReference="24" causality="output" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 26 -->
+	<ScalarVariable name="_Integrator_delayIn_IN1" valueReference="25" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 27 -->
+	<ScalarVariable name="_Integrator_delayIn_IC" valueReference="26" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 28 -->
+	<ScalarVariable name="_Integrator_multDelta_IN1" valueReference="27" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 29 -->
+	<ScalarVariable name="_Integrator_multDelta_IN2" valueReference="28" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 30 -->
+	<ScalarVariable name="_Integrator_delayState_IN1" valueReference="29" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 31 -->
+	<ScalarVariable name="_Integrator_delayState_IC" valueReference="30" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 32 -->
+	<ScalarVariable name="_Integrator_sumState_IN1" valueReference="31" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 33 -->
+	<ScalarVariable name="_Integrator_sumState_IN2" valueReference="32" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 34 -->
+	<ScalarVariable name="_Integrator_IN1" valueReference="33" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 35 -->
+	<ScalarVariable name="_Integrator_IC" valueReference="34" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 36 -->
+	<ScalarVariable name="_Derrivator_multIc_IN1" valueReference="35" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 37 -->
+	<ScalarVariable name="_Derrivator_multIc_IN2" valueReference="36" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 38 -->
+	<ScalarVariable name="_Derrivator_neg1_IN1" valueReference="37" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 39 -->
+	<ScalarVariable name="_Derrivator_sum1_IN1" valueReference="38" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 40 -->
+	<ScalarVariable name="_Derrivator_sum1_IN2" valueReference="39" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 41 -->
+	<ScalarVariable name="_Derrivator_delay_IN1" valueReference="40" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 42 -->
+	<ScalarVariable name="_Derrivator_delay_IC" valueReference="41" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 43 -->
+	<ScalarVariable name="_Derrivator_neg2_IN1" valueReference="42" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 44 -->
+	<ScalarVariable name="_Derrivator_sum2_IN1" valueReference="43" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 45 -->
+	<ScalarVariable name="_Derrivator_sum2_IN2" valueReference="44" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 46 -->
+	<ScalarVariable name="_Derrivator_mult_IN1" valueReference="45" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 47 -->
+	<ScalarVariable name="_Derrivator_mult_IN2" valueReference="46" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 48 -->
+	<ScalarVariable name="_Derrivator_inv_IN1" valueReference="47" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 49 -->
+	<ScalarVariable name="_Derrivator_IN1" valueReference="48" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 50 -->
+	<ScalarVariable name="_Derrivator_IC" valueReference="49" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 51 -->
+	<ScalarVariable name="_Product_Kd_IN1" valueReference="50" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 52 -->
+	<ScalarVariable name="_Product_Kd_IN2" valueReference="51" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 53 -->
+	<ScalarVariable name="_Product_Ki_IN1" valueReference="52" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 54 -->
+	<ScalarVariable name="_Product_Ki_IN2" valueReference="53" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 55 -->
+	<ScalarVariable name="_Product_Kp_IN1" valueReference="54" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 56 -->
+	<ScalarVariable name="_Product_Kp_IN2" valueReference="55" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 57 -->
+	<ScalarVariable name="_Summation_IN1" valueReference="56" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 58 -->
+	<ScalarVariable name="_Summation_IN2" valueReference="57" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 59 -->
+	<ScalarVariable name="_Summation_IN3" valueReference="58" causality="local" variability="continuous" initial="calculated">
+		<Real/>
+	</ScalarVariable>
+	<!-- index: 60 -->
+	<ScalarVariable name="_IN" valueReference="59" causality="input" variability="continuous">
+		<Real start="0"/>
+	</ScalarVariable>
+
+	</ModelVariables>
+
+	<ModelStructure>
+		<Outputs>
+				<Unknown index="25"/>
+		</Outputs>
+		<InitialUnknowns>
+				<Unknown index="25"/>
+		</InitialUnknowns>
+	</ModelStructure>
+</fmiModelDescription>

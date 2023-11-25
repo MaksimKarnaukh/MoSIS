@@ -98,7 +98,7 @@ def compile_and_run():
     result = simulate_fmu("Container.fmu",
                           # debug_logging=True,
                           # fmi_call_logger=print,
-                          stop_time=70, output_interval=0.0001)
+                          stop_time=70, output_interval=0.00001)
 
     plt.plot([r[0] for r in result], [r[2] for r in result], label="x_tgt")
     plt.plot([r[0] for r in result], [r[3] for r in result], label="x_ego")
@@ -111,7 +111,7 @@ def compile_and_run():
     plt.legend()
     plt.show()
     # plot the error over time, only taking an entry every 0.1 second (1 every 100 entries)
-    plt.plot([r[0] for r in result][::1000], [r[1] for r in result][::1000], label="x_err")
+    plt.plot([r[0] for r in result], [r[1] for r in result], label="x_err")
     plt.legend()
     plt.show()
 
