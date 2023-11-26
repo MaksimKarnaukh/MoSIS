@@ -273,7 +273,10 @@ def blockToCString(model, block: BaseBlock, cur_iteration) -> str:
 
     # if block is a DeltaTBlock
     elif isinstance(block, DeltaTBlock):
-        output += f"{portnames[0]} = delta;\n"
+        if cur_iteration == 0:
+            # IC
+            output += f"{portnames[0]} = 0.0000000000000001;\n"
+        else: output += f"{portnames[0]} = delta;\n"
 
     # if block is a DelayBlock
     elif isinstance(block, DelayBlock):
