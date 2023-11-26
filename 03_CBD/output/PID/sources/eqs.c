@@ -13,17 +13,13 @@ _Integrator_delayIn_OUT1 = _Integrator_delayIn_IN1;
 _Integrator_multDelta_IN1 = _Integrator_delayIn_OUT1;
 _Integrator_multDelta_OUT1 = _Integrator_multDelta_IN1 * _Integrator_multDelta_IN2;
 _Integrator_sumState_IN1 = _Integrator_multDelta_OUT1;
+_Integrator_delayState_IN1 = _Integrator_sumState_OUT1;
 _Integrator_IC = _Const0_OUT1;
 _Integrator_delayState_IC = _Integrator_IC;
-
-
-_Integrator_delayState_IN1 = _Integrator_sumState_OUT1;
-_Integrator_sumState_IN2 = _Integrator_delayState_OUT1;
 _Integrator_delayState_OUT1 = _Integrator_delayState_IN1;
+_Integrator_sumState_IN2 = _Integrator_delayState_OUT1;
 _Integrator_sumState_OUT1 = _Integrator_sumState_IN1 + _Integrator_sumState_IN2;
 _Integrator_OUT1 = _Integrator_sumState_OUT1;
-
-
 _Derrivator_delta_t_OUT1 = delta;
 _Derrivator_multIc_IN2 = _Derrivator_delta_t_OUT1;
 _Derrivator_inv_IN1 = _Derrivator_delta_t_OUT1;

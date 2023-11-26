@@ -9,7 +9,7 @@
 #include <math.h>
 
 void initialEquations(CBD* cbd) {
-    Real delta = 0.000000001;
+    Real delta = 0.0;
 
 	#include "eq0.c"
 
