@@ -285,6 +285,7 @@ def blockToCString(model, block: BaseBlock, cur_iteration) -> str:
             output += f"{portnames[0]} = {portnames[2]};\n"
         # IN1
         else:
+            output += handleOutputPorts(model, block, cur_iteration)
             output += f"{portnames[0]} = {portnames[1]};\n"
 
 

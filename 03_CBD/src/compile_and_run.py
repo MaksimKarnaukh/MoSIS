@@ -41,22 +41,8 @@ configuration = Configuration(
             causality='output',
             name='x_ego',
             mapping=[('plant', 'ego_car.y')]
-        ),
-        Variable(
-            type='Real',
-            causality="output",
-            variability = "continuous",
-            initial = "calculated",
-            name='e',
-            mapping=[('pid', '_Derrivator_inv_IN1')]
-        ),
-        # Variable(
-        #     type='Real',
-        #     variability='continuous',
-        #     causality='output',
-        #     name='u',
-        #     mapping=[('pid', '_OUT')]
-        # )
+        )
+
     ],
     components=[
         Component(
@@ -98,15 +84,10 @@ def compile_and_run():
     result = simulate_fmu("Container.fmu",
                           # debug_logging=True,
                           # fmi_call_logger=print,
-                          stop_time=70, output_interval=0.0001)
+                          stop_time=70, output_interval=0.01)
 
     plt.plot([r[0] for r in result], [r[2] for r in result], label="x_tgt")
     plt.plot([r[0] for r in result], [r[3] for r in result], label="x_ego")
-    # plt.xlim(0,5)
-    # plt.ylim(0,50)
-    #plot the value of _IN variable of pid over time
-    # plt.plot([r[0] for r in result], [r[4] for r in result], label="e")
-    # plt.plot([r[0] for r in result], [r[5] for r in result], label="u")
 
     plt.legend()
     plt.show()
@@ -115,9 +96,6 @@ def compile_and_run():
     plt.legend()
     plt.show()
 
-    plt.plot([r[0] for r in result], [r[4] for r in result], label="integral")
-    plt.legend()
-    plt.show()
     # change the working directory back to the original location
     os.chdir("../src/")
 
