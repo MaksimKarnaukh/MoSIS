@@ -195,15 +195,11 @@ def portToCString(model, port: Port, cur_iteration, recursive=True) -> str:
                 source = incoming.source
                 s += connectToLastPortCString(source, model)
                 source_portname = getPortNameFromPort(source, model)
-                if source_portname == "_Integrator_sumState_OUT1":
-                    print("a")
                 s += f"{portname} = {source_portname};\n"
 
         outgoing = port.getOutgoing()
         for out in outgoing:
             if not isHandled(out):
-                if portname == "_Integrator_sumState_OUT1" :
-                    print("a")
                 target_portname = getPortNameFromPort(out.target, model)
                 s += f"{target_portname} = {portname};\n"
 
@@ -211,8 +207,6 @@ def portToCString(model, port: Port, cur_iteration, recursive=True) -> str:
         outgoing = port.getOutgoing()
         for out in outgoing:
             if not isHandled(out):
-                if getPortNameFromPort(out.target, model) == "_Integrator_OUT1" :
-                    print("a")
                 target_portname = getPortNameFromPort(out.target, model)
 
                 s += f"{target_portname} = {portname};\n"
@@ -350,8 +344,6 @@ def getAllConnections(model: CBD, sep="_"):
 def handledPort(port:Port):
     if port.block._parent:
         blockname = getPortNameFromPort(port, port.block._parent.getTopCBD())
-        if blockname == "_Integrator_sumState_OUT1":
-            print("a")
     if port in handled_ports:
         return True
     return False
@@ -645,12 +637,24 @@ def ex_3():
     pid: CBD = PID("pid")
     # get all signal names of the model with the separator "_" and _ as prefix
     metadata = create_metadata(pid)
+    print("Constucting defs.h...")
     construct_defs_h(pid, metadata)
+    print("\t...done")
+
+    print("Constucting eq0.c...")
     construct_eq0(pid, metadata)
+    print("\t...done")
+    print("Constucting eqs.c...")
     construct_eqs(pid)
+    print("\t...done")
+    print("Constucting modelDescription.xml...")
     construct_modelDescription_xml(pid, metadata)
-    tests()
+    print("\t...done")
+    # tests()
+    print("Zipping PID...")
     zip_pid()
+    print("\t...done")
+    print("Compiling and running PID...")
     compile_and_run()
 
 
