@@ -9,21 +9,21 @@
   - North segment may move to West segment or Northern Outroad, clock goes up in either case
 - **Micro4:** 
   - South segment may move to East segment or Southern Outroad, clock goes up in either case
-- **Micro6:**
+- **Micro5:**
   - Eastern segment **MUST** move to the Northern segment if possible
   - -> Can only stay put if Northern segment is occupied
-- **Micro7:** 
+- **Micro6:** 
     - Western segment **MUST** move to the Southern segment if possible
     - -> Can only stay put if Southern segment is occupied
-- **Micro8:** 
+- **Micro7:** 
   - A vehicle on the Western inroad **MUST** enter the core (western segment) if possible
   - -> Can only stay put if Western segment is occupied
-- **Micro9:** 
+- **Micro8:** 
   - A vehicle on the Eastern inroad **MUST** enter the core (eastern segment) if possible
   - -> Can only stay put if Eastern segment is occupied
-- **Micro10:** 
+- **Micro9:** 
   - A vehicle may or may not enter western inroad.
-- **Micro11:** 
+- **Micro10:** 
   - A vehicle may or may not enter eastern inroad.
 
 ***

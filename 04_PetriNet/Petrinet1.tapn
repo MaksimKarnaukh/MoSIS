@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <pnml xmlns="http://www.informatik.hu-berlin.de/top/pnml/ptNetb">
   <shared-place initialMarking="0" invariant="&lt; inf" name="EastCarEntered"/>
-  <shared-place initialMarking="1" invariant="&lt; inf" name="Micro1"/>
-  <shared-place initialMarking="0" invariant="&lt; inf" name="Micro2"/>
-  <shared-place initialMarking="0" invariant="&lt; inf" name="Micro3"/>
+  <shared-place initialMarking="1" invariant="&lt; inf" name="EasternDoubleMoveSafeguard"/>
   <shared-place initialMarking="0" invariant="&lt; inf" name="Micro10"/>
-  <shared-place initialMarking="0" invariant="&lt; inf" name="Mirco4"/>
-  <shared-place initialMarking="0" invariant="&lt; inf" name="Mirco5"/>
-  <shared-place initialMarking="0" invariant="&lt; inf" name="Mirco6"/>
+  <shared-place initialMarking="1" invariant="&lt; inf" name="Micro1_NorthernOutgoingMayMove"/>
+  <shared-place initialMarking="0" invariant="&lt; inf" name="Micro2_SouthernOutGoingMayMove"/>
+  <shared-place initialMarking="0" invariant="&lt; inf" name="Micro3_NorthernCoreMayMove"/>
+  <shared-place initialMarking="0" invariant="&lt; inf" name="Mirco4_SouthernCoreMayMove"/>
+  <shared-place initialMarking="0" invariant="&lt; inf" name="Mirco5_EasternCoreMayMove"/>
+  <shared-place initialMarking="0" invariant="&lt; inf" name="Mirco6_WesternCoreMayMove"/>
   <shared-place initialMarking="0" invariant="&lt; inf" name="Mirco7"/>
   <shared-place initialMarking="0" invariant="&lt; inf" name="Mirco8"/>
   <shared-place initialMarking="1" invariant="&lt; inf" name="Mirco9"/>
   <shared-place initialMarking="0" invariant="&lt; inf" name="Mirco11"/>
-  <shared-place initialMarking="0" invariant="&lt; inf" name="NorthernCarLeaves"/>
-  <shared-place initialMarking="0" invariant="&lt; inf" name="SouthernCarLeaves"/>
+  <shared-place initialMarking="0" invariant="&lt; inf" name="NorthernOutRoadMoved"/>
+  <shared-place initialMarking="0" invariant="&lt; inf" name="NorthernCoreMoved"/>
+  <shared-place initialMarking="0" invariant="&lt; inf" name="SouthernOutRoadMoved"/>
   <shared-place initialMarking="0" invariant="&lt; inf" name="WestCarEntered"/>
-  <shared-place initialMarking="1" invariant="&lt; inf" name="EasternDoubleMoveSafeguard"/>
   <shared-place initialMarking="1" invariant="&lt; inf" name="WesternnDoubleMoveSafeguard"/>
+  <shared-place initialMarking="0" invariant="&lt; inf" name="SouthernCoreMoved"/>
+  <shared-place initialMarking="0" invariant="&lt; inf" name="CoreNorth"/>
+  <shared-place initialMarking="0" invariant="&lt; inf" name="EasternCoreMoved"/>
+  <shared-place initialMarking="0" invariant="&lt; inf" name="CoreSouth"/>
+  <shared-place initialMarking="0" invariant="&lt; inf" name="WesternCoreMoved"/>
   <net active="true" id="TAPN1" type="P/T net">
     <place displayName="true" id="WestInroad" initialMarking="0" invariant="&lt; inf" name="WestInroad" nameOffsetX="0" nameOffsetY="0" positionX="150" positionY="345"/>
     <place displayName="true" id="EastInroad" initialMarking="0" invariant="&lt; inf" name="EastInroad" nameOffsetX="0" nameOffsetY="0" positionX="750" positionY="345"/>
@@ -30,10 +36,20 @@
     <place displayName="true" id="Mirco9" initialMarking="1" invariant="&lt; inf" name="Mirco9" nameOffsetX="32" nameOffsetY="47" positionX="19" positionY="427"/>
     <place displayName="true" id="WestCarEntered" initialMarking="0" invariant="&lt; inf" name="WestCarEntered" nameOffsetX="54" nameOffsetY="48" positionX="87" positionY="427"/>
     <place displayName="true" id="EastCarEntered" initialMarking="0" invariant="&lt; inf" name="EastCarEntered" nameOffsetX="56" nameOffsetY="50" positionX="780" positionY="423"/>
-    <place displayName="true" id="NorthernCarLeaves" initialMarking="0" invariant="&lt; inf" name="NorthernCarLeaves" nameOffsetX="0" nameOffsetY="0" positionX="566" positionY="29"/>
-    <place displayName="true" id="Micro1" initialMarking="1" invariant="&lt; inf" name="Micro1" nameOffsetX="0" nameOffsetY="0" positionX="567" positionY="103"/>
+    <place displayName="true" id="NorthernOutRoadMoved" initialMarking="0" invariant="&lt; inf" name="NorthernOutRoadMoved" nameOffsetX="124" nameOffsetY="-2" positionX="566" positionY="29"/>
+    <place displayName="true" id="Micro1_NorthernOutgoingMayMove" initialMarking="1" invariant="&lt; inf" name="Micro1_NorthernOutgoingMayMove" nameOffsetX="172" nameOffsetY="-8" positionX="567" positionY="103"/>
     <place displayName="true" id="WesternnDoubleMoveSafeguard" initialMarking="1" invariant="&lt; inf" name="WesternnDoubleMoveSafeguard" nameOffsetX="0" nameOffsetY="0" positionX="405" positionY="339"/>
     <place displayName="true" id="EasternDoubleMoveSafeguard" initialMarking="1" invariant="&lt; inf" name="EasternDoubleMoveSafeguard" nameOffsetX="0" nameOffsetY="0" positionX="525" positionY="344"/>
+    <place displayName="true" id="Micro3_NorthernCoreMayMove" initialMarking="0" invariant="&lt; inf" name="Micro3_NorthernCoreMayMove" nameOffsetX="82" nameOffsetY="-9" positionX="270" positionY="111"/>
+    <place displayName="true" id="NorthernCoreMoved" initialMarking="0" invariant="&lt; inf" name="NorthernCoreMoved" nameOffsetX="57" nameOffsetY="-7" positionX="234" positionY="165"/>
+    <place displayName="true" id="Micro2_SouthernOutGoingMayMove" initialMarking="0" invariant="&lt; inf" name="Micro2_SouthernOutGoingMayMove" nameOffsetX="206" nameOffsetY="24" positionX="525" positionY="615"/>
+    <place displayName="true" id="SouthernOutRoadMoved" initialMarking="0" invariant="&lt; inf" name="SouthernOutRoadMoved" nameOffsetX="151" nameOffsetY="32" positionX="525" positionY="690"/>
+    <place displayName="true" id="Mirco4_SouthernCoreMayMove" initialMarking="0" invariant="&lt; inf" name="Mirco4_SouthernCoreMayMove" nameOffsetX="86" nameOffsetY="36" positionX="690" positionY="495"/>
+    <place displayName="true" id="SouthernCoreMoved" initialMarking="0" invariant="&lt; inf" name="SouthernCoreMoved" nameOffsetX="67" nameOffsetY="44" positionX="630" positionY="540"/>
+    <place displayName="true" id="Mirco5_EasternCoreMayMove" initialMarking="0" invariant="&lt; inf" name="Mirco5_EasternCoreMayMove" nameOffsetX="90" nameOffsetY="-4" positionX="678" positionY="198"/>
+    <place displayName="true" id="EasternCoreMoved" initialMarking="0" invariant="&lt; inf" name="EasternCoreMoved" nameOffsetX="59" nameOffsetY="39" positionX="675" positionY="255"/>
+    <place displayName="true" id="Mirco6_WesternCoreMayMove" initialMarking="0" invariant="&lt; inf" name="Mirco6_WesternCoreMayMove" nameOffsetX="69" nameOffsetY="-11" positionX="270" positionY="465"/>
+    <place displayName="true" id="WesternCoreMoved" initialMarking="0" invariant="&lt; inf" name="WesternCoreMoved" nameOffsetX="49" nameOffsetY="35" positionX="300" positionY="510"/>
     <transition angle="0" displayName="true" id="WestInroadGenerator" infiniteServer="false" name="WestInroadGenerator" nameOffsetX="0" nameOffsetY="0" player="0" positionX="45" positionY="345" priority="0" urgent="false"/>
     <transition angle="0" displayName="true" id="EastRoadgenerator" infiniteServer="false" name="EastRoadgenerator" nameOffsetX="0" nameOffsetY="0" player="0" positionX="818" positionY="345" priority="0" urgent="false"/>
     <transition angle="90" displayName="true" id="NorthExitTransition" infiniteServer="false" name="NorthExitTransition" nameOffsetX="0" nameOffsetY="0" player="0" positionX="465" positionY="135" priority="0" urgent="false"/>
@@ -55,19 +71,19 @@
       <arcpath arcPointType="false" id="1" xCoord="150" yCoord="361"/>
     </arc>
     <arc id="A2" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="CoreWest" target="WestSouthTransition" type="timed" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="351" yCoord="375"/>
-      <arcpath arcPointType="false" id="1" xCoord="375" yCoord="435"/>
+      <arcpath arcPointType="false" id="0" xCoord="351" yCoord="374"/>
+      <arcpath arcPointType="false" id="1" xCoord="376" yCoord="435"/>
     </arc>
     <arc id="A3" inscription="1" nameOffsetX="0" nameOffsetY="0" source="WestSouthTransition" target="CoreSouth" type="normal" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="380" yCoord="451"/>
       <arcpath arcPointType="false" id="1" xCoord="466" yCoord="489"/>
     </arc>
     <arc id="A4" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="CoreSouth" target="SouthEastTransition" type="timed" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="495" yCoord="489"/>
+      <arcpath arcPointType="false" id="0" xCoord="494" yCoord="489"/>
       <arcpath arcPointType="false" id="1" xCoord="580" yCoord="451"/>
     </arc>
     <arc id="A5" inscription="1" nameOffsetX="0" nameOffsetY="0" source="SouthEastTransition" target="CoreEast" type="normal" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="585" yCoord="435"/>
+      <arcpath arcPointType="false" id="0" xCoord="586" yCoord="435"/>
       <arcpath arcPointType="false" id="1" xCoord="623" yCoord="374"/>
     </arc>
     <arc id="A6" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="CoreEast" target="EastNorthTransition" type="timed" weight="1">
@@ -75,7 +91,7 @@
       <arcpath arcPointType="false" id="1" xCoord="585" yCoord="270"/>
     </arc>
     <arc id="A7" inscription="1" nameOffsetX="0" nameOffsetY="0" source="EastNorthTransition" target="CoreNorth" type="normal" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="580" yCoord="255"/>
+      <arcpath arcPointType="false" id="0" xCoord="580" yCoord="256"/>
       <arcpath arcPointType="false" id="1" xCoord="495" yCoord="229"/>
     </arc>
     <arc id="A8" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="CoreNorth" target="NorthWestTransition" type="timed" weight="1">
@@ -99,7 +115,7 @@
       <arcpath arcPointType="false" id="1" xCoord="645" yCoord="361"/>
     </arc>
     <arc id="A14" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="EastInroad" target="EastEntryTransition" type="timed" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="750" yCoord="362"/>
+      <arcpath arcPointType="false" id="0" xCoord="750" yCoord="361"/>
       <arcpath arcPointType="false" id="1" xCoord="695" yCoord="365"/>
     </arc>
     <arc id="A15" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="CoreNorth" target="NorthExitTransition" type="timed" weight="1">
@@ -111,8 +127,8 @@
       <arcpath arcPointType="false" id="1" xCoord="481" yCoord="550"/>
     </arc>
     <arc id="A17" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NorthExitTransition" target="NorthOutroad" type="normal" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="480" yCoord="145"/>
-      <arcpath arcPointType="false" id="1" xCoord="481" yCoord="120"/>
+      <arcpath arcPointType="false" id="0" xCoord="479" yCoord="145"/>
+      <arcpath arcPointType="false" id="1" xCoord="480" yCoord="120"/>
     </arc>
     <arc id="A18" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="NorthOutroad" target="NorthSink" type="timed" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="479" yCoord="90"/>
@@ -123,47 +139,47 @@
       <arcpath arcPointType="false" id="1" xCoord="481" yCoord="585"/>
     </arc>
     <arc id="A20" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="SouthOutroad" target="SouthSink" type="timed" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="481" yCoord="615"/>
-      <arcpath arcPointType="false" id="1" xCoord="481" yCoord="655"/>
+      <arcpath arcPointType="false" id="0" xCoord="479" yCoord="615"/>
+      <arcpath arcPointType="false" id="1" xCoord="485" yCoord="655"/>
     </arc>
     <arc id="I21" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="CoreWest" target="NorthWestTransition" type="tapnInhibitor" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="344" yCoord="345"/>
-      <arcpath arcPointType="false" id="1" xCoord="333" yCoord="233"/>
-      <arcpath arcPointType="false" id="2" xCoord="385" yCoord="251"/>
+      <arcpath arcPointType="false" id="1" xCoord="337" yCoord="237"/>
+      <arcpath arcPointType="false" id="2" xCoord="385" yCoord="264"/>
     </arc>
     <arc id="I22" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="CoreEast" target="SouthEastTransition" type="tapnInhibitor" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="634" yCoord="375"/>
-      <arcpath arcPointType="false" id="1" xCoord="660" yCoord="514"/>
-      <arcpath arcPointType="false" id="2" xCoord="590" yCoord="451"/>
+      <arcpath arcPointType="false" id="1" xCoord="664" yCoord="518"/>
+      <arcpath arcPointType="false" id="2" xCoord="590" yCoord="454"/>
     </arc>
     <arc id="I23" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="CoreEast" target="EastEntryTransition" type="tapnInhibitor" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="643" yCoord="352"/>
-      <arcpath arcPointType="false" id="1" xCoord="731" yCoord="294"/>
+      <arcpath arcPointType="false" id="0" xCoord="643" yCoord="353"/>
+      <arcpath arcPointType="false" id="1" xCoord="735" yCoord="298"/>
       <arcpath arcPointType="false" id="2" xCoord="695" yCoord="355"/>
     </arc>
     <arc id="I24" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="CoreNorth" target="EastNorthTransition" type="tapnInhibitor" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="495" yCoord="224"/>
-      <arcpath arcPointType="false" id="1" xCoord="652" yCoord="209"/>
-      <arcpath arcPointType="false" id="2" xCoord="590" yCoord="255"/>
+      <arcpath arcPointType="false" id="1" xCoord="656" yCoord="213"/>
+      <arcpath arcPointType="false" id="2" xCoord="591" yCoord="247"/>
     </arc>
     <arc id="I25" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="CoreSouth" target="WestSouthTransition" type="tapnInhibitor" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="466" yCoord="501"/>
-      <arcpath arcPointType="false" id="1" xCoord="359" yCoord="544"/>
+      <arcpath arcPointType="false" id="1" xCoord="363" yCoord="548"/>
       <arcpath arcPointType="false" id="2" xCoord="375" yCoord="465"/>
     </arc>
     <arc id="I26" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="SouthOutroad" target="SouthExitTransition" type="tapnInhibitor" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="493" yCoord="592"/>
-      <arcpath arcPointType="false" id="1" xCoord="569" yCoord="542"/>
+      <arcpath arcPointType="false" id="0" xCoord="494" yCoord="593"/>
+      <arcpath arcPointType="false" id="1" xCoord="573" yCoord="546"/>
       <arcpath arcPointType="false" id="2" xCoord="495" yCoord="555"/>
     </arc>
     <arc id="I27" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="NorthOutroad" target="NorthExitTransition" type="tapnInhibitor" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="468" yCoord="114"/>
-      <arcpath arcPointType="false" id="1" xCoord="404" yCoord="164"/>
+      <arcpath arcPointType="false" id="0" xCoord="469" yCoord="115"/>
+      <arcpath arcPointType="false" id="1" xCoord="408" yCoord="168"/>
       <arcpath arcPointType="false" id="2" xCoord="465" yCoord="151"/>
     </arc>
     <arc id="I28" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="CoreWest" target="WestEntryTransition" type="tapnInhibitor" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="335" yCoord="372"/>
-      <arcpath arcPointType="false" id="1" xCoord="278" yCoord="437"/>
+      <arcpath arcPointType="false" id="0" xCoord="336" yCoord="372"/>
+      <arcpath arcPointType="false" id="1" xCoord="282" yCoord="441"/>
       <arcpath arcPointType="false" id="2" xCoord="285" yCoord="375"/>
     </arc>
     <arc id="A32" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Micro10" target="EastRoadgenerator" type="timed" weight="1">
@@ -171,143 +187,377 @@
       <arcpath arcPointType="false" id="1" xCoord="834" yCoord="375"/>
     </arc>
     <arc id="A28" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Mirco9" target="WestInroadGenerator" type="timed" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="42" yCoord="429"/>
-      <arcpath arcPointType="false" id="1" xCoord="67" yCoord="385"/>
+      <arcpath arcPointType="false" id="0" xCoord="42" yCoord="430"/>
+      <arcpath arcPointType="false" id="1" xCoord="71" yCoord="389"/>
       <arcpath arcPointType="false" id="2" xCoord="61" yCoord="375"/>
     </arc>
     <arc id="A39" inscription="1" nameOffsetX="0" nameOffsetY="0" source="WestInroadGenerator" target="WestCarEntered" type="normal" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="61" yCoord="375"/>
-      <arcpath arcPointType="false" id="1" xCoord="95" yCoord="429"/>
+      <arcpath arcPointType="false" id="1" xCoord="94" yCoord="429"/>
     </arc>
     <arc id="A35" inscription="1" nameOffsetX="0" nameOffsetY="0" source="EastRoadgenerator" target="EastCarEntered" type="normal" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="834" yCoord="375"/>
       <arcpath arcPointType="false" id="1" xCoord="803" yCoord="425"/>
     </arc>
-    <arc id="A33" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Micro1" target="NorthSink" type="timed" weight="1">
+    <arc id="A33" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Micro1_NorthernOutgoingMayMove" target="NorthSink" type="timed" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="570" yCoord="109"/>
-      <arcpath arcPointType="false" id="1" xCoord="488" yCoord="50"/>
+      <arcpath arcPointType="false" id="1" xCoord="485" yCoord="50"/>
     </arc>
-    <arc id="A34" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NorthSink" target="NorthernCarLeaves" type="normal" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="495" yCoord="45"/>
-      <arcpath arcPointType="false" id="1" xCoord="566" yCoord="45"/>
+    <arc id="A34" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NorthSink" target="NorthernOutRoadMoved" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="495" yCoord="46"/>
+      <arcpath arcPointType="false" id="1" xCoord="566" yCoord="44"/>
     </arc>
     <arc id="A36" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="WesternnDoubleMoveSafeguard" target="NorthWestTransition" type="timed" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="415" yCoord="340"/>
+      <arcpath arcPointType="false" id="0" xCoord="415" yCoord="339"/>
       <arcpath arcPointType="false" id="1" xCoord="391" yCoord="270"/>
     </arc>
     <arc id="A37" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="WesternnDoubleMoveSafeguard" target="WestSouthTransition" type="timed" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="414" yCoord="367"/>
-      <arcpath arcPointType="false" id="1" xCoord="375" yCoord="435"/>
+      <arcpath arcPointType="false" id="0" xCoord="413" yCoord="367"/>
+      <arcpath arcPointType="false" id="1" xCoord="376" yCoord="435"/>
     </arc>
     <arc id="A38" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="EasternDoubleMoveSafeguard" target="EastNorthTransition" type="timed" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="547" yCoord="345"/>
+      <arcpath arcPointType="false" id="0" xCoord="547" yCoord="346"/>
       <arcpath arcPointType="false" id="1" xCoord="585" yCoord="270"/>
     </arc>
     <arc id="A40" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="EasternDoubleMoveSafeguard" target="SouthEastTransition" type="timed" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="548" yCoord="372"/>
-      <arcpath arcPointType="false" id="1" xCoord="585" yCoord="435"/>
+      <arcpath arcPointType="false" id="1" xCoord="586" yCoord="435"/>
+    </arc>
+    <arc id="A39" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Micro3_NorthernCoreMayMove" target="NorthExitTransition" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="300" yCoord="128"/>
+      <arcpath arcPointType="false" id="1" xCoord="465" yCoord="151"/>
+    </arc>
+    <arc id="A41" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Micro3_NorthernCoreMayMove" target="NorthWestTransition" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="294" yCoord="138"/>
+      <arcpath arcPointType="false" id="1" xCoord="385" yCoord="256"/>
+    </arc>
+    <arc id="A42" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NorthWestTransition" target="NorthernCoreMoved" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="385" yCoord="259"/>
+      <arcpath arcPointType="false" id="1" xCoord="262" yCoord="188"/>
+    </arc>
+    <arc id="A43" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NorthExitTransition" target="NorthernCoreMoved" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="465" yCoord="151"/>
+      <arcpath arcPointType="false" id="1" xCoord="264" yCoord="178"/>
+    </arc>
+    <arc id="A44" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Micro2_SouthernOutGoingMayMove" target="SouthSink" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="528" yCoord="639"/>
+      <arcpath arcPointType="false" id="1" xCoord="495" yCoord="660"/>
+    </arc>
+    <arc id="A45" inscription="1" nameOffsetX="0" nameOffsetY="0" source="SouthSink" target="SouthernOutRoadMoved" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="481" yCoord="665"/>
+      <arcpath arcPointType="false" id="1" xCoord="528" yCoord="696"/>
+    </arc>
+    <arc id="A46" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Mirco4_SouthernCoreMayMove" target="SouthEastTransition" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="692" yCoord="502"/>
+      <arcpath arcPointType="false" id="1" xCoord="591" yCoord="442"/>
+    </arc>
+    <arc id="A47" inscription="1" nameOffsetX="0" nameOffsetY="0" source="SouthEastTransition" target="SouthernCoreMoved" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="589" yCoord="459"/>
+      <arcpath arcPointType="false" id="1" xCoord="638" yCoord="542"/>
+    </arc>
+    <arc id="A48" inscription="1" nameOffsetX="0" nameOffsetY="0" source="SouthExitTransition" target="SouthernCoreMoved" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="495" yCoord="555"/>
+      <arcpath arcPointType="false" id="1" xCoord="630" yCoord="555"/>
+    </arc>
+    <arc id="A49" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Mirco4_SouthernCoreMayMove" target="SouthExitTransition" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="691" yCoord="514"/>
+      <arcpath arcPointType="false" id="1" xCoord="495" yCoord="555"/>
+    </arc>
+    <arc id="A50" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Mirco5_EasternCoreMayMove" target="EastNorthTransition" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="679" yCoord="219"/>
+      <arcpath arcPointType="false" id="1" xCoord="590" yCoord="254"/>
+    </arc>
+    <arc id="A51" inscription="1" nameOffsetX="0" nameOffsetY="0" source="EastNorthTransition" target="EasternCoreMoved" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="589" yCoord="264"/>
+      <arcpath arcPointType="false" id="1" xCoord="675" yCoord="269"/>
+    </arc>
+    <arc id="A52" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Mirco6_WesternCoreMayMove" target="WestSouthTransition" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="299" yCoord="476"/>
+      <arcpath arcPointType="false" id="1" xCoord="369" yCoord="456"/>
+    </arc>
+    <arc id="A53" inscription="1" nameOffsetX="0" nameOffsetY="0" source="WestSouthTransition" target="WesternCoreMoved" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="369" yCoord="459"/>
+      <arcpath arcPointType="false" id="1" xCoord="324" yCoord="514"/>
     </arc>
   </net>
   <net active="true" id="Clock" type="P/T net">
-    <place displayName="true" id="Counter" initialMarking="0" invariant="&lt; inf" name="Counter" nameOffsetX="0" nameOffsetY="0" positionX="1617" positionY="832"/>
-    <place displayName="true" id="Micro1" initialMarking="1" invariant="&lt; inf" name="Micro1" nameOffsetX="34" nameOffsetY="48" positionX="11" positionY="825"/>
-    <place displayName="true" id="Mirco11" initialMarking="0" invariant="&lt; inf" name="Mirco11" nameOffsetX="34" nameOffsetY="46" positionX="1393" positionY="826"/>
-    <place displayName="true" id="Micro10" initialMarking="0" invariant="&lt; inf" name="Micro10" nameOffsetX="38" nameOffsetY="42" positionX="1262" positionY="826"/>
-    <place displayName="true" id="Mirco9" initialMarking="1" invariant="&lt; inf" name="Mirco9" nameOffsetX="32" nameOffsetY="47" positionX="1114" positionY="826"/>
-    <place displayName="true" id="WestCarEntered" initialMarking="0" invariant="&lt; inf" name="WestCarEntered" nameOffsetX="64" nameOffsetY="-14" positionX="1191" positionY="666"/>
-    <place displayName="true" id="EastCarEntered" initialMarking="0" invariant="&lt; inf" name="EastCarEntered" nameOffsetX="52" nameOffsetY="-7" positionX="1338" positionY="659"/>
-    <place displayName="true" id="Micro2" initialMarking="0" invariant="&lt; inf" name="Micro2" nameOffsetX="36" nameOffsetY="49" positionX="270" positionY="825"/>
-    <place displayName="true" id="Mirco4" initialMarking="0" invariant="&lt; inf" name="Mirco4" nameOffsetX="34" nameOffsetY="47" positionX="734" positionY="826"/>
-    <place displayName="true" id="Mirco5" initialMarking="0" invariant="&lt; inf" name="Mirco5" nameOffsetX="34" nameOffsetY="46" positionX="793" positionY="826"/>
-    <place displayName="true" id="Mirco6" initialMarking="0" invariant="&lt; inf" name="Mirco6" nameOffsetX="30" nameOffsetY="39" positionX="854" positionY="826"/>
-    <place displayName="true" id="Mirco7" initialMarking="0" invariant="&lt; inf" name="Mirco7" nameOffsetX="34" nameOffsetY="40" positionX="913" positionY="826"/>
-    <place displayName="true" id="Mirco8" initialMarking="0" invariant="&lt; inf" name="Mirco8" nameOffsetX="32" nameOffsetY="46" positionX="1019" positionY="826"/>
-    <place displayName="true" id="Micro3" initialMarking="0" invariant="&lt; inf" name="Micro3" nameOffsetX="30" nameOffsetY="44" positionX="523" positionY="825"/>
-    <place displayName="true" id="NorthernCarLeaves" initialMarking="0" invariant="&lt; inf" name="NorthernCarLeaves" nameOffsetX="56" nameOffsetY="-12" positionX="270" positionY="645"/>
-    <place displayName="true" id="SouthernCarLeaves" initialMarking="0" invariant="&lt; inf" name="SouthernCarLeaves" nameOffsetX="60" nameOffsetY="-25" positionX="523" positionY="645"/>
-    <place displayName="true" id="WesternnDoubleMoveSafeguard" initialMarking="1" invariant="&lt; inf" name="WesternnDoubleMoveSafeguard" nameOffsetX="104" nameOffsetY="54" positionX="427" positionY="992"/>
-    <place displayName="true" id="P29" initialMarking="0" invariant="&lt; inf" name="P29" nameOffsetX="0" nameOffsetY="0" positionX="1395" positionY="1005"/>
-    <place displayName="true" id="EasternDoubleMoveSafeguard" initialMarking="1" invariant="&lt; inf" name="EasternDoubleMoveSafeguard" nameOffsetX="0" nameOffsetY="0" positionX="1530" positionY="1020"/>
-    <transition angle="0" displayName="true" id="NoEastCarEnteredTransition" infiniteServer="false" name="NoEastCarEnteredTransition" nameOffsetX="98" nameOffsetY="49" player="0" positionX="1316" positionY="852" priority="0" urgent="false"/>
-    <transition angle="0" displayName="true" id="NoWestCarEnteredTransition" infiniteServer="false" name="NoWestCarEnteredTransition" nameOffsetX="86" nameOffsetY="43" player="0" positionX="1188" positionY="846" priority="0" urgent="false"/>
-    <transition angle="0" displayName="true" id="EastCarEnteredTransition" infiniteServer="false" name="EastCarEnteredTransition" nameOffsetX="78" nameOffsetY="-10" player="0" positionX="1190" positionY="758" priority="0" urgent="false"/>
-    <transition angle="0" displayName="true" id="T15" infiniteServer="false" name="T15" nameOffsetX="0" nameOffsetY="0" player="0" positionX="1459" positionY="856" priority="0" urgent="false"/>
-    <transition angle="0" displayName="true" id="WestCarEnteredTransition" infiniteServer="false" name="WestCarEnteredTransition" nameOffsetX="82" nameOffsetY="-4" player="0" positionX="1339" positionY="760" priority="0" urgent="false"/>
-    <transition angle="0" displayName="true" id="NoNorthernCarLeavesTransition" infiniteServer="false" name="NoNorthernCarLeavesTransition" nameOffsetX="92" nameOffsetY="58" player="0" positionX="180" positionY="825" priority="0" urgent="false"/>
-    <transition angle="0" displayName="true" id="NorthernCarLeavesTransition" infiniteServer="false" name="NorthernCarLeavesTransition" nameOffsetX="94" nameOffsetY="-17" player="0" positionX="270" positionY="735" priority="0" urgent="false"/>
-    <transition angle="0" displayName="true" id="SouthernCarLeavesTransition" infiniteServer="false" name="SouthernCarLeavesTransition" nameOffsetX="84" nameOffsetY="47" player="0" positionX="523" positionY="735" priority="0" urgent="false"/>
-    <transition angle="0" displayName="true" id="NoSouthernCarLeavesTransition" infiniteServer="false" name="NoSouthernCarLeavesTransition" nameOffsetX="94" nameOffsetY="64" player="0" positionX="390" positionY="825" priority="0" urgent="false"/>
+    <labels border="true" height="36" positionX="1270" positionY="1140" width="105">If none, put one there. Else go on</labels>
+    <place displayName="true" id="Counter" initialMarking="0" invariant="&lt; inf" name="Counter" nameOffsetX="0" nameOffsetY="0" positionX="2113" positionY="819"/>
+    <place displayName="true" id="Micro1_NorthernOutgoingMayMove" initialMarking="1" invariant="&lt; inf" name="Micro1_NorthernOutgoingMayMove" nameOffsetX="107" nameOffsetY="-10" positionX="11" positionY="825"/>
+    <place displayName="true" id="Mirco11" initialMarking="0" invariant="&lt; inf" name="Mirco11" nameOffsetX="34" nameOffsetY="46" positionX="1887" positionY="813"/>
+    <place displayName="true" id="Micro10" initialMarking="0" invariant="&lt; inf" name="Micro10" nameOffsetX="38" nameOffsetY="42" positionX="1756" positionY="813"/>
+    <place displayName="true" id="Mirco9" initialMarking="1" invariant="&lt; inf" name="Mirco9" nameOffsetX="32" nameOffsetY="47" positionX="1609" positionY="813"/>
+    <place displayName="true" id="WestCarEntered" initialMarking="0" invariant="&lt; inf" name="WestCarEntered" nameOffsetX="64" nameOffsetY="-14" positionX="1686" positionY="653"/>
+    <place displayName="true" id="EastCarEntered" initialMarking="0" invariant="&lt; inf" name="EastCarEntered" nameOffsetX="52" nameOffsetY="-7" positionX="1833" positionY="645"/>
+    <place displayName="true" id="Micro2_SouthernOutGoingMayMove" initialMarking="0" invariant="&lt; inf" name="Micro2_SouthernOutGoingMayMove" nameOffsetX="108" nameOffsetY="43" positionX="270" positionY="825"/>
+    <place displayName="true" id="Mirco4_SouthernCoreMayMove" initialMarking="0" invariant="&lt; inf" name="Mirco4_SouthernCoreMayMove" nameOffsetX="92" nameOffsetY="52" positionX="724" positionY="826"/>
+    <place displayName="true" id="Mirco5_EasternCoreMayMove" initialMarking="0" invariant="&lt; inf" name="Mirco5_EasternCoreMayMove" nameOffsetX="88" nameOffsetY="53" positionX="923" positionY="826"/>
+    <place displayName="true" id="Mirco6_WesternCoreMayMove" initialMarking="0" invariant="&lt; inf" name="Mirco6_WesternCoreMayMove" nameOffsetX="84" nameOffsetY="45" positionX="1159" positionY="826"/>
+    <place displayName="true" id="Mirco7" initialMarking="0" invariant="&lt; inf" name="Mirco7" nameOffsetX="34" nameOffsetY="40" positionX="1365" positionY="826"/>
+    <place displayName="true" id="Micro3_NorthernCoreMayMove" initialMarking="0" invariant="&lt; inf" name="Micro3_NorthernCoreMayMove" nameOffsetX="87" nameOffsetY="44" positionX="523" positionY="825"/>
+    <place displayName="true" id="NorthernOutRoadMoved" initialMarking="0" invariant="&lt; inf" name="NorthernOutRoadMoved" nameOffsetX="77" nameOffsetY="-12" positionX="270" positionY="645"/>
+    <place displayName="true" id="SouthernOutRoadMoved" initialMarking="0" invariant="&lt; inf" name="SouthernOutRoadMoved" nameOffsetX="71" nameOffsetY="-20" positionX="523" positionY="645"/>
+    <place displayName="true" id="WesternnDoubleMoveSafeguard" initialMarking="1" invariant="&lt; inf" name="WesternnDoubleMoveSafeguard" nameOffsetX="104" nameOffsetY="54" positionX="1743" positionY="1039"/>
+    <place displayName="true" id="EasternDoubleMoveSafeguard" initialMarking="1" invariant="&lt; inf" name="EasternDoubleMoveSafeguard" nameOffsetX="95" nameOffsetY="47" positionX="1945" positionY="1066"/>
+    <place displayName="true" id="P30" initialMarking="0" invariant="&lt; inf" name="P30" nameOffsetX="0" nameOffsetY="0" positionX="1955" positionY="986"/>
+    <place displayName="true" id="P31" initialMarking="0" invariant="&lt; inf" name="P31" nameOffsetX="0" nameOffsetY="0" positionX="1835" positionY="982"/>
+    <place displayName="true" id="P32" initialMarking="0" invariant="&lt; inf" name="P32" nameOffsetX="0" nameOffsetY="0" positionX="1650" positionY="976"/>
+    <place displayName="true" id="NorthernCoreMoved" initialMarking="0" invariant="&lt; inf" name="NorthernCoreMoved" nameOffsetX="56" nameOffsetY="-12" positionX="725" positionY="645"/>
+    <place displayName="true" id="SouthernCoreMoved" initialMarking="0" invariant="&lt; inf" name="SouthernCoreMoved" nameOffsetX="64" nameOffsetY="-13" positionX="923" positionY="645"/>
+    <place displayName="true" id="CoreNorth" initialMarking="0" invariant="&lt; inf" name="CoreNorth" nameOffsetX="34" nameOffsetY="-11" positionX="1038" positionY="761"/>
+    <place displayName="true" id="EasternCoreMoved" initialMarking="0" invariant="&lt; inf" name="EasternCoreMoved" nameOffsetX="67" nameOffsetY="-13" positionX="1155" positionY="645"/>
+    <place displayName="true" id="CoreSouth" initialMarking="0" invariant="&lt; inf" name="CoreSouth" nameOffsetX="42" nameOffsetY="4" positionX="1259" positionY="765"/>
+    <place displayName="true" id="WesternCoreMoved" initialMarking="0" invariant="&lt; inf" name="WesternCoreMoved" nameOffsetX="64" nameOffsetY="-6" positionX="1364" positionY="644"/>
+    <transition angle="0" displayName="true" id="NoEastCarEnteredTransition" infiniteServer="false" name="NoEastCarEnteredTransition" nameOffsetX="98" nameOffsetY="49" player="0" positionX="1810" positionY="839" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="NoWestCarEnteredTransition" infiniteServer="false" name="NoWestCarEnteredTransition" nameOffsetX="86" nameOffsetY="43" player="0" positionX="1683" positionY="833" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="EastCarEnteredTransition" infiniteServer="false" name="EastCarEnteredTransition" nameOffsetX="78" nameOffsetY="-10" player="0" positionX="1685" positionY="745" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="T15" infiniteServer="false" name="T15" nameOffsetX="0" nameOffsetY="0" player="0" positionX="1954" positionY="843" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="WestCarEnteredTransition" infiniteServer="false" name="WestCarEnteredTransition" nameOffsetX="82" nameOffsetY="-4" player="0" positionX="1834" positionY="746" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="NoNorthernOutRoadMoved" infiniteServer="false" name="NoNorthernOutRoadMoved" nameOffsetX="82" nameOffsetY="65" player="0" positionX="180" positionY="825" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="NorthernOutRoadMovedTransition" infiniteServer="false" name="NorthernOutRoadMovedTransition" nameOffsetX="105" nameOffsetY="-15" player="0" positionX="270" positionY="735" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="SouthernOutRoadMovedTransition" infiniteServer="false" name="SouthernOutRoadMovedTransition" nameOffsetX="84" nameOffsetY="47" player="0" positionX="523" positionY="735" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="NoSouthernOutRoadMoved" infiniteServer="false" name="NoSouthernOutRoadMoved" nameOffsetX="94" nameOffsetY="64" player="0" positionX="390" positionY="825" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="T18" infiniteServer="false" name="T18" nameOffsetX="0" nameOffsetY="0" player="0" positionX="165" positionY="960" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="T19" infiniteServer="false" name="T19" nameOffsetX="0" nameOffsetY="0" player="0" positionX="1890" positionY="1036" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="T20" infiniteServer="false" name="T20" nameOffsetX="0" nameOffsetY="0" player="0" positionX="1905" positionY="986" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="T21" infiniteServer="false" name="T21" nameOffsetX="0" nameOffsetY="0" player="0" positionX="1740" positionY="976" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="T22" infiniteServer="false" name="T22" nameOffsetX="0" nameOffsetY="0" player="0" positionX="1695" positionY="1036" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="NoNorthernCoreMoved" infiniteServer="false" name="NoNorthernCoreMoved" nameOffsetX="76" nameOffsetY="64" player="0" positionX="625" positionY="825" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="NorthernCoreMovedTransition" infiniteServer="false" name="NorthernCoreMovedTransition" nameOffsetX="98" nameOffsetY="-14" player="0" positionX="725" positionY="735" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="SouthernCoreMovedTransition" infiniteServer="false" name="SouthernCoreMovedTransition" nameOffsetX="95" nameOffsetY="45" player="0" positionX="921" positionY="735" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="NoSouthernCoreMoved" infiniteServer="false" name="NoSouthernCoreMoved" nameOffsetX="81" nameOffsetY="58" player="0" positionX="821" positionY="825" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="CoreNorthOccupied" infiniteServer="false" name="CoreNorthOccupied" nameOffsetX="59" nameOffsetY="60" player="0" positionX="1038" positionY="825" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="EasternCoreMovedTransition" infiniteServer="false" name="EasternCoreMovedTransition" nameOffsetX="82" nameOffsetY="-6" player="0" positionX="1155" positionY="748" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="CoreSouthOccupied" infiniteServer="false" name="CoreSouthOccupied" nameOffsetX="61" nameOffsetY="56" player="0" positionX="1259" positionY="826" priority="0" urgent="false"/>
+    <transition angle="0" displayName="true" id="WesternCoreMovedTransition" infiniteServer="false" name="WesternCoreMovedTransition" nameOffsetX="102" nameOffsetY="41" player="0" positionX="1362" positionY="752" priority="0" urgent="false"/>
     <arc id="A35" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NoEastCarEnteredTransition" target="Mirco11" type="normal" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="1336" yCoord="867"/>
-      <arcpath arcPointType="false" id="1" xCoord="1394" yCoord="846"/>
+      <arcpath arcPointType="false" id="0" xCoord="1830" yCoord="855"/>
+      <arcpath arcPointType="false" id="1" xCoord="1888" yCoord="834"/>
     </arc>
     <arc id="A34" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Micro10" target="NoEastCarEnteredTransition" type="timed" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="1290" yCoord="848"/>
-      <arcpath arcPointType="false" id="1" xCoord="1326" yCoord="867"/>
+      <arcpath arcPointType="false" id="0" xCoord="1785" yCoord="835"/>
+      <arcpath arcPointType="false" id="1" xCoord="1820" yCoord="855"/>
     </arc>
     <arc id="A31" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NoWestCarEnteredTransition" target="Micro10" type="normal" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="1208" yCoord="862"/>
-      <arcpath arcPointType="false" id="1" xCoord="1263" yCoord="845"/>
+      <arcpath arcPointType="false" id="0" xCoord="1703" yCoord="848"/>
+      <arcpath arcPointType="false" id="1" xCoord="1757" yCoord="832"/>
     </arc>
     <arc id="A30" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Mirco9" target="NoWestCarEnteredTransition" type="timed" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="1143" yCoord="845"/>
-      <arcpath arcPointType="false" id="1" xCoord="1198" yCoord="862"/>
+      <arcpath arcPointType="false" id="0" xCoord="1638" yCoord="832"/>
+      <arcpath arcPointType="false" id="1" xCoord="1693" yCoord="848"/>
     </arc>
     <arc id="A4" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="WestCarEntered" target="EastCarEnteredTransition" type="timed" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="1206" yCoord="696"/>
-      <arcpath arcPointType="false" id="1" xCoord="1205" yCoord="758"/>
+      <arcpath arcPointType="false" id="0" xCoord="1702" yCoord="683"/>
+      <arcpath arcPointType="false" id="1" xCoord="1701" yCoord="745"/>
     </arc>
     <arc id="A6" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Mirco11" target="T15" type="timed" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="1421" yCoord="848"/>
-      <arcpath arcPointType="false" id="1" xCoord="1469" yCoord="872"/>
+      <arcpath arcPointType="false" id="0" xCoord="1915" yCoord="835"/>
+      <arcpath arcPointType="false" id="1" xCoord="1964" yCoord="858"/>
     </arc>
     <arc id="A8" inscription="1" nameOffsetX="0" nameOffsetY="0" source="EastCarEnteredTransition" target="Micro10" type="normal" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="1210" yCoord="774"/>
-      <arcpath arcPointType="false" id="1" xCoord="1266" yCoord="831"/>
+      <arcpath arcPointType="false" id="0" xCoord="1705" yCoord="761"/>
+      <arcpath arcPointType="false" id="1" xCoord="1761" yCoord="817"/>
     </arc>
     <arc id="A9" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="EastCarEntered" target="WestCarEnteredTransition" type="timed" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="1354" yCoord="689"/>
-      <arcpath arcPointType="false" id="1" xCoord="1355" yCoord="760"/>
+      <arcpath arcPointType="false" id="0" xCoord="1848" yCoord="675"/>
+      <arcpath arcPointType="false" id="1" xCoord="1849" yCoord="746"/>
     </arc>
     <arc id="A10" inscription="1" nameOffsetX="0" nameOffsetY="0" source="WestCarEnteredTransition" target="Mirco11" type="normal" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="1359" yCoord="775"/>
-      <arcpath arcPointType="false" id="1" xCoord="1399" yCoord="829"/>
+      <arcpath arcPointType="false" id="0" xCoord="1854" yCoord="762"/>
+      <arcpath arcPointType="false" id="1" xCoord="1894" yCoord="815"/>
     </arc>
     <arc id="A12" inscription="1" nameOffsetX="0" nameOffsetY="0" source="T15" target="Counter" type="normal" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="1479" yCoord="872"/>
-      <arcpath arcPointType="false" id="1" xCoord="1617" yCoord="849"/>
+      <arcpath arcPointType="false" id="0" xCoord="1974" yCoord="858"/>
+      <arcpath arcPointType="false" id="1" xCoord="2113" yCoord="836"/>
     </arc>
-    <arc id="A14" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NoNorthernCarLeavesTransition" target="Micro2" type="normal" weight="1">
+    <arc id="A14" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NoNorthernOutRoadMoved" target="Micro2_SouthernOutGoingMayMove" type="normal" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="200" yCoord="841"/>
       <arcpath arcPointType="false" id="1" xCoord="270" yCoord="841"/>
     </arc>
-    <arc id="A13" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Micro1" target="NoNorthernCarLeavesTransition" type="timed" weight="1">
+    <arc id="A13" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Micro1_NorthernOutgoingMayMove" target="NoNorthernOutRoadMoved" type="timed" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="41" yCoord="841"/>
-      <arcpath arcPointType="false" id="1" xCoord="190" yCoord="842"/>
+      <arcpath arcPointType="false" id="1" xCoord="190" yCoord="841"/>
     </arc>
-    <arc id="A15" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="NorthernCarLeaves" target="NorthernCarLeavesTransition" type="timed" weight="1">
+    <arc id="A15" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="NorthernOutRoadMoved" target="NorthernOutRoadMovedTransition" type="timed" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="285" yCoord="675"/>
       <arcpath arcPointType="false" id="1" xCoord="285" yCoord="735"/>
     </arc>
-    <arc id="A16" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NorthernCarLeavesTransition" target="Micro2" type="normal" weight="1">
+    <arc id="A16" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NorthernOutRoadMovedTransition" target="Micro2_SouthernOutGoingMayMove" type="normal" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="285" yCoord="765"/>
       <arcpath arcPointType="false" id="1" xCoord="285" yCoord="825"/>
     </arc>
-    <arc id="A17" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Micro2" target="NoSouthernCarLeavesTransition" type="timed" weight="1">
-      <arcpath arcPointType="false" id="0" xCoord="300" yCoord="840"/>
-      <arcpath arcPointType="false" id="1" xCoord="400" yCoord="835"/>
+    <arc id="A17" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Micro2_SouthernOutGoingMayMove" target="NoSouthernOutRoadMoved" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="300" yCoord="841"/>
+      <arcpath arcPointType="false" id="1" xCoord="400" yCoord="841"/>
     </arc>
-    <arc id="A18" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NoSouthernCarLeavesTransition" target="Micro3" type="normal" weight="1">
+    <arc id="A18" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NoSouthernOutRoadMoved" target="Micro3_NorthernCoreMayMove" type="normal" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="410" yCoord="841"/>
       <arcpath arcPointType="false" id="1" xCoord="523" yCoord="841"/>
     </arc>
-    <arc id="A19" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="SouthernCarLeaves" target="SouthernCarLeavesTransition" type="timed" weight="1">
+    <arc id="A19" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="SouthernOutRoadMoved" target="SouthernOutRoadMovedTransition" type="timed" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="538" yCoord="675"/>
       <arcpath arcPointType="false" id="1" xCoord="538" yCoord="735"/>
     </arc>
-    <arc id="A20" inscription="1" nameOffsetX="0" nameOffsetY="0" source="SouthernCarLeavesTransition" target="Micro3" type="normal" weight="1">
+    <arc id="A20" inscription="1" nameOffsetX="0" nameOffsetY="0" source="SouthernOutRoadMovedTransition" target="Micro3_NorthernCoreMayMove" type="normal" weight="1">
       <arcpath arcPointType="false" id="0" xCoord="538" yCoord="765"/>
       <arcpath arcPointType="false" id="1" xCoord="538" yCoord="825"/>
+    </arc>
+    <arc id="A26" inscription="1" nameOffsetX="0" nameOffsetY="0" source="T18" target="Micro1_NorthernOutgoingMayMove" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="175" yCoord="975"/>
+      <arcpath arcPointType="false" id="1" xCoord="37" yCoord="851"/>
+    </arc>
+    <arc id="A21" inscription="1" nameOffsetX="0" nameOffsetY="0" source="T15" target="P30" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1969" yCoord="873"/>
+      <arcpath arcPointType="false" id="1" xCoord="1970" yCoord="986"/>
+    </arc>
+    <arc id="A22" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="P30" target="T19" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1958" yCoord="1010"/>
+      <arcpath arcPointType="false" id="1" xCoord="1910" yCoord="1044"/>
+    </arc>
+    <arc id="I23" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="EasternDoubleMoveSafeguard" target="T19" type="tapnInhibitor" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1947" yCoord="1075"/>
+      <arcpath arcPointType="false" id="1" xCoord="1910" yCoord="1057"/>
+    </arc>
+    <arc id="A27" inscription="1" nameOffsetX="0" nameOffsetY="0" source="T19" target="EasternDoubleMoveSafeguard" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1909" yCoord="1061"/>
+      <arcpath arcPointType="false" id="1" xCoord="1946" yCoord="1075"/>
+    </arc>
+    <arc id="A28" inscription="1" nameOffsetX="0" nameOffsetY="0" source="T19" target="P31" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1900" yCoord="1047"/>
+      <arcpath arcPointType="false" id="1" xCoord="1861" yCoord="1007"/>
+    </arc>
+    <arc id="A29" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="P30" target="T20" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1955" yCoord="1002"/>
+      <arcpath arcPointType="false" id="1" xCoord="1925" yCoord="1002"/>
+    </arc>
+    <arc id="A31" inscription="1" nameOffsetX="0" nameOffsetY="0" source="T20" target="P31" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1915" yCoord="1002"/>
+      <arcpath arcPointType="false" id="1" xCoord="1865" yCoord="998"/>
+    </arc>
+    <arc id="A30" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="EasternDoubleMoveSafeguard" target="T20" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1953" yCoord="1068"/>
+      <arcpath arcPointType="false" id="1" xCoord="1921" yCoord="1016"/>
+    </arc>
+    <arc id="A32" inscription="1" nameOffsetX="0" nameOffsetY="0" source="T20" target="EasternDoubleMoveSafeguard" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1921" yCoord="1016"/>
+      <arcpath arcPointType="false" id="1" xCoord="1953" yCoord="1068"/>
+    </arc>
+    <arc id="A31" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="P31" target="T21" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1835" yCoord="997"/>
+      <arcpath arcPointType="false" id="1" xCoord="1760" yCoord="996"/>
+    </arc>
+    <arc id="A33" inscription="1" nameOffsetX="0" nameOffsetY="0" source="T21" target="P32" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1750" yCoord="992"/>
+      <arcpath arcPointType="false" id="1" xCoord="1680" yCoord="992"/>
+    </arc>
+    <arc id="A35" inscription="1" nameOffsetX="0" nameOffsetY="0" source="T21" target="WesternnDoubleMoveSafeguard" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1755" yCoord="1006"/>
+      <arcpath arcPointType="false" id="1" xCoord="1757" yCoord="1039"/>
+    </arc>
+    <arc id="A34" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="WesternnDoubleMoveSafeguard" target="T21" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1757" yCoord="1039"/>
+      <arcpath arcPointType="false" id="1" xCoord="1755" yCoord="1006"/>
+    </arc>
+    <arc id="A36" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="P31" target="T22" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1836" yCoord="1002"/>
+      <arcpath arcPointType="false" id="1" xCoord="1715" yCoord="1049"/>
+    </arc>
+    <arc id="A35" inscription="1" nameOffsetX="0" nameOffsetY="0" source="T22" target="P32" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1705" yCoord="1052"/>
+      <arcpath arcPointType="false" id="1" xCoord="1674" yCoord="1004"/>
+    </arc>
+    <arc id="A37" inscription="1" nameOffsetX="0" nameOffsetY="0" source="T22" target="WesternnDoubleMoveSafeguard" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1715" yCoord="1052"/>
+      <arcpath arcPointType="false" id="1" xCoord="1743" yCoord="1054"/>
+    </arc>
+    <arc id="I35" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="WesternnDoubleMoveSafeguard" target="T22" type="tapnInhibitor" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1743" yCoord="1056"/>
+      <arcpath arcPointType="false" id="1" xCoord="1715" yCoord="1061"/>
+    </arc>
+    <arc id="A38" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="P32" target="T18" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1650" yCoord="992"/>
+      <arcpath arcPointType="false" id="1" xCoord="266" yCoord="1003"/>
+      <arcpath arcPointType="false" id="2" xCoord="185" yCoord="975"/>
+    </arc>
+    <arc id="A40" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NoNorthernCoreMoved" target="Mirco4_SouthernCoreMayMove" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="645" yCoord="841"/>
+      <arcpath arcPointType="false" id="1" xCoord="724" yCoord="842"/>
+    </arc>
+    <arc id="A39" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Micro3_NorthernCoreMayMove" target="NoNorthernCoreMoved" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="553" yCoord="842"/>
+      <arcpath arcPointType="false" id="1" xCoord="635" yCoord="850"/>
+    </arc>
+    <arc id="A41" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="NorthernCoreMoved" target="NorthernCoreMovedTransition" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="741" yCoord="675"/>
+      <arcpath arcPointType="false" id="1" xCoord="741" yCoord="735"/>
+    </arc>
+    <arc id="A42" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NorthernCoreMovedTransition" target="Mirco4_SouthernCoreMayMove" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="741" yCoord="765"/>
+      <arcpath arcPointType="false" id="1" xCoord="739" yCoord="826"/>
+    </arc>
+    <arc id="A43" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="SouthernCoreMoved" target="SouthernCoreMovedTransition" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="937" yCoord="675"/>
+      <arcpath arcPointType="false" id="1" xCoord="936" yCoord="735"/>
+    </arc>
+    <arc id="A44" inscription="1" nameOffsetX="0" nameOffsetY="0" source="SouthernCoreMovedTransition" target="Mirco5_EasternCoreMayMove" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="936" yCoord="765"/>
+      <arcpath arcPointType="false" id="1" xCoord="937" yCoord="826"/>
+    </arc>
+    <arc id="A46" inscription="1" nameOffsetX="0" nameOffsetY="0" source="NoSouthernCoreMoved" target="Mirco5_EasternCoreMayMove" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="841" yCoord="841"/>
+      <arcpath arcPointType="false" id="1" xCoord="923" yCoord="842"/>
+    </arc>
+    <arc id="A45" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Mirco4_SouthernCoreMayMove" target="NoSouthernCoreMoved" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="754" yCoord="843"/>
+      <arcpath arcPointType="false" id="1" xCoord="830" yCoord="852"/>
+    </arc>
+    <arc id="A47" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Mirco5_EasternCoreMayMove" target="CoreNorthOccupied" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="953" yCoord="842"/>
+      <arcpath arcPointType="false" id="1" xCoord="1048" yCoord="842"/>
+    </arc>
+    <arc id="A48" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="CoreNorth" target="CoreNorthOccupied" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1054" yCoord="791"/>
+      <arcpath arcPointType="false" id="1" xCoord="1054" yCoord="825"/>
+    </arc>
+    <arc id="A49" inscription="1" nameOffsetX="0" nameOffsetY="0" source="CoreNorthOccupied" target="CoreNorth" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1054" yCoord="825"/>
+      <arcpath arcPointType="false" id="1" xCoord="1054" yCoord="791"/>
+    </arc>
+    <arc id="A50" inscription="1" nameOffsetX="0" nameOffsetY="0" source="CoreNorthOccupied" target="Mirco6_WesternCoreMayMove" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1058" yCoord="841"/>
+      <arcpath arcPointType="false" id="1" xCoord="1159" yCoord="842"/>
+    </arc>
+    <arc id="A51" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="EasternCoreMoved" target="EasternCoreMovedTransition" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1171" yCoord="675"/>
+      <arcpath arcPointType="false" id="1" xCoord="1171" yCoord="748"/>
+    </arc>
+    <arc id="A52" inscription="1" nameOffsetX="0" nameOffsetY="0" source="EasternCoreMovedTransition" target="Mirco6_WesternCoreMayMove" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1171" yCoord="778"/>
+      <arcpath arcPointType="false" id="1" xCoord="1174" yCoord="826"/>
+    </arc>
+    <arc id="A53" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="Mirco6_WesternCoreMayMove" target="CoreSouthOccupied" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1189" yCoord="843"/>
+      <arcpath arcPointType="false" id="1" xCoord="1269" yCoord="847"/>
+    </arc>
+    <arc id="A54" inscription="1" nameOffsetX="0" nameOffsetY="0" source="CoreSouthOccupied" target="CoreSouth" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1275" yCoord="826"/>
+      <arcpath arcPointType="false" id="1" xCoord="1275" yCoord="795"/>
+    </arc>
+    <arc id="A55" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="CoreSouth" target="CoreSouthOccupied" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1275" yCoord="795"/>
+      <arcpath arcPointType="false" id="1" xCoord="1275" yCoord="826"/>
+    </arc>
+    <arc id="A56" inscription="1" nameOffsetX="0" nameOffsetY="0" source="CoreSouthOccupied" target="Mirco7" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1279" yCoord="842"/>
+      <arcpath arcPointType="false" id="1" xCoord="1365" yCoord="842"/>
+    </arc>
+    <arc id="A57" inscription="[0,inf)" nameOffsetX="0" nameOffsetY="0" source="WesternCoreMoved" target="WesternCoreMovedTransition" type="timed" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1378" yCoord="674"/>
+      <arcpath arcPointType="false" id="1" xCoord="1377" yCoord="752"/>
+    </arc>
+    <arc id="A58" inscription="1" nameOffsetX="0" nameOffsetY="0" source="WesternCoreMovedTransition" target="Mirco7" type="normal" weight="1">
+      <arcpath arcPointType="false" id="0" xCoord="1377" yCoord="782"/>
+      <arcpath arcPointType="false" id="1" xCoord="1380" yCoord="826"/>
     </arc>
   </net>
   <k-bound bound="3"/>
