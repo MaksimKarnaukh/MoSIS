@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<trace>
+  <transition id="Clock_NoNorthernOutRoadMovedTransition">
+    <token age="0" place="Shared_Micro1_NorthernOutgoingMayMove"/>
+  </transition>
+  <transition id="Clock_NoSouthernOutRoadMovedTransition">
+    <token age="0" place="Shared_Micro2_SouthernOutGoingMayMove"/>
+  </transition>
+  <transition id="Clock_NoNorthernCoreMovedTransition">
+    <token age="0" place="Shared_Micro3_NorthernCoreMayMove"/>
+  </transition>
+  <transition id="Clock_NoSouthernCoreMovedTransition">
+    <token age="0" place="Shared_Mirco4_SouthernCoreMayMove"/>
+  </transition>
+  <transition id="Clock_EasternCoreNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco5_EasternCoreMayMove"/>
+  </transition>
+  <transition id="Clock_WesternCoreNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco6_WesternCoreMayMove"/>
+  </transition>
+  <transition id="Clock_WesternInRoadNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco7_WesternInRoadMayMove"/>
+  </transition>
+  <transition id="Clock_EastInRoadNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco8_EasternInRoadMayMove"/>
+  </transition>
+  <transition id="TAPN1_WestInroadGenerator">
+    <token age="0" place="Shared_Mirco9_WestCarMayEnter"/>
+  </transition>
+  <transition id="Clock_EastCarEnteredTransition">
+    <token age="0" place="Shared_WestCarEntered"/>
+  </transition>
+  <transition id="TAPN1_EastRoadgenerator">
+    <token age="0" place="Shared_Micro10_EastCarMayEnter"/>
+  </transition>
+  <transition id="Clock_WestCarEnteredTransition">
+    <token age="0" place="Shared_EastCarEntered"/>
+  </transition>
+  <transition id="Clock_T15">
+    <token age="0" place="Shared_MicroFinished"/>
+  </transition>
+  <transition id="Clock_T20">
+    <token age="0" place="Clock_P30"/>
+    <token age="0" place="Shared_EasternDoubleMoveSafeguard"/>
+  </transition>
+  <transition id="Clock_T21">
+    <token age="0" place="Clock_P31"/>
+    <token age="0" place="Shared_WesternnDoubleMoveSafeguard"/>
+  </transition>
+  <transition id="Clock_T18">
+    <token age="0" place="Clock_P32"/>
+  </transition>
+  <transition id="Clock_NoNorthernOutRoadMovedTransition">
+    <token age="0" place="Shared_Micro1_NorthernOutgoingMayMove"/>
+  </transition>
+  <transition id="Clock_NoSouthernOutRoadMovedTransition">
+    <token age="0" place="Shared_Micro2_SouthernOutGoingMayMove"/>
+  </transition>
+  <transition id="Clock_NoNorthernCoreMovedTransition">
+    <token age="0" place="Shared_Micro3_NorthernCoreMayMove"/>
+  </transition>
+  <transition id="Clock_NoSouthernCoreMovedTransition">
+    <token age="0" place="Shared_Mirco4_SouthernCoreMayMove"/>
+  </transition>
+  <transition id="Clock_EasternCoreNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco5_EasternCoreMayMove"/>
+  </transition>
+  <transition id="Clock_WesternCoreNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco6_WesternCoreMayMove"/>
+  </transition>
+  <transition id="TAPN1_WestEntryTransition">
+    <token age="0" place="Shared_WestInroad"/>
+    <token age="0" place="Shared_Mirco7_WesternInRoadMayMove"/>
+  </transition>
+  <transition id="Clock_WesternInRoadMovedTransition">
+    <token age="0" place="Shared_WesternInRoadMoved"/>
+  </transition>
+  <transition id="TAPN1_EastEntryTransition">
+    <token age="0" place="Shared_EastInroad"/>
+    <token age="0" place="Shared_Mirco8_EasternInRoadMayMove"/>
+  </transition>
+  <transition id="Clock_EasternInRoadMovedTransition">
+    <token age="0" place="Shared_EasternInRoadMoved"/>
+  </transition>
+  <transition id="Clock_NoWestCarEnteredTransition">
+    <token age="0" place="Shared_Mirco9_WestCarMayEnter"/>
+  </transition>
+  <transition id="Clock_NoEastCarEnteredTransition">
+    <token age="0" place="Shared_Micro10_EastCarMayEnter"/>
+  </transition>
+  <transition id="Clock_T15">
+    <token age="0" place="Shared_MicroFinished"/>
+  </transition>
+  <transition id="Clock_T20">
+    <token age="0" place="Clock_P30"/>
+    <token age="0" place="Shared_EasternDoubleMoveSafeguard"/>
+  </transition>
+  <transition id="Clock_T21">
+    <token age="0" place="Clock_P31"/>
+    <token age="0" place="Shared_WesternnDoubleMoveSafeguard"/>
+  </transition>
+  <transition id="Clock_T18">
+    <token age="0" place="Clock_P32"/>
+  </transition>
+  <transition id="Clock_NoNorthernOutRoadMovedTransition">
+    <token age="0" place="Shared_Micro1_NorthernOutgoingMayMove"/>
+  </transition>
+  <transition id="Clock_NoSouthernOutRoadMovedTransition">
+    <token age="0" place="Shared_Micro2_SouthernOutGoingMayMove"/>
+  </transition>
+  <transition id="Clock_NoNorthernCoreMovedTransition">
+    <token age="0" place="Shared_Micro3_NorthernCoreMayMove"/>
+  </transition>
+  <transition id="Clock_NoSouthernCoreMovedTransition">
+    <token age="0" place="Shared_Mirco4_SouthernCoreMayMove"/>
+  </transition>
+  <transition id="TAPN1_EastNorthTransition">
+    <token age="0" place="Shared_CoreEast"/>
+    <token age="0" place="Shared_EasternDoubleMoveSafeguard"/>
+    <token age="0" place="Shared_Mirco5_EasternCoreMayMove"/>
+  </transition>
+  <transition id="Clock_EasternCoreMovedTransition">
+    <token age="0" place="Shared_EasternCoreMoved"/>
+  </transition>
+  <transition id="TAPN1_WestSouthTransition">
+    <token age="0" place="Shared_CoreWest"/>
+    <token age="0" place="Shared_WesternnDoubleMoveSafeguard"/>
+    <token age="0" place="Shared_Mirco6_WesternCoreMayMove"/>
+  </transition>
+  <transition id="Clock_WesternCoreMovedTransition">
+    <token age="0" place="Shared_WesternCoreMoved"/>
+  </transition>
+  <transition id="Clock_WesternInRoadNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco7_WesternInRoadMayMove"/>
+  </transition>
+  <transition id="Clock_EastInRoadNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco8_EasternInRoadMayMove"/>
+  </transition>
+  <transition id="Clock_NoWestCarEnteredTransition">
+    <token age="0" place="Shared_Mirco9_WestCarMayEnter"/>
+  </transition>
+  <transition id="Clock_NoEastCarEnteredTransition">
+    <token age="0" place="Shared_Micro10_EastCarMayEnter"/>
+  </transition>
+  <transition id="Clock_T15">
+    <token age="0" place="Shared_MicroFinished"/>
+  </transition>
+  <transition id="Clock_T19">
+    <token age="0" place="Clock_P30"/>
+  </transition>
+  <transition id="Clock_T22">
+    <token age="0" place="Clock_P31"/>
+  </transition>
+  <transition id="Clock_T18">
+    <token age="0" place="Clock_P32"/>
+  </transition>
+  <transition id="Clock_NoNorthernOutRoadMovedTransition">
+    <token age="0" place="Shared_Micro1_NorthernOutgoingMayMove"/>
+  </transition>
+  <transition id="Clock_NoSouthernOutRoadMovedTransition">
+    <token age="0" place="Shared_Micro2_SouthernOutGoingMayMove"/>
+  </transition>
+  <transition id="TAPN1_NorthExitTransition">
+    <token age="0" place="Shared_CoreNorth"/>
+    <token age="0" place="Shared_Micro3_NorthernCoreMayMove"/>
+  </transition>
+  <transition id="Clock_NorthernCoreMovedTransition">
+    <token age="0" place="Shared_NorthernCoreMoved"/>
+  </transition>
+  <transition id="TAPN1_SouthExitTransition">
+    <token age="0" place="Shared_CoreSouth"/>
+    <token age="0" place="Shared_Mirco4_SouthernCoreMayMove"/>
+  </transition>
+  <transition id="Clock_SouthernCoreMovedTransition">
+    <token age="0" place="Shared_SouthernCoreMoved"/>
+  </transition>
+  <transition id="Clock_EasternCoreNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco5_EasternCoreMayMove"/>
+  </transition>
+  <transition id="Clock_WesternCoreNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco6_WesternCoreMayMove"/>
+  </transition>
+  <transition id="Clock_WesternInRoadNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco7_WesternInRoadMayMove"/>
+  </transition>
+  <transition id="Clock_EastInRoadNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco8_EasternInRoadMayMove"/>
+  </transition>
+  <transition id="Clock_NoWestCarEnteredTransition">
+    <token age="0" place="Shared_Mirco9_WestCarMayEnter"/>
+  </transition>
+  <transition id="Clock_NoEastCarEnteredTransition">
+    <token age="0" place="Shared_Micro10_EastCarMayEnter"/>
+  </transition>
+  <transition id="Clock_T15">
+    <token age="0" place="Shared_MicroFinished"/>
+  </transition>
+  <transition id="Clock_T20">
+    <token age="0" place="Clock_P30"/>
+    <token age="0" place="Shared_EasternDoubleMoveSafeguard"/>
+  </transition>
+  <transition id="Clock_T21">
+    <token age="0" place="Clock_P31"/>
+    <token age="0" place="Shared_WesternnDoubleMoveSafeguard"/>
+  </transition>
+  <transition id="Clock_T18">
+    <token age="0" place="Clock_P32"/>
+  </transition>
+  <transition id="TAPN1_NorthSink">
+    <token age="0" place="TAPN1_NorthOutroad"/>
+    <token age="0" place="Shared_Micro1_NorthernOutgoingMayMove"/>
+  </transition>
+  <transition id="Clock_NorthernOutRoadMovedTransition">
+    <token age="0" place="Shared_NorthernOutRoadMoved"/>
+  </transition>
+  <transition id="TAPN1_SouthSink">
+    <token age="0" place="TAPN1_SouthOutroad"/>
+    <token age="0" place="Shared_Micro2_SouthernOutGoingMayMove"/>
+  </transition>
+</trace>
