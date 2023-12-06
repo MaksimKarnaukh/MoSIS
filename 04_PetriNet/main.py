@@ -1,6 +1,5 @@
 import RC as rc
 import os
-import graphviz as gv
 
 
 def generate_graph(input_file, output_file, type, extra_args=""):
