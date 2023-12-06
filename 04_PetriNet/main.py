@@ -8,6 +8,8 @@ def generate_graph(input_file, output_file, type, extra_args=""):
 
 
 input_file = "./Petrinets/Petrinet1.tapn"
+# input_file = "./Petrinets/Petrinet2_finite_reach.tapn"
+
 
 if __name__ == '__main__':
 
@@ -18,3 +20,4 @@ if __name__ == '__main__':
     generate_graph(input_file, "./output/reach.dot", "reachability", "-p -I 100")
 
     generate_graph(input_file, "./output/cov.dot", "coverability", "-p")
+
