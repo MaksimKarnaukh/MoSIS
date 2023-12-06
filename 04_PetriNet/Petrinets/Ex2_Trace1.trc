@@ -36,7 +36,7 @@
   <transition id="Clock_WestCarEnteredTransition">
     <token age="0" place="Shared_EastCarEntered"/>
   </transition>
-  <transition id="Clock_T15">
+  <transition id="Clock_ResetGuardsTransition">
     <token age="0" place="Shared_MicroFinished"/>
   </transition>
   <transition id="Clock_T20">
@@ -47,7 +47,7 @@
     <token age="0" place="Clock_P31"/>
     <token age="0" place="Shared_WesternnDoubleMoveSafeguard"/>
   </transition>
-  <transition id="Clock_T18">
+  <transition id="Clock_TickClockTransition">
     <token age="0" place="Clock_P32"/>
   </transition>
   <transition id="Clock_NoNorthernOutRoadMovedTransition">
@@ -88,7 +88,7 @@
   <transition id="Clock_NoEastCarEnteredTransition">
     <token age="0" place="Shared_Micro10_EastCarMayEnter"/>
   </transition>
-  <transition id="Clock_T15">
+  <transition id="Clock_ResetGuardsTransition">
     <token age="0" place="Shared_MicroFinished"/>
   </transition>
   <transition id="Clock_T20">
@@ -99,7 +99,7 @@
     <token age="0" place="Clock_P31"/>
     <token age="0" place="Shared_WesternnDoubleMoveSafeguard"/>
   </transition>
-  <transition id="Clock_T18">
+  <transition id="Clock_TickClockTransition">
     <token age="0" place="Clock_P32"/>
   </transition>
   <transition id="Clock_NoNorthernOutRoadMovedTransition">
@@ -142,7 +142,7 @@
   <transition id="Clock_NoEastCarEnteredTransition">
     <token age="0" place="Shared_Micro10_EastCarMayEnter"/>
   </transition>
-  <transition id="Clock_T15">
+  <transition id="Clock_ResetGuardsTransition">
     <token age="0" place="Shared_MicroFinished"/>
   </transition>
   <transition id="Clock_T19">
@@ -151,7 +151,7 @@
   <transition id="Clock_T22">
     <token age="0" place="Clock_P31"/>
   </transition>
-  <transition id="Clock_T18">
+  <transition id="Clock_TickClockTransition">
     <token age="0" place="Clock_P32"/>
   </transition>
   <transition id="Clock_NoNorthernOutRoadMovedTransition">
@@ -192,7 +192,7 @@
   <transition id="Clock_NoEastCarEnteredTransition">
     <token age="0" place="Shared_Micro10_EastCarMayEnter"/>
   </transition>
-  <transition id="Clock_T15">
+  <transition id="Clock_ResetGuardsTransition">
     <token age="0" place="Shared_MicroFinished"/>
   </transition>
   <transition id="Clock_T20">
@@ -203,7 +203,7 @@
     <token age="0" place="Clock_P31"/>
     <token age="0" place="Shared_WesternnDoubleMoveSafeguard"/>
   </transition>
-  <transition id="Clock_T18">
+  <transition id="Clock_TickClockTransition">
     <token age="0" place="Clock_P32"/>
   </transition>
   <transition id="TAPN1_NorthSink">
@@ -216,5 +216,46 @@
   <transition id="TAPN1_SouthSink">
     <token age="0" place="TAPN1_SouthOutroad"/>
     <token age="0" place="Shared_Micro2_SouthernOutGoingMayMove"/>
+  </transition>
+  <transition id="Clock_SouthernOutRoadMovedTransition">
+    <token age="0" place="Shared_SouthernOutRoadMoved"/>
+  </transition>
+  <transition id="Clock_NoNorthernCoreMovedTransition">
+    <token age="0" place="Shared_Micro3_NorthernCoreMayMove"/>
+  </transition>
+  <transition id="Clock_NoSouthernCoreMovedTransition">
+    <token age="0" place="Shared_Mirco4_SouthernCoreMayMove"/>
+  </transition>
+  <transition id="Clock_EasternCoreNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco5_EasternCoreMayMove"/>
+  </transition>
+  <transition id="Clock_WesternCoreNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco6_WesternCoreMayMove"/>
+  </transition>
+  <transition id="Clock_WesternInRoadNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco7_WesternInRoadMayMove"/>
+  </transition>
+  <transition id="Clock_EastInRoadNotOccupiedTransition">
+    <token age="0" place="Shared_Mirco8_EasternInRoadMayMove"/>
+  </transition>
+  <transition id="Clock_NoWestCarEnteredTransition">
+    <token age="0" place="Shared_Mirco9_WestCarMayEnter"/>
+  </transition>
+  <transition id="Clock_NoEastCarEnteredTransition">
+    <token age="0" place="Shared_Micro10_EastCarMayEnter"/>
+  </transition>
+  <transition id="Clock_ResetGuardsTransition">
+    <token age="0" place="Shared_MicroFinished"/>
+  </transition>
+  <transition id="Clock_T20">
+    <token age="0" place="Clock_P30"/>
+    <token age="0" place="Shared_EasternDoubleMoveSafeguard"/>
+  </transition>
+  <transition id="Clock_T21">
+    <token age="0" place="Clock_P31"/>
+    <token age="0" place="Shared_WesternnDoubleMoveSafeguard"/>
+  </transition>
+  <transition id="Clock_TickClockTransition">
+    <token age="0" place="Clock_P32"/>
   </transition>
 </trace>
