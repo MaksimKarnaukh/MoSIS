@@ -505,6 +505,11 @@ class PetriNet:
 		self.setMarking(initial)
 		print("Creating graph with %i nodes..." % len(markings))
 
+		print(self.places)
+		for idx, i in enumerate(self.places):
+			print(idx, self.places[i])
+		print(len(self.places))
+
 		if lc > iterations:
 			print("WARNING: The Coverability Graph's construction was prematurely terminated.\n"
 					"         The graph may be incomplete.")

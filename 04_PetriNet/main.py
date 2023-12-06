@@ -1,6 +1,5 @@
 import RC as rc
 import os
-import graphviz as gv
 
 
 def generate_graph(input_file, output_file, type, extra_args=""):
@@ -16,6 +15,6 @@ if __name__ == '__main__':
     # file is optional and the 'type' is expected to be a prefix of either 'reachability' or
     # 'coverability' (case-insensitve)
 
-    generate_graph(input_file, "./output/reach.dot", "reachability", "-p -I 200")
+    generate_graph(input_file, "./output/reach.dot", "reachability", "-p -I 100")
 
     generate_graph(input_file, "./output/cov.dot", "coverability", "-p")
