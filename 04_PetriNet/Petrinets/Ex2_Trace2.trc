@@ -33,7 +33,7 @@
   <transition id="Clock_WestCarEnteredTransition">
     <token age="0" place="Shared_EastCarEntered"/>
   </transition>
-  <transition id="Clock_T15">
+  <transition id="Clock_ResetGuardsTransition">
     <token age="0" place="Shared_MicroFinished"/>
   </transition>
   <transition id="Clock_T20">
@@ -44,7 +44,7 @@
     <token age="0" place="Clock_P31"/>
     <token age="0" place="Shared_WesternnDoubleMoveSafeguard"/>
   </transition>
-  <transition id="Clock_T18">
+  <transition id="Clock_TickClockTransition">
     <token age="0" place="Clock_P32"/>
   </transition>
   <transition id="Clock_NoNorthernOutRoadMovedTransition">
@@ -84,7 +84,7 @@
   <transition id="Clock_WestCarEnteredTransition">
     <token age="0" place="Shared_EastCarEntered"/>
   </transition>
-  <transition id="Clock_T15">
+  <transition id="Clock_ResetGuardsTransition">
     <token age="0" place="Shared_MicroFinished"/>
   </transition>
   <transition id="Clock_T20">
@@ -95,7 +95,7 @@
     <token age="0" place="Clock_P31"/>
     <token age="0" place="Shared_WesternnDoubleMoveSafeguard"/>
   </transition>
-  <transition id="Clock_T18">
+  <transition id="Clock_TickClockTransition">
     <token age="0" place="Clock_P32"/>
   </transition>
   <transition id="Clock_NoNorthernOutRoadMovedTransition">
