@@ -693,6 +693,8 @@ if __name__ == '__main__':
 		if invs != "":
 			print("P-Invariants:")
 			print(invs + "\n")
+		else:
+			print("No P-Invariants found.\n")
 	if args.markings:
 		print("The markings are given w.r.t. the following places:", [net.places[x][0] for x in net._mvec])
 	gv = ""
