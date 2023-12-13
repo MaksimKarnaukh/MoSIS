@@ -42,7 +42,10 @@ class Statechart:
 		self.set_yellow_value = None
 		self.set_yellow_observable = Observable()
 		
+		self.__internal_event_queue = queue.Queue()
 		self.in_event_queue = queue.Queue()
+		self.local_set_led = None
+		self.local_set_led_value = None
 		
 		# enumeration of all states:
 		self.__State = Statechart.State
@@ -53,7 +56,7 @@ class Statechart:
 		
 		# for timed statechart:
 		self.timer_service = None
-		self.__time_events = [None] * 3
+		self.__time_events = [None] * 4
 		
 		# initializations:
 		self.__is_executing = False
@@ -84,7 +87,7 @@ class Statechart:
 	def time_elapsed(self, event_id):
 		"""Add time events to in event queue
 		"""
-		if event_id in range(3):
+		if event_id in range(4):
 			self.in_event_queue.put(lambda: self.raise_time_event(event_id))
 			self.run_cycle()
 	
@@ -97,10 +100,23 @@ class Statechart:
 		func()
 	
 	def __get_next_event(self):
+		if not self.__internal_event_queue.empty():
+			return self.__internal_event_queue.get()
 		if not self.in_event_queue.empty():
 			return self.in_event_queue.get()
 		return None
 	
+	
+	def raise_local_set_led(self, value):
+		"""Raise method for event local_set_led.
+		"""
+		self.__internal_event_queue.put(lambda: self.__raise_local_set_led_call(value))
+	
+	def __raise_local_set_led_call(self, value):
+		"""Raise callback for event local_set_led.
+		"""
+		self.local_set_led = True
+		self.local_set_led_value = value
 	
 	def raise_button_pressed(self):
 		"""Raise method for event button_pressed.
@@ -140,20 +156,23 @@ class Statechart:
 		"""
 		#Entry action for state 'red'.
 		self.timer_service.set_timer(self, 0, (2 * 1000), False)
+		self.timer_service.set_timer(self, 1, (1 * 1000), False)
 		self.set_red_observable.next(True)
 		
 	def __entry_action_main_region_green(self):
 		"""Entry action for state 'green'..
 		"""
 		#Entry action for state 'green'.
-		self.timer_service.set_timer(self, 1, (2 * 1000), False)
+		self.timer_service.set_timer(self, 2, (2 * 1000), False)
 		self.set_green_observable.next(True)
+		self.set_led_observable.next(True)
+		self.raise_local_set_led(True)
 		
 	def __entry_action_main_region_yellow(self):
 		"""Entry action for state 'yellow'..
 		"""
 		#Entry action for state 'yellow'.
-		self.timer_service.set_timer(self, 2, (1 * 1000), False)
+		self.timer_service.set_timer(self, 3, (1 * 1000), False)
 		self.set_yellow_observable.next(True)
 		
 	def __exit_action_main_region_red(self):
@@ -161,18 +180,19 @@ class Statechart:
 		"""
 		#Exit action for state 'red'.
 		self.timer_service.unset_timer(self, 0)
+		self.timer_service.unset_timer(self, 1)
 		
 	def __exit_action_main_region_green(self):
 		"""Exit action for state 'green'..
 		"""
 		#Exit action for state 'green'.
-		self.timer_service.unset_timer(self, 1)
+		self.timer_service.unset_timer(self, 2)
 		
 	def __exit_action_main_region_yellow(self):
 		"""Exit action for state 'yellow'..
 		"""
 		#Exit action for state 'yellow'.
-		self.timer_service.unset_timer(self, 2)
+		self.timer_service.unset_timer(self, 3)
 		
 	def __enter_sequence_main_region_red_default(self):
 		"""'default' enter sequence for state red.
@@ -262,6 +282,12 @@ class Statechart:
 				self.__enter_sequence_main_region_green_default()
 				self.__react(0)
 				transitioned_after = 0
+			elif (self.__time_events[1]) and (self.local_set_led_value):
+				self.__exit_sequence_main_region_red()
+				self.__time_events[1] = False
+				self.__enter_sequence_main_region_red_default()
+				self.__react(0)
+				transitioned_after = 0
 		#If no transition was taken
 		if transitioned_after == transitioned_before:
 			#then execute local reactions.
@@ -275,9 +301,9 @@ class Statechart:
 		#The reactions of state green.
 		transitioned_after = transitioned_before
 		if transitioned_after < 0:
-			if self.__time_events[1]:
+			if self.__time_events[2]:
 				self.__exit_sequence_main_region_green()
-				self.__time_events[1] = False
+				self.__time_events[2] = False
 				self.__enter_sequence_main_region_yellow_default()
 				self.__react(0)
 				transitioned_after = 0
@@ -294,9 +320,9 @@ class Statechart:
 		#The reactions of state yellow.
 		transitioned_after = transitioned_before
 		if transitioned_after < 0:
-			if self.__time_events[2]:
+			if self.__time_events[3]:
 				self.__exit_sequence_main_region_yellow()
-				self.__time_events[2] = False
+				self.__time_events[3] = False
 				self.__enter_sequence_main_region_red_default()
 				self.__react(0)
 				transitioned_after = 0
@@ -316,6 +342,13 @@ class Statechart:
 		self.__time_events[0] = False
 		self.__time_events[1] = False
 		self.__time_events[2] = False
+		self.__time_events[3] = False
+	
+	
+	def __clear_internal_events(self):
+		"""Implementation of __clear_internal_events function.
+		"""
+		self.local_set_led = False
 	
 	
 	def __micro_step(self):
@@ -347,6 +380,7 @@ class Statechart:
 		while condition_0:
 			self.__micro_step()
 			self.__clear_in_events()
+			self.__clear_internal_events()
 			condition_0 = False
 			next_event = self.__get_next_event()
 			if next_event is not None:
