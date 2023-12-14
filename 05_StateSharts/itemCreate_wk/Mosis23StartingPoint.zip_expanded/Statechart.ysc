@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0">
-  <sgraph:Statechart xmi:id="_kIaZEJVLEe6b9-O1typuNw" specification="// Use the event driven execution model.&#xA;// Switch to cycle based behavior&#xA;// by specifying '@CycleBased(200)'.&#xA;@EventDriven&#xA;&#xA;// Use @SuperSteps(yes) to enable&#xA;// super step semantics.&#xA;@SuperSteps(no)&#xD;&#xA;&#xA;interface hmi:&#xA;&#x9;out event policeInterrupt&#xA;&#x9;&#xA;interface controller:&#xA;&#x9;in event buttonPressed&#xA;&#x9;in event buttonReleased&#xA;&#x9;in event carDetected&#xA;&#x9;&#xA;&#x9;out event setLED: boolean&#xA;&#x9;&#xA;&#x9;out event setRed: boolean&#xA;&#x9;out event setYellow: boolean&#xA;&#x9;out event setGreen: boolean" name="Statechart">
+  <sgraph:Statechart xmi:id="_kIaZEJVLEe6b9-O1typuNw" specification="// Use the event driven execution model.&#xA;// Switch to cycle based behavior&#xA;// by specifying '@CycleBased(200)'.&#xA;@EventDriven&#xA;&#xA;// Use @SuperSteps(yes) to enable&#xA;// super step semantics.&#xA;@SuperSteps(no)&#xD;&#xA;&#xA;internal:&#xA;&#x9;event policeInterrupt&#xA;&#x9;&#xA;interface:&#xA;&#x9;in event buttonPressed&#xA;&#x9;in event buttonReleased&#xA;&#x9;in event carDetected&#xA;&#x9;&#xA;&#x9;out event setLED: boolean&#xA;&#x9;&#xA;&#x9;out event setRed: boolean&#xA;&#x9;out event setYellow: boolean&#xA;&#x9;out event setGreen: boolean" name="Statechart">
     <regions xmi:id="_kIdcY5VLEe6b9-O1typuNw" name="main region">
       <vertices xsi:type="sgraph:State" xmi:id="_BJ108JiOEe64iIGqF_g53w" name="orthogonal" incomingTransitions="_-K8lcJiOEe64iIGqF_g53w">
         <regions xmi:id="_BJ2cAJiOEe64iIGqF_g53w" name="TOGGLE MODE BUTTON">
           <vertices xsi:type="sgraph:State" xmi:id="_tyA15plXEe6m3Jl4mywE3Q" name="not pressed" incomingTransitions="_tyCEBplXEe6m3Jl4mywE3Q _tyBc6plXEe6m3Jl4mywE3Q _tyCD_JlXEe6m3Jl4mywE3Q" documentation="The light can be switched from &quot;dumb mode&quot; to &quot;smart mode&quot; (and back) by pressing the TOGGLE MODE-button, and releasing the button quickly (pressed down for strictly less than 2 seconds).&#xD;&#xA;">
-            <outgoingTransitions xmi:id="_tyBc4plXEe6m3Jl4mywE3Q" specification="controller.buttonPressed" target="_tyBc55lXEe6m3Jl4mywE3Q"/>
+            <outgoingTransitions xmi:id="_tyBc4plXEe6m3Jl4mywE3Q" specification="buttonPressed" target="_tyBc55lXEe6m3Jl4mywE3Q"/>
           </vertices>
           <vertices xsi:type="sgraph:State" xmi:id="_tyBc55lXEe6m3Jl4mywE3Q" name="pressed" incomingTransitions="_tyBc4plXEe6m3Jl4mywE3Q">
-            <outgoingTransitions xmi:id="_tyBc6plXEe6m3Jl4mywE3Q" specification="controller.buttonReleased / &#xD;&#xA;raise controller.setLED: !valueof(controller.setLED)" documentation="There is a status LED that must be on if and only if &quot;smart mode&quot; is activated (initially it is off since we start in &quot;dumb mode&quot;).&#xD;&#xA;" target="_tyA15plXEe6m3Jl4mywE3Q"/>
-            <outgoingTransitions xmi:id="_tyCD_JlXEe6m3Jl4mywE3Q" specification="after 2 s / &#xD;&#xA;raise hmi.policeInterrupt" documentation="Pressing and holding the TOGGLE MODE-button for at least 2 seconds, and then releasing it, starts or ends a &quot;police interrupt&quot;. A police interrupt completely overrides the functionality of the traffic light. A police interrupt shows a blinking yellow light. When a police interrupt starts, the yellow light turns on immediately, and stays on for 500 milliseconds, and then off for 500 milliseconds, then on again, etc." target="_tyA15plXEe6m3Jl4mywE3Q"/>
+            <outgoingTransitions xmi:id="_tyBc6plXEe6m3Jl4mywE3Q" specification="buttonReleased / &#xD;&#xA;raise setLED: !valueof(setLED)" documentation="There is a status LED that must be on if and only if &quot;smart mode&quot; is activated (initially it is off since we start in &quot;dumb mode&quot;).&#xD;&#xA;" target="_tyA15plXEe6m3Jl4mywE3Q"/>
+            <outgoingTransitions xmi:id="_tyCD_JlXEe6m3Jl4mywE3Q" specification="after 2 s / &#xD;&#xA;raise policeInterrupt" documentation="Pressing and holding the TOGGLE MODE-button for at least 2 seconds, and then releasing it, starts or ends a &quot;police interrupt&quot;. A police interrupt completely overrides the functionality of the traffic light. A police interrupt shows a blinking yellow light. When a police interrupt starts, the yellow light turns on immediately, and stays on for 500 milliseconds, and then off for 500 milliseconds, then on again, etc." target="_tyA15plXEe6m3Jl4mywE3Q"/>
           </vertices>
           <vertices xsi:type="sgraph:Entry" xmi:id="_tyCEBZlXEe6m3Jl4mywE3Q">
             <outgoingTransitions xmi:id="_tyCEBplXEe6m3Jl4mywE3Q" specification="" target="_tyA15plXEe6m3Jl4mywE3Q"/>
@@ -17,12 +17,12 @@
         </regions>
         <regions xmi:id="_BJ2cAZiOEe64iIGqF_g53w" name="TRAFFIC LIGHT MODES">
           <vertices xsi:type="sgraph:State" xmi:id="_Z60l0JiPEe64iIGqF_g53w" name="normal" incomingTransitions="_DUZ9IJiQEe64iIGqF_g53w _OJU4QJiQEe64iIGqF_g53w" documentation="In &quot;dumb mode&quot;, the traffic light cycles through red, green, yellow and then red again. The light will be red for 2 seconds, green for 2 seconds, and yellow for 1 second.&#xD;&#xA;In &quot;smart mode&quot;, the behavior is identical to &quot;dumb mode&quot;, except that when the light is green, and a car is detected, the light will not turn yellow until 2 seconds have passed since the car-detection-event. For instance, if the light has been green for 1.1 seconds, and a car is detected, then the light will stay green for a total duration of 3.1 seconds.&#xD;&#xA;Even in &quot;smart mode&quot;, there is still a limit on how far the green period can be extended: the total green light duration must never be greater than 5 seconds.&#xD;&#xA;Switching between &quot;dumb mode&quot; and &quot;smart mode&quot; must be seamless: the light should not be reset (e.g., to red). The only difference between these modes is whether new car-detection-events are responded to or not. For instance:&#xD;&#xA;if the light is in &quot;dumb mode&quot;, and has been red for 0.2 seconds, and then switches to &quot;smart mode&quot;, it should remain red for the remaining 1.8 seconds.&#xD;&#xA;going from &quot;dumb mode&quot; to &quot;smart mode&quot;, the traffic light simply starts responding to car-detection-events, possibly extending the current green period (up to a maximum of 5 seconds, even if the switch from &quot;dumb&quot; to &quot;smart&quot; happened at some point during those 5 seconds)&#xD;&#xA;going from &quot;smart mode&quot; to &quot;dumb mode&quot;, the traffic light simply stops responding to car-detection events. If the current green period was already extended (due to car-detection-events before switching to &quot;dumb mode&quot;), then the green period remains extended.">
-            <outgoingTransitions xmi:id="_Kxn8oJiQEe64iIGqF_g53w" specification="hmi.policeInterrupt" documentation="&#xD;&#xA;" target="_nzDg8JiPEe64iIGqF_g53w"/>
+            <outgoingTransitions xmi:id="_Kxn8oJiQEe64iIGqF_g53w" specification="policeInterrupt" documentation="&#xD;&#xA;" target="_nzDg8JiPEe64iIGqF_g53w"/>
             <regions xmi:id="_Z60l05iPEe64iIGqF_g53w" name="r1">
-              <vertices xsi:type="sgraph:State" xmi:id="_Av7VgJlREe62qIgnk1CxGg" specification="entry / &#xD;&#xA;raise controller.setRed: true&#xD;&#xA;exit /&#xD;&#xA;raise controller.setRed: false" name="red" incomingTransitions="_Av78vZlREe62qIgnk1CxGg _Av8joZlREe62qIgnk1CxGg">
+              <vertices xsi:type="sgraph:State" xmi:id="_Av7VgJlREe62qIgnk1CxGg" specification="entry / &#xD;&#xA;raise setRed: true&#xD;&#xA;exit /&#xD;&#xA;raise setRed: false" name="red" incomingTransitions="_Av78vZlREe62qIgnk1CxGg _Av8joZlREe62qIgnk1CxGg">
                 <outgoingTransitions xmi:id="_Av7VqZlREe62qIgnk1CxGg" specification="after 2 s" target="_Av8jq5lREe62qIgnk1CxGg"/>
               </vertices>
-              <vertices xsi:type="sgraph:State" xmi:id="_Av78lJlREe62qIgnk1CxGg" specification="entry / &#xD;&#xA;raise controller.setYellow: true&#xD;&#xA;exit /&#xD;&#xA;raise controller.setYellow: false" name="yellow" incomingTransitions="_Av8jwJlREe62qIgnk1CxGg _Av8jpZlREe62qIgnk1CxGg">
+              <vertices xsi:type="sgraph:State" xmi:id="_Av78lJlREe62qIgnk1CxGg" specification="entry / &#xD;&#xA;raise setYellow: true&#xD;&#xA;exit /&#xD;&#xA;raise setYellow: false" name="yellow" incomingTransitions="_Av8jwJlREe62qIgnk1CxGg _Av8jpZlREe62qIgnk1CxGg">
                 <outgoingTransitions xmi:id="_Av78vZlREe62qIgnk1CxGg" specification="after 1 s" target="_Av7VgJlREe62qIgnk1CxGg"/>
               </vertices>
               <vertices xsi:type="sgraph:Entry" xmi:id="_Av8joJlREe62qIgnk1CxGg">
@@ -31,18 +31,18 @@
               <vertices xsi:type="sgraph:State" xmi:id="_Av8joplREe62qIgnk1CxGg" name="smart green" documentation="On entry, set green to true.&#xD;&#xA;After 2 seconds, if no car detected in &quot;smart mode&quot;, set green to false and transition to yellow.&#xD;&#xA;If a car is detected (and &quot;smart mode&quot; is on), extend green period by 2 seconds (limit on how far the green period can be extended: the total green light duration must never be greater than 5 seconds, this is why we have a transition from 'smart green' to yellow after 5 seconds). ">
                 <outgoingTransitions xmi:id="_Av8jpZlREe62qIgnk1CxGg" specification="after 5 s" target="_Av78lJlREe62qIgnk1CxGg"/>
                 <regions xmi:id="_Av8jqplREe62qIgnk1CxGg" name="r1">
-                  <vertices xsi:type="sgraph:State" xmi:id="_Av8jq5lREe62qIgnk1CxGg" specification="entry / &#xD;&#xA;raise controller.setGreen: true&#xD;&#xA;exit /&#xD;&#xA;raise controller.setGreen: false&#xD;&#xA;" name="green" incomingTransitions="_Av7VqZlREe62qIgnk1CxGg _Av8jxZlREe62qIgnk1CxGg">
+                  <vertices xsi:type="sgraph:State" xmi:id="_Av8jq5lREe62qIgnk1CxGg" specification="entry / &#xD;&#xA;raise setGreen: true&#xD;&#xA;exit /&#xD;&#xA;raise setGreen: false&#xD;&#xA;" name="green" incomingTransitions="_Av7VqZlREe62qIgnk1CxGg _Av8jxZlREe62qIgnk1CxGg">
                     <outgoingTransitions xmi:id="_Av8jwJlREe62qIgnk1CxGg" specification="after 2 s" target="_Av78lJlREe62qIgnk1CxGg"/>
-                    <outgoingTransitions xmi:id="_Av8jxZlREe62qIgnk1CxGg" specification="controller.carDetected &#xD;&#xA;[valueof(controller.setLED) == true]" target="_Av8jq5lREe62qIgnk1CxGg"/>
+                    <outgoingTransitions xmi:id="_Av8jxZlREe62qIgnk1CxGg" specification="carDetected [valueof(setLED) == true]" target="_Av8jq5lREe62qIgnk1CxGg"/>
                   </vertices>
                 </regions>
               </vertices>
             </regions>
           </vertices>
           <vertices xsi:type="sgraph:State" xmi:id="_nzDg8JiPEe64iIGqF_g53w" name="interrupted" incomingTransitions="_Kxn8oJiQEe64iIGqF_g53w" documentation="A police interrupt shows a blinking yellow light. When a police interrupt starts, the yellow light turns on immediately, and stays on for 500 milliseconds, and then off for 500 milliseconds, then on again, etc.&#xD;&#xA;During a &quot;police interrupt&quot;, &quot;smart mode&quot; can still be turned on or off in the usual manner (and the status LED should turn on and off accordingly). Of course, the chosen mode has no impact on the traffic light's behavior during a police interrupt.&#xD;&#xA;">
-            <outgoingTransitions xmi:id="_OJU4QJiQEe64iIGqF_g53w" specification="hmi.policeInterrupt" documentation="When a &quot;police interrupt&quot; ends, the traffic light is reset to a red light (for safety reasons), and resumes normal behavior (&quot;dumb&quot; or &quot;smart&quot;, depending on the active mode)." target="_Z60l0JiPEe64iIGqF_g53w"/>
+            <outgoingTransitions xmi:id="_OJU4QJiQEe64iIGqF_g53w" specification="policeInterrupt" documentation="When a &quot;police interrupt&quot; ends, the traffic light is reset to a red light (for safety reasons), and resumes normal behavior (&quot;dumb&quot; or &quot;smart&quot;, depending on the active mode)." target="_Z60l0JiPEe64iIGqF_g53w"/>
             <regions xmi:id="_nzDg85iPEe64iIGqF_g53w" name="r1">
-              <vertices xsi:type="sgraph:State" xmi:id="_rQFogJiPEe64iIGqF_g53w" specification="entry / raise controller.setYellow: true&#xD;&#xA;exit / raise controller.setYellow: false" name="yellow" incomingTransitions="_wqLSoJiPEe64iIGqF_g53w _86cxcJiPEe64iIGqF_g53w" documentation="Yellow light active only.">
+              <vertices xsi:type="sgraph:State" xmi:id="_rQFogJiPEe64iIGqF_g53w" specification="entry / raise setYellow: true&#xD;&#xA;exit / raise setYellow: false" name="yellow" incomingTransitions="_wqLSoJiPEe64iIGqF_g53w _86cxcJiPEe64iIGqF_g53w" documentation="Yellow light active only.">
                 <outgoingTransitions xmi:id="_6V5KAJiPEe64iIGqF_g53w" specification="after 500 ms" target="_s9gMkJiPEe64iIGqF_g53w"/>
               </vertices>
               <vertices xsi:type="sgraph:State" xmi:id="_s9gMkJiPEe64iIGqF_g53w" specification="" name="allblack" incomingTransitions="_6V5KAJiPEe64iIGqF_g53w" documentation="No light. Traffic light is all black.">
@@ -54,7 +54,7 @@
             </regions>
           </vertices>
           <vertices xsi:type="sgraph:Entry" xmi:id="_CqdoQJiQEe64iIGqF_g53w">
-            <outgoingTransitions xmi:id="_DUZ9IJiQEe64iIGqF_g53w" specification="/ raise controller.setLED: false" documentation="Initially, when the controller starts, the traffic is in &quot;dumb mode&quot;." target="_Z60l0JiPEe64iIGqF_g53w"/>
+            <outgoingTransitions xmi:id="_DUZ9IJiQEe64iIGqF_g53w" specification="/ raise setLED: false" documentation="Initially, when the controller starts, the traffic is in &quot;dumb mode&quot;." target="_Z60l0JiPEe64iIGqF_g53w"/>
           </vertices>
         </regions>
       </vertices>
@@ -495,7 +495,7 @@
     <edges xmi:id="_Av9Ky5lREe62qIgnk1CxGg" type="Transition" element="_Av8jxZlREe62qIgnk1CxGg" source="_Av12H5lREe62qIgnk1CxGg" target="_Av12H5lREe62qIgnk1CxGg">
       <children xsi:type="notation:DecorationNode" xmi:id="_Av9KzJlREe62qIgnk1CxGg" type="TransitionExpression">
         <styles xsi:type="notation:ShapeStyle" xmi:id="_Av9KzZlREe62qIgnk1CxGg"/>
-        <layoutConstraint xsi:type="notation:Location" xmi:id="_Av9KzplREe62qIgnk1CxGg" x="150" y="1"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_Av9KzplREe62qIgnk1CxGg" x="153" y="-7"/>
       </children>
       <styles xsi:type="notation:ConnectorStyle" xmi:id="_Av9Kz5lREe62qIgnk1CxGg" routing="Rectilinear" lineColor="4210752"/>
       <styles xsi:type="notation:FontStyle" xmi:id="_Av9K0JlREe62qIgnk1CxGg" fontName="Verdana"/>
