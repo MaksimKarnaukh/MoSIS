@@ -4,7 +4,7 @@ GeneratorModel for create::python {
 
 	const FOLDER : string = "srcgen"
 
-	statechart Statechart {
+	statechart A {
 		feature Outlet {
 			targetProject = PROJECT
 			targetFolder = FOLDER
