@@ -133,7 +133,7 @@ SCENARIOS = [
             (10174013700, "set_yellow", True),
             (10674013700, "set_yellow", False),
 
-            # We exit police interrupt mode
+            # We exit police interrupt mode (default light is red)
             (10674013700, "set_red", True),
             (12674013700, "set_red", False),
 
