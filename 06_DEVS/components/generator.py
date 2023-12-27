@@ -86,16 +86,24 @@ class Generator(AtomicDEVS):
     def outputFnc(self):
         # Outputs the newly generated Car.
         if self.state.next_car is None:
-            return {}
+            return {
+            }
         # if a car is generated, but not queried yet
         elif self.state.query_state == QueryState.NOT_SENT:
+
             # send the query
-            return {self.Q_send: Query(self.state.next_car.ID)}
+            return {self.Q_send: Query(self.state.next_car.ID),
+
+                    }
         # if a car is generated and acknowledged
         elif self.state.query_state == QueryState.ACKNOWLEDGED:
             # send the car
-            return {self.car_out: self.state.next_car}
+            return {
+                self.car_out: self.state.next_car,
 
+            }
+        print("This should not happen")
+        return {}
     def intTransition(self):
         self.state.time += self.timeAdvance()
         # if the car is created yet
@@ -103,18 +111,22 @@ class Generator(AtomicDEVS):
             # but not queried yet, it is now sent
             if self.state.query_state == QueryState.NOT_SENT:
                 self.state.query_state = QueryState.SENT
+                self.state.next_time = INFINITY
             # elif a car is generated and acknowledged, it is now neither
             elif self.state.query_state == QueryState.ACKNOWLEDGED:
                 self.state.query_state = QueryState.NOT_SENT
                 self.state.next_car = None
+                # next time is the IAT of the next car
+                self.state.next_time = random.uniform(self.state.IAT_min, self.state.IAT_max)
         # if the car has not been created yet
         else:
+            self.state.query_state = QueryState.NOT_SENT
             # if the count is under the limit, create a new one
             if self.state.generated_car_count < self.state.limit:
                 self.state.next_car = self.createCar()
-                self.state.query_state = QueryState.NOT_SENT
+                self.state.next_time = 0.0
+            # else, there is no next_car and the count is over the limit, so do nothing
             else:
-                # else, there is no next_car and the count is over the limit, so do nothing
                 self.state.next_car = None
                 self.state.next_time = INFINITY
         return self.state
