@@ -94,32 +94,29 @@ class Generator(AtomicDEVS):
         # if a car is generated and acknowledged
         elif self.state.query_state == QueryState.ACKNOWLEDGED:
             # send the car
-            return {
-                self.car_out: self.state.next_car
-            }
+            return {self.car_out: self.state.next_car}
 
     def intTransition(self):
         self.state.time += self.timeAdvance()
-        # if there is a next_car, send it over the car_out port
+        # if the car is created yet
         if self.state.next_car is not None:
-            self.state.next_car = None
-        # if a car is generated, but not queried yet, it is now sent
-        elif self.state.query_state == QueryState.NOT_SENT:
-            self.state.query_state = QueryState.SENT
-        # if a car is generated and acknowledged, it is now neither
-        elif self.state.query_state == QueryState.ACKNOWLEDGED:
-            self.state.query_state = QueryState.NOT_SENT
-            self.state.next_car = None
-
-
-        # elif there is no next_car and the count is under the limit, generate a new one
-        elif self.state.generated_car_count < self.state.limit:
-            self.state.next_car = self.generateCar()
-            self.state.query_state = QueryState.NOT_SENT
+            # but not queried yet, it is now sent
+            if self.state.query_state == QueryState.NOT_SENT:
+                self.state.query_state = QueryState.SENT
+            # elif a car is generated and acknowledged, it is now neither
+            elif self.state.query_state == QueryState.ACKNOWLEDGED:
+                self.state.query_state = QueryState.NOT_SENT
+                self.state.next_car = None
+        # if the car has not been created yet
         else:
-            # else, there is no next_car and the count is over the limit, so do nothing
-            self.state.next_car = None
-            self.state.next_time = INFINITY
+            # if the count is under the limit, create a new one
+            if self.state.generated_car_count < self.state.limit:
+                self.state.next_car = self.createCar()
+                self.state.query_state = QueryState.NOT_SENT
+            else:
+                # else, there is no next_car and the count is over the limit, so do nothing
+                self.state.next_car = None
+                self.state.next_time = INFINITY
         return self.state
 
     def extTransition(self, inputs):
@@ -129,7 +126,7 @@ class Generator(AtomicDEVS):
             self.state.query_state = QueryState.ACKNOWLEDGED
         return self.state
 
-    def generateCar(self):
+    def createCar(self):
         """
 
         """
