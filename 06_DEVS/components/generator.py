@@ -89,13 +89,10 @@ class Generator(AtomicDEVS):
             return {}
         # if a car is generated, but not queried yet
         elif self.state.query_state == QueryState.NOT_SENT:
-            # todo
             # send the query
             return {self.Q_send: Query(self.state.next_car.ID)}
         # if a car is generated and acknowledged
         elif self.state.query_state == QueryState.ACKNOWLEDGED:
-            # todo
-
             # send the car
             return {
                 self.car_out: self.state.next_car
