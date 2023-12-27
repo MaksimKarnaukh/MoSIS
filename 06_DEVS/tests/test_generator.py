@@ -19,6 +19,7 @@ class TestGenerator(unittest.TestCase):
 
 		sim = Simulator(model)
 		sim.setClassicDEVS()
+		sim.setVerbose()
 		sim.simulate()
 
 		cars = [x[1] for x in cl.state["data"]]
