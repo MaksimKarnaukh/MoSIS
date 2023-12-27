@@ -102,8 +102,9 @@ class Generator(AtomicDEVS):
                 self.car_out: self.state.next_car,
 
             }
-        print("This should not happen")
-        return {}
+        # throw error
+        raise Exception("Invalid state")
+
     def intTransition(self):
         self.state.time += self.timeAdvance()
         # if the car is created yet
