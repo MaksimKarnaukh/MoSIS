@@ -100,7 +100,6 @@ class Generator(AtomicDEVS):
             # send the car
             return {
                 self.car_out: self.state.next_car,
-
             }
         # throw error
         raise Exception("Invalid state")
