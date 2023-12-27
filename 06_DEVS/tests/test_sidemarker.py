@@ -3,7 +3,7 @@ import unittest
 from tests.helpers import *
 
 from components.sidemarker import SideMarker
-from components.messages import *
+from components.messages import QueryAck
 
 from pypdevs.simulator import Simulator
 
