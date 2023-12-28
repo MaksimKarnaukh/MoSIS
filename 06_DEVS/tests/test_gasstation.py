@@ -25,7 +25,6 @@ class TestGasStation(unittest.TestCase):
 
 		times = [x[0] - x[1].departure_time for x in cl.state["data"]]
 		cars = [x[1] for x in cl.state["data"]]
-
 		self.assertSetEqual(set(c.ID for c in cars), set(x for x in range(1000)))
 
 		avg_time = sum(times) / len(times)

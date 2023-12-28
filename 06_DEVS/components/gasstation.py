@@ -94,12 +94,12 @@ class GasStation(AtomicDEVS):
         self.Q_send = self.addOutPort("Q_send")
 
     def timeAdvance(self):
-
-        # return the delay of the first car
-        if len(self.state.cars) > 0:
-            return self.state.cars[0][0]
-        return INFINITY
-
+        if self.state.gasStationIsAvailable():
+            # return the delay of the first car
+            if len(self.state.cars) > 0:
+                return max(0.0, self.state.cars[0][0])
+            return INFINITY
+        return self.state.next_time
 
     def outputFnc(self):
         # if self.state.next_car is None:
@@ -125,22 +125,21 @@ class GasStation(AtomicDEVS):
         # if there is no next car and there are cars in the queue
         if self.state.gasStationIsAvailable():
             if len(self.state.cars) > 0:
-                first_car = self.state.cars[0]
                 # if the car with the shortest delay is ready to enter the GasStation
-                if first_car[0] <= 0.0:
-                    self.state.next_car = first_car
-                    self.car_out = self.state.cars.pop(0)
+                if self.state.cars[0][0] <= 0.0:
+                    self.state.next_car = self.state.cars.pop(0)
                     self.state.query_state = QueryState.NOT_SENT
                     self.state.next_time = 0.0
-                # if the car with the shortest delay is not ready to enter the GasStation
-                else:
-                    self.state.next_time = first_car[0]
         else:
             # if there is a next car and it is not queried yet
             if self.state.query_state == QueryState.NOT_SENT:
                 # send the query
                 self.state.query_state = QueryState.SENT
                 self.state.next_time = INFINITY
+            if self.state.query_state == QueryState.ACKNOWLEDGED:
+                self.state.query_state = QueryState.AVAILABLE
+                self.state.next_car = None
+
         return self.state
 
     def extTransition(self, inputs):
@@ -154,18 +153,17 @@ class GasStation(AtomicDEVS):
             # As soon as one is entered, it is given a delay time,
             # sampled from a normal distribution with mean 10 minutes and standard deviation of 130 seconds
             # A car is required to stay at least 2 minutes in the GasStation.
-            delay_time = min(self.state.minimum_car_stay, random.normalvariate(self.state.delay_dist_mean, self.state.delay_dist_std))
+            delay_time = max(self.state.minimum_car_stay, random.normalvariate(self.state.delay_dist_mean, self.state.delay_dist_std))
             self.state.carArrived(inputs[self.car_in], delay_time)
-
-            self.state.next_time = delay_time
 
         elif self.Q_rack in inputs:
             # When a QueryAck is received, the GasStation waits for QueryAck's t_until_dep time
             # before outputting the next Car over the car_out output.
             self.state.next_time = inputs[self.Q_rack].t_until_dep
-            self.state.query_state = QueryState.AVAILABLE
             if self.state.next_time == INFINITY:
                 self.state.next_time = self.state.observ_delay
                 self.state.query_state = QueryState.NOT_SENT
+            else:
+                self.state.query_state = QueryState.ACKNOWLEDGED
 
         return self.state
