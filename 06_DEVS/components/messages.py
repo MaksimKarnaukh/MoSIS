@@ -28,18 +28,18 @@ class Car:
     # The (simulation) time at which the Car is created.
     departure_time: float
     # The total distance th at the Car has traveled.
-    distance_traveled: float
+    # distance_traveled: float
     # The current velocity.
     # By default, it is initialized to be the same as v_pref, but may change during the simulation.
     # This value is used for all the distance computations etc.
     v: float
     # Indicator that the Car needs gas.
-    no_gas: bool
+    no_gas: bool = False
     # The target destination of the Car.
     # This will help for path planning etc in a more detailed library.
     # Later on in the assignment, this value will be used for CrossRoads.
-    destination: str
-
+    destination: str = None
+    distance_traveled: float = 0.0
 
 
 
