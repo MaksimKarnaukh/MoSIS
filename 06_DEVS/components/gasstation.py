@@ -106,7 +106,7 @@ class GasStation(AtomicDEVS):
         #     return {}
         if self.state.query_state == QueryState.NOT_SENT and not self.state.gasStationIsAvailable():
             return {
-                self.Q_send: Query(self.state.next_car.ID),
+                self.Q_send: Query(self.state.next_car[1].ID),
             }
 
         elif self.state.query_state == QueryState.ACKNOWLEDGED:
