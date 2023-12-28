@@ -80,6 +80,11 @@ class RoadSegment(AtomicDEVS):
         """
         super(RoadSegment, self).__init__(name)
         self.state = RoadSegmentState([], None, None)
+        self.L: float = L
+        self.v_max: float = v_max
+        self.observ_delay: float = observ_delay
+        self.priority: bool = priority
+        self.lane: int = lane
 
         # All Cars are inputted on this port. As soon as a Car arrives, a Query is outputted over the Q_send port.
         self.car_in = self.addInPort("car_in")
@@ -99,51 +104,35 @@ class RoadSegment(AtomicDEVS):
         return self.state.next_time
 
     def outputFnc(self):
-        # Outputs the newly generated Car.
-        if self.state.next_car is None:
-            return {
-            }
-        # if a car is generated, but not queried yet
-        elif self.state.query_state == QueryState.NOT_SENT:
 
-            # send the query
-            return {self.Q_send: Query(self.state.next_car.ID),
-
-                    }
-        # if a car is generated and acknowledged
-        elif self.state.query_state == QueryState.ACKNOWLEDGED:
-            # send the car
-            return {
-                self.car_out: self.state.next_car,
-            }
         # throw error
         raise Exception("Invalid state")
 
     def intTransition(self):
         self.state.time += self.timeAdvance()
-        # if the car is created yet
-        if self.state.next_car is not None:
-            # but not queried yet, it is now sent
-            if self.state.query_state == QueryState.NOT_SENT:
-                self.state.query_state = QueryState.SENT
-                self.state.next_time = INFINITY
-            # elif a car is generated and acknowledged, it is now neither
-            elif self.state.query_state == QueryState.ACKNOWLEDGED:
-                self.state.query_state = QueryState.NOT_SENT
-                self.state.next_car = None
-                # next time is the IAT of the next car
-                self.state.next_time = random.uniform(self.state.IAT_min, self.state.IAT_max)
-        # if the car has not been created yet
+
+        # if there is no next car
+        if self.state.gasStationIsAvailable():
+            # if there are cars in the queue
+            if len(self.state.cars) > 0:
+                # if the car with the shortest delay is ready to enter the GasStation
+                if self.state.cars[0][0] <= 0.0:
+                    self.state.next_car = self.state.cars.pop(0)
+                    self.state.query_state = QueryState.NOT_SENT
+                    self.state.next_time = 0.0
         else:
-            self.state.query_state = QueryState.NOT_SENT
-            # if the count is under the limit, create a new one
-            if self.state.generated_car_count < self.state.limit:
-                self.state.next_car = self.createCar()
-                self.state.next_time = 0.0
-            # else, there is no next_car and the count is over the limit, so do nothing
-            else:
-                self.state.next_car = None
+            # if there is a next car and it is not queried yet
+            if self.state.query_state == QueryState.NOT_SENT:
+                # the query has been sent
+                self.state.query_state = QueryState.SENT
+                # wait for the QueryAck
                 self.state.next_time = INFINITY
+            # if the query has been sent and acknowledged
+            if self.state.query_state == QueryState.ACKNOWLEDGED:
+                # the car has left and the query is available again
+                self.state.query_state = QueryState.AVAILABLE
+                self.state.next_car = None
+
         return self.state
 
     def extTransition(self, inputs):
