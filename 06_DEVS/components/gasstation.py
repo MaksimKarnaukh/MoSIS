@@ -120,7 +120,7 @@ class GasStation(AtomicDEVS):
         self.state.time += self.timeAdvance()
 
         # decrease the delay of every car by self.elapsed
-        self.state.decreaseCarDelays(self.elapsed)
+        self.state.decreaseCarDelays(self.timeAdvance())
 
         # if there is no next car and there are cars in the queue
         if self.state.gasStationIsAvailable():
