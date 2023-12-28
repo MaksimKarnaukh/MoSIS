@@ -46,7 +46,7 @@ class GasStationState(object):
         """
         for i in range(len(self.cars)):
             # self.cars is a list of tuples (delay, car)
-            f.cars[i][0] -= elapsed_time
+            self.cars[i][0] -= elapsed_time
 
     def gasStationIsAvailable(self):
         return self.next_car is None
@@ -113,8 +113,8 @@ class GasStation(AtomicDEVS):
             return {
                 self.car_out: self.state.next_car,
             }
-
-        raise Exception("Invalid state")
+        else:
+            return {}
 
     def intTransition(self):
         self.state.time += self.timeAdvance()
