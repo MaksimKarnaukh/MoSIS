@@ -11,6 +11,9 @@ random.seed(42)
 
 
 class QueryState(Enum):
+    """
+    The state of the Query.
+    """
     NOT_SENT = 1
     SENT = 2
     ACKNOWLEDGED = 3
@@ -20,12 +23,27 @@ class GeneratorState(object):
     # Constants for the maximum allowed acceleration and deceleration.
     dv_neg_max: float = 21.0
     dv_pos_max: float = 28.0
+
     time: float = 0
     next_time: float = 0.0
     generated_car_count: int = 0
     query_state: QueryState = QueryState.NOT_SENT
 
     def __init__(self, IAT_min, IAT_max, v_pref_mu, v_pref_sigma, destinations, limit):
+        """
+        :param IAT_min (float):
+            Lower bound for the IAT uniform distribution.
+        :param IAT_max (float):
+            Upper bound for the IAT uniform distribution.
+        :param v_pref_mu (float):
+            Mean of the normal distribution that is used to sample v_pref.
+        :param v_pref_sigma (float):
+            Standard deviation of the normal distribution that is used to sample v_pref.
+        :param destinations (list):
+            A non-empty list of potential (string) destinations for the Cars. A random destination will be selected.
+        :param limit (int):
+            Upper limit of the number of Cars to generate.
+        """
         self.IAT_min: float = IAT_min
         self.IAT_max: float = IAT_max
         self.v_pref_mu: float = v_pref_mu
@@ -34,8 +52,6 @@ class GeneratorState(object):
         self.limit: int = limit
 
         self.next_car: Car = None
-
-        self.ackreceived: bool = False
 
 
 class Generator(AtomicDEVS):
@@ -140,7 +156,7 @@ class Generator(AtomicDEVS):
 
     def createCar(self):
         """
-
+        Function to create a new Car object with the necessary parameters.
         """
         # Upon generation, the Car's no_gas is randomly set to be either true or false.
         no_gas = random.choice([True, False])

@@ -10,22 +10,29 @@ random.seed(42)
 
 
 class QueryState(Enum):
+    """
+    The state of the Query.
+    """
     AVAILABLE = 1
     NOT_SENT = 2
     SENT = 3
     ACKNOWLEDGED = 4
 
 
-
-
-
 class GasStationState(object):
+
+    # Constants for delay time distribution
     delay_dist_mean: float = 600.0
     delay_dist_std: float = 130.0
-    minimum_car_stay: float = 120.0
 
+    minimum_car_stay: float = 120.0 # cars are required to stay at least 2 minutes in the GasStation.
 
     def __init__(self, observ_delay):
+        """
+        :param observ_delay:
+            The interval at which the GasStation must poll if the received QueryAck has an infinite delay.
+            Defaults to 0.1.
+        """
         self.query_state = QueryState.AVAILABLE
         self.observ_delay: float = observ_delay
         self.next_time: float = 0.0
