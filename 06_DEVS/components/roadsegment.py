@@ -11,51 +11,89 @@ random.seed(42)
 
 
 class QueryState(Enum):
+    """
+    The state of the Query.
+    """
     NOT_SENT = 1
     SENT = 2
     ACKNOWLEDGED = 3
 
 
-class GeneratorState(object):
-    # Constants for the maximum allowed acceleration and deceleration.
-    dv_neg_max: float = 21.0
-    dv_pos_max: float = 28.0
+class RoadSegmentState(object):
+
     time: float = 0
     next_time: float = 0.0
-    generated_car_count: int = 0
     query_state: QueryState = QueryState.NOT_SENT
 
-    def __init__(self, IAT_min, IAT_max, v_pref_mu, v_pref_sigma, destinations, limit):
-        self.IAT_min: float = IAT_min
-        self.IAT_max: float = IAT_max
-        self.v_pref_mu: float = v_pref_mu
-        self.v_pref_sigma: float = v_pref_sigma
-        self.destinations: List[str] = destinations
-        self.limit: int = limit
+    def __init__(self, cars_present: List[Car], t_until_dep: float, remaining_x: float):
+        """
+        :param cars_present (list):
+            A list for all the Cars on this RoadSegment.
+            Even though the existence of multiple Cars results in a collision,
+            for extensibility purposes a list should be used.
+        :param t_until_dep (float):
+            The time until the current Car (i.e., the first one in cars_present) leaves the RoadSegment.
+            If the Car's velocity is 0, this value is infinity. If no Car is present, this value is 0.
+        :param remaining_x (float):
+            The remaining distance that the current Car (i.e., the first one in cars_present)
+            should still travel on this RoadSegment.
+        """
+
+        # While the state should contain many more fields, the following three should at least be there.
+        self.cars_present: List[Car] = cars_present
+        self.t_until_dep: float = t_until_dep
+        self.remaining_x: float = remaining_x
 
         self.next_car: Car = None
-
         self.ackreceived: bool = False
 
 
 class RoadSegment(AtomicDEVS):
     """
+    Represents a small stretch of road that can only contain a single Car.
+    When multiple Cars are on a RoadSegment, we assume the Cars crashed into each other.
     """
+    observ_delay_default: float = 0.1
+    priority_default: bool = False
+    lane_default: int = 0
 
-    # The unique incremental identifier for the cars.
-    id_iter = itertools.count()
+    def __init__(self, name, L: float, v_max: float, observ_delay: float = observ_delay_default, priority: bool = priority_default, lane: int = lane_default):
+        """
+        :param name (str):
+            The name for this model. Must be unique inside a Coupled DEVS.
+        :param L (float):
+            The length of the RoadSegment.
+            Given that the average Car is about 5 meters in length, a good estimate value for L would therefore be 5 meters.
+        :param v_max (float):
+            The maximal allowed velocity on this RoadSegment.
+        :param observ_delay (float):
+            The time it takes to reply to a Query that was inputted.
+            This value mimics the reaction time of the driver.
+            We can increase the observ_delay to accommodate for bad weather situations (e.g., a lot of fog and/or rain).
+            Defaults to 0.1.
+        :param priority (bool):
+            Whether or not this RoadSegment should have priority on a merge with other road segments.
+            Defaults to False.
+        :param lane (int):
+            Indicator of the lane this Roadsegment is currently part of.
+            Defaults to 0.
+        """
+        super(RoadSegment, self).__init__(name)
+        self.state = RoadSegmentState([], None, None)
 
-    def __init__(self, name, ):
-        """
-        """
-        super(Generator, self).__init__(name)
-        self.state = GeneratorState()
+        # All Cars are inputted on this port. As soon as a Car arrives, a Query is outputted over the Q_send port.
+        self.car_in = self.addInPort("car_in")
+        # Port that receives Query events.
+        self.Q_recv = self.addInPort("Q_recv")
         # Port for receiving QueryAck events
         self.Q_rack = self.addInPort("Q_rack")
+
         # Port for outputting generated cars
         self.car_out = self.addOutPort("car_out")
         # Sends a Query as soon as the newly sampled IAT says so.
         self.Q_send = self.addOutPort("Q_send")
+        # Replies a QueryAck to a Query.
+        self.Q_sack = self.addOutPort("Q_sack")
 
     def timeAdvance(self):
         return self.state.next_time
@@ -114,3 +152,14 @@ class RoadSegment(AtomicDEVS):
             self.state.next_time = query_ack.t_until_dep
             self.state.query_state = QueryState.ACKNOWLEDGED
         return self.state
+
+    def car_enter(self, car: Car):
+        """
+        Adds a Car to the RoadSegment.
+
+        :param car (Car):
+            The Car that enters the RoadSegment.
+            Can be called to pre-fill the RoadSegment with a Car.
+        """
+        self.state.cars_present.append(car)
+        # todo
