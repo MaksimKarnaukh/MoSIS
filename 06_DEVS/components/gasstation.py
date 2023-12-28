@@ -111,7 +111,7 @@ class GasStation(AtomicDEVS):
 
         elif self.state.query_state == QueryState.ACKNOWLEDGED:
             return {
-                self.car_out: self.state.next_car,
+                self.car_out: self.state.next_car[1],
             }
         else:
             return {}
