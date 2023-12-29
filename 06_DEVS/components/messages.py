@@ -9,8 +9,6 @@ Made by:
 from dataclasses import dataclass, field
 
 
-
-
 @dataclass
 class Car:
     """
@@ -42,8 +40,6 @@ class Car:
     destination: str = None
 
 
-
-
 @dataclass
 class Query:
     """
@@ -51,9 +47,6 @@ class Query:
     """
     # The unique identifier of the Car that sends this Query.
     ID: int
-
-
-
 
 
 @dataclass
