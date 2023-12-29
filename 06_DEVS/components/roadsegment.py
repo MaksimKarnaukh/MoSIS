@@ -4,26 +4,21 @@ import random
 from typing import List
 from components.messages import Query, QueryAck, Car
 import itertools
+from components.querystate import QueryState
 from enum import Enum
-
 # set a seed for reproducibility
 random.seed(42)
 
 
-class QueryState(Enum):
-    """
-    The state of the Query.
-    """
-    NOT_SENT = 1
-    SENT = 2
-    ACKNOWLEDGED = 3
 
+class EventEnum(Enum):
+    SEND_QUERY = 0
+    RECEIVED_QUERY = 1
+    RECEIVED_ACKNOWLEDGEMENT = 2
+    CAR_OUT = 3
 
 class RoadSegmentState(object):
-
     time: float = 0
-    next_time: float = 0.0
-    query_state: QueryState = QueryState.NOT_SENT
 
     def __init__(self, cars_present: List[Car], t_until_dep: float, remaining_x: float):
         """
@@ -100,7 +95,29 @@ class RoadSegment(AtomicDEVS):
         # Replies a QueryAck to a Query.
         self.Q_sack = self.addOutPort("Q_sack")
 
+
+    def sortEventQueue(self):
+        self.state.event_queue.sort(key=lambda x: x[1])
+    def overwriteCarOutTime(self, new_time:float):
+        self.state.car_out_event[1] = new_time
+        self.sortEventQueue()
+
+    def nextEvent(self):
+        """
+        :returns: The next event in the event queue and the time it occurs.
+        """
+        if len(self.state.event_queue) == 0:
+            return [None, INFINITY]
+        return self.state.event_queue[0]
+
     def timeAdvance(self):
+        next_event = self.nextEvent()
+        if not next_event:
+            return INFINITY
+        next_time = next_event[1]
+        return max( 0.0, next_time )
+
+        # todo check
         return self.state.next_time
 
     def outputFnc(self):

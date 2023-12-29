@@ -48,7 +48,7 @@ class Fork(AtomicDEVS):
 
                     }
         # if a car is generated and acknowledged
-        elif self.state.query_state == QueryState.ACKNOWLEDGED:
+        elif self.state.query_state == QueryState.RECEIVED_ACKNOWLEDGEMENT:
             # send the car
             return {
                 self.car_out: self.state.next_car,
@@ -65,7 +65,7 @@ class Fork(AtomicDEVS):
                 self.state.query_state = QueryState.SENT
                 self.state.next_time = INFINITY
             # elif a car is generated and acknowledged, it is now neither
-            elif self.state.query_state == QueryState.ACKNOWLEDGED:
+            elif self.state.query_state == QueryState.RECEIVED_ACKNOWLEDGEMENT:
                 self.state.query_state = QueryState.NOT_SENT
                 self.state.next_car = None
                 # next time is the IAT of the next car
@@ -87,5 +87,5 @@ class Fork(AtomicDEVS):
         if self.Q_rack in inputs and self.state.query_state == QueryState.SENT:
             query_ack: QueryAck = inputs[self.Q_rack]
             self.state.next_time = query_ack.t_until_dep
-            self.state.query_state = QueryState.ACKNOWLEDGED
+            self.state.query_state = QueryState.RECEIVED_ACKNOWLEDGEMENT
         return self.state

@@ -3,20 +3,12 @@ from pypdevs.infinity import INFINITY
 import random
 from typing import List, Dict
 from components.messages import Query, QueryAck, Car
-from enum import Enum
-
+from components.querystate import QueryState
 # set a seed for reproducibility
 random.seed(42)
 
 
-class QueryState(Enum):
-    """
-    The state of the Query.
-    """
-    AVAILABLE = 1
-    NOT_SENT = 2
-    SENT = 3
-    ACKNOWLEDGED = 4
+
 
 
 class GasStationState(object):

@@ -6,7 +6,7 @@ Made by:
     - Sam Roggeman
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 
@@ -26,20 +26,20 @@ class Car:
     # The maximal amount of deceleration possible for this Car on a single RoadSegment.
     dv_neg_max: float
     # The (simulation) time at which the Car is created.
-    departure_time: float
-    # The total distance th at the Car has traveled.
+    departure_time: float = None
+    # The total distance that the Car has traveled.
     # distance_traveled: float
     # The current velocity.
     # By default, it is initialized to be the same as v_pref, but may change during the simulation.
+    distance_traveled: float = 0.0
     # This value is used for all the distance computations etc.
-    v: float
+    v: float = None
     # Indicator that the Car needs gas.
     no_gas: bool = False
     # The target destination of the Car.
     # This will help for path planning etc in a more detailed library.
     # Later on in the assignment, this value will be used for CrossRoads.
     destination: str = None
-    distance_traveled: float = 0.0
 
 
 
