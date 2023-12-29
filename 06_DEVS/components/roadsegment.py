@@ -352,7 +352,7 @@ class RoadSegment(AtomicDEVS):
             # if priority is true, no special action should be taken
             else:
                 pass
-        new_velocity : float = min(v_new, self.v_max)
+        new_velocity: float = min(v_new, self.v_max)
         # calculate when the car will exit the road segment with this velocity
         estimated_time_until_exit = self.state.remaining_x / new_velocity
         self.state.t_until_dep = estimated_time_until_exit
