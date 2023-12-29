@@ -1,91 +1,83 @@
 from pypdevs.DEVS import AtomicDEVS, CoupledDEVS
 from pypdevs.infinity import INFINITY
-import random
 from typing import List
 from components.messages import Query, QueryAck, Car
+from components.querystate import QueryState
 from enum import Enum
+from components.roadsegment import RoadSegmentState, RoadSegment
+from components.roadsegment import EventEnum
 
-# set a seed for reproducibility
-random.seed(42)
-
-class ForkState(object):
-
-    def __init__(self, ):
-        pass
+# class EventEnum(Enum):
+#     SEND_QUERY = 0
+#     RECEIVED_QUERY = 1
+#     RECEIVED_ACKNOWLEDGEMENT = 2
+#     CAR_OUT = 3
 
 
-class Fork(AtomicDEVS):
+class Fork(RoadSegment):
     """
-    Allows Cars to choose between multiple RoadSegments. This allows for a simplified form of "lane switching". For the sake of convenience of this assignment, the switching criteria is: output a Car over the car_out2 port if its no_gas member is true.
-    Given that this block inherits from RoadSegment, all aspects discussed there are also applicable. The description below only focuses on what is new for this component.
+    A fork in the road.
+    Allows Cars to choose between multiple RoadSegments. This allows for a simplified form of "lane switching".
+    For the sake of convenience of this assignment, the switching criteria is:
+    output a Car over the car_out2 port if its no_gas member is true.
+    Given that this block inherits from RoadSegment, all aspects discussed there are also applicable.
     """
-
-    def __init__(self, name, ):
+    def __init__(self, name, L, v_max):
         """
-        """
-        super(Fork, self).__init__(name)
-        self.state = ForkState()
-        # Port for receiving QueryAck events
-        self.Q_rack = self.addInPort("Q_rack")
-        # Port for outputting generated cars
-        self.car_out = self.addOutPort("car_out")
-        # Sends a Query as soon as the newly sampled IAT says so.
-        self.Q_send = self.addOutPort("Q_send")
+        Initializes the Fork.
 
-    def timeAdvance(self):
-        return self.state.next_time
+        :param name (str):
+            The name for this model. Must be unique inside a Coupled DEVS.
+        :param L (float):
+            The length of the RoadSegment.
+            Given that the average Car is about 5 meters in length, a good estimate value for L would therefore be 5 meters.
+        :param v_max (float):
+            The maximal allowed velocity on this RoadSegment.
+        """
+        super(Fork, self).__init__(name, L, v_max)
+
+        self.car_out2 = self.addOutPort("car_out2")
 
     def outputFnc(self):
-        # Outputs the newly generated Car.
-        if self.state.next_car is None:
-            return {
-            }
-        # if a car is generated, but not queried yet
-        elif self.state.query_state == QueryState.NOT_SENT:
+        # get the next event
+        event = self.nextEvent()
+        # if the next event is a car entering, Sends a Query on Q_send as soon as a new Car arrives on this RoadSegment
+        if event[0] == EventEnum.SEND_QUERY:
+            # get the car if it is still present
+            if len(self.state.cars_present) > 0:
+                car: Car = self.state.cars_present[0]
 
-            # send the query
-            return {self.Q_send: Query(self.state.next_car.ID),
+                return {
+                    self.Q_send: Query(car.ID)
+                }
 
-                    }
-        # if a car is generated and acknowledged
-        elif self.state.query_state == QueryState.RECEIVED_ACKNOWLEDGEMENT:
-            # send the car
-            return {
-                self.car_out: self.state.next_car,
-            }
-        # throw error
-        raise Exception("Invalid state")
-
-    def intTransition(self):
-        self.state.time += self.timeAdvance()
-        # if the car is created yet
-        if self.state.next_car is not None:
-            # but not queried yet, it is now sent
-            if self.state.query_state == QueryState.NOT_SENT:
-                self.state.query_state = QueryState.SENT
-                self.state.next_time = INFINITY
-            # elif a car is generated and acknowledged, it is now neither
-            elif self.state.query_state == QueryState.RECEIVED_ACKNOWLEDGEMENT:
-                self.state.query_state = QueryState.NOT_SENT
-                self.state.next_car = None
-                # next time is the IAT of the next car
-                self.state.next_time = random.uniform(self.state.IAT_min, self.state.IAT_max)
-        # if the car has not been created yet
-        else:
-            self.state.query_state = QueryState.NOT_SENT
-            # if the count is under the limit, create a new one
-            if self.state.generated_car_count < self.state.limit:
-                self.state.next_car = self.createCar()
-                self.state.next_time = 0.0
-            # else, there is no next_car and the count is over the limit, so do nothing
+        elif event[0] == EventEnum.RECEIVED_QUERY:
+            '''
+                Replies a QueryAck to a Query. 
+                The QueryAck's t_until_dep equals the remaining time of the current Car on the RoadSegment 
+                    (which can be infinity if the Car's velocity is 0). 
+                If there is no Car, t_until_dep equals zero. 
+                The QueryAck's lane is set w.r.t. the RoadSegment's lane; 
+                    and the QueryAck's sideways is set to be false here. 
+            '''
+            # if there is a car on the road segment
+            if len(self.state.cars_present) > 0:
+                # get the car
+                car: Car = self.state.cars_present[0]
+                return {
+                    self.Q_sack: QueryAck(car.ID, self.state.t_until_dep, self.lane, False)
+                }
+        elif event[0] == EventEnum.CAR_OUT:
+            # get the car
+            car: Car = self.state.cars_present[0]
+            # send the car out
+            if car.no_gas:
+                return {
+                    self.car_out2: car
+                }
             else:
-                self.state.next_car = None
-                self.state.next_time = INFINITY
-        return self.state
-
-    def extTransition(self, inputs):
-        if self.Q_rack in inputs and self.state.query_state == QueryState.SENT:
-            query_ack: QueryAck = inputs[self.Q_rack]
-            self.state.next_time = query_ack.t_until_dep
-            self.state.query_state = QueryState.RECEIVED_ACKNOWLEDGEMENT
-        return self.state
+                return {
+                    self.car_out: car
+                }
+        print(f"emtpy outputFnc")
+        return {}

@@ -1,14 +1,8 @@
 from pypdevs.DEVS import AtomicDEVS, CoupledDEVS
 from pypdevs.infinity import INFINITY
-import random
 from typing import List
 from components.messages import Query, QueryAck, Car
-import itertools
-from components.querystate import QueryState
 from enum import Enum
-# set a seed for reproducibility
-random.seed(42)
-
 
 
 class EventEnum(Enum):
@@ -204,8 +198,6 @@ class RoadSegment(AtomicDEVS):
             }
 
         return {}
-        # throw error
-        raise Exception("Invalid state")
 
     def intTransition(self):
         # get the time since last event
