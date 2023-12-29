@@ -7,12 +7,6 @@ from enum import Enum
 from components.roadsegment import RoadSegmentState, RoadSegment
 from components.roadsegment import EventEnum
 
-# class EventEnum(Enum):
-#     SEND_QUERY = 0
-#     RECEIVED_QUERY = 1
-#     RECEIVED_ACKNOWLEDGEMENT = 2
-#     CAR_OUT = 3
-
 
 class Fork(RoadSegment):
     """
@@ -24,8 +18,6 @@ class Fork(RoadSegment):
     """
     def __init__(self, name, L, v_max):
         """
-        Initializes the Fork.
-
         :param name (str):
             The name for this model. Must be unique inside a Coupled DEVS.
         :param L (float):
@@ -79,5 +71,4 @@ class Fork(RoadSegment):
                 return {
                     self.car_out: car
                 }
-        print(f"emtpy outputFnc")
         return {}
