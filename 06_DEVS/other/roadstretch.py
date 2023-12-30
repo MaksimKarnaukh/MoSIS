@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from pypdevs.DEVS import CoupledDEVS
 
@@ -83,8 +83,10 @@ class RoadStretch(CoupledDEVS):
             self.road_segment_n2,
             self.road_segment_n3,
             self.road_segment_n4,
-            self.collector
         ])
+
+        # connect the n4 road segment to the collector
+        self.connectPorts(self.road_segment_n4.car_out, self.collector.car_in)
 
         # connect the second fork - car output of the fork to road segment s1
         self.connectForkOutput(
@@ -96,6 +98,7 @@ class RoadStretch(CoupledDEVS):
         # connect all components of the southern side
         self.connectComponentsToGasStation([
             self.road_segment_s1,
+            self.gas_station,
             self.road_segment_s2
         ])
 
@@ -109,13 +112,13 @@ class RoadStretch(CoupledDEVS):
         self.connectPorts(self.road_segment_n3.Q_sack, self.side_marker.mi)
         self.connectPorts(self.side_marker.mo, self.road_segment_s2.Q_rack)
 
-    def connectComponents(self, components: List[RoadSegment, Fork, Generator, Collector]):
+    def connectComponents(self, components: List[Union[RoadSegment, Fork, Generator]]):
         """
         Connects all components in the list to each other in the order they are given.
         The order matters, as the first component is connected to the second, the second to the third, etc.
 
         :param components: The components of type RoadSegment, Fork, Generator,
-            Collector to connect. Generator and Collector can only be at the start and end respectively.
+            to connect. Generator and Collector can only be at the start and end respectively.
             Fork will only connect the first car output to the next component.
 
         """
@@ -126,7 +129,7 @@ class RoadStretch(CoupledDEVS):
 
     def connectComponentsToGasStation(self, components: list):
         """
-        Connects two components (RoadSegment, Fork, Generator, Collector) to the gas station.
+        Connects two components of type (RoadSegment, Fork, Generator, Collector) to the gas station.
         The order is component 1, gas station, component 2.
         :param components: The components to connect in order. [ Component 1, GasStation Component , Component 2 ]
         """
