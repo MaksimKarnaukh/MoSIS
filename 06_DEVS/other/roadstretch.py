@@ -28,9 +28,9 @@ class RoadStretch(CoupledDEVS):
 
     IAT_min = 5
     IAT_max = 7
-    v_pref_mu = 10
-    v_pref_sigma = 20
-    destinations = ["E"]
+    v_pref_mu = 30
+    v_pref_sigma = 10
+    destinations = ["collector"]
     limit = 50
 
     def __init__(self, name):
@@ -73,6 +73,18 @@ class RoadStretch(CoupledDEVS):
         # to the left of fork, south from left to right
         self.road_segment_s1 = self.addSubModel(RoadSegment("road_segment_s1", self.L, self.v_max))
         self.road_segment_s2 = self.addSubModel(RoadSegment("road_segment_s2", self.L, self.v_max))
+
+        # put the road segments in a list
+        self.road_segments = [
+            self.road_segment_gen,
+            self.road_segment_n1,
+            self.road_segment_n2,
+            self.road_segment_n3,
+            self.road_segment_n4,
+            self.road_segment_s1,
+            self.road_segment_s2,
+            self.fork
+        ]
 
         # connect all components on the northern line
         self.connectComponents([
@@ -153,4 +165,10 @@ class RoadStretch(CoupledDEVS):
 
     def getCollector(self):
         return self.collector
+
+    def getNumberCrashes(self):
+        collisions = 0
+        for component in self.road_segments:
+            collisions += component.state.collisions
+        return collisions
 

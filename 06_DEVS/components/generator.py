@@ -162,7 +162,7 @@ class Generator(AtomicDEVS):
         # Upon generation, the Car's no_gas is randomly set to be either true or false.
         no_gas = random.choice([True, False])
         # Upon generation, each car is given a preferred velocity v_pref by sampling from a normal distribution.
-        v_pref = random.normalvariate(self.state.v_pref_mu, self.state.v_pref_sigma)
+        v_pref = max(0.0, random.normalvariate(self.state.v_pref_mu, self.state.v_pref_sigma))
         # A non-empty list of potential (string) destinations for the Cars. A random destination will be selected.
         destination = random.choice(self.state.destinations)
         distance_traveled = 0.0

@@ -37,3 +37,10 @@ class Collector(AtomicDEVS):
 
     # Don't define anything else, as we only store events.
     # Collector has no behaviour
+
+    def getStatistics(self):
+        return {
+            "total_time": self.state.time,
+            "average_time": self.state.total_time / self.state.n,
+            "number_of_cars": self.state.n
+        }

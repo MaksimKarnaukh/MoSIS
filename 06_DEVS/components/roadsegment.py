@@ -38,6 +38,7 @@ class RoadSegmentState(object):
         self.collisions: int = 0
 
         self.query_ack_reply: QueryAck = None
+
         self.time_since_last_query: float = 0.0
         self.previous_v_new = 0.0
 
@@ -183,11 +184,10 @@ class RoadSegment(AtomicDEVS):
                     and the QueryAck's sideways is set to be false here. 
             '''
             # if there is a car on the road segment
-            if len(self.state.cars_present) > 0:
-                # get the car
-                car: Car = self.state.cars_present[0]
+            if len(self.state.cars_present) == 0:
+
                 return {
-                    self.Q_sack: QueryAck(car.ID, self.state.t_until_dep, self.lane, False)
+                    self.Q_sack: self.state.query_ack_reply
                 }
         elif event[0] == EventEnum.CAR_OUT:
             # get the car
@@ -242,7 +242,7 @@ class RoadSegment(AtomicDEVS):
             # equals zero. Notice that multiple Query events may arrive during this waiting time,
             # all of whom should wait for exactly observ_delay time.
             query: Query = inputs[self.Q_recv]
-            self.state.query_ack_reply = QueryAck(query.ID, self.state.t_until_dep)
+            self.state.query_ack_reply = QueryAck(ID=query.ID, t_until_dep=self.state.t_until_dep, lane=self.lane, sideways=False)
             if len(self.state.cars_present) > 0:
                 self.state.query_ack_reply.t_until_dep = self.state.remaining_x / self.state.cars_present[0].v
             else:
@@ -252,13 +252,13 @@ class RoadSegment(AtomicDEVS):
         # Upon arrival of a QueryAck
         if self.Q_rack in inputs:
             query_ack: QueryAck = inputs[self.Q_rack]
-
-            # update car velocity
-            v_new = self.get_car_new_velocity(self.state.cars_present[0], query_ack)
-            if self.state.time_since_last_query >= 0.0001:
-                v_new = max(self.state.previous_v_new, v_new)
-            self.state.cars_present[0].v = v_new
-
+            # if the car is still present:
+            if len(self.state.cars_present) > 0:
+                v_new = self.get_car_new_velocity(self.state.cars_present[0], query_ack)
+                # update car velocity
+                if self.state.time_since_last_query >= 0.0001:
+                    v_new = max(self.state.previous_v_new, v_new)
+                self.state.cars_present[0].v = v_new
             self.state.time_since_last_query = 0.0
 
         return self.state

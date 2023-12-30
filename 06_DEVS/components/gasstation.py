@@ -28,6 +28,8 @@ class GasStationState(object):
         self.time: float = 0.0
         self.cars: List[Car] = []
         self.next_car: Car = None
+        self.nr_cars_passed: int = 0
+        self.nr_total_delay: float = 0.0
 
 
     def carArrived(self, car:Car, delay_time):
@@ -135,6 +137,7 @@ class GasStation(AtomicDEVS):
             if self.state.query_state == QueryState.ACKNOWLEDGED:
                 # the car has left and the query is available again
                 self.state.query_state = QueryState.AVAILABLE
+                self.state.next_car.no_gas = False
                 self.state.next_car = None
 
         return self.state

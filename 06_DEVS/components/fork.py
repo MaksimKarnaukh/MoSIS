@@ -33,33 +33,8 @@ class Fork(RoadSegment):
     def outputFnc(self):
         # get the next event
         event = self.nextEvent()
-        # if the next event is a car entering, Sends a Query on Q_send as soon as a new Car arrives on this RoadSegment
-        if event[0] == EventEnum.SEND_QUERY:
-            # get the car if it is still present
-            if len(self.state.cars_present) > 0:
-                car: Car = self.state.cars_present[0]
-
-                return {
-                    self.Q_send: Query(car.ID)
-                }
-
-        elif event[0] == EventEnum.RECEIVED_QUERY:
-            '''
-                Replies a QueryAck to a Query. 
-                The QueryAck's t_until_dep equals the remaining time of the current Car on the RoadSegment 
-                    (which can be infinity if the Car's velocity is 0). 
-                If there is no Car, t_until_dep equals zero. 
-                The QueryAck's lane is set w.r.t. the RoadSegment's lane; 
-                    and the QueryAck's sideways is set to be false here. 
-            '''
-            # if there is a car on the road segment
-            if len(self.state.cars_present) > 0:
-                # get the car
-                car: Car = self.state.cars_present[0]
-                return {
-                    self.Q_sack: QueryAck(car.ID, self.state.t_until_dep, self.lane, False)
-                }
-        elif event[0] == EventEnum.CAR_OUT:
+        # the next event is a car leaving, override the default output function
+        if event[0] == EventEnum.CAR_OUT:
             # get the car
             car: Car = self.state.cars_present[0]
             # send the car out
@@ -71,4 +46,7 @@ class Fork(RoadSegment):
                 return {
                     self.car_out: car
                 }
-        return {}
+        # apply the default output function
+        return super(Fork, self).outputFnc()
+
+
