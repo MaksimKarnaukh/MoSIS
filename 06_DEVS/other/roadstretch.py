@@ -47,7 +47,7 @@ class RoadStretch(CoupledDEVS):
                       v_pref_mu=self.v_pref_mu, v_pref_sigma=self.v_pref_sigma,
                       destinations=self.destinations, limit=self.limit))
 
-        # create the fork
+        # create the fork<
         self.fork = self.addSubModel(Fork(name="fork", L=self.L, v_max=self.v_max))
 
         # create the collector
