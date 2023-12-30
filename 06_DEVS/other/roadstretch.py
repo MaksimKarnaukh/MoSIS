@@ -86,11 +86,12 @@ class RoadStretch(CoupledDEVS):
             self.collector
         ])
 
-        # connect fork to road segment s1
-        self.connectComponents([
+        # connect the second fork - car output of the fork to road segment s1
+        self.connectForkOutput(
             self.fork,
             self.road_segment_s1,
-        ])
+            self.fork.car_out2,
+        )
 
         # connect all components of the southern side
         self.connectComponentsToGasStation([
@@ -115,6 +116,7 @@ class RoadStretch(CoupledDEVS):
 
         :param components: The components of type RoadSegment, Fork, Generator,
             Collector to connect. Generator and Collector can only be at the start and end respectively.
+            Fork will only connect the first car output to the next component.
 
         """
         for i in range(len(components) - 1):
@@ -134,4 +136,15 @@ class RoadStretch(CoupledDEVS):
         self.connectPorts(components[1].car_out, components[2].car_in)
         self.connectPorts(components[1].Q_send, components[2].Q_recv)
         self.connectPorts(components[2].Q_sack, components[1].Q_rack)
+
+    def connectForkOutput(self, fork:Fork, component ,fork_output_port):
+        """
+        connects the output of the fork to the component.
+        :param fork: the fork
+        :param component: the component to connect to
+        :param fork_output_port: the fork output port to connect to
+        """
+        self.connectPorts(fork_output_port, component.car_in)
+        self.connectPorts(component.Q_send, fork.Q_recv)
+        self.connectPorts(fork.Q_sack, component.Q_rack)
 
