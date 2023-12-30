@@ -15,7 +15,7 @@ class CrossRoadSegment(RoadSegment):
     Combining multiple of these segments together results in a CrossRoad.
     Given that this block inherits from RoadSegment, all aspects discussed there are also applicable.
     """
-    def __init__(self, name, L: float, v_max: float, destinations: List[str]):
+    def __init__(self, name, L: float, v_max: float, destinations: List[str], observ_delay: float):
         """
         :param name (str):
             The name for this model. Must be unique inside a Coupled DEVS.
@@ -29,6 +29,7 @@ class CrossRoadSegment(RoadSegment):
         """
         super(CrossRoadSegment, self).__init__(name, L, v_max)
         self.destinations: List[str] = destinations
+        self.observ_delay = observ_delay
 
         # Cars can enter on this segment as if it were the normal car_in port.
         # However, this port is only used for Cars that were already on the crossroads.
@@ -163,50 +164,65 @@ class CrossRoads(CoupledDEVS):
     For the sake of readability, the outer ports are here encoded using North (N), East (E), South (S), West (W);
     instead of using indexes.
     """
-    def __init__(self, name, destinations: List[str], L: float, v_max: float, observ_delay: float):
+    def __init__(self, name, destinations: List[List[str]], L: float, v_max: float, observ_delay: float):
         """
         :param name (str):
             The name for this model. Must be unique inside a Coupled DEVS.
-        :param L (float):
-            The length of the RoadSegment.
-            Given that the average Car is about 5 meters in length, a good estimate value for L would therefore be 5 meters.
-        :param v_max (float):
-            The maximal allowed velocity on this RoadSegment.
         :param destinations (list):
-            A non-empty list of potential (string) destinations for the Cars.
-        :param n_segments (int):
-            The number of CrossRoadSegments that should be combined.
+            A list of lists of destinations for the CrossRoads.
+            The amount of sub-lists indicates how many branches the CrossRoads has.
+            Each sub-list is given to the CrossRoadSegments in order.
+        :param L (float):
+            The length of the individual CrossRoadSegments.
+        :param v_max (float):
+            The maximal allowed velocity on the CrossRoads.
+        :param observ_delay (float):
+            The observ_delay for the CrossRoadSegments.
         """
         super(CrossRoads, self).__init__(name)
-
-        self.n_segments = n_segments
+        self.L: float = L
+        self.v_max: float = v_max
+        self.observ_delay: float = observ_delay
         self.destinations = destinations
 
-        # create the segments
+        # The amount of sub-lists of destinations indicates how many branches the CrossRoads has.
+        self.branches_amount = len(destinations)
+
+        # create the crossroad segments and add the segments to the coupled model
         self.segments = []
-        for i in range(n_segments):
-            self.segments.append(CrossRoadSegment("segment_" + str(i), L, v_max, destinations))
+        for i in range(self.branches_amount):
+            cross_road_segment = CrossRoadSegment("segment_" + str(i), L, v_max, destinations[i], observ_delay)
+            self.segments.append(cross_road_segment)
+            self.addSubModel(cross_road_segment)
 
-        # add the segments to the coupled model
-        for i in range(n_segments):
-            self.addSubModel(self.segments[i])
+        # connect the segments in a circle
+        for i in range(self.branches_amount):
+            # connect the car_out_cr of the current segment to the car_in_cr of the next segment
+            self.connectPorts(self.segments[i].car_out_cr, self.segments[(i + 1) % self.branches_amount].car_in_cr)
 
-        # connect the segments
-        for i in range(n_segments):
-            if i == 0:
-                self.connectPorts(self.segments[i].car_out, self.segments[i + 1].car_in_cr)
-            elif i == n_segments - 1:
-                self.connectPorts(self.segments[i].car_out_cr, self.segments[i - 1].car_in)
-            else:
-                self.connectPorts(self.segments[i].car_out, self.segments[i + 1].car_in_cr)
-                self.connectPorts(self.segments[i].car_out_cr, self.segments[i - 1].car_in)
+            # also connect the Q_send and Q_sack ports of the current segment to the
+            # Q_recv and Q_rack ports respectively of the previous segment
+            self.connectPorts(self.segments[i].Q_send, self.segments[(i - 1) % self.branches_amount].Q_recv)
+            self.connectPorts(self.segments[i].Q_sack, self.segments[(i - 1) % self.branches_amount].Q_rack)
 
-        # add the collector
-        self.collector = TestCollector("collector")
-        self.addSubModel(self.collector)
+        # add outside input and output ports (per branch)
+        self.inp_and_out_ports = []
+        for i in range(self.branches_amount):
 
-        # connect the collector
-        self.connectPorts(self.segments[0].car_out, self.collector.inp)
+            self.inp_and_out_ports.append([
+                self.addInPort("car_in_" + str(i)),
+                self.addInPort("Q_recv_" + str(i)),
+                self.addInPort("Q_rack_" + str(i)),
+                self.addOutPort("car_out_" + str(i)),
+                self.addOutPort("Q_send_" + str(i)),
+                self.addOutPort("Q_sack_" + str(i))
+            ])
 
-    def get_collector(self):
-        return self.collector
+        # connect each branch to its correct outside ports
+        for i in range(self.branches_amount):
+            self.connectPorts(self.inp_and_out_ports[i][0], self.segments[i].car_in)
+            self.connectPorts(self.inp_and_out_ports[i][1], self.segments[i].Q_recv)
+            self.connectPorts(self.inp_and_out_ports[i][2], self.segments[i].Q_rack)
+            self.connectPorts(self.segments[i].car_out, self.inp_and_out_ports[i][3])
+            self.connectPorts(self.segments[i].Q_send, self.inp_and_out_ports[i][4])
+            self.connectPorts(self.segments[i].Q_sack, self.inp_and_out_ports[i][5])
