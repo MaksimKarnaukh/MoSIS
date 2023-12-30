@@ -8,9 +8,6 @@ from components.querystate import QueryState
 random.seed(42)
 
 
-
-
-
 class GasStationState(object):
 
     # Constants for delay time distribution

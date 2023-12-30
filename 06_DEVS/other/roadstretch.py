@@ -24,6 +24,13 @@ class RoadStretch(CoupledDEVS):
     L = 5 # length of the road segment
     v_max = 30 # maximum allowed velocity
 
+    IAT_min = 5
+    IAT_max = 7
+    v_pref_mu = 10
+    v_pref_sigma = 20
+    destinations = ["E"]
+    limit = 50
+
     def __init__(self, name):
         """
         :param name:
@@ -32,7 +39,7 @@ class RoadStretch(CoupledDEVS):
         super(RoadStretch, self).__init__(name)
 
         # create the generator
-        self.generator = self.addSubModel(Generator("gen"))
+        self.generator = self.addSubModel(Generator("gen", self.IAT_min, self.IAT_max, self.v_pref_mu, self.v_pref_sigma, self.destinations, self.limit))
         # create the fork
         self.fork = self.addSubModel(Fork("fork", self.L, self.v_max))
         # create the collector
