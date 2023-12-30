@@ -5,6 +5,7 @@ from typing import List
 from components.messages import Query, QueryAck, Car
 import itertools
 from enum import Enum
+import uuid
 
 # set a seed for reproducibility
 random.seed(42)

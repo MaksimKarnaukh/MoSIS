@@ -2,8 +2,7 @@ import unittest
 
 from tests.helpers import *
 
-# from components.generator import uuid
-import uuid
+from components.generator import uuid
 from components.roadsegment import RoadSegment
 from components.messages import *
 
