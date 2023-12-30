@@ -24,7 +24,6 @@ class TestSideMarker(unittest.TestCase):
 		sim = Simulator(model)
 
 		sim.setClassicDEVS()
-		sim.setVerbose(None)
 		sim.setTerminationTime(10)
 		sim.simulate()
 

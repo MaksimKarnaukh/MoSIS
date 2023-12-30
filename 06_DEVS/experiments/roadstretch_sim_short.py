@@ -7,7 +7,7 @@ def roadstretch_sim_short():
     sim = Simulator(model)
     sim.setClassicDEVS()
     sim.setTerminationTime(100)
-    sim.setVerbose(None)
+    sim.setVerbose("./traces/roadstretch")
     sim.simulate()
 
 
