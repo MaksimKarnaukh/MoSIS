@@ -1,11 +1,11 @@
-from pypdevs.DEVS import AtomicDEVS, CoupledDEVS
-from pypdevs.infinity import INFINITY
-import random
+from typing import List
+
+from pypdevs.DEVS import CoupledDEVS
 
 from components.collector import Collector
 from components.fork import Fork
-from components.generator import Generator
 from components.gasstation import GasStation
+from components.generator import Generator
 from components.roadsegment import RoadSegment
 from components.sidemarker import SideMarker
 
@@ -21,8 +21,10 @@ class RoadStretch(CoupledDEVS):
     easily understandable solution.
     """
 
-    L = 5 # length of the road segment
-    v_max = 30 # maximum allowed velocity
+    # constants for the road stretch
+
+    L = 5  # length of the road segment
+    v_max = 30  # maximum allowed velocity
 
     IAT_min = 5
     IAT_max = 7
@@ -39,30 +41,41 @@ class RoadStretch(CoupledDEVS):
         super(RoadStretch, self).__init__(name)
 
         # create the generator
-        self.generator = self.addSubModel(Generator("gen", self.IAT_min, self.IAT_max, self.v_pref_mu, self.v_pref_sigma, self.destinations, self.limit))
+        self.generator = self.addSubModel(
+            Generator(name="gen",
+                      IAT_min=self.IAT_min, IAT_max=self.IAT_max,
+                      v_pref_mu=self.v_pref_mu, v_pref_sigma=self.v_pref_sigma,
+                      destinations=self.destinations, limit=self.limit))
+
         # create the fork
-        self.fork = self.addSubModel(Fork("fork", self.L, self.v_max))
+        self.fork = self.addSubModel(Fork(name="fork", L=self.L, v_max=self.v_max))
+
         # create the collector
         self.collector = self.addSubModel(Collector("collector"))
+
         # create the side marker
         self.side_marker = self.addSubModel(SideMarker("side_marker"))
+
         # create the gas station
         self.gas_station = self.addSubModel(GasStation("gas_station"))
 
         # create the 7 road segments
+
         # first road segment connected to the generator
         self.road_segment_gen = self.addSubModel(RoadSegment("road_segment_gen", self.L, self.v_max))
+
         # to the right of fork, north from left to right
         self.road_segment_n1 = self.addSubModel(RoadSegment("road_segment_n1", self.L, self.v_max))
         self.road_segment_n2 = self.addSubModel(RoadSegment("road_segment_n2", self.L, self.v_max))
         self.road_segment_n3 = self.addSubModel(RoadSegment("road_segment_n3", self.L, self.v_max, priority=True))
         self.road_segment_n4 = self.addSubModel(RoadSegment("road_segment_n4", self.L, self.v_max))
+
         # to the left of fork, south from left to right
         self.road_segment_s1 = self.addSubModel(RoadSegment("road_segment_s1", self.L, self.v_max))
         self.road_segment_s2 = self.addSubModel(RoadSegment("road_segment_s2", self.L, self.v_max))
 
         # connect all components on the northern line
-        self.connectComponentsDefault([
+        self.connectComponents([
             self.generator,
             self.road_segment_gen,
             self.fork,
@@ -71,10 +84,10 @@ class RoadStretch(CoupledDEVS):
             self.road_segment_n3,
             self.road_segment_n4,
             self.collector
-            ])
+        ])
 
         # connect fork to road segment s1
-        self.connectComponentsDefault([
+        self.connectComponents([
             self.fork,
             self.road_segment_s1,
         ])
@@ -86,7 +99,7 @@ class RoadStretch(CoupledDEVS):
         ])
 
         # connect road segment s2 to road segment n4
-        self.connectComponentsDefault([
+        self.connectComponents([
             self.road_segment_s2,
             self.road_segment_n4
         ])
@@ -95,11 +108,14 @@ class RoadStretch(CoupledDEVS):
         self.connectPorts(self.road_segment_n3.Q_sack, self.side_marker.mi)
         self.connectPorts(self.side_marker.mo, self.road_segment_s2.Q_rack)
 
-
-    def connectComponentsDefault(self, components: list):
+    def connectComponents(self, components: List[RoadSegment, Fork, Generator, Collector]):
         """
         Connects all components in the list to each other in the order they are given.
-        :param components: The components to connect.
+        The order matters, as the first component is connected to the second, the second to the third, etc.
+
+        :param components: The components of type RoadSegment, Fork, Generator,
+            Collector to connect. Generator and Collector can only be at the start and end respectively.
+
         """
         for i in range(len(components) - 1):
             self.connectPorts(components[i].car_out, components[i + 1].car_in)
@@ -108,12 +124,14 @@ class RoadStretch(CoupledDEVS):
 
     def connectComponentsToGasStation(self, components: list):
         """
-        Connects two components ([road segment 1, road segment 2]) in the list to a gas station.
-        The theoretical order is road segment 1, gas station, road segment 2.
-        :param components: The components to connect.
+        Connects two components (RoadSegment, Fork, Generator, Collector) to the gas station.
+        The order is component 1, gas station, component 2.
+        :param components: The components to connect in order. [ Component 1, GasStation Component , Component 2 ]
         """
-        self.connectPorts(components[0].car_out, self.gas_station.car_in)
 
-        self.connectPorts(self.gas_station.car_out, components[1].car_in)
-        self.connectPorts(self.gas_station.Q_send, components[1].Q_recv)
-        self.connectPorts(components[1].Q_sack, self.gas_station.Q_rack)
+        self.connectPorts(components[0].car_out, components[1].car_in)
+
+        self.connectPorts(components[1].car_out, components[2].car_in)
+        self.connectPorts(components[1].Q_send, components[2].Q_recv)
+        self.connectPorts(components[2].Q_sack, components[1].Q_rack)
+

@@ -22,7 +22,9 @@ class TestSideMarker(unittest.TestCase):
 		model.connectPorts(sm.mo, cl.inp)
 
 		sim = Simulator(model)
+
 		sim.setClassicDEVS()
+		sim.setVerbose(None)
 		sim.setTerminationTime(10)
 		sim.simulate()
 
