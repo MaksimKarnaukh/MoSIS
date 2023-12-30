@@ -242,11 +242,11 @@ class RoadSegment(AtomicDEVS):
             # equals zero. Notice that multiple Query events may arrive during this waiting time,
             # all of whom should wait for exactly observ_delay time.
             query: Query = inputs[self.Q_recv]
+            self.state.query_ack_reply = QueryAck(query.ID, self.state.t_until_dep)
             if len(self.state.cars_present) > 0:
-                self.state.query_ack_reply.t_until_dep = self.state.cars_present[0].remaining_x / self.state.cars_present[0].v
+                self.state.query_ack_reply.t_until_dep = self.state.remaining_x / self.state.cars_present[0].v
             else:
                 self.state.query_ack_reply.t_until_dep = 0.0
-            self.state.query_ack_reply = QueryAck(query.ID, self.state.t_until_dep)
             self.addEvent(EventEnum.RECEIVED_QUERY, self.observ_delay)
 
         # Upon arrival of a QueryAck
