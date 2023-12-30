@@ -148,3 +148,6 @@ class RoadStretch(CoupledDEVS):
         self.connectPorts(component.Q_send, fork.Q_recv)
         self.connectPorts(fork.Q_sack, component.Q_rack)
 
+    def getCollector(self):
+        return self.collector
+
