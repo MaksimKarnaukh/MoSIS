@@ -49,6 +49,8 @@ def handle_statistics(model, length):
     Handles the plotting/printing of statistics of the simulation.
     :param model:
         the model to get the statistics from
+    :param length: (str)
+        the length ("short" or "long") of the simulation
     """
 
     statistics = model.collector.getStatistics()
@@ -75,7 +77,29 @@ def handle_statistics(model, length):
 
 
 def roadstretch_sim(termination_time, length, L, v_max, IAT_min, IAT_max, v_pref_mu, v_pref_sigma, destinations, limit):
-
+    """
+    Simulates the roadstretch model.
+    :param termination_time: (int)
+        the time at which the simulation should stop
+    :param length: (str)
+        the length ("short" or "long") of the simulation
+    :param L: (int)
+        length of the road segments
+    :param v_max: (int)
+        maximum allowed velocity
+    :param IAT_min: (int)
+        minimum inter-arrival time
+    :param IAT_max: (int)
+        maximum inter-arrival time
+    :param v_pref_mu: (int)
+        mean of the preferred velocity
+    :param v_pref_sigma: (int)
+        standard deviation of the preferred velocity
+    :param destinations: (list)
+        list of destinations
+    :param limit: (int)
+        limit of cars
+    """
     model = RoadStretch("roadstretch", L, v_max, IAT_min, IAT_max, v_pref_mu, v_pref_sigma, destinations, limit)
     sim = Simulator(model)
     sim.setClassicDEVS()
