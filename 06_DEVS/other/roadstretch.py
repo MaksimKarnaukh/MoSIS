@@ -9,17 +9,6 @@ from components.generator import Generator
 from components.roadsegment import RoadSegment
 from components.sidemarker import SideMarker
 
-# constants for the road stretch
-
-L = 5  # length of the road segment
-v_max = 30  # maximum allowed velocity
-
-IAT_min = 5
-IAT_max = 7
-v_pref_mu = 30
-v_pref_sigma = 10
-destinations = ["collector"]
-limit = 50
 
 class RoadStretch(CoupledDEVS):
     """
@@ -32,9 +21,7 @@ class RoadStretch(CoupledDEVS):
     easily understandable solution.
     """
 
-
-
-    def __init__(self, name, limit=limit):
+    def __init__(self, name, L, v_max, IAT_min, IAT_max, v_pref_mu, v_pref_sigma, destinations, limit):
         """
         :param name:
             The name for this model. Must be unique inside a Coupled DEVS.
@@ -64,17 +51,17 @@ class RoadStretch(CoupledDEVS):
         # create the 7 road segments
 
         # first road segment connected to the generator
-        self.road_segment_gen = self.addSubModel(RoadSegment("road_segment_gen", self.L, self.v_max))
+        self.road_segment_gen = self.addSubModel(RoadSegment("road_segment_gen", L, v_max))
 
         # to the right of fork, north from left to right
-        self.road_segment_n1 = self.addSubModel(RoadSegment("road_segment_n1", self.L, self.v_max))
-        self.road_segment_n2 = self.addSubModel(RoadSegment("road_segment_n2", self.L, self.v_max))
-        self.road_segment_n3 = self.addSubModel(RoadSegment("road_segment_n3", self.L, self.v_max, priority=True))
-        self.road_segment_n4 = self.addSubModel(RoadSegment("road_segment_n4", self.L, self.v_max))
+        self.road_segment_n1 = self.addSubModel(RoadSegment("road_segment_n1", L, v_max))
+        self.road_segment_n2 = self.addSubModel(RoadSegment("road_segment_n2", L, v_max))
+        self.road_segment_n3 = self.addSubModel(RoadSegment("road_segment_n3", L, v_max, priority=True))
+        self.road_segment_n4 = self.addSubModel(RoadSegment("road_segment_n4", L, v_max))
 
         # to the left of fork, south from left to right
-        self.road_segment_s1 = self.addSubModel(RoadSegment("road_segment_s1", self.L, self.v_max))
-        self.road_segment_s2 = self.addSubModel(RoadSegment("road_segment_s2", self.L, self.v_max))
+        self.road_segment_s1 = self.addSubModel(RoadSegment("road_segment_s1", L, v_max))
+        self.road_segment_s2 = self.addSubModel(RoadSegment("road_segment_s2", L, v_max))
 
         # put the road segments in a list
         self.road_segments = [

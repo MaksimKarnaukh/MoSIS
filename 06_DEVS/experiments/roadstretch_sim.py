@@ -3,12 +3,12 @@ from other.roadstretch import RoadStretch
 import matplotlib.pyplot as plt
 
 
-def plot_cars(number_of_cars, travel_time_per_car):
+def plot_cars(travel_time_per_car):
     # plot the travel time per car with the car ID on the x-axis and the travel time on the y-axis
     plt.plot([c[0].ID for c in travel_time_per_car], [c[1] for c in travel_time_per_car], 'ro')
     # use logarimtic scale on the y-axis
     plt.yscale('log')
-    # use a grid
+    # use a grid on x and y axis
     plt.grid(True)
     # make sure the x-axis contains the car IDs of all cars
     plt.xticks([c[0].ID for c in travel_time_per_car])
@@ -38,15 +38,26 @@ def handle_statistics(model):
 
     # number of crashes
     print("The number of crashes is: " + str(model.getNumberCrashes()))
+    print("The total time is: " + str(total_time))
 
     # plot the travel time per car
-    plot_cars(number_of_cars, travel_time_per_car)
+    plot_cars(travel_time_per_car)
 
 
 
 def roadstretch_sim(termination_time, cars_limit):
 
-    model = RoadStretch("roadstretch", limit=cars_limit)
+    # constants for the road stretch
+    L = 5  # length of the road segments
+    v_max = 30  # maximum allowed velocity
+    IAT_min = 5
+    IAT_max = 7
+    v_pref_mu = 30
+    v_pref_sigma = 10
+    destinations = ["collector"]
+    limit = 50
+
+    model = RoadStretch("roadstretch", L, v_max, IAT_min, IAT_max, v_pref_mu, v_pref_sigma, destinations, limit)
     sim = Simulator(model)
     sim.setClassicDEVS()
     sim.setTerminationTime(termination_time)
