@@ -9,6 +9,17 @@ from components.generator import Generator
 from components.roadsegment import RoadSegment
 from components.sidemarker import SideMarker
 
+# constants for the road stretch
+
+L = 5  # length of the road segment
+v_max = 30  # maximum allowed velocity
+
+IAT_min = 5
+IAT_max = 7
+v_pref_mu = 30
+v_pref_sigma = 10
+destinations = ["collector"]
+limit = 50
 
 class RoadStretch(CoupledDEVS):
     """
@@ -21,17 +32,7 @@ class RoadStretch(CoupledDEVS):
     easily understandable solution.
     """
 
-    # constants for the road stretch
 
-    L = 5  # length of the road segment
-    v_max = 30  # maximum allowed velocity
-
-    IAT_min = 5
-    IAT_max = 7
-    v_pref_mu = 30
-    v_pref_sigma = 10
-    destinations = ["collector"]
-    limit = 50
 
     def __init__(self, name, limit=limit):
         """
@@ -44,12 +45,12 @@ class RoadStretch(CoupledDEVS):
         # create the generator
         self.generator = self.addSubModel(
             Generator(name="gen",
-                      IAT_min=self.IAT_min, IAT_max=self.IAT_max,
-                      v_pref_mu=self.v_pref_mu, v_pref_sigma=self.v_pref_sigma,
-                      destinations=self.destinations, limit=self.limit))
+                      IAT_min=IAT_min, IAT_max=IAT_max,
+                      v_pref_mu=v_pref_mu, v_pref_sigma=v_pref_sigma,
+                      destinations=destinations, limit=limit))
 
         # create the fork<
-        self.fork = self.addSubModel(Fork(name="fork", L=self.L, v_max=self.v_max))
+        self.fork = self.addSubModel(Fork(name="fork", L=L, v_max=v_max))
 
         # create the collector
         self.collector = self.addSubModel(Collector("collector"))
