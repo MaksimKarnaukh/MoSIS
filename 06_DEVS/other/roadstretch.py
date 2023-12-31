@@ -33,12 +33,13 @@ class RoadStretch(CoupledDEVS):
     destinations = ["collector"]
     limit = 50
 
-    def __init__(self, name):
+    def __init__(self, name, limit=limit):
         """
         :param name:
             The name for this model. Must be unique inside a Coupled DEVS.
         """
         super(RoadStretch, self).__init__(name)
+        self.limit = limit
 
         # create the generator
         self.generator = self.addSubModel(
