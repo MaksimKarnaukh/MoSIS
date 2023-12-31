@@ -137,7 +137,7 @@ class GasStation(AtomicDEVS):
             if self.state.query_state == QueryState.ACKNOWLEDGED:
                 # the car has left and the query is available again
                 self.state.query_state = QueryState.AVAILABLE
-                self.state.next_car.no_gas = False
+                self.state.next_car[1].no_gas = False
                 self.state.next_car = None
 
         return self.state
