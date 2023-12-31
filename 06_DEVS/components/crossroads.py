@@ -200,9 +200,9 @@ class CrossRoads(CoupledDEVS):
             # connect the car_out_cr of the current segment to the car_in_cr of the next segment
             self.connectPorts(self.segments[i].car_out_cr, self.segments[(i + 1) % self.branches_amount].car_in_cr)
 
-            # also connect the Q_send and Q_sack ports of the current segment to the
-            # Q_recv and Q_rack ports respectively of the previous segment
-            self.connectPorts(self.segments[i].Q_send, self.segments[(i - 1) % self.branches_amount].Q_recv)
+            # also connect the Q_send to the Q_recv of the next segment and
+            # connect the Q_sack to the Q_rack of the previous segment
+            self.connectPorts(self.segments[i].Q_send, self.segments[(i + 1) % self.branches_amount].Q_recv)
             self.connectPorts(self.segments[i].Q_sack, self.segments[(i - 1) % self.branches_amount].Q_rack)
 
         # add outside input and output ports (per branch)
@@ -222,7 +222,7 @@ class CrossRoads(CoupledDEVS):
         for i in range(self.branches_amount):
             self.connectPorts(self.inp_and_out_ports[i][0], self.segments[i].car_in)
             self.connectPorts(self.inp_and_out_ports[i][1], self.segments[i].Q_recv)
-            self.connectPorts(self.inp_and_out_ports[i][2], self.segments[i].Q_rack)
-            self.connectPorts(self.segments[i].car_out, self.inp_and_out_ports[i][3])
-            self.connectPorts(self.segments[i].Q_send, self.inp_and_out_ports[i][4])
+            self.connectPorts(self.inp_and_out_ports[i][2], self.segments[(i - 1) % self.branches_amount].Q_rack)
+            self.connectPorts(self.segments[(i - 1) % self.branches_amount].car_out, self.inp_and_out_ports[i][3])
+            self.connectPorts(self.segments[(i - 1) % self.branches_amount].Q_send, self.inp_and_out_ports[i][4])
             self.connectPorts(self.segments[i].Q_sack, self.inp_and_out_ports[i][5])
