@@ -17,6 +17,9 @@ def plot_tt_short(travel_time_per_car):
     plt.xlabel('Car IDs')
     plt.ylabel('Travel Time (seconds)')
     plt.title('Travel Times of Cars')
+
+    # write to png file
+    plt.savefig('./plots/travel_times_short.png')
     plt.show()
 
 
@@ -41,6 +44,9 @@ def plot_tt_long(travel_time_per_car):
     plt.xlabel('Car IDs')
     plt.ylabel('Travel Time (log of seconds)')
     plt.title('Travel Times of Cars')
+
+    # write to png file
+    plt.savefig('./plots/travel_times_long.png')
     plt.show()
 
 
