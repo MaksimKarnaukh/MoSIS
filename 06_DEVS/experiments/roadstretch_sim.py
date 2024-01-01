@@ -101,8 +101,10 @@ def roadstretch_sim(termination_time, length, L, v_max, IAT_min, IAT_max, v_pref
         limit of cars
     """
     model = RoadStretch("roadstretch", L, v_max, IAT_min, IAT_max, v_pref_mu, v_pref_sigma, destinations, limit)
-    sim = Simulator(model)
+    sim: Simulator = Simulator(model)
     sim.setClassicDEVS()
+    sim.setDrawModel(True, "model.dot", False)
+
     sim.setTerminationTime(termination_time)
     sim.setVerbose(f"./traces/roadstretch_{termination_time}.txt")
     sim.simulate()

@@ -58,6 +58,10 @@ class GasStationState(object):
         """
         return self.next_car is None
 
+    def __repr__(self):
+        return ""
+
+
 class GasStation(AtomicDEVS):
     """
     Represents the notion that some Cars need gas.

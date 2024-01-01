@@ -12,6 +12,10 @@ class CollectorState(object):
         self.time: float = 0.0
         self.cars: List[Tuple[Car, float]] = [] # list of tuples (car, travel_time)
 
+    def __repr__(self):
+        return ""
+
+
 class Collector(AtomicDEVS):
 
     def __init__(self, name):

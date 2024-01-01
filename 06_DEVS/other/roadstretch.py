@@ -8,9 +8,10 @@ from components.gasstation import GasStation
 from components.generator import Generator
 from components.roadsegment import RoadSegment
 from components.sidemarker import SideMarker
+from other.RoadCoupledDEVS import RoadCoupledDEVS
 
 
-class RoadStretch(AbsCoupledDEVS):
+class RoadStretch(RoadCoupledDEVS):
     """
     Create a single RoadStretch (a Coupled DEVS),
     that starts with a Generator, has a variable amount of RoadSegments, and ends in a Collector.

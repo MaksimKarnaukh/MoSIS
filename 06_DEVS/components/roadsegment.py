@@ -46,7 +46,8 @@ class RoadSegmentState(object):
         # [[ Event, time ], ... ]
         self.event_queue: List[List] = []
 
-
+    def __repr__(self):
+        return ""
 
 
 class RoadSegment(AtomicDEVS):

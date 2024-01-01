@@ -1,11 +1,12 @@
-from pypdevs.DEVS import AtomicDEVS, CoupledDEVS
-from pypdevs.infinity import INFINITY
-import random
-from typing import List
-from components.messages import Query, QueryAck, Car
 import itertools
+import random
 from enum import Enum
-import uuid
+from typing import List
+
+from pypdevs.DEVS import AtomicDEVS
+from pypdevs.infinity import INFINITY
+
+from components.messages import Query, QueryAck, Car
 
 # set a seed for reproducibility
 random.seed(42)
@@ -53,6 +54,9 @@ class GeneratorState(object):
         self.limit: int = limit
 
         self.next_car: Car = None
+
+    def __repr__(self):
+        return ""
 
 
 class Generator(AtomicDEVS):
