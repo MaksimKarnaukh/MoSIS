@@ -63,7 +63,7 @@ def handle_statistics(model, length):
     print(f"Simulation statistics for {length} simulation:")
 
     # number of crashes
-    print("\t -The number of crashes is: " + str(model.getNumberCrashes()))
+    print("\t -The number of collisions is: " + str(model.getNumberCrashes()))
     print("\t -The number of cars that passed the roadstretch is: " + str(number_of_cars))
     print("\t -The total time spent by cars in the roadstretch is: " + str(total_time))
     print("\t -The average time spent by a car in the roadstretch is: " + str(average_travel_time))
