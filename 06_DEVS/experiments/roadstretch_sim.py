@@ -42,7 +42,7 @@ def plot_tt_long(travel_time_per_car):
     plt.grid(True)
 
     plt.xlabel('Car IDs')
-    plt.ylabel('Travel Time (log of seconds)')
+    plt.ylabel('Travel Time (seconds)')
     plt.title('Travel Times of Cars')
 
     # write to png file
