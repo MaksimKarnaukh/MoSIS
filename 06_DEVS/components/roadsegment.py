@@ -245,7 +245,7 @@ class RoadSegment(AtomicDEVS):
             query: Query = inputs[self.Q_recv]
             self.state.query_ack_reply = QueryAck(ID=query.ID, t_until_dep=self.state.t_until_dep, lane=self.lane, sideways=False)
             if len(self.state.cars_present) > 0:
-                self.state.query_ack_reply.t_until_dep = self.state.remaining_x / self.state.cars_present[0].v
+                self.state.query_ack_reply.t_until_dep = self.state.remaining_x / self.state.cars_present[0].v if self.state.cars_present[0].v > 0.0000001 else INFINITY
             else:
                 self.state.query_ack_reply.t_until_dep = 0.0
             self.addEvent(EventEnum.RECEIVED_QUERY, self.observ_delay)
