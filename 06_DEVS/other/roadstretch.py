@@ -35,7 +35,7 @@ class RoadStretch(RoadCoupledDEVS):
             Generator(name="gen",
                       IAT_min=IAT_min, IAT_max=IAT_max,
                       v_pref_mu=v_pref_mu, v_pref_sigma=v_pref_sigma,
-                      destinations=destinations, limit=limit))
+                      destinations=destinations, limit=limit, v_max=v_max))
 
         # create the fork<
         self.fork = self.addSubModel(Fork(name="fork", L=L, v_max=v_max))

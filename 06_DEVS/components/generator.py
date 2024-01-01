@@ -5,7 +5,7 @@ from typing import List
 
 from pypdevs.DEVS import AtomicDEVS
 from pypdevs.infinity import INFINITY
-
+import uuid
 from components.messages import Query, QueryAck, Car
 
 # set a seed for reproducibility
@@ -75,7 +75,7 @@ class Generator(AtomicDEVS):
     # The unique incremental identifier for the cars.
     id_iter = itertools.count()
 
-    def __init__(self, name, IAT_min, IAT_max, v_pref_mu, v_pref_sigma, destinations, limit):
+    def __init__(self, name, IAT_min, IAT_max, v_pref_mu, v_pref_sigma, destinations, limit, v_max=100.0):
         """
             :param name (str):
                 The name for this model. Must be unique inside a Coupled DEVS.
@@ -91,9 +91,14 @@ class Generator(AtomicDEVS):
                 A non-empty list of potential (string) destinations for the Cars. A random destination will be selected.
             :param limit (int):
                 Upper limit of the number of Cars to generate.
+            :param v_max (float):
+                The maximum velocity of the cars. Only needed because we don't want to generate a car with v greater
+                than the max velocity of the road segment where the car will be outputted by the generator.
         """
         super(Generator, self).__init__(name)
         self.state = GeneratorState(IAT_min, IAT_max, v_pref_mu, v_pref_sigma, destinations, limit)
+        self.v_max = v_max
+
         # Port for receiving QueryAck events
         self.Q_rack = self.addInPort("Q_rack")
         # Port for outputting generated cars
@@ -175,7 +180,7 @@ class Generator(AtomicDEVS):
         car_id = next(self.id_iter)
         generated_car = Car(
             departure_time=departure_time, no_gas=no_gas,
-            v_pref=v_pref, v=v_pref, destination=destination,
+            v_pref=v_pref, v=min(v_pref, self.v_max), destination=destination,
             distance_traveled=distance_traveled, ID=car_id,
             dv_neg_max=self.state.dv_neg_max, dv_pos_max=self.state.dv_pos_max
         )

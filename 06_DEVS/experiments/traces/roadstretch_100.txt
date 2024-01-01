@@ -428,7 +428,7 @@ __  Current Time:   5.479076 __________________________________________
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_gen>
 		Input Port Configuration:
 			port <car_in>:
-				Car(ID=1, v_pref=30.094375808156613, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=5.279075857050287, distance_traveled=0.0, v=30.094375808156613, no_gas=True, destination='collector')
+				Car(ID=1, v_pref=30.094375808156613, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=5.279075857050287, distance_traveled=0.0, v=30, no_gas=True, destination='collector')
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
@@ -439,7 +439,7 @@ __  Current Time:   5.479076 __________________________________________
 		New State: 
 		Output Port Configuration:
 			port <car_out>:
-				Car(ID=1, v_pref=30.094375808156613, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=5.279075857050287, distance_traveled=0.0, v=30.094375808156613, no_gas=True, destination='collector')
+				Car(ID=1, v_pref=30.094375808156613, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=5.279075857050287, distance_traveled=0.0, v=30, no_gas=True, destination='collector')
 			port <Q_send>:
 		Next scheduled internal transition at time 11.911115
 
@@ -464,7 +464,7 @@ __  Current Time:   5.479076 __________________________________________
 			port <Q_send>:
 				Query(ID=1)
 			port <Q_sack>:
-		Next scheduled internal transition at time 5.645220
+		Next scheduled internal transition at time 5.645743
 
 
 __  Current Time:   5.579076 __________________________________________ 
@@ -477,7 +477,7 @@ __  Current Time:   5.579076 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=1, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 5.645428
+		Next scheduled internal transition at time 5.645743
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -501,7 +501,7 @@ __  Current Time:   5.579076 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:   5.645428 __________________________________________ 
+__  Current Time:   5.645743 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -511,7 +511,7 @@ __  Current Time:   5.645428 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 5.645428
+		Next scheduled internal transition at time 5.645743
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_gen>
@@ -524,7 +524,7 @@ __  Current Time:   5.645428 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:   5.645428 __________________________________________ 
+__  Current Time:   5.645743 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -534,7 +534,7 @@ __  Current Time:   5.645428 __________________________________________
 				Query(ID=1)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 5.745428
+		Next scheduled internal transition at time 5.745743
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -545,10 +545,10 @@ __  Current Time:   5.645428 __________________________________________
 				Query(ID=1)
 			port <Q_sack>:
 			port <car_out2>:
-		Next scheduled internal transition at time 5.812095
+		Next scheduled internal transition at time 5.812410
 
 
-__  Current Time:   5.745428 __________________________________________ 
+__  Current Time:   5.745743 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -558,7 +558,7 @@ __  Current Time:   5.745428 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=1, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 5.812095
+		Next scheduled internal transition at time 5.812410
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -571,7 +571,7 @@ __  Current Time:   5.745428 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:   5.812095 __________________________________________ 
+__  Current Time:   5.812410 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -581,7 +581,7 @@ __  Current Time:   5.812095 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 5.812095
+		Next scheduled internal transition at time 5.812410
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -595,7 +595,7 @@ __  Current Time:   5.812095 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:   5.812095 __________________________________________ 
+__  Current Time:   5.812410 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -605,7 +605,7 @@ __  Current Time:   5.812095 __________________________________________
 				Query(ID=1)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 5.912095
+		Next scheduled internal transition at time 5.912410
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -615,10 +615,10 @@ __  Current Time:   5.812095 __________________________________________
 			port <Q_send>:
 				Query(ID=1)
 			port <Q_sack>:
-		Next scheduled internal transition at time 5.978762
+		Next scheduled internal transition at time 5.979077
 
 
-__  Current Time:   5.912095 __________________________________________ 
+__  Current Time:   5.912410 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_gen>
@@ -638,7 +638,7 @@ __  Current Time:   5.912095 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=1, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 5.978762
+		Next scheduled internal transition at time 5.979077
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -652,7 +652,7 @@ __  Current Time:   5.912095 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:   5.978762 __________________________________________ 
+__  Current Time:   5.979077 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.gas_station>
@@ -734,7 +734,7 @@ __  Current Time:  12.011115 __________________________________________
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_gen>
 		Input Port Configuration:
 			port <car_in>:
-				Car(ID=2, v_pref=38.03579401621673, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=11.711115082895095, distance_traveled=0.0, v=38.03579401621673, no_gas=False, destination='collector')
+				Car(ID=2, v_pref=38.03579401621673, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=11.711115082895095, distance_traveled=0.0, v=30, no_gas=False, destination='collector')
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
@@ -745,7 +745,7 @@ __  Current Time:  12.011115 __________________________________________
 		New State: 
 		Output Port Configuration:
 			port <car_out>:
-				Car(ID=2, v_pref=38.03579401621673, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=11.711115082895095, distance_traveled=0.0, v=38.03579401621673, no_gas=False, destination='collector')
+				Car(ID=2, v_pref=38.03579401621673, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=11.711115082895095, distance_traveled=0.0, v=30, no_gas=False, destination='collector')
 			port <Q_send>:
 		Next scheduled internal transition at time 18.528730
 
@@ -770,7 +770,7 @@ __  Current Time:  12.011115 __________________________________________
 			port <Q_send>:
 				Query(ID=2)
 			port <Q_sack>:
-		Next scheduled internal transition at time 12.142570
+		Next scheduled internal transition at time 12.177782
 
 
 __  Current Time:  12.111115 __________________________________________ 
@@ -783,7 +783,7 @@ __  Current Time:  12.111115 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=2, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 12.150996
+		Next scheduled internal transition at time 12.177782
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -807,7 +807,7 @@ __  Current Time:  12.111115 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  12.150996 __________________________________________ 
+__  Current Time:  12.177782 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -817,7 +817,7 @@ __  Current Time:  12.150996 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 12.150996
+		Next scheduled internal transition at time 12.177782
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_gen>
@@ -830,7 +830,7 @@ __  Current Time:  12.150996 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  12.150996 __________________________________________ 
+__  Current Time:  12.177782 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -840,7 +840,7 @@ __  Current Time:  12.150996 __________________________________________
 				Query(ID=2)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 12.250996
+		Next scheduled internal transition at time 12.277782
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -851,10 +851,10 @@ __  Current Time:  12.150996 __________________________________________
 				Query(ID=2)
 			port <Q_sack>:
 			port <car_out2>:
-		Next scheduled internal transition at time 12.317663
+		Next scheduled internal transition at time 12.344449
 
 
-__  Current Time:  12.250996 __________________________________________ 
+__  Current Time:  12.277782 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -864,7 +864,7 @@ __  Current Time:  12.250996 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=2, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 12.317663
+		Next scheduled internal transition at time 12.344449
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -877,7 +877,7 @@ __  Current Time:  12.250996 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  12.317663 __________________________________________ 
+__  Current Time:  12.344449 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -887,7 +887,7 @@ __  Current Time:  12.317663 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 12.317663
+		Next scheduled internal transition at time 12.344449
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -901,7 +901,7 @@ __  Current Time:  12.317663 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  12.317663 __________________________________________ 
+__  Current Time:  12.344449 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -911,7 +911,7 @@ __  Current Time:  12.317663 __________________________________________
 				Query(ID=2)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 12.417663
+		Next scheduled internal transition at time 12.444449
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -921,10 +921,10 @@ __  Current Time:  12.317663 __________________________________________
 			port <Q_send>:
 				Query(ID=2)
 			port <Q_sack>:
-		Next scheduled internal transition at time 12.484330
+		Next scheduled internal transition at time 12.511116
 
 
-__  Current Time:  12.417663 __________________________________________ 
+__  Current Time:  12.444449 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -934,7 +934,7 @@ __  Current Time:  12.417663 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=2, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 12.484330
+		Next scheduled internal transition at time 12.511116
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -947,7 +947,7 @@ __  Current Time:  12.417663 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  12.484330 __________________________________________ 
+__  Current Time:  12.511116 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -957,7 +957,7 @@ __  Current Time:  12.484330 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 12.484330
+		Next scheduled internal transition at time 12.511116
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -970,7 +970,7 @@ __  Current Time:  12.484330 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  12.484330 __________________________________________ 
+__  Current Time:  12.511116 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -980,7 +980,7 @@ __  Current Time:  12.484330 __________________________________________
 				Query(ID=2)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 12.584330
+		Next scheduled internal transition at time 12.611116
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -990,10 +990,10 @@ __  Current Time:  12.484330 __________________________________________
 			port <Q_send>:
 				Query(ID=2)
 			port <Q_sack>:
-		Next scheduled internal transition at time 12.650997
+		Next scheduled internal transition at time 12.677783
 
 
-__  Current Time:  12.584330 __________________________________________ 
+__  Current Time:  12.611116 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -1003,7 +1003,7 @@ __  Current Time:  12.584330 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=2, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 12.650997
+		Next scheduled internal transition at time 12.677783
 
 
 	EXTERNAL TRANSITION in model <roadstretch.side_marker>
@@ -1024,7 +1024,7 @@ __  Current Time:  12.584330 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  12.650997 __________________________________________ 
+__  Current Time:  12.677783 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -1034,7 +1034,7 @@ __  Current Time:  12.650997 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 12.650997
+		Next scheduled internal transition at time 12.677783
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -1047,7 +1047,7 @@ __  Current Time:  12.650997 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  12.650997 __________________________________________ 
+__  Current Time:  12.677783 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n4>
@@ -1057,7 +1057,7 @@ __  Current Time:  12.650997 __________________________________________
 				Query(ID=2)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 12.750997
+		Next scheduled internal transition at time 12.777783
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -1067,10 +1067,10 @@ __  Current Time:  12.650997 __________________________________________
 			port <Q_send>:
 				Query(ID=2)
 			port <Q_sack>:
-		Next scheduled internal transition at time 12.817664
+		Next scheduled internal transition at time 12.844450
 
 
-__  Current Time:  12.750997 __________________________________________ 
+__  Current Time:  12.777783 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -1080,7 +1080,7 @@ __  Current Time:  12.750997 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=2, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 12.817664
+		Next scheduled internal transition at time 12.844450
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s2>
@@ -1103,7 +1103,7 @@ __  Current Time:  12.750997 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  12.817664 __________________________________________ 
+__  Current Time:  12.844450 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n4>
@@ -1113,7 +1113,7 @@ __  Current Time:  12.817664 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 12.817664
+		Next scheduled internal transition at time 12.844450
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -1126,7 +1126,7 @@ __  Current Time:  12.817664 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  12.817664 __________________________________________ 
+__  Current Time:  12.844450 __________________________________________ 
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n4>
@@ -1136,10 +1136,10 @@ __  Current Time:  12.817664 __________________________________________
 			port <Q_send>:
 				Query(ID=2)
 			port <Q_sack>:
-		Next scheduled internal transition at time 12.984331
+		Next scheduled internal transition at time 13.011117
 
 
-__  Current Time:  12.984331 __________________________________________ 
+__  Current Time:  13.011117 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.collector>
@@ -1220,7 +1220,7 @@ __  Current Time:  18.628730 __________________________________________
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_gen>
 		Input Port Configuration:
 			port <car_in>:
-				Car(ID=3, v_pref=35.152162190771925, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=18.22872981715463, distance_traveled=0.0, v=35.152162190771925, no_gas=True, destination='collector')
+				Car(ID=3, v_pref=35.152162190771925, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=18.22872981715463, distance_traveled=0.0, v=30, no_gas=True, destination='collector')
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
@@ -1231,7 +1231,7 @@ __  Current Time:  18.628730 __________________________________________
 		New State: 
 		Output Port Configuration:
 			port <car_out>:
-				Car(ID=3, v_pref=35.152162190771925, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=18.22872981715463, distance_traveled=0.0, v=35.152162190771925, no_gas=True, destination='collector')
+				Car(ID=3, v_pref=35.152162190771925, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=18.22872981715463, distance_traveled=0.0, v=30, no_gas=True, destination='collector')
 			port <Q_send>:
 		Next scheduled internal transition at time 24.059358
 
@@ -1256,7 +1256,7 @@ __  Current Time:  18.628730 __________________________________________
 			port <Q_send>:
 				Query(ID=3)
 			port <Q_sack>:
-		Next scheduled internal transition at time 18.770969
+		Next scheduled internal transition at time 18.795397
 
 
 __  Current Time:  18.728730 __________________________________________ 
@@ -1269,7 +1269,7 @@ __  Current Time:  18.728730 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=3, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 18.778223
+		Next scheduled internal transition at time 18.795397
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -1293,7 +1293,7 @@ __  Current Time:  18.728730 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  18.778223 __________________________________________ 
+__  Current Time:  18.795397 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -1303,7 +1303,7 @@ __  Current Time:  18.778223 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 18.778223
+		Next scheduled internal transition at time 18.795397
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_gen>
@@ -1316,7 +1316,7 @@ __  Current Time:  18.778223 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  18.778223 __________________________________________ 
+__  Current Time:  18.795397 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -1326,7 +1326,7 @@ __  Current Time:  18.778223 __________________________________________
 				Query(ID=3)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 18.878223
+		Next scheduled internal transition at time 18.895397
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -1337,10 +1337,10 @@ __  Current Time:  18.778223 __________________________________________
 				Query(ID=3)
 			port <Q_sack>:
 			port <car_out2>:
-		Next scheduled internal transition at time 18.944890
+		Next scheduled internal transition at time 18.962064
 
 
-__  Current Time:  18.878223 __________________________________________ 
+__  Current Time:  18.895397 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -1350,7 +1350,7 @@ __  Current Time:  18.878223 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=3, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 18.944890
+		Next scheduled internal transition at time 18.962064
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -1363,7 +1363,7 @@ __  Current Time:  18.878223 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  18.944890 __________________________________________ 
+__  Current Time:  18.962064 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -1373,7 +1373,7 @@ __  Current Time:  18.944890 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 18.944890
+		Next scheduled internal transition at time 18.962064
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -1387,7 +1387,7 @@ __  Current Time:  18.944890 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  18.944890 __________________________________________ 
+__  Current Time:  18.962064 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -1397,7 +1397,7 @@ __  Current Time:  18.944890 __________________________________________
 				Query(ID=3)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 19.044890
+		Next scheduled internal transition at time 19.062064
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -1407,10 +1407,10 @@ __  Current Time:  18.944890 __________________________________________
 			port <Q_send>:
 				Query(ID=3)
 			port <Q_sack>:
-		Next scheduled internal transition at time 19.111557
+		Next scheduled internal transition at time 19.128731
 
 
-__  Current Time:  19.044890 __________________________________________ 
+__  Current Time:  19.062064 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_gen>
@@ -1430,7 +1430,7 @@ __  Current Time:  19.044890 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=3, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 19.111557
+		Next scheduled internal transition at time 19.128731
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -1444,7 +1444,7 @@ __  Current Time:  19.044890 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  19.111557 __________________________________________ 
+__  Current Time:  19.128731 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.gas_station>
@@ -1526,7 +1526,7 @@ __  Current Time:  24.159358 __________________________________________
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_gen>
 		Input Port Configuration:
 			port <car_in>:
-				Car(ID=4, v_pref=39.22607425642984, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=23.659357341369805, distance_traveled=0.0, v=39.22607425642984, no_gas=False, destination='collector')
+				Car(ID=4, v_pref=39.22607425642984, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=23.659357341369805, distance_traveled=0.0, v=30, no_gas=False, destination='collector')
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
@@ -1537,7 +1537,7 @@ __  Current Time:  24.159358 __________________________________________
 		New State: 
 		Output Port Configuration:
 			port <car_out>:
-				Car(ID=4, v_pref=39.22607425642984, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=23.659357341369805, distance_traveled=0.0, v=39.22607425642984, no_gas=False, destination='collector')
+				Car(ID=4, v_pref=39.22607425642984, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=23.659357341369805, distance_traveled=0.0, v=30, no_gas=False, destination='collector')
 			port <Q_send>:
 		Next scheduled internal transition at time 30.231814
 
@@ -1562,7 +1562,7 @@ __  Current Time:  24.159358 __________________________________________
 			port <Q_send>:
 				Query(ID=4)
 			port <Q_sack>:
-		Next scheduled internal transition at time 24.286824
+		Next scheduled internal transition at time 24.326025
 
 
 __  Current Time:  24.259358 __________________________________________ 
@@ -1575,7 +1575,7 @@ __  Current Time:  24.259358 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=4, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 24.295271
+		Next scheduled internal transition at time 24.326025
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -1599,7 +1599,7 @@ __  Current Time:  24.259358 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  24.295271 __________________________________________ 
+__  Current Time:  24.326025 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -1609,7 +1609,7 @@ __  Current Time:  24.295271 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 24.295271
+		Next scheduled internal transition at time 24.326025
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_gen>
@@ -1622,7 +1622,7 @@ __  Current Time:  24.295271 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  24.295271 __________________________________________ 
+__  Current Time:  24.326025 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -1632,7 +1632,7 @@ __  Current Time:  24.295271 __________________________________________
 				Query(ID=4)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 24.395271
+		Next scheduled internal transition at time 24.426025
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -1643,10 +1643,10 @@ __  Current Time:  24.295271 __________________________________________
 				Query(ID=4)
 			port <Q_sack>:
 			port <car_out2>:
-		Next scheduled internal transition at time 24.461938
+		Next scheduled internal transition at time 24.492692
 
 
-__  Current Time:  24.395271 __________________________________________ 
+__  Current Time:  24.426025 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -1656,7 +1656,7 @@ __  Current Time:  24.395271 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=4, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 24.461938
+		Next scheduled internal transition at time 24.492692
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -1669,7 +1669,7 @@ __  Current Time:  24.395271 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  24.461938 __________________________________________ 
+__  Current Time:  24.492692 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -1679,7 +1679,7 @@ __  Current Time:  24.461938 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 24.461938
+		Next scheduled internal transition at time 24.492692
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -1693,7 +1693,7 @@ __  Current Time:  24.461938 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  24.461938 __________________________________________ 
+__  Current Time:  24.492692 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -1703,7 +1703,7 @@ __  Current Time:  24.461938 __________________________________________
 				Query(ID=4)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 24.561938
+		Next scheduled internal transition at time 24.592692
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -1713,10 +1713,10 @@ __  Current Time:  24.461938 __________________________________________
 			port <Q_send>:
 				Query(ID=4)
 			port <Q_sack>:
-		Next scheduled internal transition at time 24.628605
+		Next scheduled internal transition at time 24.659359
 
 
-__  Current Time:  24.561938 __________________________________________ 
+__  Current Time:  24.592692 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -1726,7 +1726,7 @@ __  Current Time:  24.561938 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=4, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 24.628605
+		Next scheduled internal transition at time 24.659359
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -1739,7 +1739,7 @@ __  Current Time:  24.561938 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  24.628605 __________________________________________ 
+__  Current Time:  24.659359 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -1749,7 +1749,7 @@ __  Current Time:  24.628605 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 24.628605
+		Next scheduled internal transition at time 24.659359
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -1762,7 +1762,7 @@ __  Current Time:  24.628605 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  24.628605 __________________________________________ 
+__  Current Time:  24.659359 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -1772,7 +1772,7 @@ __  Current Time:  24.628605 __________________________________________
 				Query(ID=4)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 24.728605
+		Next scheduled internal transition at time 24.759359
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -1782,10 +1782,10 @@ __  Current Time:  24.628605 __________________________________________
 			port <Q_send>:
 				Query(ID=4)
 			port <Q_sack>:
-		Next scheduled internal transition at time 24.795272
+		Next scheduled internal transition at time 24.826026
 
 
-__  Current Time:  24.728605 __________________________________________ 
+__  Current Time:  24.759359 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -1795,7 +1795,7 @@ __  Current Time:  24.728605 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=4, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 24.795272
+		Next scheduled internal transition at time 24.826026
 
 
 	EXTERNAL TRANSITION in model <roadstretch.side_marker>
@@ -1816,7 +1816,7 @@ __  Current Time:  24.728605 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  24.795272 __________________________________________ 
+__  Current Time:  24.826026 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -1826,7 +1826,7 @@ __  Current Time:  24.795272 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 24.795272
+		Next scheduled internal transition at time 24.826026
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -1839,7 +1839,7 @@ __  Current Time:  24.795272 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  24.795272 __________________________________________ 
+__  Current Time:  24.826026 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n4>
@@ -1849,7 +1849,7 @@ __  Current Time:  24.795272 __________________________________________
 				Query(ID=4)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 24.895272
+		Next scheduled internal transition at time 24.926026
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -1859,10 +1859,10 @@ __  Current Time:  24.795272 __________________________________________
 			port <Q_send>:
 				Query(ID=4)
 			port <Q_sack>:
-		Next scheduled internal transition at time 24.961939
+		Next scheduled internal transition at time 24.992693
 
 
-__  Current Time:  24.895272 __________________________________________ 
+__  Current Time:  24.926026 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -1872,7 +1872,7 @@ __  Current Time:  24.895272 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=4, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 24.961939
+		Next scheduled internal transition at time 24.992693
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s2>
@@ -1895,7 +1895,7 @@ __  Current Time:  24.895272 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  24.961939 __________________________________________ 
+__  Current Time:  24.992693 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n4>
@@ -1905,7 +1905,7 @@ __  Current Time:  24.961939 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 24.961939
+		Next scheduled internal transition at time 24.992693
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -1918,7 +1918,7 @@ __  Current Time:  24.961939 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  24.961939 __________________________________________ 
+__  Current Time:  24.992693 __________________________________________ 
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n4>
@@ -1928,10 +1928,10 @@ __  Current Time:  24.961939 __________________________________________
 			port <Q_send>:
 				Query(ID=4)
 			port <Q_sack>:
-		Next scheduled internal transition at time 25.128606
+		Next scheduled internal transition at time 25.159360
 
 
-__  Current Time:  25.128606 __________________________________________ 
+__  Current Time:  25.159360 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.collector>
@@ -3290,7 +3290,7 @@ __  Current Time:  50.160602 __________________________________________
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_gen>
 		Input Port Configuration:
 			port <car_in>:
-				Car(ID=8, v_pref=32.2587284396138, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=49.26060148303135, distance_traveled=0.0, v=32.2587284396138, no_gas=True, destination='collector')
+				Car(ID=8, v_pref=32.2587284396138, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=49.26060148303135, distance_traveled=0.0, v=30, no_gas=True, destination='collector')
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
@@ -3301,7 +3301,7 @@ __  Current Time:  50.160602 __________________________________________
 		New State: 
 		Output Port Configuration:
 			port <car_out>:
-				Car(ID=8, v_pref=32.2587284396138, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=49.26060148303135, distance_traveled=0.0, v=32.2587284396138, no_gas=True, destination='collector')
+				Car(ID=8, v_pref=32.2587284396138, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=49.26060148303135, distance_traveled=0.0, v=30, no_gas=True, destination='collector')
 			port <Q_send>:
 		Next scheduled internal transition at time 55.487407
 
@@ -3326,7 +3326,7 @@ __  Current Time:  50.160602 __________________________________________
 			port <Q_send>:
 				Query(ID=8)
 			port <Q_sack>:
-		Next scheduled internal transition at time 50.315599
+		Next scheduled internal transition at time 50.327269
 
 
 __  Current Time:  50.260602 __________________________________________ 
@@ -3339,7 +3339,7 @@ __  Current Time:  50.260602 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=8, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 50.319740
+		Next scheduled internal transition at time 50.327269
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -3363,7 +3363,7 @@ __  Current Time:  50.260602 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  50.319740 __________________________________________ 
+__  Current Time:  50.327269 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -3373,7 +3373,7 @@ __  Current Time:  50.319740 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 50.319740
+		Next scheduled internal transition at time 50.327269
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_gen>
@@ -3386,7 +3386,7 @@ __  Current Time:  50.319740 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  50.319740 __________________________________________ 
+__  Current Time:  50.327269 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -3396,7 +3396,7 @@ __  Current Time:  50.319740 __________________________________________
 				Query(ID=8)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 50.419740
+		Next scheduled internal transition at time 50.427269
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -3407,10 +3407,10 @@ __  Current Time:  50.319740 __________________________________________
 				Query(ID=8)
 			port <Q_sack>:
 			port <car_out2>:
-		Next scheduled internal transition at time 50.486407
+		Next scheduled internal transition at time 50.493936
 
 
-__  Current Time:  50.419740 __________________________________________ 
+__  Current Time:  50.427269 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -3420,7 +3420,7 @@ __  Current Time:  50.419740 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=8, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 50.486407
+		Next scheduled internal transition at time 50.493936
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -3433,7 +3433,7 @@ __  Current Time:  50.419740 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  50.486407 __________________________________________ 
+__  Current Time:  50.493936 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -3443,7 +3443,7 @@ __  Current Time:  50.486407 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 50.486407
+		Next scheduled internal transition at time 50.493936
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -3457,7 +3457,7 @@ __  Current Time:  50.486407 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  50.486407 __________________________________________ 
+__  Current Time:  50.493936 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -3467,7 +3467,7 @@ __  Current Time:  50.486407 __________________________________________
 				Query(ID=8)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 50.586407
+		Next scheduled internal transition at time 50.593936
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -3477,10 +3477,10 @@ __  Current Time:  50.486407 __________________________________________
 			port <Q_send>:
 				Query(ID=8)
 			port <Q_sack>:
-		Next scheduled internal transition at time 50.653074
+		Next scheduled internal transition at time 50.660603
 
 
-__  Current Time:  50.586407 __________________________________________ 
+__  Current Time:  50.593936 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_gen>
@@ -3500,7 +3500,7 @@ __  Current Time:  50.586407 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=8, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 50.653074
+		Next scheduled internal transition at time 50.660603
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -3514,7 +3514,7 @@ __  Current Time:  50.586407 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  50.653074 __________________________________________ 
+__  Current Time:  50.660603 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.gas_station>
@@ -4874,7 +4874,7 @@ __  Current Time:  74.493450 __________________________________________
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_gen>
 		Input Port Configuration:
 			port <car_in>:
-				Car(ID=12, v_pref=30.17976889833916, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=73.19344952311495, distance_traveled=0.0, v=30.17976889833916, no_gas=False, destination='collector')
+				Car(ID=12, v_pref=30.17976889833916, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=73.19344952311495, distance_traveled=0.0, v=30, no_gas=False, destination='collector')
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
@@ -4885,7 +4885,7 @@ __  Current Time:  74.493450 __________________________________________
 		New State: 
 		Output Port Configuration:
 			port <car_out>:
-				Car(ID=12, v_pref=30.17976889833916, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=73.19344952311495, distance_traveled=0.0, v=30.17976889833916, no_gas=False, destination='collector')
+				Car(ID=12, v_pref=30.17976889833916, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=73.19344952311495, distance_traveled=0.0, v=30, no_gas=False, destination='collector')
 			port <Q_send>:
 		Next scheduled internal transition at time 81.215656
 
@@ -4910,7 +4910,7 @@ __  Current Time:  74.493450 __________________________________________
 			port <Q_send>:
 				Query(ID=12)
 			port <Q_sack>:
-		Next scheduled internal transition at time 74.659124
+		Next scheduled internal transition at time 74.660117
 
 
 __  Current Time:  74.593450 __________________________________________ 
@@ -4923,7 +4923,7 @@ __  Current Time:  74.593450 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=12, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 74.659517
+		Next scheduled internal transition at time 74.660117
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -4947,7 +4947,7 @@ __  Current Time:  74.593450 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  74.659517 __________________________________________ 
+__  Current Time:  74.660117 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -4957,7 +4957,7 @@ __  Current Time:  74.659517 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 74.659517
+		Next scheduled internal transition at time 74.660117
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_gen>
@@ -4970,7 +4970,7 @@ __  Current Time:  74.659517 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  74.659517 __________________________________________ 
+__  Current Time:  74.660117 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -4980,7 +4980,7 @@ __  Current Time:  74.659517 __________________________________________
 				Query(ID=12)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 74.759517
+		Next scheduled internal transition at time 74.760117
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -4991,10 +4991,10 @@ __  Current Time:  74.659517 __________________________________________
 				Query(ID=12)
 			port <Q_sack>:
 			port <car_out2>:
-		Next scheduled internal transition at time 74.826184
+		Next scheduled internal transition at time 74.826784
 
 
-__  Current Time:  74.759517 __________________________________________ 
+__  Current Time:  74.760117 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -5004,7 +5004,7 @@ __  Current Time:  74.759517 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=12, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 74.826184
+		Next scheduled internal transition at time 74.826784
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -5017,7 +5017,7 @@ __  Current Time:  74.759517 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  74.826184 __________________________________________ 
+__  Current Time:  74.826784 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -5027,7 +5027,7 @@ __  Current Time:  74.826184 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 74.826184
+		Next scheduled internal transition at time 74.826784
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -5041,7 +5041,7 @@ __  Current Time:  74.826184 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  74.826184 __________________________________________ 
+__  Current Time:  74.826784 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -5051,7 +5051,7 @@ __  Current Time:  74.826184 __________________________________________
 				Query(ID=12)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 74.926184
+		Next scheduled internal transition at time 74.926784
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -5061,10 +5061,10 @@ __  Current Time:  74.826184 __________________________________________
 			port <Q_send>:
 				Query(ID=12)
 			port <Q_sack>:
-		Next scheduled internal transition at time 74.992851
+		Next scheduled internal transition at time 74.993451
 
 
-__  Current Time:  74.926184 __________________________________________ 
+__  Current Time:  74.926784 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -5074,7 +5074,7 @@ __  Current Time:  74.926184 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=12, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 74.992851
+		Next scheduled internal transition at time 74.993451
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -5087,7 +5087,7 @@ __  Current Time:  74.926184 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  74.992851 __________________________________________ 
+__  Current Time:  74.993451 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -5097,7 +5097,7 @@ __  Current Time:  74.992851 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 74.992851
+		Next scheduled internal transition at time 74.993451
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -5110,7 +5110,7 @@ __  Current Time:  74.992851 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  74.992851 __________________________________________ 
+__  Current Time:  74.993451 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -5120,7 +5120,7 @@ __  Current Time:  74.992851 __________________________________________
 				Query(ID=12)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 75.092851
+		Next scheduled internal transition at time 75.093451
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -5130,10 +5130,10 @@ __  Current Time:  74.992851 __________________________________________
 			port <Q_send>:
 				Query(ID=12)
 			port <Q_sack>:
-		Next scheduled internal transition at time 75.159518
+		Next scheduled internal transition at time 75.160118
 
 
-__  Current Time:  75.092851 __________________________________________ 
+__  Current Time:  75.093451 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -5143,7 +5143,7 @@ __  Current Time:  75.092851 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=12, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 75.159518
+		Next scheduled internal transition at time 75.160118
 
 
 	EXTERNAL TRANSITION in model <roadstretch.side_marker>
@@ -5164,7 +5164,7 @@ __  Current Time:  75.092851 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  75.159518 __________________________________________ 
+__  Current Time:  75.160118 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -5174,7 +5174,7 @@ __  Current Time:  75.159518 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 75.159518
+		Next scheduled internal transition at time 75.160118
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -5187,7 +5187,7 @@ __  Current Time:  75.159518 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  75.159518 __________________________________________ 
+__  Current Time:  75.160118 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n4>
@@ -5197,7 +5197,7 @@ __  Current Time:  75.159518 __________________________________________
 				Query(ID=12)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 75.259518
+		Next scheduled internal transition at time 75.260118
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -5207,10 +5207,10 @@ __  Current Time:  75.159518 __________________________________________
 			port <Q_send>:
 				Query(ID=12)
 			port <Q_sack>:
-		Next scheduled internal transition at time 75.326185
+		Next scheduled internal transition at time 75.326785
 
 
-__  Current Time:  75.259518 __________________________________________ 
+__  Current Time:  75.260118 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -5220,7 +5220,7 @@ __  Current Time:  75.259518 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=12, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 75.326185
+		Next scheduled internal transition at time 75.326785
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s2>
@@ -5243,7 +5243,7 @@ __  Current Time:  75.259518 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  75.326185 __________________________________________ 
+__  Current Time:  75.326785 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n4>
@@ -5253,7 +5253,7 @@ __  Current Time:  75.326185 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 75.326185
+		Next scheduled internal transition at time 75.326785
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -5266,7 +5266,7 @@ __  Current Time:  75.326185 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  75.326185 __________________________________________ 
+__  Current Time:  75.326785 __________________________________________ 
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n4>
@@ -5276,10 +5276,10 @@ __  Current Time:  75.326185 __________________________________________
 			port <Q_send>:
 				Query(ID=12)
 			port <Q_sack>:
-		Next scheduled internal transition at time 75.492852
+		Next scheduled internal transition at time 75.493452
 
 
-__  Current Time:  75.492852 __________________________________________ 
+__  Current Time:  75.493452 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.collector>
@@ -5360,7 +5360,7 @@ __  Current Time:  81.315656 __________________________________________
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_gen>
 		Input Port Configuration:
 			port <car_in>:
-				Car(ID=13, v_pref=40.515417242658174, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=79.91565534244828, distance_traveled=0.0, v=40.515417242658174, no_gas=True, destination='collector')
+				Car(ID=13, v_pref=40.515417242658174, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=79.91565534244828, distance_traveled=0.0, v=30, no_gas=True, destination='collector')
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
@@ -5371,7 +5371,7 @@ __  Current Time:  81.315656 __________________________________________
 		New State: 
 		Output Port Configuration:
 			port <car_out>:
-				Car(ID=13, v_pref=40.515417242658174, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=79.91565534244828, distance_traveled=0.0, v=40.515417242658174, no_gas=True, destination='collector')
+				Car(ID=13, v_pref=40.515417242658174, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=79.91565534244828, distance_traveled=0.0, v=30, no_gas=True, destination='collector')
 			port <Q_send>:
 		Next scheduled internal transition at time 87.508474
 
@@ -5396,7 +5396,7 @@ __  Current Time:  81.315656 __________________________________________
 			port <Q_send>:
 				Query(ID=13)
 			port <Q_sack>:
-		Next scheduled internal transition at time 81.439066
+		Next scheduled internal transition at time 81.482323
 
 
 __  Current Time:  81.415656 __________________________________________ 
@@ -5409,7 +5409,7 @@ __  Current Time:  81.415656 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=13, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 81.447271
+		Next scheduled internal transition at time 81.482323
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -5433,7 +5433,7 @@ __  Current Time:  81.415656 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  81.447271 __________________________________________ 
+__  Current Time:  81.482323 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -5443,7 +5443,7 @@ __  Current Time:  81.447271 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 81.447271
+		Next scheduled internal transition at time 81.482323
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_gen>
@@ -5456,7 +5456,7 @@ __  Current Time:  81.447271 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  81.447271 __________________________________________ 
+__  Current Time:  81.482323 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -5466,7 +5466,7 @@ __  Current Time:  81.447271 __________________________________________
 				Query(ID=13)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 81.547271
+		Next scheduled internal transition at time 81.582323
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -5477,10 +5477,10 @@ __  Current Time:  81.447271 __________________________________________
 				Query(ID=13)
 			port <Q_sack>:
 			port <car_out2>:
-		Next scheduled internal transition at time 81.613938
+		Next scheduled internal transition at time 81.648990
 
 
-__  Current Time:  81.547271 __________________________________________ 
+__  Current Time:  81.582323 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -5490,7 +5490,7 @@ __  Current Time:  81.547271 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=13, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 81.613938
+		Next scheduled internal transition at time 81.648990
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -5503,7 +5503,7 @@ __  Current Time:  81.547271 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  81.613938 __________________________________________ 
+__  Current Time:  81.648990 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -5513,7 +5513,7 @@ __  Current Time:  81.613938 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 81.613938
+		Next scheduled internal transition at time 81.648990
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -5527,7 +5527,7 @@ __  Current Time:  81.613938 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  81.613938 __________________________________________ 
+__  Current Time:  81.648990 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -5537,7 +5537,7 @@ __  Current Time:  81.613938 __________________________________________
 				Query(ID=13)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 81.713938
+		Next scheduled internal transition at time 81.748990
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -5547,10 +5547,10 @@ __  Current Time:  81.613938 __________________________________________
 			port <Q_send>:
 				Query(ID=13)
 			port <Q_sack>:
-		Next scheduled internal transition at time 81.780605
+		Next scheduled internal transition at time 81.815657
 
 
-__  Current Time:  81.713938 __________________________________________ 
+__  Current Time:  81.748990 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_gen>
@@ -5570,7 +5570,7 @@ __  Current Time:  81.713938 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=13, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 81.780605
+		Next scheduled internal transition at time 81.815657
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -5584,7 +5584,7 @@ __  Current Time:  81.713938 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  81.780605 __________________________________________ 
+__  Current Time:  81.815657 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.gas_station>
@@ -5666,7 +5666,7 @@ __  Current Time:  87.608474 __________________________________________
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_gen>
 		Input Port Configuration:
 			port <car_in>:
-				Car(ID=14, v_pref=47.26959395755162, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=86.10847340391223, distance_traveled=0.0, v=47.26959395755162, no_gas=False, destination='collector')
+				Car(ID=14, v_pref=47.26959395755162, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=86.10847340391223, distance_traveled=0.0, v=30, no_gas=False, destination='collector')
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
@@ -5677,7 +5677,7 @@ __  Current Time:  87.608474 __________________________________________
 		New State: 
 		Output Port Configuration:
 			port <car_out>:
-				Car(ID=14, v_pref=47.26959395755162, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=86.10847340391223, distance_traveled=0.0, v=47.26959395755162, no_gas=False, destination='collector')
+				Car(ID=14, v_pref=47.26959395755162, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=86.10847340391223, distance_traveled=0.0, v=30, no_gas=False, destination='collector')
 			port <Q_send>:
 		Next scheduled internal transition at time 93.969041
 
@@ -5702,7 +5702,7 @@ __  Current Time:  87.608474 __________________________________________
 			port <Q_send>:
 				Query(ID=14)
 			port <Q_sack>:
-		Next scheduled internal transition at time 87.714250
+		Next scheduled internal transition at time 87.775141
 
 
 __  Current Time:  87.708474 __________________________________________ 
@@ -5715,7 +5715,7 @@ __  Current Time:  87.708474 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=14, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 87.717575
+		Next scheduled internal transition at time 87.775141
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -5739,7 +5739,7 @@ __  Current Time:  87.708474 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  87.717575 __________________________________________ 
+__  Current Time:  87.775141 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -5749,7 +5749,7 @@ __  Current Time:  87.717575 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 87.717575
+		Next scheduled internal transition at time 87.775141
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_gen>
@@ -5762,7 +5762,7 @@ __  Current Time:  87.717575 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  87.717575 __________________________________________ 
+__  Current Time:  87.775141 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -5772,7 +5772,7 @@ __  Current Time:  87.717575 __________________________________________
 				Query(ID=14)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 87.817575
+		Next scheduled internal transition at time 87.875141
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -5783,10 +5783,10 @@ __  Current Time:  87.717575 __________________________________________
 				Query(ID=14)
 			port <Q_sack>:
 			port <car_out2>:
-		Next scheduled internal transition at time 87.884242
+		Next scheduled internal transition at time 87.941808
 
 
-__  Current Time:  87.817575 __________________________________________ 
+__  Current Time:  87.875141 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -5796,7 +5796,7 @@ __  Current Time:  87.817575 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=14, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 87.884242
+		Next scheduled internal transition at time 87.941808
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -5809,7 +5809,7 @@ __  Current Time:  87.817575 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  87.884242 __________________________________________ 
+__  Current Time:  87.941808 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -5819,7 +5819,7 @@ __  Current Time:  87.884242 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 87.884242
+		Next scheduled internal transition at time 87.941808
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -5833,7 +5833,7 @@ __  Current Time:  87.884242 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  87.884242 __________________________________________ 
+__  Current Time:  87.941808 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -5843,7 +5843,7 @@ __  Current Time:  87.884242 __________________________________________
 				Query(ID=14)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 87.984242
+		Next scheduled internal transition at time 88.041808
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -5853,10 +5853,10 @@ __  Current Time:  87.884242 __________________________________________
 			port <Q_send>:
 				Query(ID=14)
 			port <Q_sack>:
-		Next scheduled internal transition at time 88.050909
+		Next scheduled internal transition at time 88.108475
 
 
-__  Current Time:  87.984242 __________________________________________ 
+__  Current Time:  88.041808 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -5866,7 +5866,7 @@ __  Current Time:  87.984242 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=14, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 88.050909
+		Next scheduled internal transition at time 88.108475
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -5879,7 +5879,7 @@ __  Current Time:  87.984242 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  88.050909 __________________________________________ 
+__  Current Time:  88.108475 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -5889,7 +5889,7 @@ __  Current Time:  88.050909 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 88.050909
+		Next scheduled internal transition at time 88.108475
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -5902,7 +5902,7 @@ __  Current Time:  88.050909 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  88.050909 __________________________________________ 
+__  Current Time:  88.108475 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -5912,7 +5912,7 @@ __  Current Time:  88.050909 __________________________________________
 				Query(ID=14)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 88.150909
+		Next scheduled internal transition at time 88.208475
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -5922,10 +5922,10 @@ __  Current Time:  88.050909 __________________________________________
 			port <Q_send>:
 				Query(ID=14)
 			port <Q_sack>:
-		Next scheduled internal transition at time 88.217576
+		Next scheduled internal transition at time 88.275142
 
 
-__  Current Time:  88.150909 __________________________________________ 
+__  Current Time:  88.208475 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -5935,7 +5935,7 @@ __  Current Time:  88.150909 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=14, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 88.217576
+		Next scheduled internal transition at time 88.275142
 
 
 	EXTERNAL TRANSITION in model <roadstretch.side_marker>
@@ -5956,7 +5956,7 @@ __  Current Time:  88.150909 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  88.217576 __________________________________________ 
+__  Current Time:  88.275142 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -5966,7 +5966,7 @@ __  Current Time:  88.217576 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 88.217576
+		Next scheduled internal transition at time 88.275142
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n2>
@@ -5979,7 +5979,7 @@ __  Current Time:  88.217576 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  88.217576 __________________________________________ 
+__  Current Time:  88.275142 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n4>
@@ -5989,7 +5989,7 @@ __  Current Time:  88.217576 __________________________________________
 				Query(ID=14)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 88.317576
+		Next scheduled internal transition at time 88.375142
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -5999,10 +5999,10 @@ __  Current Time:  88.217576 __________________________________________
 			port <Q_send>:
 				Query(ID=14)
 			port <Q_sack>:
-		Next scheduled internal transition at time 88.384243
+		Next scheduled internal transition at time 88.441809
 
 
-__  Current Time:  88.317576 __________________________________________ 
+__  Current Time:  88.375142 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -6012,7 +6012,7 @@ __  Current Time:  88.317576 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=14, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 88.384243
+		Next scheduled internal transition at time 88.441809
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s2>
@@ -6035,7 +6035,7 @@ __  Current Time:  88.317576 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  88.384243 __________________________________________ 
+__  Current Time:  88.441809 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n4>
@@ -6045,7 +6045,7 @@ __  Current Time:  88.384243 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 88.384243
+		Next scheduled internal transition at time 88.441809
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n3>
@@ -6058,7 +6058,7 @@ __  Current Time:  88.384243 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  88.384243 __________________________________________ 
+__  Current Time:  88.441809 __________________________________________ 
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n4>
@@ -6068,10 +6068,10 @@ __  Current Time:  88.384243 __________________________________________
 			port <Q_send>:
 				Query(ID=14)
 			port <Q_sack>:
-		Next scheduled internal transition at time 88.550910
+		Next scheduled internal transition at time 88.608476
 
 
-__  Current Time:  88.550910 __________________________________________ 
+__  Current Time:  88.608476 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.collector>
@@ -6152,7 +6152,7 @@ __  Current Time:  94.069041 __________________________________________
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_gen>
 		Input Port Configuration:
 			port <car_in>:
-				Car(ID=15, v_pref=36.732380333704604, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=92.46904022442527, distance_traveled=0.0, v=36.732380333704604, no_gas=True, destination='collector')
+				Car(ID=15, v_pref=36.732380333704604, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=92.46904022442527, distance_traveled=0.0, v=30, no_gas=True, destination='collector')
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
@@ -6163,7 +6163,7 @@ __  Current Time:  94.069041 __________________________________________
 		New State: 
 		Output Port Configuration:
 			port <car_out>:
-				Car(ID=15, v_pref=36.732380333704604, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=92.46904022442527, distance_traveled=0.0, v=36.732380333704604, no_gas=True, destination='collector')
+				Car(ID=15, v_pref=36.732380333704604, dv_pos_max=28.0, dv_neg_max=21.0, departure_time=92.46904022442527, distance_traveled=0.0, v=30, no_gas=True, destination='collector')
 			port <Q_send>:
 		Next scheduled internal transition at time 100.606238
 
@@ -6188,7 +6188,7 @@ __  Current Time:  94.069041 __________________________________________
 			port <Q_send>:
 				Query(ID=15)
 			port <Q_sack>:
-		Next scheduled internal transition at time 94.205161
+		Next scheduled internal transition at time 94.235708
 
 
 __  Current Time:  94.169041 __________________________________________ 
@@ -6201,7 +6201,7 @@ __  Current Time:  94.169041 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=15, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 94.213266
+		Next scheduled internal transition at time 94.235708
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -6225,7 +6225,7 @@ __  Current Time:  94.169041 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  94.213266 __________________________________________ 
+__  Current Time:  94.235708 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -6235,7 +6235,7 @@ __  Current Time:  94.213266 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 94.213266
+		Next scheduled internal transition at time 94.235708
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_gen>
@@ -6248,7 +6248,7 @@ __  Current Time:  94.213266 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  94.213266 __________________________________________ 
+__  Current Time:  94.235708 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -6258,7 +6258,7 @@ __  Current Time:  94.213266 __________________________________________
 				Query(ID=15)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 94.313266
+		Next scheduled internal transition at time 94.335708
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -6269,10 +6269,10 @@ __  Current Time:  94.213266 __________________________________________
 				Query(ID=15)
 			port <Q_sack>:
 			port <car_out2>:
-		Next scheduled internal transition at time 94.379933
+		Next scheduled internal transition at time 94.402375
 
 
-__  Current Time:  94.313266 __________________________________________ 
+__  Current Time:  94.335708 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -6282,7 +6282,7 @@ __  Current Time:  94.313266 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=15, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 94.379933
+		Next scheduled internal transition at time 94.402375
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_n1>
@@ -6295,7 +6295,7 @@ __  Current Time:  94.313266 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  94.379933 __________________________________________ 
+__  Current Time:  94.402375 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -6305,7 +6305,7 @@ __  Current Time:  94.379933 __________________________________________
 			port <Q_recv>:
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 94.379933
+		Next scheduled internal transition at time 94.402375
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -6319,7 +6319,7 @@ __  Current Time:  94.379933 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  94.379933 __________________________________________ 
+__  Current Time:  94.402375 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.fork>
@@ -6329,7 +6329,7 @@ __  Current Time:  94.379933 __________________________________________
 				Query(ID=15)
 			port <Q_rack>:
 		New State: 
-		Next scheduled internal transition at time 94.479933
+		Next scheduled internal transition at time 94.502375
 
 
 	INTERNAL TRANSITION in model <roadstretch.road_segment_s1>
@@ -6339,10 +6339,10 @@ __  Current Time:  94.379933 __________________________________________
 			port <Q_send>:
 				Query(ID=15)
 			port <Q_sack>:
-		Next scheduled internal transition at time 94.546600
+		Next scheduled internal transition at time 94.569042
 
 
-__  Current Time:  94.479933 __________________________________________ 
+__  Current Time:  94.502375 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.road_segment_gen>
@@ -6362,7 +6362,7 @@ __  Current Time:  94.479933 __________________________________________
 			port <Q_rack>:
 				QueryAck(ID=15, t_until_dep=0.0, lane=0, sideways=False)
 		New State: 
-		Next scheduled internal transition at time 94.546600
+		Next scheduled internal transition at time 94.569042
 
 
 	INTERNAL TRANSITION in model <roadstretch.fork>
@@ -6376,7 +6376,7 @@ __  Current Time:  94.479933 __________________________________________
 		Next scheduled internal transition at time inf
 
 
-__  Current Time:  94.546600 __________________________________________ 
+__  Current Time:  94.569042 __________________________________________ 
 
 
 	EXTERNAL TRANSITION in model <roadstretch.gas_station>
