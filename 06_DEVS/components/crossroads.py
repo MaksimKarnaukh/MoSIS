@@ -112,49 +112,12 @@ class CrossRoadSegment(RoadSegment):
         return self.state
 
     def extTransition(self, inputs):
-        # get the time since last event
-        time_passed = self.elapsed
-
-        # update the time of all events in the event queue
-        self.timePassed(time_passed)
-
-        # a car arrives
-        if self.car_in in inputs:
-            car: Car = inputs[self.car_in]
-            self.car_enter(car)
 
         if self.car_in_cr in inputs:
             car: Car = inputs[self.car_in_cr]
             self.car_enter(car)
 
-        # upon receiving a query
-        if self.Q_recv in inputs:
-            # Upon arrival of a Query, the RoadSegment waits for observ_delay time before replying a QueryAck on
-            # the Q_sack output port. The outputted QueryAck's t_until_dep equals the remaining time of the current Car
-            # on the RoadSegment (which can be infinity if the Car's velocity is 0). If there is no Car, t_until_dep
-            # equals zero. Notice that multiple Query events may arrive during this waiting time,
-            # all of whom should wait for exactly observ_delay time.
-            query: Query = inputs[self.Q_recv]
-            if len(self.state.cars_present) > 0:
-                self.state.query_ack_reply.t_until_dep = self.state.cars_present[0].remaining_x / self.state.cars_present[0].v
-            else:
-                self.state.query_ack_reply.t_until_dep = 0.0
-            self.state.query_ack_reply = QueryAck(query.ID, self.state.t_until_dep)
-            self.addEvent(EventEnum.RECEIVED_QUERY, self.observ_delay)
-
-        # Upon arrival of a QueryAck
-        if self.Q_rack in inputs:
-            query_ack: QueryAck = inputs[self.Q_rack]
-
-            # update car velocity
-            v_new = self.get_car_new_velocity(self.state.cars_present[0], query_ack)
-            if self.state.time_since_last_query >= 0.0001:
-                v_new = max(self.state.previous_v_new, v_new)
-            self.state.cars_present[0].v = v_new
-
-            self.state.time_since_last_query = 0.0
-
-        return self.state
+        return super(CrossRoadSegment, self).extTransition(inputs)
 
 
 class CrossRoads(CoupledDEVS):

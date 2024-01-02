@@ -46,8 +46,10 @@ class Collector(AtomicDEVS):
 
     def getStatistics(self):
         return {
+            "time": self.state.time,
             "total_time": self.state.total_time,
-            "average_time": self.state.total_time / self.state.n,
+            # if n is 0, return 0 to avoid division by 0
+            "average_time": self.state.total_time / self.state.n if self.state.n > 0 else 0,
             "number_of_cars": self.state.n,
             "travel_time_per_car": self.state.cars
         }
