@@ -147,7 +147,7 @@ class GasStation(AtomicDEVS):
         return self.state
 
     def extTransition(self, inputs):
-        self.state.time += self.timeAdvance()
+        self.state.time += self.elapsed
 
         # decrease the delay of every car by self.elapsed
         self.state.decreaseCarDelays(self.elapsed)
