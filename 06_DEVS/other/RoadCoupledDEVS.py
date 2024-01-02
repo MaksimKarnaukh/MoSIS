@@ -44,5 +44,5 @@ class RoadCoupledDEVS(CoupledDEVS):
         :param fork_output_port: the fork output port to connect to
         """
         self.connectPorts(fork_output_port, component.car_in)
-        self.connectPorts(component.Q_send, fork.Q_recv)
-        self.connectPorts(fork.Q_sack, component.Q_rack)
+        self.connectPorts(fork.Q_send, component.Q_recv)
+        self.connectPorts(component.Q_sack, fork.Q_rack)
