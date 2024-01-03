@@ -3,7 +3,7 @@ import unittest
 from tests.helpers import *
 
 from components.sidemarker import SideMarker
-from components.messages import QueryAck
+from components.messages import *
 
 from pypdevs.simulator import Simulator
 
@@ -22,7 +22,6 @@ class TestSideMarker(unittest.TestCase):
 		model.connectPorts(sm.mo, cl.inp)
 
 		sim = Simulator(model)
-
 		sim.setClassicDEVS()
 		sim.setTerminationTime(10)
 		sim.simulate()
