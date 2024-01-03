@@ -114,6 +114,9 @@ class RoadStretch(RoadCoupledDEVS):
         self.connectPorts(self.road_segment_n3.Q_sack, self.side_marker.mi)
         self.connectPorts(self.side_marker.mo, self.road_segment_s2.Q_rack)
 
+        # connect s2 Q_send to n3 Q_recv
+        self.connectPorts(self.road_segment_s2.Q_send, self.road_segment_n3.Q_recv)
+
     def getCollector(self):
         return self.collector
 
