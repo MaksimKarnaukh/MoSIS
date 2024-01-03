@@ -176,7 +176,6 @@ def crossroad_sim_long():
         IAT_max,
         v_pref_mu,
         v_pref_sigma,
-        destinations,
         limit
     )
 
