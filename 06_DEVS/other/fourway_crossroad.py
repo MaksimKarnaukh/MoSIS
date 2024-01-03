@@ -163,13 +163,13 @@ class fourwayCrossroad(RoadCoupledDEVS):
             The name for this model. Must be unique inside a Coupled DEVS.
         """
         super(fourwayCrossroad, self).__init__(name)
-        self.destinations = ['N', 'W', 'S', 'E']
+        self.destinations = ['north_collector', 'west_collector', 'south_collector', 'east_collector']
 
         self.initializeSequentialRoads(L, v_max, IAT_min, IAT_max, v_pref_mu, v_pref_sigma, limit)
 
         # create the crossroad
         self.crossroad: CrossRoads = self.addSubModel(
-            CrossRoads("crossroad", destinations=[['N'], ['W'], ['S'], ['E']], L=L, v_max=v_max,
+            CrossRoads("crossroad", destinations=[['north_collector'],['west_collector'], ['south_collector'], ['east_collector']], L=L, v_max=v_max,
                        observ_delay=observ_delay))
 
         # connect the crossroad to the sequential roads
@@ -286,7 +286,8 @@ class VoorangVanRechtsCrossRoad(fourwayCrossroad):
         # a car from the east has priority over a car from the south
 
 
-        directionlist = ['W', 'S', 'E', 'N']
+
+        directionlist = ['west_collector', 'south_collector', 'east_collector', 'north_collector']
         sidemarkers = [self.sidemarker_west, self.sidemarker_south, self.sidemarker_east, self.sidemarker_north]
         roads = [self.road_west, self.road_south, self.road_east, self.road_north]
 
@@ -353,7 +354,7 @@ class Roundabout(fourwayCrossroad):
         for seq_road in [self.road_north, self.road_east, self.road_south, self.road_west]:
             seq_road.markOutgoingAsPriority()
 
-        directionlist = ['N','W', 'S', 'E']
+        directionlist = ['north_collector', 'west_collector', 'south_collector', 'east_collector']
         sidemarkers = [self.sidemarker_west, self.sidemarker_south, self.sidemarker_east, self.sidemarker_north]
         roads = [self.road_west, self.road_south, self.road_east, self.road_north]
 
