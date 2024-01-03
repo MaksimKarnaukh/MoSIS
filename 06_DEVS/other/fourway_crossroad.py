@@ -193,7 +193,6 @@ class fourwayCrossroad(RoadCoupledDEVS):
                 Q_send
                 Q_sack
             """
-            print([str(inp_and_out_port.name) for inp_and_out_port in inp_and_out])
             self.connectPorts(road.car_out, inp_and_out[0])
             self.connectPorts(road.Q_send, inp_and_out[1])
             self.connectPorts(road.Q_sack, inp_and_out[2])
@@ -354,7 +353,7 @@ class Roundabout(fourwayCrossroad):
         for seq_road in [self.road_north, self.road_east, self.road_south, self.road_west]:
             seq_road.markOutgoingAsPriority()
 
-        directionlist = ['W', 'S', 'E', 'N']
+        directionlist = ['N','W', 'S', 'E']
         sidemarkers = [self.sidemarker_west, self.sidemarker_south, self.sidemarker_east, self.sidemarker_north]
         roads = [self.road_west, self.road_south, self.road_east, self.road_north]
 
@@ -362,10 +361,10 @@ class Roundabout(fourwayCrossroad):
         for i in range(4):
             direction = directionlist[i]
             sidemarker = sidemarkers[i]
-            priority_road = roads[i]
-            non_priority_road_ports = self.crossroad.getInAndOutPorts(direction)
+            non_priority_road = roads[i]
+            priority_road = self.crossroad.getInAndOutPorts(direction)
 
-            self.connectSidemarker(sidemarker, priority_road, non_priority_road_ports)
+            self.connectSidemarker(sidemarker, priority_road, non_priority_road)
 
 
 

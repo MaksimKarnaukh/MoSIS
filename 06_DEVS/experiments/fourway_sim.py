@@ -3,7 +3,7 @@ from typing import List
 import matplotlib.pyplot as plt
 from pypdevs.simulator import Simulator
 
-from other.fourway_crossroad import fourwayCrossroad, VoorangVanRechtsCrossRoad
+from other.fourway_crossroad import fourwayCrossroad, VoorangVanRechtsCrossRoad, Roundabout
 
 
 def plot_tt_short(travel_time_per_car):
@@ -208,10 +208,40 @@ def fourway_priority_for_right_crossroad_sim():
     sim.setVerbose(f"./traces/fourway_crossroad.txt")
 
     sim.simulate()
+    # handle_statistics(model, length)
+
+def roundabout_sim():
+    """
+    Simulates the roundabout with priority for right model for a short period of time.
+    Runs the simulation for 100 time units with a limit of 50 cars per generator.
+
+    """
+
+    # constants for the road stretch
+    L = 5  # length of the road segments
+    v_max = 30  # maximum allowed velocity
+    IAT_min = 5
+    IAT_max = 7
+    v_pref_mu = 20
+    v_pref_sigma = 5
+    limit = 50
+    termination_time = 100
+
+    model = Roundabout("Roundabout", L, v_max, IAT_min, IAT_max, v_pref_mu, v_pref_sigma,
+                                      limit)
+    sim: Simulator = Simulator(model)
+    sim.setClassicDEVS()
+    sim.setDrawModel(True, "./drawings/roundabout.dot", False)
+
+    sim.setTerminationTime(termination_time)
+    sim.setVerbose(f"./traces/roundabout.txt")
+
+    sim.simulate()
 
     # handle_statistics(model, length)
 
 
 if __name__ == '__main__':
-    fourway_crossroad_sim_short()
-    fourway_priority_for_right_crossroad_sim()
+    # fourway_crossroad_sim_short()
+    # fourway_priority_for_right_crossroad_sim()
+    roundabout_sim()
