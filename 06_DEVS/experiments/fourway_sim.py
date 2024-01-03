@@ -24,9 +24,14 @@ def plot_tt_long(travel_time_per_car, model: fourwayCrossroad):
     # make grid
     plt.grid(True)
 
+    # draw a line at 6.0 seconds
+    plt.axhline(y=6.0, color='b', linestyle='--')
+
     plt.xlabel('Car IDs')
     plt.ylabel('Travel Time (seconds)')
     plt.title('Travel Times of Cars (' + str(model.getModelName()) + ')')
+
+    plt.savefig('./plots/' + str(model.getModelName()) + '_travel_times.png')
     plt.show()
 
 
