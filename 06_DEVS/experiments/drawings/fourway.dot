@@ -1,0 +1,354 @@
+digraph G {
+  subgraph "clusterfourway_crossroad" {
+  label = "fourway_crossroad"
+  color=black
+  subgraph "clusterfourway_crossroad.north" {
+  label = "north"
+  color=black
+  "fourway_crossroad.north.north_gen" [
+    label = "north_gen\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.north.north_collector" [
+    label = "north_collector\nState: "
+    color="red"
+    style=filled
+]
+  subgraph "clusterfourway_crossroad.north.north_last_segment" {
+  label = "north_last_segment"
+  color=black
+  "fourway_crossroad.north.north_last_segment.north_last_segment_incoming" [
+    label = "north_last_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.north.north_last_segment.north_last_segment_outgoing" [
+    label = "north_last_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterfourway_crossroad.north.north_middle_segment" {
+  label = "north_middle_segment"
+  color=black
+  "fourway_crossroad.north.north_middle_segment.north_middle_segment_incoming" [
+    label = "north_middle_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.north.north_middle_segment.north_middle_segment_outgoing" [
+    label = "north_middle_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterfourway_crossroad.north.north_core_segment" {
+  label = "north_core_segment"
+  color=black
+  "fourway_crossroad.north.north_core_segment.north_core_segment_incoming" [
+    label = "north_core_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.north.north_core_segment.north_core_segment_outgoing" [
+    label = "north_core_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  }
+  subgraph "clusterfourway_crossroad.east" {
+  label = "east"
+  color=black
+  "fourway_crossroad.east.east_gen" [
+    label = "east_gen\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.east.east_collector" [
+    label = "east_collector\nState: "
+    color="red"
+    style=filled
+]
+  subgraph "clusterfourway_crossroad.east.east_last_segment" {
+  label = "east_last_segment"
+  color=black
+  "fourway_crossroad.east.east_last_segment.east_last_segment_incoming" [
+    label = "east_last_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.east.east_last_segment.east_last_segment_outgoing" [
+    label = "east_last_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterfourway_crossroad.east.east_middle_segment" {
+  label = "east_middle_segment"
+  color=black
+  "fourway_crossroad.east.east_middle_segment.east_middle_segment_incoming" [
+    label = "east_middle_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.east.east_middle_segment.east_middle_segment_outgoing" [
+    label = "east_middle_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterfourway_crossroad.east.east_core_segment" {
+  label = "east_core_segment"
+  color=black
+  "fourway_crossroad.east.east_core_segment.east_core_segment_incoming" [
+    label = "east_core_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.east.east_core_segment.east_core_segment_outgoing" [
+    label = "east_core_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  }
+  subgraph "clusterfourway_crossroad.south" {
+  label = "south"
+  color=black
+  "fourway_crossroad.south.south_gen" [
+    label = "south_gen\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.south.south_collector" [
+    label = "south_collector\nState: "
+    color="red"
+    style=filled
+]
+  subgraph "clusterfourway_crossroad.south.south_last_segment" {
+  label = "south_last_segment"
+  color=black
+  "fourway_crossroad.south.south_last_segment.south_last_segment_incoming" [
+    label = "south_last_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.south.south_last_segment.south_last_segment_outgoing" [
+    label = "south_last_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterfourway_crossroad.south.south_middle_segment" {
+  label = "south_middle_segment"
+  color=black
+  "fourway_crossroad.south.south_middle_segment.south_middle_segment_incoming" [
+    label = "south_middle_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.south.south_middle_segment.south_middle_segment_outgoing" [
+    label = "south_middle_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterfourway_crossroad.south.south_core_segment" {
+  label = "south_core_segment"
+  color=black
+  "fourway_crossroad.south.south_core_segment.south_core_segment_incoming" [
+    label = "south_core_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.south.south_core_segment.south_core_segment_outgoing" [
+    label = "south_core_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  }
+  subgraph "clusterfourway_crossroad.west" {
+  label = "west"
+  color=black
+  "fourway_crossroad.west.west_gen" [
+    label = "west_gen\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.west.west_collector" [
+    label = "west_collector\nState: "
+    color="red"
+    style=filled
+]
+  subgraph "clusterfourway_crossroad.west.west_last_segment" {
+  label = "west_last_segment"
+  color=black
+  "fourway_crossroad.west.west_last_segment.west_last_segment_incoming" [
+    label = "west_last_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.west.west_last_segment.west_last_segment_outgoing" [
+    label = "west_last_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterfourway_crossroad.west.west_middle_segment" {
+  label = "west_middle_segment"
+  color=black
+  "fourway_crossroad.west.west_middle_segment.west_middle_segment_incoming" [
+    label = "west_middle_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.west.west_middle_segment.west_middle_segment_outgoing" [
+    label = "west_middle_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterfourway_crossroad.west.west_core_segment" {
+  label = "west_core_segment"
+  color=black
+  "fourway_crossroad.west.west_core_segment.west_core_segment_incoming" [
+    label = "west_core_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.west.west_core_segment.west_core_segment_outgoing" [
+    label = "west_core_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  }
+  subgraph "clusterfourway_crossroad.crossroad" {
+  label = "crossroad"
+  color=black
+  "fourway_crossroad.crossroad.segment_0" [
+    label = "segment_0\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.crossroad.segment_1" [
+    label = "segment_1\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.crossroad.segment_2" [
+    label = "segment_2\nState: "
+    color="red"
+    style=filled
+]
+  "fourway_crossroad.crossroad.segment_3" [
+    label = "segment_3\nState: "
+    color="red"
+    style=filled
+]
+  }
+  }
+  "fourway_crossroad.north.north_gen" -> "fourway_crossroad.north.north_last_segment.north_last_segment_incoming" [label="car_out -> car_in"];
+  "fourway_crossroad.north.north_gen" -> "fourway_crossroad.north.north_last_segment.north_last_segment_incoming" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.east.east_gen" -> "fourway_crossroad.east.east_last_segment.east_last_segment_incoming" [label="car_out -> car_in"];
+  "fourway_crossroad.east.east_gen" -> "fourway_crossroad.east.east_last_segment.east_last_segment_incoming" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.south.south_gen" -> "fourway_crossroad.south.south_last_segment.south_last_segment_incoming" [label="car_out -> car_in"];
+  "fourway_crossroad.south.south_gen" -> "fourway_crossroad.south.south_last_segment.south_last_segment_incoming" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.west.west_gen" -> "fourway_crossroad.west.west_last_segment.west_last_segment_incoming" [label="car_out -> car_in"];
+  "fourway_crossroad.west.west_gen" -> "fourway_crossroad.west.west_last_segment.west_last_segment_incoming" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.crossroad.segment_0" -> "fourway_crossroad.west.west_core_segment.west_core_segment_outgoing" [label="car_out -> car_in"];
+  "fourway_crossroad.crossroad.segment_0" -> "fourway_crossroad.crossroad.segment_1" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.crossroad.segment_0" -> "fourway_crossroad.west.west_core_segment.west_core_segment_outgoing" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.crossroad.segment_0" -> "fourway_crossroad.crossroad.segment_3" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.crossroad.segment_0" -> "fourway_crossroad.north.north_core_segment.north_core_segment_incoming" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.crossroad.segment_0" -> "fourway_crossroad.crossroad.segment_1" [label="car_out_cr -> car_in_cr"];
+  "fourway_crossroad.crossroad.segment_1" -> "fourway_crossroad.south.south_core_segment.south_core_segment_outgoing" [label="car_out -> car_in"];
+  "fourway_crossroad.crossroad.segment_1" -> "fourway_crossroad.crossroad.segment_2" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.crossroad.segment_1" -> "fourway_crossroad.south.south_core_segment.south_core_segment_outgoing" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.crossroad.segment_1" -> "fourway_crossroad.crossroad.segment_0" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.crossroad.segment_1" -> "fourway_crossroad.west.west_core_segment.west_core_segment_incoming" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.crossroad.segment_1" -> "fourway_crossroad.crossroad.segment_2" [label="car_out_cr -> car_in_cr"];
+  "fourway_crossroad.crossroad.segment_2" -> "fourway_crossroad.east.east_core_segment.east_core_segment_outgoing" [label="car_out -> car_in"];
+  "fourway_crossroad.crossroad.segment_2" -> "fourway_crossroad.crossroad.segment_3" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.crossroad.segment_2" -> "fourway_crossroad.east.east_core_segment.east_core_segment_outgoing" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.crossroad.segment_2" -> "fourway_crossroad.crossroad.segment_1" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.crossroad.segment_2" -> "fourway_crossroad.south.south_core_segment.south_core_segment_incoming" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.crossroad.segment_2" -> "fourway_crossroad.crossroad.segment_3" [label="car_out_cr -> car_in_cr"];
+  "fourway_crossroad.crossroad.segment_3" -> "fourway_crossroad.north.north_core_segment.north_core_segment_outgoing" [label="car_out -> car_in"];
+  "fourway_crossroad.crossroad.segment_3" -> "fourway_crossroad.crossroad.segment_0" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.crossroad.segment_3" -> "fourway_crossroad.north.north_core_segment.north_core_segment_outgoing" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.crossroad.segment_3" -> "fourway_crossroad.crossroad.segment_2" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.crossroad.segment_3" -> "fourway_crossroad.east.east_core_segment.east_core_segment_incoming" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.crossroad.segment_3" -> "fourway_crossroad.crossroad.segment_0" [label="car_out_cr -> car_in_cr"];
+  "fourway_crossroad.north.north_last_segment.north_last_segment_incoming" -> "fourway_crossroad.north.north_middle_segment.north_middle_segment_incoming" [label="car_out -> car_in"];
+  "fourway_crossroad.north.north_last_segment.north_last_segment_incoming" -> "fourway_crossroad.north.north_middle_segment.north_middle_segment_incoming" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.north.north_last_segment.north_last_segment_incoming" -> "fourway_crossroad.north.north_gen" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.north.north_last_segment.north_last_segment_outgoing" -> "fourway_crossroad.north.north_collector" [label="car_out -> car_in"];
+  "fourway_crossroad.north.north_last_segment.north_last_segment_outgoing" -> "fourway_crossroad.north.north_middle_segment.north_middle_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.north.north_middle_segment.north_middle_segment_incoming" -> "fourway_crossroad.north.north_core_segment.north_core_segment_incoming" [label="car_out -> car_in"];
+  "fourway_crossroad.north.north_middle_segment.north_middle_segment_incoming" -> "fourway_crossroad.north.north_core_segment.north_core_segment_incoming" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.north.north_middle_segment.north_middle_segment_incoming" -> "fourway_crossroad.north.north_last_segment.north_last_segment_incoming" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.north.north_middle_segment.north_middle_segment_outgoing" -> "fourway_crossroad.north.north_last_segment.north_last_segment_outgoing" [label="car_out -> car_in"];
+  "fourway_crossroad.north.north_middle_segment.north_middle_segment_outgoing" -> "fourway_crossroad.north.north_last_segment.north_last_segment_outgoing" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.north.north_middle_segment.north_middle_segment_outgoing" -> "fourway_crossroad.north.north_core_segment.north_core_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.north.north_core_segment.north_core_segment_incoming" -> "fourway_crossroad.crossroad.segment_0" [label="car_out -> car_in"];
+  "fourway_crossroad.north.north_core_segment.north_core_segment_incoming" -> "fourway_crossroad.crossroad.segment_0" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.north.north_core_segment.north_core_segment_incoming" -> "fourway_crossroad.north.north_middle_segment.north_middle_segment_incoming" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.north.north_core_segment.north_core_segment_outgoing" -> "fourway_crossroad.north.north_middle_segment.north_middle_segment_outgoing" [label="car_out -> car_in"];
+  "fourway_crossroad.north.north_core_segment.north_core_segment_outgoing" -> "fourway_crossroad.north.north_middle_segment.north_middle_segment_outgoing" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.north.north_core_segment.north_core_segment_outgoing" -> "fourway_crossroad.crossroad.segment_3" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.east.east_last_segment.east_last_segment_incoming" -> "fourway_crossroad.east.east_middle_segment.east_middle_segment_incoming" [label="car_out -> car_in"];
+  "fourway_crossroad.east.east_last_segment.east_last_segment_incoming" -> "fourway_crossroad.east.east_middle_segment.east_middle_segment_incoming" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.east.east_last_segment.east_last_segment_incoming" -> "fourway_crossroad.east.east_gen" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.east.east_last_segment.east_last_segment_outgoing" -> "fourway_crossroad.east.east_collector" [label="car_out -> car_in"];
+  "fourway_crossroad.east.east_last_segment.east_last_segment_outgoing" -> "fourway_crossroad.east.east_middle_segment.east_middle_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.east.east_middle_segment.east_middle_segment_incoming" -> "fourway_crossroad.east.east_core_segment.east_core_segment_incoming" [label="car_out -> car_in"];
+  "fourway_crossroad.east.east_middle_segment.east_middle_segment_incoming" -> "fourway_crossroad.east.east_core_segment.east_core_segment_incoming" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.east.east_middle_segment.east_middle_segment_incoming" -> "fourway_crossroad.east.east_last_segment.east_last_segment_incoming" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.east.east_middle_segment.east_middle_segment_outgoing" -> "fourway_crossroad.east.east_last_segment.east_last_segment_outgoing" [label="car_out -> car_in"];
+  "fourway_crossroad.east.east_middle_segment.east_middle_segment_outgoing" -> "fourway_crossroad.east.east_last_segment.east_last_segment_outgoing" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.east.east_middle_segment.east_middle_segment_outgoing" -> "fourway_crossroad.east.east_core_segment.east_core_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.east.east_core_segment.east_core_segment_incoming" -> "fourway_crossroad.crossroad.segment_3" [label="car_out -> car_in"];
+  "fourway_crossroad.east.east_core_segment.east_core_segment_incoming" -> "fourway_crossroad.crossroad.segment_3" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.east.east_core_segment.east_core_segment_incoming" -> "fourway_crossroad.east.east_middle_segment.east_middle_segment_incoming" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.east.east_core_segment.east_core_segment_outgoing" -> "fourway_crossroad.east.east_middle_segment.east_middle_segment_outgoing" [label="car_out -> car_in"];
+  "fourway_crossroad.east.east_core_segment.east_core_segment_outgoing" -> "fourway_crossroad.east.east_middle_segment.east_middle_segment_outgoing" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.east.east_core_segment.east_core_segment_outgoing" -> "fourway_crossroad.crossroad.segment_2" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.south.south_last_segment.south_last_segment_incoming" -> "fourway_crossroad.south.south_middle_segment.south_middle_segment_incoming" [label="car_out -> car_in"];
+  "fourway_crossroad.south.south_last_segment.south_last_segment_incoming" -> "fourway_crossroad.south.south_middle_segment.south_middle_segment_incoming" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.south.south_last_segment.south_last_segment_incoming" -> "fourway_crossroad.south.south_gen" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.south.south_last_segment.south_last_segment_outgoing" -> "fourway_crossroad.south.south_collector" [label="car_out -> car_in"];
+  "fourway_crossroad.south.south_last_segment.south_last_segment_outgoing" -> "fourway_crossroad.south.south_middle_segment.south_middle_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.south.south_middle_segment.south_middle_segment_incoming" -> "fourway_crossroad.south.south_core_segment.south_core_segment_incoming" [label="car_out -> car_in"];
+  "fourway_crossroad.south.south_middle_segment.south_middle_segment_incoming" -> "fourway_crossroad.south.south_core_segment.south_core_segment_incoming" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.south.south_middle_segment.south_middle_segment_incoming" -> "fourway_crossroad.south.south_last_segment.south_last_segment_incoming" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.south.south_middle_segment.south_middle_segment_outgoing" -> "fourway_crossroad.south.south_last_segment.south_last_segment_outgoing" [label="car_out -> car_in"];
+  "fourway_crossroad.south.south_middle_segment.south_middle_segment_outgoing" -> "fourway_crossroad.south.south_last_segment.south_last_segment_outgoing" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.south.south_middle_segment.south_middle_segment_outgoing" -> "fourway_crossroad.south.south_core_segment.south_core_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.south.south_core_segment.south_core_segment_incoming" -> "fourway_crossroad.crossroad.segment_2" [label="car_out -> car_in"];
+  "fourway_crossroad.south.south_core_segment.south_core_segment_incoming" -> "fourway_crossroad.crossroad.segment_2" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.south.south_core_segment.south_core_segment_incoming" -> "fourway_crossroad.south.south_middle_segment.south_middle_segment_incoming" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.south.south_core_segment.south_core_segment_outgoing" -> "fourway_crossroad.south.south_middle_segment.south_middle_segment_outgoing" [label="car_out -> car_in"];
+  "fourway_crossroad.south.south_core_segment.south_core_segment_outgoing" -> "fourway_crossroad.south.south_middle_segment.south_middle_segment_outgoing" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.south.south_core_segment.south_core_segment_outgoing" -> "fourway_crossroad.crossroad.segment_1" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.west.west_last_segment.west_last_segment_incoming" -> "fourway_crossroad.west.west_middle_segment.west_middle_segment_incoming" [label="car_out -> car_in"];
+  "fourway_crossroad.west.west_last_segment.west_last_segment_incoming" -> "fourway_crossroad.west.west_middle_segment.west_middle_segment_incoming" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.west.west_last_segment.west_last_segment_incoming" -> "fourway_crossroad.west.west_gen" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.west.west_last_segment.west_last_segment_outgoing" -> "fourway_crossroad.west.west_collector" [label="car_out -> car_in"];
+  "fourway_crossroad.west.west_last_segment.west_last_segment_outgoing" -> "fourway_crossroad.west.west_middle_segment.west_middle_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.west.west_middle_segment.west_middle_segment_incoming" -> "fourway_crossroad.west.west_core_segment.west_core_segment_incoming" [label="car_out -> car_in"];
+  "fourway_crossroad.west.west_middle_segment.west_middle_segment_incoming" -> "fourway_crossroad.west.west_core_segment.west_core_segment_incoming" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.west.west_middle_segment.west_middle_segment_incoming" -> "fourway_crossroad.west.west_last_segment.west_last_segment_incoming" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.west.west_middle_segment.west_middle_segment_outgoing" -> "fourway_crossroad.west.west_last_segment.west_last_segment_outgoing" [label="car_out -> car_in"];
+  "fourway_crossroad.west.west_middle_segment.west_middle_segment_outgoing" -> "fourway_crossroad.west.west_last_segment.west_last_segment_outgoing" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.west.west_middle_segment.west_middle_segment_outgoing" -> "fourway_crossroad.west.west_core_segment.west_core_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.west.west_core_segment.west_core_segment_incoming" -> "fourway_crossroad.crossroad.segment_1" [label="car_out -> car_in"];
+  "fourway_crossroad.west.west_core_segment.west_core_segment_incoming" -> "fourway_crossroad.crossroad.segment_1" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.west.west_core_segment.west_core_segment_incoming" -> "fourway_crossroad.west.west_middle_segment.west_middle_segment_incoming" [label="Q_sack -> Q_rack"];
+  "fourway_crossroad.west.west_core_segment.west_core_segment_outgoing" -> "fourway_crossroad.west.west_middle_segment.west_middle_segment_outgoing" [label="car_out -> car_in"];
+  "fourway_crossroad.west.west_core_segment.west_core_segment_outgoing" -> "fourway_crossroad.west.west_middle_segment.west_middle_segment_outgoing" [label="Q_send -> Q_recv"];
+  "fourway_crossroad.west.west_core_segment.west_core_segment_outgoing" -> "fourway_crossroad.crossroad.segment_0" [label="Q_sack -> Q_rack"];
+}

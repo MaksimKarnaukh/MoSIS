@@ -1,0 +1,98 @@
+digraph G {
+  subgraph "clusterroadstretch" {
+  label = "roadstretch"
+  color=black
+  "roadstretch.gen" [
+    label = "gen\nState: "
+    color="red"
+    style=filled
+]
+  "roadstretch.fork" [
+    label = "fork\nState: "
+    color="red"
+    style=filled
+]
+  "roadstretch.collector" [
+    label = "collector\nState: "
+    color="red"
+    style=filled
+]
+  "roadstretch.side_marker" [
+    label = "side_marker\nState: {'events': []}"
+    color="red"
+    style=filled
+]
+  "roadstretch.gas_station" [
+    label = "gas_station\nState: "
+    color="red"
+    style=filled
+]
+  "roadstretch.road_segment_gen" [
+    label = "road_segment_gen\nState: "
+    color="red"
+    style=filled
+]
+  "roadstretch.road_segment_n1" [
+    label = "road_segment_n1\nState: "
+    color="red"
+    style=filled
+]
+  "roadstretch.road_segment_n2" [
+    label = "road_segment_n2\nState: "
+    color="red"
+    style=filled
+]
+  "roadstretch.road_segment_n3" [
+    label = "road_segment_n3\nState: "
+    color="red"
+    style=filled
+]
+  "roadstretch.road_segment_n4" [
+    label = "road_segment_n4\nState: "
+    color="red"
+    style=filled
+]
+  "roadstretch.road_segment_s1" [
+    label = "road_segment_s1\nState: "
+    color="red"
+    style=filled
+]
+  "roadstretch.road_segment_s2" [
+    label = "road_segment_s2\nState: "
+    color="red"
+    style=filled
+]
+  }
+  "roadstretch.gen" -> "roadstretch.road_segment_gen" [label="car_out -> car_in"];
+  "roadstretch.gen" -> "roadstretch.road_segment_gen" [label="Q_send -> Q_recv"];
+  "roadstretch.fork" -> "roadstretch.road_segment_n1" [label="car_out -> car_in"];
+  "roadstretch.fork" -> "roadstretch.road_segment_n1" [label="Q_send -> Q_recv"];
+  "roadstretch.fork" -> "roadstretch.road_segment_s1" [label="Q_send -> Q_recv"];
+  "roadstretch.fork" -> "roadstretch.road_segment_gen" [label="Q_sack -> Q_rack"];
+  "roadstretch.fork" -> "roadstretch.road_segment_s1" [label="car_out2 -> car_in"];
+  "roadstretch.side_marker" -> "roadstretch.road_segment_s2" [label="mo -> Q_rack"];
+  "roadstretch.gas_station" -> "roadstretch.road_segment_s2" [label="car_out -> car_in"];
+  "roadstretch.gas_station" -> "roadstretch.road_segment_s2" [label="Q_send -> Q_recv"];
+  "roadstretch.road_segment_gen" -> "roadstretch.fork" [label="car_out -> car_in"];
+  "roadstretch.road_segment_gen" -> "roadstretch.fork" [label="Q_send -> Q_recv"];
+  "roadstretch.road_segment_gen" -> "roadstretch.gen" [label="Q_sack -> Q_rack"];
+  "roadstretch.road_segment_n1" -> "roadstretch.road_segment_n2" [label="car_out -> car_in"];
+  "roadstretch.road_segment_n1" -> "roadstretch.road_segment_n2" [label="Q_send -> Q_recv"];
+  "roadstretch.road_segment_n1" -> "roadstretch.fork" [label="Q_sack -> Q_rack"];
+  "roadstretch.road_segment_n2" -> "roadstretch.road_segment_n3" [label="car_out -> car_in"];
+  "roadstretch.road_segment_n2" -> "roadstretch.road_segment_n3" [label="Q_send -> Q_recv"];
+  "roadstretch.road_segment_n2" -> "roadstretch.road_segment_n1" [label="Q_sack -> Q_rack"];
+  "roadstretch.road_segment_n3" -> "roadstretch.road_segment_n4" [label="car_out -> car_in"];
+  "roadstretch.road_segment_n3" -> "roadstretch.road_segment_n4" [label="Q_send -> Q_recv"];
+  "roadstretch.road_segment_n3" -> "roadstretch.road_segment_n2" [label="Q_sack -> Q_rack"];
+  "roadstretch.road_segment_n3" -> "roadstretch.side_marker" [label="Q_sack -> mi"];
+  "roadstretch.road_segment_n4" -> "roadstretch.collector" [label="car_out -> car_in"];
+  "roadstretch.road_segment_n4" -> "roadstretch.road_segment_n3" [label="Q_sack -> Q_rack"];
+  "roadstretch.road_segment_n4" -> "roadstretch.road_segment_s2" [label="Q_sack -> Q_rack"];
+  "roadstretch.road_segment_s1" -> "roadstretch.gas_station" [label="car_out -> car_in"];
+  "roadstretch.road_segment_s1" -> "roadstretch.fork" [label="Q_sack -> Q_rack"];
+  "roadstretch.road_segment_s2" -> "roadstretch.road_segment_n4" [label="car_out -> car_in"];
+  "roadstretch.road_segment_s2" -> "roadstretch.road_segment_n4" [label="Q_send -> Q_recv"];
+  "roadstretch.road_segment_s2" -> "roadstretch.road_segment_n3" [label="Q_send -> Q_recv"];
+  "roadstretch.road_segment_s2" -> "roadstretch.gas_station" [label="Q_sack -> Q_rack"];
+}

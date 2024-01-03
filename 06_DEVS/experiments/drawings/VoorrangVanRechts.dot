@@ -1,0 +1,386 @@
+digraph G {
+  subgraph "clusterVoorrang van rechts" {
+  label = "Voorrang van rechts"
+  color=black
+  subgraph "clusterVoorrang van rechts.north" {
+  label = "north"
+  color=black
+  "Voorrang van rechts.north.north_gen" [
+    label = "north_gen\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.north.north_collector" [
+    label = "north_collector\nState: "
+    color="red"
+    style=filled
+]
+  subgraph "clusterVoorrang van rechts.north.north_last_segment" {
+  label = "north_last_segment"
+  color=black
+  "Voorrang van rechts.north.north_last_segment.north_last_segment_incoming" [
+    label = "north_last_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.north.north_last_segment.north_last_segment_outgoing" [
+    label = "north_last_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterVoorrang van rechts.north.north_middle_segment" {
+  label = "north_middle_segment"
+  color=black
+  "Voorrang van rechts.north.north_middle_segment.north_middle_segment_incoming" [
+    label = "north_middle_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.north.north_middle_segment.north_middle_segment_outgoing" [
+    label = "north_middle_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterVoorrang van rechts.north.north_core_segment" {
+  label = "north_core_segment"
+  color=black
+  "Voorrang van rechts.north.north_core_segment.north_core_segment_incoming" [
+    label = "north_core_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.north.north_core_segment.north_core_segment_outgoing" [
+    label = "north_core_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  }
+  subgraph "clusterVoorrang van rechts.east" {
+  label = "east"
+  color=black
+  "Voorrang van rechts.east.east_gen" [
+    label = "east_gen\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.east.east_collector" [
+    label = "east_collector\nState: "
+    color="red"
+    style=filled
+]
+  subgraph "clusterVoorrang van rechts.east.east_last_segment" {
+  label = "east_last_segment"
+  color=black
+  "Voorrang van rechts.east.east_last_segment.east_last_segment_incoming" [
+    label = "east_last_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.east.east_last_segment.east_last_segment_outgoing" [
+    label = "east_last_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterVoorrang van rechts.east.east_middle_segment" {
+  label = "east_middle_segment"
+  color=black
+  "Voorrang van rechts.east.east_middle_segment.east_middle_segment_incoming" [
+    label = "east_middle_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.east.east_middle_segment.east_middle_segment_outgoing" [
+    label = "east_middle_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterVoorrang van rechts.east.east_core_segment" {
+  label = "east_core_segment"
+  color=black
+  "Voorrang van rechts.east.east_core_segment.east_core_segment_incoming" [
+    label = "east_core_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.east.east_core_segment.east_core_segment_outgoing" [
+    label = "east_core_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  }
+  subgraph "clusterVoorrang van rechts.south" {
+  label = "south"
+  color=black
+  "Voorrang van rechts.south.south_gen" [
+    label = "south_gen\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.south.south_collector" [
+    label = "south_collector\nState: "
+    color="red"
+    style=filled
+]
+  subgraph "clusterVoorrang van rechts.south.south_last_segment" {
+  label = "south_last_segment"
+  color=black
+  "Voorrang van rechts.south.south_last_segment.south_last_segment_incoming" [
+    label = "south_last_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.south.south_last_segment.south_last_segment_outgoing" [
+    label = "south_last_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterVoorrang van rechts.south.south_middle_segment" {
+  label = "south_middle_segment"
+  color=black
+  "Voorrang van rechts.south.south_middle_segment.south_middle_segment_incoming" [
+    label = "south_middle_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.south.south_middle_segment.south_middle_segment_outgoing" [
+    label = "south_middle_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterVoorrang van rechts.south.south_core_segment" {
+  label = "south_core_segment"
+  color=black
+  "Voorrang van rechts.south.south_core_segment.south_core_segment_incoming" [
+    label = "south_core_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.south.south_core_segment.south_core_segment_outgoing" [
+    label = "south_core_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  }
+  subgraph "clusterVoorrang van rechts.west" {
+  label = "west"
+  color=black
+  "Voorrang van rechts.west.west_gen" [
+    label = "west_gen\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.west.west_collector" [
+    label = "west_collector\nState: "
+    color="red"
+    style=filled
+]
+  subgraph "clusterVoorrang van rechts.west.west_last_segment" {
+  label = "west_last_segment"
+  color=black
+  "Voorrang van rechts.west.west_last_segment.west_last_segment_incoming" [
+    label = "west_last_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.west.west_last_segment.west_last_segment_outgoing" [
+    label = "west_last_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterVoorrang van rechts.west.west_middle_segment" {
+  label = "west_middle_segment"
+  color=black
+  "Voorrang van rechts.west.west_middle_segment.west_middle_segment_incoming" [
+    label = "west_middle_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.west.west_middle_segment.west_middle_segment_outgoing" [
+    label = "west_middle_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  subgraph "clusterVoorrang van rechts.west.west_core_segment" {
+  label = "west_core_segment"
+  color=black
+  "Voorrang van rechts.west.west_core_segment.west_core_segment_incoming" [
+    label = "west_core_segment_incoming\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.west.west_core_segment.west_core_segment_outgoing" [
+    label = "west_core_segment_outgoing\nState: "
+    color="red"
+    style=filled
+]
+  }
+  }
+  subgraph "clusterVoorrang van rechts.crossroad" {
+  label = "crossroad"
+  color=black
+  "Voorrang van rechts.crossroad.segment_0" [
+    label = "segment_0\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.crossroad.segment_1" [
+    label = "segment_1\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.crossroad.segment_2" [
+    label = "segment_2\nState: "
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.crossroad.segment_3" [
+    label = "segment_3\nState: "
+    color="red"
+    style=filled
+]
+  }
+  "Voorrang van rechts.sidemarker_north" [
+    label = "sidemarker_north\nState: {'events': []}"
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.sidemarker_east" [
+    label = "sidemarker_east\nState: {'events': []}"
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.sidemarker_south" [
+    label = "sidemarker_south\nState: {'events': []}"
+    color="red"
+    style=filled
+]
+  "Voorrang van rechts.sidemarker_west" [
+    label = "sidemarker_west\nState: {'events': []}"
+    color="red"
+    style=filled
+]
+  }
+  "Voorrang van rechts.sidemarker_north" -> "Voorrang van rechts.crossroad.segment_3" [label="mo -> Q_rack"];
+  "Voorrang van rechts.sidemarker_east" -> "Voorrang van rechts.crossroad.segment_2" [label="mo -> Q_rack"];
+  "Voorrang van rechts.sidemarker_south" -> "Voorrang van rechts.crossroad.segment_1" [label="mo -> Q_rack"];
+  "Voorrang van rechts.sidemarker_west" -> "Voorrang van rechts.crossroad.segment_0" [label="mo -> Q_rack"];
+  "Voorrang van rechts.north.north_gen" -> "Voorrang van rechts.north.north_last_segment.north_last_segment_incoming" [label="car_out -> car_in"];
+  "Voorrang van rechts.north.north_gen" -> "Voorrang van rechts.north.north_last_segment.north_last_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.east.east_gen" -> "Voorrang van rechts.east.east_last_segment.east_last_segment_incoming" [label="car_out -> car_in"];
+  "Voorrang van rechts.east.east_gen" -> "Voorrang van rechts.east.east_last_segment.east_last_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.south.south_gen" -> "Voorrang van rechts.south.south_last_segment.south_last_segment_incoming" [label="car_out -> car_in"];
+  "Voorrang van rechts.south.south_gen" -> "Voorrang van rechts.south.south_last_segment.south_last_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.west.west_gen" -> "Voorrang van rechts.west.west_last_segment.west_last_segment_incoming" [label="car_out -> car_in"];
+  "Voorrang van rechts.west.west_gen" -> "Voorrang van rechts.west.west_last_segment.west_last_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.crossroad.segment_0" -> "Voorrang van rechts.west.west_core_segment.west_core_segment_outgoing" [label="car_out -> car_in"];
+  "Voorrang van rechts.crossroad.segment_0" -> "Voorrang van rechts.crossroad.segment_1" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.crossroad.segment_0" -> "Voorrang van rechts.west.west_core_segment.west_core_segment_outgoing" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.crossroad.segment_0" -> "Voorrang van rechts.west.west_core_segment.west_core_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.crossroad.segment_0" -> "Voorrang van rechts.crossroad.segment_3" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.crossroad.segment_0" -> "Voorrang van rechts.north.north_core_segment.north_core_segment_incoming" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.crossroad.segment_0" -> "Voorrang van rechts.crossroad.segment_1" [label="car_out_cr -> car_in_cr"];
+  "Voorrang van rechts.crossroad.segment_1" -> "Voorrang van rechts.south.south_core_segment.south_core_segment_outgoing" [label="car_out -> car_in"];
+  "Voorrang van rechts.crossroad.segment_1" -> "Voorrang van rechts.crossroad.segment_2" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.crossroad.segment_1" -> "Voorrang van rechts.south.south_core_segment.south_core_segment_outgoing" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.crossroad.segment_1" -> "Voorrang van rechts.south.south_core_segment.south_core_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.crossroad.segment_1" -> "Voorrang van rechts.crossroad.segment_0" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.crossroad.segment_1" -> "Voorrang van rechts.west.west_core_segment.west_core_segment_incoming" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.crossroad.segment_1" -> "Voorrang van rechts.crossroad.segment_2" [label="car_out_cr -> car_in_cr"];
+  "Voorrang van rechts.crossroad.segment_2" -> "Voorrang van rechts.east.east_core_segment.east_core_segment_outgoing" [label="car_out -> car_in"];
+  "Voorrang van rechts.crossroad.segment_2" -> "Voorrang van rechts.crossroad.segment_3" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.crossroad.segment_2" -> "Voorrang van rechts.east.east_core_segment.east_core_segment_outgoing" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.crossroad.segment_2" -> "Voorrang van rechts.east.east_core_segment.east_core_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.crossroad.segment_2" -> "Voorrang van rechts.crossroad.segment_1" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.crossroad.segment_2" -> "Voorrang van rechts.south.south_core_segment.south_core_segment_incoming" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.crossroad.segment_2" -> "Voorrang van rechts.crossroad.segment_3" [label="car_out_cr -> car_in_cr"];
+  "Voorrang van rechts.crossroad.segment_3" -> "Voorrang van rechts.north.north_core_segment.north_core_segment_outgoing" [label="car_out -> car_in"];
+  "Voorrang van rechts.crossroad.segment_3" -> "Voorrang van rechts.crossroad.segment_0" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.crossroad.segment_3" -> "Voorrang van rechts.north.north_core_segment.north_core_segment_outgoing" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.crossroad.segment_3" -> "Voorrang van rechts.north.north_core_segment.north_core_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.crossroad.segment_3" -> "Voorrang van rechts.crossroad.segment_2" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.crossroad.segment_3" -> "Voorrang van rechts.east.east_core_segment.east_core_segment_incoming" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.crossroad.segment_3" -> "Voorrang van rechts.crossroad.segment_0" [label="car_out_cr -> car_in_cr"];
+  "Voorrang van rechts.north.north_last_segment.north_last_segment_incoming" -> "Voorrang van rechts.north.north_middle_segment.north_middle_segment_incoming" [label="car_out -> car_in"];
+  "Voorrang van rechts.north.north_last_segment.north_last_segment_incoming" -> "Voorrang van rechts.north.north_middle_segment.north_middle_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.north.north_last_segment.north_last_segment_incoming" -> "Voorrang van rechts.north.north_gen" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.north.north_last_segment.north_last_segment_outgoing" -> "Voorrang van rechts.north.north_collector" [label="car_out -> car_in"];
+  "Voorrang van rechts.north.north_last_segment.north_last_segment_outgoing" -> "Voorrang van rechts.north.north_middle_segment.north_middle_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.north.north_middle_segment.north_middle_segment_incoming" -> "Voorrang van rechts.north.north_core_segment.north_core_segment_incoming" [label="car_out -> car_in"];
+  "Voorrang van rechts.north.north_middle_segment.north_middle_segment_incoming" -> "Voorrang van rechts.north.north_core_segment.north_core_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.north.north_middle_segment.north_middle_segment_incoming" -> "Voorrang van rechts.north.north_last_segment.north_last_segment_incoming" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.north.north_middle_segment.north_middle_segment_outgoing" -> "Voorrang van rechts.north.north_last_segment.north_last_segment_outgoing" [label="car_out -> car_in"];
+  "Voorrang van rechts.north.north_middle_segment.north_middle_segment_outgoing" -> "Voorrang van rechts.north.north_last_segment.north_last_segment_outgoing" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.north.north_middle_segment.north_middle_segment_outgoing" -> "Voorrang van rechts.north.north_core_segment.north_core_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.north.north_core_segment.north_core_segment_incoming" -> "Voorrang van rechts.crossroad.segment_0" [label="car_out -> car_in"];
+  "Voorrang van rechts.north.north_core_segment.north_core_segment_incoming" -> "Voorrang van rechts.crossroad.segment_0" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.north.north_core_segment.north_core_segment_incoming" -> "Voorrang van rechts.north.north_middle_segment.north_middle_segment_incoming" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.north.north_core_segment.north_core_segment_incoming" -> "Voorrang van rechts.sidemarker_north" [label="Q_sack -> mi"];
+  "Voorrang van rechts.north.north_core_segment.north_core_segment_outgoing" -> "Voorrang van rechts.north.north_middle_segment.north_middle_segment_outgoing" [label="car_out -> car_in"];
+  "Voorrang van rechts.north.north_core_segment.north_core_segment_outgoing" -> "Voorrang van rechts.north.north_middle_segment.north_middle_segment_outgoing" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.north.north_core_segment.north_core_segment_outgoing" -> "Voorrang van rechts.crossroad.segment_3" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.east.east_last_segment.east_last_segment_incoming" -> "Voorrang van rechts.east.east_middle_segment.east_middle_segment_incoming" [label="car_out -> car_in"];
+  "Voorrang van rechts.east.east_last_segment.east_last_segment_incoming" -> "Voorrang van rechts.east.east_middle_segment.east_middle_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.east.east_last_segment.east_last_segment_incoming" -> "Voorrang van rechts.east.east_gen" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.east.east_last_segment.east_last_segment_outgoing" -> "Voorrang van rechts.east.east_collector" [label="car_out -> car_in"];
+  "Voorrang van rechts.east.east_last_segment.east_last_segment_outgoing" -> "Voorrang van rechts.east.east_middle_segment.east_middle_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.east.east_middle_segment.east_middle_segment_incoming" -> "Voorrang van rechts.east.east_core_segment.east_core_segment_incoming" [label="car_out -> car_in"];
+  "Voorrang van rechts.east.east_middle_segment.east_middle_segment_incoming" -> "Voorrang van rechts.east.east_core_segment.east_core_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.east.east_middle_segment.east_middle_segment_incoming" -> "Voorrang van rechts.east.east_last_segment.east_last_segment_incoming" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.east.east_middle_segment.east_middle_segment_outgoing" -> "Voorrang van rechts.east.east_last_segment.east_last_segment_outgoing" [label="car_out -> car_in"];
+  "Voorrang van rechts.east.east_middle_segment.east_middle_segment_outgoing" -> "Voorrang van rechts.east.east_last_segment.east_last_segment_outgoing" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.east.east_middle_segment.east_middle_segment_outgoing" -> "Voorrang van rechts.east.east_core_segment.east_core_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.east.east_core_segment.east_core_segment_incoming" -> "Voorrang van rechts.crossroad.segment_3" [label="car_out -> car_in"];
+  "Voorrang van rechts.east.east_core_segment.east_core_segment_incoming" -> "Voorrang van rechts.crossroad.segment_3" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.east.east_core_segment.east_core_segment_incoming" -> "Voorrang van rechts.east.east_middle_segment.east_middle_segment_incoming" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.east.east_core_segment.east_core_segment_incoming" -> "Voorrang van rechts.sidemarker_east" [label="Q_sack -> mi"];
+  "Voorrang van rechts.east.east_core_segment.east_core_segment_outgoing" -> "Voorrang van rechts.east.east_middle_segment.east_middle_segment_outgoing" [label="car_out -> car_in"];
+  "Voorrang van rechts.east.east_core_segment.east_core_segment_outgoing" -> "Voorrang van rechts.east.east_middle_segment.east_middle_segment_outgoing" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.east.east_core_segment.east_core_segment_outgoing" -> "Voorrang van rechts.crossroad.segment_2" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.south.south_last_segment.south_last_segment_incoming" -> "Voorrang van rechts.south.south_middle_segment.south_middle_segment_incoming" [label="car_out -> car_in"];
+  "Voorrang van rechts.south.south_last_segment.south_last_segment_incoming" -> "Voorrang van rechts.south.south_middle_segment.south_middle_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.south.south_last_segment.south_last_segment_incoming" -> "Voorrang van rechts.south.south_gen" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.south.south_last_segment.south_last_segment_outgoing" -> "Voorrang van rechts.south.south_collector" [label="car_out -> car_in"];
+  "Voorrang van rechts.south.south_last_segment.south_last_segment_outgoing" -> "Voorrang van rechts.south.south_middle_segment.south_middle_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.south.south_middle_segment.south_middle_segment_incoming" -> "Voorrang van rechts.south.south_core_segment.south_core_segment_incoming" [label="car_out -> car_in"];
+  "Voorrang van rechts.south.south_middle_segment.south_middle_segment_incoming" -> "Voorrang van rechts.south.south_core_segment.south_core_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.south.south_middle_segment.south_middle_segment_incoming" -> "Voorrang van rechts.south.south_last_segment.south_last_segment_incoming" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.south.south_middle_segment.south_middle_segment_outgoing" -> "Voorrang van rechts.south.south_last_segment.south_last_segment_outgoing" [label="car_out -> car_in"];
+  "Voorrang van rechts.south.south_middle_segment.south_middle_segment_outgoing" -> "Voorrang van rechts.south.south_last_segment.south_last_segment_outgoing" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.south.south_middle_segment.south_middle_segment_outgoing" -> "Voorrang van rechts.south.south_core_segment.south_core_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.south.south_core_segment.south_core_segment_incoming" -> "Voorrang van rechts.crossroad.segment_2" [label="car_out -> car_in"];
+  "Voorrang van rechts.south.south_core_segment.south_core_segment_incoming" -> "Voorrang van rechts.crossroad.segment_2" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.south.south_core_segment.south_core_segment_incoming" -> "Voorrang van rechts.south.south_middle_segment.south_middle_segment_incoming" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.south.south_core_segment.south_core_segment_incoming" -> "Voorrang van rechts.sidemarker_south" [label="Q_sack -> mi"];
+  "Voorrang van rechts.south.south_core_segment.south_core_segment_outgoing" -> "Voorrang van rechts.south.south_middle_segment.south_middle_segment_outgoing" [label="car_out -> car_in"];
+  "Voorrang van rechts.south.south_core_segment.south_core_segment_outgoing" -> "Voorrang van rechts.south.south_middle_segment.south_middle_segment_outgoing" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.south.south_core_segment.south_core_segment_outgoing" -> "Voorrang van rechts.crossroad.segment_1" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.west.west_last_segment.west_last_segment_incoming" -> "Voorrang van rechts.west.west_middle_segment.west_middle_segment_incoming" [label="car_out -> car_in"];
+  "Voorrang van rechts.west.west_last_segment.west_last_segment_incoming" -> "Voorrang van rechts.west.west_middle_segment.west_middle_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.west.west_last_segment.west_last_segment_incoming" -> "Voorrang van rechts.west.west_gen" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.west.west_last_segment.west_last_segment_outgoing" -> "Voorrang van rechts.west.west_collector" [label="car_out -> car_in"];
+  "Voorrang van rechts.west.west_last_segment.west_last_segment_outgoing" -> "Voorrang van rechts.west.west_middle_segment.west_middle_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.west.west_middle_segment.west_middle_segment_incoming" -> "Voorrang van rechts.west.west_core_segment.west_core_segment_incoming" [label="car_out -> car_in"];
+  "Voorrang van rechts.west.west_middle_segment.west_middle_segment_incoming" -> "Voorrang van rechts.west.west_core_segment.west_core_segment_incoming" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.west.west_middle_segment.west_middle_segment_incoming" -> "Voorrang van rechts.west.west_last_segment.west_last_segment_incoming" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.west.west_middle_segment.west_middle_segment_outgoing" -> "Voorrang van rechts.west.west_last_segment.west_last_segment_outgoing" [label="car_out -> car_in"];
+  "Voorrang van rechts.west.west_middle_segment.west_middle_segment_outgoing" -> "Voorrang van rechts.west.west_last_segment.west_last_segment_outgoing" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.west.west_middle_segment.west_middle_segment_outgoing" -> "Voorrang van rechts.west.west_core_segment.west_core_segment_outgoing" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.west.west_core_segment.west_core_segment_incoming" -> "Voorrang van rechts.crossroad.segment_1" [label="car_out -> car_in"];
+  "Voorrang van rechts.west.west_core_segment.west_core_segment_incoming" -> "Voorrang van rechts.crossroad.segment_1" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.west.west_core_segment.west_core_segment_incoming" -> "Voorrang van rechts.west.west_middle_segment.west_middle_segment_incoming" [label="Q_sack -> Q_rack"];
+  "Voorrang van rechts.west.west_core_segment.west_core_segment_incoming" -> "Voorrang van rechts.sidemarker_west" [label="Q_sack -> mi"];
+  "Voorrang van rechts.west.west_core_segment.west_core_segment_outgoing" -> "Voorrang van rechts.west.west_middle_segment.west_middle_segment_outgoing" [label="car_out -> car_in"];
+  "Voorrang van rechts.west.west_core_segment.west_core_segment_outgoing" -> "Voorrang van rechts.west.west_middle_segment.west_middle_segment_outgoing" [label="Q_send -> Q_recv"];
+  "Voorrang van rechts.west.west_core_segment.west_core_segment_outgoing" -> "Voorrang van rechts.crossroad.segment_0" [label="Q_sack -> Q_rack"];
+}

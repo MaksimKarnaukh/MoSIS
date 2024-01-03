@@ -19,7 +19,7 @@ def plot_tt_short(travel_time_per_car):
     plt.title('Travel Times of Cars')
 
     # write to png file
-    plt.savefig('./plots/travel_times_short.png')
+    plt.savefig('./plots/roadstretch_travel_times_short.png')
     plt.show()
 
 
@@ -46,7 +46,7 @@ def plot_tt_long(travel_time_per_car):
     plt.title('Travel Times of Cars')
 
     # write to png file
-    plt.savefig('./plots/travel_times_long.png')
+    plt.savefig('./plots/roadstretch_travel_times_long.png')
     plt.show()
 
 

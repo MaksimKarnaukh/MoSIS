@@ -6,24 +6,7 @@ from pypdevs.simulator import Simulator
 from other.fourway_crossroad import fourwayCrossroad, VoorangVanRechtsCrossRoad, Roundabout
 
 
-def plot_tt_short(travel_time_per_car):
-    """
-    Plots the travel time per car for the short simulation.
-    :param travel_time_per_car: (list)
-        list of tuples (car, travel_time)
-    """
-    cars = [f"{c[0].ID}" for c in travel_time_per_car]
-    travel_times = [c[1] for c in travel_time_per_car]
-
-    # Plotting
-    plt.bar(cars, travel_times, color='blue')
-    plt.xlabel('Car IDs')
-    plt.ylabel('Travel Time (seconds)')
-    plt.title('Travel Times of Cars')
-    plt.show()
-
-
-def plot_tt_long(travel_time_per_car):
+def plot_tt_long(travel_time_per_car, model: fourwayCrossroad):
     """
     Plots the travel time per car for the long simulation.
     :param travel_time_per_car: (list)
@@ -42,12 +25,12 @@ def plot_tt_long(travel_time_per_car):
     plt.grid(True)
 
     plt.xlabel('Car IDs')
-    plt.ylabel('Travel Time (log of seconds)')
-    plt.title('Travel Times of Cars')
+    plt.ylabel('Travel Time (seconds)')
+    plt.title('Travel Times of Cars (' + str(model.getModelName()) + ')')
     plt.show()
 
 
-def handle_statistics(model: fourwayCrossroad, length):
+def handle_statistics(model: fourwayCrossroad):
     """
     Handles the plotting/printing of statistics of the simulation.
     :param model:
@@ -67,7 +50,7 @@ def handle_statistics(model: fourwayCrossroad, length):
 
     simulated_time = max([statistic["time"] for statistic in statistics])
 
-    print(f"Simulation statistics for {length} simulation:")
+    print(f"Simulation statistics for {model.getModelName()}:")
 
     # print the statistics
     print("\t -The simulated time is: " + str(simulated_time))
@@ -78,11 +61,7 @@ def handle_statistics(model: fourwayCrossroad, length):
     print("\t -The average time spent by a car in the fourway crossroad is: " + str(average_travel_time))
     print("\n")
 
-    # plot the travel time per car
-    # if length == "short":
-    #     plot_tt_short(travel_time_per_car)
-    # else:
-    plot_tt_long(travel_time_per_car)
+    plot_tt_long(travel_time_per_car, model)
 
 
 def fourway_crossroad_sim(termination_time, length, L, v_max, IAT_min, IAT_max, v_pref_mu, v_pref_sigma,
@@ -117,42 +96,14 @@ def fourway_crossroad_sim(termination_time, length, L, v_max, IAT_min, IAT_max, 
     sim.setDrawModel(True, "./drawings/fourway.dot", False)
 
     sim.setTerminationTime(termination_time)
-    sim.setVerbose(f"./traces/fourway_crossroad_{termination_time}.txt")
+    sim.setVerbose(f"./traces/fourway_crossroad.txt")
 
     sim.simulate()
 
-    handle_statistics(model, length)
+    handle_statistics(model)
 
 
-def fourway_crossroad_sim_short():
-    """
-    Simulates the crossroad model for a short period of time.
-    Runs the simulation for 100 time units with a limit of 50 cars per generator.
-
-    """
-
-    # constants for the road stretch
-    L = 5  # length of the road segments
-    v_max = 30  # maximum allowed velocity
-    IAT_min = 5
-    IAT_max = 7
-    v_pref_mu = 20
-    v_pref_sigma = 5
-    limit = 50
-
-    fourway_crossroad_sim(
-        100,
-        "short",
-        L, v_max,
-        IAT_min,
-        IAT_max,
-        v_pref_mu,
-        v_pref_sigma,
-        limit
-    )
-
-
-def crossroad_sim_long():
+def fourway_crossroad_sim_long():
     """
     Simulates the crossroad model for a long period of time.
     Runs the simulation for 10000 time units with a limit of 50 cars per generator.
@@ -169,7 +120,7 @@ def crossroad_sim_long():
     limit = 50
 
     fourway_crossroad_sim(
-        10000,
+        1000,
         "long",
         L, v_max,
         IAT_min,
@@ -195,7 +146,7 @@ def fourway_priority_for_right_crossroad_sim():
     v_pref_mu = 20
     v_pref_sigma = 5
     limit = 50
-    termination_time = 100
+    termination_time = 1000
 
     model = VoorangVanRechtsCrossRoad("Voorrang van rechts", L, v_max, IAT_min, IAT_max, v_pref_mu, v_pref_sigma,
                                       limit)
@@ -204,10 +155,10 @@ def fourway_priority_for_right_crossroad_sim():
     sim.setDrawModel(True, "./drawings/VoorrangVanRechts.dot", False)
 
     sim.setTerminationTime(termination_time)
-    sim.setVerbose(f"./traces/fourway_crossroad.txt")
+    sim.setVerbose(f"./traces/rightofway_crossroad.txt")
 
     sim.simulate()
-    # handle_statistics(model, length)
+    handle_statistics(model)
 
 def roundabout_sim():
     """
@@ -224,7 +175,7 @@ def roundabout_sim():
     v_pref_mu = 20
     v_pref_sigma = 5
     limit = 50
-    termination_time = 100
+    termination_time = 1000
 
     model = Roundabout("Roundabout", L, v_max, IAT_min, IAT_max, v_pref_mu, v_pref_sigma,
                                       limit)
@@ -237,10 +188,10 @@ def roundabout_sim():
 
     sim.simulate()
 
-    # handle_statistics(model, length)
+    handle_statistics(model)
 
 
 if __name__ == '__main__':
-    # fourway_crossroad_sim_short()
-    # fourway_priority_for_right_crossroad_sim()
+    fourway_crossroad_sim_long()
+    fourway_priority_for_right_crossroad_sim()
     roundabout_sim()
