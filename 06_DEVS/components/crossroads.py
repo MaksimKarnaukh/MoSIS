@@ -37,7 +37,6 @@ class CrossRoadSegment(RoadSegment):
         # Outputs the Cars that must stay on the crossroads.
         # In essence, these are all the Cars that have a destination not in this CrossRoadSegment's destinations field.
         self.car_out_cr = self.addOutPort("car_out_cr")
-
     def outputFnc(self):
         # get the next event
         event = self.nextEvent()
@@ -151,7 +150,7 @@ class CrossRoads(CoupledDEVS):
         self.branches_amount = len(destinations)
 
         # create the crossroad segments and add the segments to the coupled model
-        self.segments = []
+        self.segments: List[CrossRoadSegment] = []
         for i in range(self.branches_amount):
             cross_road_segment = CrossRoadSegment("segment_" + str(i), L, v_max, destinations[i])
             cross_road_segment.observ_delay = observ_delay
@@ -189,3 +188,45 @@ class CrossRoads(CoupledDEVS):
             self.connectPorts(self.segments[(i - 1) % self.branches_amount].car_out, self.inp_and_out_ports[i][3])
             self.connectPorts(self.segments[(i - 1) % self.branches_amount].Q_send, self.inp_and_out_ports[i][4])
             self.connectPorts(self.segments[i].Q_sack, self.inp_and_out_ports[i][5])
+    def markPriority(self):
+        """
+        Marks the priority of the crossroad segments.
+        """
+        for i in range(self.branches_amount):
+            self.segments[i].priority = True
+
+    def destinationToIndex(self, destination):
+        """
+        Converts a destination to an index. If the destination is not found, -1 is returned.
+        """
+        for i in range(self.branches_amount):
+            if destination in self.destinations[i]:
+                return i
+        return -1
+    def getInAndOutPorts(self, destination):
+        """
+        Gets the input and output ports for a destination.
+        """
+        index = self.destinationToIndex(destination)
+        if index == -1:
+            return None
+        """
+            car_in
+            Q_recv
+            Q_rack
+            car_out
+            Q_send
+            Q_sack
+        """
+        # ports
+        ports = self.inp_and_out_ports[index]
+        # convert ports to dictionary
+        ports = {
+            "car_in": ports[0],
+            "Q_recv": ports[1],
+            "Q_rack": ports[2],
+            "car_out": ports[3],
+            "Q_send": ports[4],
+            "Q_sack": ports[5]
+        }
+        return ports

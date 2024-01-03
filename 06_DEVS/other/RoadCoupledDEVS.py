@@ -46,3 +46,8 @@ class RoadCoupledDEVS(CoupledDEVS):
         self.connectPorts(fork_output_port, component.car_in)
         self.connectPorts(fork.Q_send, component.Q_recv)
         self.connectPorts(component.Q_sack, fork.Q_rack)
+    def connectSidemarkerPorts(self, sidemarker, prioritized_side_q_sack, prioritized_side_q_recv, non_prio_Q_send,
+                          non_prio_Q_rack):
+        self.connectPorts(prioritized_side_q_sack, sidemarker.mi)
+        self.connectPorts(sidemarker.mo, non_prio_Q_rack)
+        self.connectPorts(non_prio_Q_send, prioritized_side_q_recv)

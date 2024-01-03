@@ -119,13 +119,8 @@ class RoadSegment(AtomicDEVS):
 
     def timeAdvance(self):
         next_event = self.nextEvent()
-        if not next_event:
-            return INFINITY
         next_time = next_event[1]
         return max( 0.0, next_time )
-
-        # todo check
-        return self.state.next_time
 
     def addEvent(self, event: EventEnum, time: float):
         self.state.event_queue.append([event, time])
@@ -255,9 +250,9 @@ class RoadSegment(AtomicDEVS):
             query_ack: QueryAck = inputs[self.Q_rack]
             # if the car is still present:
             if len(self.state.cars_present) > 0:
-                v_new = self.get_car_new_velocity(self.state.cars_present[0], query_ack)
+                v_new, decelerate = self.get_car_new_velocity(self.state.cars_present[0], query_ack)
                 # update car velocity
-                if self.state.time_since_last_query >= 0.0001:
+                if self.state.time_since_last_query >= 0.0001 and decelerate is False:
                     v_new = max(self.state.previous_v_new, v_new)
                 self.state.cars_present[0].v = v_new
             self.state.time_since_last_query = 0.0
@@ -330,7 +325,7 @@ class RoadSegment(AtomicDEVS):
         :param query_ack (QueryAck)
             The QueryAck that is received.
         """
-
+        decelerate = False
         v_new = min(car.v_pref, car.v + car.dv_pos_max)
 
         # if the QueryAck's sideways flag is false
@@ -345,21 +340,26 @@ class RoadSegment(AtomicDEVS):
             # Thus, the maximum of v - dv_neg_max and remaining_x / t_no_coll becomes the new v.
             else:
                 v_new = max(car.v - car.dv_neg_max, self.state.remaining_x / t_no_coll)
+
         # if the QueryAck's sideways flag is true
         if query_ack.sideways is True:
             # if priority is false, the Car should decelerate as much as possible
             if not self.priority:
+                decelerate = True
                 v_new = max(0.0, car.v - car.dv_neg_max)
             # if priority is true, no special action should be taken
             else:
                 pass
         new_velocity: float = min(v_new, self.v_max)
+
         # calculate when the car will exit the road segment with this velocity
-        estimated_time_until_exit = self.state.remaining_x / new_velocity
+        # return 0 in the edge case that the car should leave the road at the same time but this function got called first
+        estimated_time_until_exit = self.state.remaining_x / new_velocity if self.state.remaining_x > 0.00001 else 0.0
         self.state.t_until_dep = estimated_time_until_exit
+
         # overwrite event for car leaving
         self.overwriteCarOutTime(self.state.t_until_dep)
-        return new_velocity
+        return new_velocity, decelerate
 
     def update_car_position(self, time_passed: float):
         """
@@ -385,7 +385,7 @@ class RoadSegment(AtomicDEVS):
                 # we first calculate the travelled distance:
                 distance_traveled = car.v * time_passed
                 # decrease the remaining distance
-                self.state.remaining_x -= distance_traveled
+                self.state.remaining_x = max(self.state.remaining_x - distance_traveled, 0.0)
                 # if self.state.remaining_x <= 0.0001:
                 #     print(f"{10*'#'}car out{10*'#'}")
                 #     # the car has left the road segment
