@@ -1,14 +1,14 @@
 from typing import List
 
 from components.collector import Collector
-from components.crossroads import CrossRoads, CrossRoadSegment
+from components.crossroads import CrossRoads
 from components.generator import Generator
 from components.roadsegment import RoadSegment
 from components.sidemarker import SideMarker
 from other.RoadCoupledDEVS import RoadCoupledDEVS
 
 
-class biDirectionalRoad(RoadCoupledDEVS):
+class biDirectionalRoadSegment(RoadCoupledDEVS):
     """
         A bidirectional road, consisting out of 2 road segments
     """
@@ -18,7 +18,7 @@ class biDirectionalRoad(RoadCoupledDEVS):
         :param name:
             The name for this model. Must be unique inside a Coupled DEVS.
         """
-        super(biDirectionalRoad, self).__init__(name)
+        super(biDirectionalRoadSegment, self).__init__(name)
         # create the 2 road segments
         self.road_segment_1: RoadSegment = self.addSubModel(RoadSegment(f"{name}_incoming", L, v_max))
         self.road_segment_2: RoadSegment = self.addSubModel(RoadSegment(f"{name}_outgoing", L, v_max))
@@ -53,7 +53,7 @@ class biDirectionalRoad(RoadCoupledDEVS):
         self.connectPorts(self.road_segment_2.Q_sack, self.road_segment_2_Q_sack)
         self.connectPorts(self.road_segment_2_Q_rack, self.road_segment_2.Q_rack)
 
-    def connectBidirectionalRoad(self, other: 'biDirectionalRoad', parent: RoadCoupledDEVS):
+    def connectBidirectionalRoad(self, other: 'biDirectionalRoadSegment', parent: RoadCoupledDEVS):
         """
             Connects the 2 road segments of this road to the 2 road segments of another road
         """
@@ -105,12 +105,13 @@ class sequentialRoad(RoadCoupledDEVS):
         self.collecter = self.addSubModel(Collector(f"{name}_collector"))
 
         # create the 3 road segments
-        self.last_segment: biDirectionalRoad = self.addSubModel(biDirectionalRoad(f"{name}_last_segment",
-                                                                                  L=L, v_max=v_max))
-        self.middle_segment: biDirectionalRoad = self.addSubModel(biDirectionalRoad(f"{name}_middle_segment",
-                                                                                    L=L, v_max=v_max))
-        self.core_segment: biDirectionalRoad = self.addSubModel(biDirectionalRoad(f"{name}_core_segment",
-                                                                                  L=L, v_max=v_max))
+        self.last_segment: biDirectionalRoadSegment = self.addSubModel(biDirectionalRoadSegment(f"{name}_last_segment",
+                                                                                                L=L, v_max=v_max))
+        self.middle_segment: biDirectionalRoadSegment = self.addSubModel(
+            biDirectionalRoadSegment(f"{name}_middle_segment",
+                                     L=L, v_max=v_max))
+        self.core_segment: biDirectionalRoadSegment = self.addSubModel(biDirectionalRoadSegment(f"{name}_core_segment",
+                                                                                                L=L, v_max=v_max))
 
         # connect all components
         self.last_segment.connectBidirectionalRoad(self.middle_segment, parent=self)
@@ -169,13 +170,15 @@ class fourwayCrossroad(RoadCoupledDEVS):
 
         # create the crossroad
         self.crossroad: CrossRoads = self.addSubModel(
-            CrossRoads("crossroad", destinations=[['north_collector'],['west_collector'], ['south_collector'], ['east_collector']], L=L, v_max=v_max,
+            CrossRoads("crossroad",
+                       destinations=[['north_collector'], ['west_collector'], ['south_collector'], ['east_collector']],
+                       L=L, v_max=v_max,
                        observ_delay=observ_delay))
 
         # connect the crossroad to the sequential roads
         self.connectCrossroad([self.road_north,
-                               self.road_west,                               self.road_south,self.road_east
-                              ])
+                               self.road_west, self.road_south, self.road_east
+                               ])
 
     def connectCrossroad(self, sequential_roads: List[sequentialRoad]):
         """
@@ -201,14 +204,13 @@ class fourwayCrossroad(RoadCoupledDEVS):
             self.connectPorts(inp_and_out[4], road.Q_recv)
             self.connectPorts(inp_and_out[5], road.Q_rack)
 
-
     def __repr__(self):
         return f"fourwayCrossroad({self.name})"
 
     def getCollectors(self):
         return [
             self.road_north.collecter
-            ,self.road_east.collecter, self.road_south.collecter, self.road_west.collecter
+            , self.road_east.collecter, self.road_south.collecter, self.road_west.collecter
         ]
 
     def getNumberCrashes(self):
@@ -221,8 +223,6 @@ class fourwayCrossroad(RoadCoupledDEVS):
                 # add the collisions to the total amount
                 collisions += component.state.collisions
         return collisions
-
-
 
     def initializeSequentialRoads(self, L, v_max, IAT_min, IAT_max, v_pref_mu, v_pref_sigma, limit):
         # create a sequential road for each input and output branch
@@ -239,6 +239,7 @@ class fourwayCrossroad(RoadCoupledDEVS):
         self.road_west = self.addSubModel(
             sequentialRoad(f"west", L=L, v_max=v_max, IAT_min=IAT_min, IAT_max=IAT_max, v_pref_mu=v_pref_mu,
                            v_pref_sigma=v_pref_sigma, destinations=self.destinations, limit=limit))
+
 
 class SequentialRoadOutRoadExposed(sequentialRoad):
     """
@@ -285,12 +286,9 @@ class VoorangVanRechtsCrossRoad(fourwayCrossroad):
         # connect the crossroad to the sidemarkers
         # a car from the east has priority over a car from the south
 
-
-
         directionlist = ['west_collector', 'south_collector', 'east_collector', 'north_collector']
         sidemarkers = [self.sidemarker_west, self.sidemarker_south, self.sidemarker_east, self.sidemarker_north]
         roads = [self.road_west, self.road_south, self.road_east, self.road_north]
-
 
         for i in range(4):
             direction = directionlist[i]
@@ -300,22 +298,19 @@ class VoorangVanRechtsCrossRoad(fourwayCrossroad):
 
             self.connectSidemarker(sidemarker, priority_road, non_priority_road_ports)
 
-
-
-
-
-    def connectSidemarker(self, sidemarker:SideMarker, priority_road, non_priority_road_ports):
+    def connectSidemarker(self, sidemarker: SideMarker, priority_road, non_priority_road_ports):
         prioritized_side_q_sack = priority_road.outgoingroad_Q_sack
         prioritized_side_q_recv = priority_road.outgoingroad_Q_recv
         non_prio_Q_send = non_priority_road_ports["Q_send"]
         non_prio_Q_rack = non_priority_road_ports["Q_rack"]
         self.connectSidemarkerPorts(sidemarker=sidemarker,
-                               prioritized_side_q_sack=prioritized_side_q_sack,
-                               prioritized_side_q_recv=prioritized_side_q_recv,
-                               non_prio_Q_send=non_prio_Q_send,
-                               non_prio_Q_rack=non_prio_Q_rack)
+                                    prioritized_side_q_sack=prioritized_side_q_sack,
+                                    prioritized_side_q_recv=prioritized_side_q_recv,
+                                    non_prio_Q_send=non_prio_Q_send,
+                                    non_prio_Q_rack=non_prio_Q_rack)
+
     def connectSidemarkerPorts(self, sidemarker, prioritized_side_q_sack, prioritized_side_q_recv, non_prio_Q_send,
-                          non_prio_Q_rack):
+                               non_prio_Q_rack):
         self.connectPorts(prioritized_side_q_sack, sidemarker.mi)
         self.connectPorts(sidemarker.mo, non_prio_Q_rack)
         self.connectPorts(non_prio_Q_send, prioritized_side_q_recv)
@@ -340,6 +335,8 @@ class VoorangVanRechtsCrossRoad(fourwayCrossroad):
             SequentialRoadOutRoadExposed(f"west", L=L, v_max=v_max, IAT_min=IAT_min, IAT_max=IAT_max,
                                          v_pref_mu=v_pref_mu,
                                          v_pref_sigma=v_pref_sigma, destinations=self.destinations, limit=limit))
+
+
 class Roundabout(fourwayCrossroad):
     def __init__(self, name, L, v_max, IAT_min, IAT_max, v_pref_mu, v_pref_sigma, limit):
         super().__init__(name, L, v_max, IAT_min, IAT_max, v_pref_mu, v_pref_sigma, limit)
@@ -350,14 +347,12 @@ class Roundabout(fourwayCrossroad):
         self.sidemarker_south: SideMarker = self.addSubModel(SideMarker(f"sidemarker_south"))
         self.sidemarker_west: SideMarker = self.addSubModel(SideMarker(f"sidemarker_west"))
 
-        # mark the outgoing road (incoming to the crossroad) of each sequential road as priority
-        for seq_road in [self.road_north, self.road_east, self.road_south, self.road_west]:
-            seq_road.markOutgoingAsPriority()
+        # mark all the crossroad segments as priority
+        self.crossroad.markPriority()
 
         directionlist = ['north_collector', 'west_collector', 'south_collector', 'east_collector']
         sidemarkers = [self.sidemarker_west, self.sidemarker_south, self.sidemarker_east, self.sidemarker_north]
         roads = [self.road_west, self.road_south, self.road_east, self.road_north]
-
 
         for i in range(4):
             direction = directionlist[i]
@@ -367,17 +362,13 @@ class Roundabout(fourwayCrossroad):
 
             self.connectSidemarker(sidemarker, priority_road, non_priority_road)
 
-
-
-
-
-    def connectSidemarker(self, sidemarker:SideMarker, priority_road_ports: dict, non_priority_road: sequentialRoad):
+    def connectSidemarker(self, sidemarker: SideMarker, priority_road_ports: dict, non_priority_road: sequentialRoad):
         prioritized_side_q_sack = priority_road_ports["Q_sack"]
         prioritized_side_q_recv = priority_road_ports["Q_recv"]
         non_prio_Q_send = non_priority_road.Q_send
         non_prio_Q_rack = non_priority_road.Q_rack
         self.connectSidemarkerPorts(sidemarker=sidemarker,
-                               prioritized_side_q_sack=prioritized_side_q_sack,
-                               prioritized_side_q_recv=prioritized_side_q_recv,
-                               non_prio_Q_send=non_prio_Q_send,
-                               non_prio_Q_rack=non_prio_Q_rack)
+                                    prioritized_side_q_sack=prioritized_side_q_sack,
+                                    prioritized_side_q_recv=prioritized_side_q_recv,
+                                    non_prio_Q_send=non_prio_Q_send,
+                                    non_prio_Q_rack=non_prio_Q_rack)
